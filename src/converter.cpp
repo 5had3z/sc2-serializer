@@ -1,4 +1,5 @@
 #include "converter.hpp"
+#include "serialize.hpp"
 
 #include <cstring>
 

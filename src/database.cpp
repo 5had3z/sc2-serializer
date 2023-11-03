@@ -1,4 +1,5 @@
 #include "database.hpp"
+#include "serialize.hpp"
 
 #include <spdlog/spdlog.h>
 

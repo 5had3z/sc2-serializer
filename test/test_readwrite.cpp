@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 
 #include "data.hpp"
+#include "serialize.hpp"
+
 #include <filesystem>
 #include <numeric>
 #include <ranges>
