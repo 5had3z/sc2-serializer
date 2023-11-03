@@ -11,6 +11,22 @@
 
 #include "observer.hpp"
 
+auto getReplaysFile(const std::string &partitionFile) noexcept -> std::vector<std::string>
+{
+    std::vector<std::string> replays;
+    std::ifstream partStream(partitionFile);
+    std::istream_iterator<std::string> fileIt(partStream);
+    std::copy(fileIt, {}, std::back_inserter(replays));
+}
+
+auto getReplaysFolder(const std::string_view folder) noexcept -> std::vector<std::string>
+{
+    std::vector<std::string> replays;
+    std::ranges::transform(std::filesystem::directory_iterator{ folder }, std::back_inserter(replays), [](auto &&e) {
+        return e.path().stem().string();
+    });
+}
+
 
 auto main(int argc, char *argv[]) -> int
 {
@@ -36,8 +52,19 @@ auto main(int argc, char *argv[]) -> int
         return -1;
     }
 
+    auto dbPath = result["output"].as<std::string>();
     cvt::Converter converter;
-    converter.loadDB(result["output"].as<std::string>());
+    if (!converter.loadDB(dbPath)) {
+        SPDLOG_ERROR("Unable to load replay db: {}", dbPath);
+        return -1;
+    }
+
+    std::vector<std::string> replays;
+    if (result["partition"].count()) {
+        replays = getReplaysFile(result["partition"].as<std::string>());
+    } else {
+        replays = getReplaysFolder(replayFolder);
+    }
 
     return 0;
 }
