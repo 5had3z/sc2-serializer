@@ -1,10 +1,10 @@
 #pragma once
 
-#include <filesystem>
 #include <sc2api/sc2_api.h>
 
 #include "database.hpp"
 
+#include <filesystem>
 #include <string_view>
 
 namespace cvt {
@@ -33,6 +33,8 @@ class Converter : public sc2::ReplayObserver
 
     ReplayDatabase database_;
     ReplayData currentReplay_;
+    bool mapDynHasLogged_{ false };
+    bool mapHeightHasLogged_{ false };
 };
 
 }// namespace cvt
