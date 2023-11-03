@@ -87,7 +87,6 @@ struct Unit
     int uniqueId;
     int unitType;
     Alliance alliance;
-
     float health;
     float health_max;
     float shield;
@@ -97,17 +96,14 @@ struct Unit
     int cargo;
     int cargo_max;
     int tgtUniqueId;
-
     CloakState cloak_state;
     bool is_blip;// detected by sensor
     bool is_flying;// flying ship
     bool is_burrowed;// zerg
     bool is_powered;// pylon
-
     Point3f pos;
     float heading;
     float radius;
-
     float build_progress;
 
     [[nodiscard]] auto operator==(const Unit &other) const noexcept -> bool = default;

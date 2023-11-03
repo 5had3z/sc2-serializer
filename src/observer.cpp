@@ -4,6 +4,7 @@
 #include <spdlog/spdlog.h>
 
 #include <cstring>
+#include <ranges>
 
 namespace cvt {
 
@@ -71,7 +72,37 @@ void Converter::copyUnitData() noexcept
 {
     // Foo
     const auto unitData = this->Observation()->GetUnits();
+    auto &units = currentReplay_.stepData.back().units;
+    units.reserve(unitData.size());
+    std::ranges::transform(unitData, std::back_inserter(units), [](const sc2::Unit *src) -> Unit {
+        Unit dst;
+        dst.uniqueId = src->tag;
+        dst.unitType = src->unit_type;
+        dst.alliance = static_cast<Alliance>(src->alliance);// Enums deffs match here
+        dst.health = src->health;
+        dst.health_max = src->health_max;
+        dst.shield = src->shield;
+        dst.shield_max = src->shield_max;
+        dst.energy = src->energy_max;
+        dst.energy_max = src->energy_max;
+        dst.cargo = src->cargo_space_taken;
+        dst.cargo_max = src->cargo_space_max;
+        dst.tgtUniqueId = src->engaged_target_tag;
+        dst.cloak_state = static_cast<CloakState>(src->cloak);
+        dst.is_blip = src->is_blip;
+        dst.is_flying = src->is_flying;
+        dst.is_burrowed = src->is_burrowed;
+        dst.is_powered = src->is_powered;
+        dst.pos.x = src->pos.x;
+        dst.pos.y = src->pos.y;
+        dst.pos.z = src->pos.z;
+        dst.heading = src->facing;
+        dst.radius = src->radius;
+        dst.build_progress = src->build_progress;
+        return dst;
+    });
 }
+
 void Converter::copyActionData() noexcept
 {
     // Foo
@@ -87,7 +118,8 @@ void Converter::copyDynamicMapData() noexcept
     if (!mapDynHasLogged_) {
         mapDynHasLogged_ = true;
         SPDLOG_INFO(
-          "Minimap Features: visibility {}, creep: {}, player_relative: {}, alerts: {}, buildable: {}, pathable: {}",
+          "Minimap Features: visibility {}, creep: {}, player_relative: {}, alerts: {}, buildable: {}, pathable: "
+          "{}",
           minimapFeats.has_visibility_map(),
           minimapFeats.has_creep(),
           minimapFeats.has_player_relative(),
