@@ -22,7 +22,7 @@ class ReplayDataTest : public testing::Test
             replay_.stepData[0].actions.emplace_back(std::move(action));
         }
         for (int i = 0; i < 3; ++i) {
-            cvt::Action action = { .unit_ids = { 1, i },
+            cvt::Action action = { .unit_ids = { 1, static_cast<cvt::UID>(i) },
                 .ability_id = 1,
                 .target_type = cvt::Action::Target_Type::Position,
                 .target = cvt::Point2d(i, 2) };
@@ -31,9 +31,12 @@ class ReplayDataTest : public testing::Test
 
         // Make some random unit data
         for (int i = 0; i < 3; ++i) {
-            cvt::Unit unit = {
-                .uniqueId = i, .unitType = 2, .health = 3, .shield = 4, .energy = 5 * i, .pos = { 1.1f, 2.2f * i, 3.3f }
-            };
+            cvt::Unit unit = { .id = static_cast<cvt::UID>(i),
+                .unitType = 2,
+                .health = 3,
+                .shield = 4,
+                .energy = 5 * i,
+                .pos = { 1.1f, 2.2f * i, 3.3f } };
             replay_.stepData[0].units.emplace_back(std::move(unit));
         }
 

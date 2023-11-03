@@ -11,14 +11,14 @@ auto createReplay(int seed) -> cvt::ReplayData
     // Make some random action data
     replay_.stepData.resize(1);
     for (int i = 0; i < 3; ++i) {
-        cvt::Action action = { .unit_ids = { 1, 2, seed },
+        cvt::Action action = { .unit_ids = { 1, 2, static_cast<cvt::UID>(seed) },
             .ability_id = seed + i,
             .target_type = cvt::Action::Target_Type::OtherUnit,
             .target = 3 };
         replay_.stepData[0].actions.emplace_back(std::move(action));
     }
     for (int i = 0; i < 3; ++i) {
-        cvt::Action action = { .unit_ids = { 1, i },
+        cvt::Action action = { .unit_ids = { 1, static_cast<cvt::UID>(i) },
             .ability_id = seed * i,
             .target_type = cvt::Action::Target_Type::Position,
             .target = cvt::Point2d(i, 2) };
@@ -28,7 +28,7 @@ auto createReplay(int seed) -> cvt::ReplayData
     // Make some random unit data
     for (int i = 0; i < 3; ++i) {
         cvt::Unit unit = {
-            .uniqueId = i, .unitType = 2, .health = seed, .shield = 4, .energy = 5 * i, .pos = { 1.1f, 2.2f * i, 3.3f }
+            .id = i, .unitType = 2, .health = seed, .shield = 4, .energy = 5 * i, .pos = { 1.1f, 2.2f * i, 3.3f }
         };
         replay_.stepData[0].units.emplace_back(std::move(unit));
     }

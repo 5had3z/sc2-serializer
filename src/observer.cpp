@@ -22,6 +22,8 @@ template<typename T> void copyMapData(Image<T> &dest, const SC2APIProtocol::Imag
     std::memcpy(dest.data(), mapData.data().data(), dest.size());
 }
 
+static_assert(sizeof(UID) == sizeof(sc2::Tag) && "Mismatch between unique id tags in SC2 and this Lib");
+
 auto Converter::loadDB(const std::filesystem::path &path) noexcept -> bool { return database_.open(path); }
 
 void Converter::OnGameStart()
@@ -76,7 +78,7 @@ void Converter::copyUnitData() noexcept
     units.reserve(unitData.size());
     std::ranges::transform(unitData, std::back_inserter(units), [](const sc2::Unit *src) -> Unit {
         Unit dst;
-        dst.uniqueId = src->tag;
+        dst.id = src->tag;
         dst.unitType = src->unit_type;
         dst.alliance = static_cast<Alliance>(src->alliance);// Enums deffs match here
         dst.health = src->health;
@@ -87,8 +89,8 @@ void Converter::copyUnitData() noexcept
         dst.energy_max = src->energy_max;
         dst.cargo = src->cargo_space_taken;
         dst.cargo_max = src->cargo_space_max;
-        dst.tgtUniqueId = src->engaged_target_tag;
-        dst.cloak_state = static_cast<CloakState>(src->cloak);
+        dst.tgtId = src->engaged_target_tag;
+        dst.cloak_state = static_cast<CloakState>(src->cloak);// These should match
         dst.is_blip = src->is_blip;
         dst.is_flying = src->is_flying;
         dst.is_burrowed = src->is_burrowed;
@@ -107,6 +109,28 @@ void Converter::copyActionData() noexcept
 {
     // Foo
     const auto actionData = this->Observation()->GetRawActions();
+    auto &actions = currentReplay_.stepData.back().actions;
+    actions.reserve(actionData.size());
+    std::ranges::transform(actionData, std::back_inserter(actions), [](const sc2::ActionRaw &src) -> Action {
+        Action dst;
+        dst.unit_ids.reserve(src.unit_tags.size());
+        std::ranges::transform(
+          src.unit_tags, std::back_inserter(dst.unit_ids), [](sc2::Tag tag) { return static_cast<UID>(tag); });
+        dst.ability_id = src.ability_id;
+        dst.target_type = static_cast<Action::Target_Type>(src.target_type);// These should match
+        switch (dst.target_type) {
+        case Action::Target_Type::Position:
+            dst.target.point.x = src.target_point.x;
+            dst.target.point.y = src.target_point.y;
+            break;
+        case Action::Target_Type::OtherUnit:
+            dst.target.other = src.target_tag;
+            break;
+        case Action::Target_Type::Self:
+            break;
+        }
+        return dst;
+    });
 }
 
 void Converter::copyDynamicMapData() noexcept

@@ -8,6 +8,8 @@ namespace cvt {
 
 // ------ Basic Data Structs ------
 
+typedef std::uint64_t UID;// Type that represents unique identifier in the game
+
 struct Point2d
 {
     int x;
@@ -84,7 +86,7 @@ enum class CloakState {
 
 struct Unit
 {
-    int uniqueId;
+    UID id;
     int unitType;
     Alliance alliance;
     float health;
@@ -95,7 +97,7 @@ struct Unit
     float energy_max;
     int cargo;
     int cargo_max;
-    int tgtUniqueId;
+    UID tgtId;
     CloakState cloak_state;
     bool is_blip;// detected by sensor
     bool is_flying;// flying ship
@@ -118,15 +120,15 @@ struct Unit
 
 struct Action
 {
-    enum Target_Type { OtherUnit, Position, Self };
+    enum Target_Type { Self, OtherUnit, Position };
 
     // Use chat union and tag here because it's needed for serialization anyway
     union Target {
         Point2d point;
-        int other;
+        UID other;
     };
 
-    std::vector<int> unit_ids;
+    std::vector<UID> unit_ids;
     int ability_id;
     Target_Type target_type;
     Target target;
