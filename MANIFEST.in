@@ -1,0 +1,5 @@
+include README.md LICENSE CMakeLists.txt
+graft src
+graft include
+graft cmake
+prune 3rdparty

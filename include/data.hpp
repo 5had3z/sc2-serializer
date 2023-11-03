@@ -12,7 +12,7 @@ struct Point2d
 {
     int x;
     int y;
-    [[nodiscard]] constexpr auto operator==(const Point2d &other) const noexcept -> bool = default;
+    [[nodiscard]] auto operator==(const Point2d &other) const noexcept -> bool = default;
 };
 
 struct Point3f
@@ -20,7 +20,7 @@ struct Point3f
     float x;
     float y;
     float z;
-    [[nodiscard]] constexpr auto operator==(const Point3f &other) const noexcept -> bool = default;
+    [[nodiscard]] auto operator==(const Point3f &other) const noexcept -> bool = default;
 };
 
 template<typename T> struct Image
@@ -32,13 +32,13 @@ template<typename T> struct Image
     int _w = 0;
     std::vector<std::byte> _data;
 
-    [[nodiscard]] constexpr auto operator==(const Image &other) const noexcept -> bool = default;
+    [[nodiscard]] auto operator==(const Image &other) const noexcept -> bool = default;
 
     // Number of elements in the image
-    [[nodiscard]] constexpr auto nelem() const noexcept -> std::size_t { return _h * _w; }
+    [[nodiscard]] auto nelem() const noexcept -> std::size_t { return _h * _w; }
 
     // Resize the buffer
-    constexpr void resize(int height, int width)
+    void resize(int height, int width)
     {
         _h = height;
         _w = width;
@@ -50,7 +50,7 @@ template<typename T> struct Image
     }
 
     // Clear buffer and shape
-    constexpr void clear() noexcept
+    void clear() noexcept
     {
         _data.clear();
         _h = 0;
@@ -58,13 +58,13 @@ template<typename T> struct Image
     }
 
     // Size in bytes of the buffer
-    [[nodiscard]] constexpr auto size() const noexcept -> std::size_t { return _data.size(); }
+    [[nodiscard]] auto size() const noexcept -> std::size_t { return _data.size(); }
 
     // Uninitialized/empty buffer
-    [[nodiscard]] constexpr auto empty() const noexcept -> bool { return _data.empty(); }
+    [[nodiscard]] auto empty() const noexcept -> bool { return _data.empty(); }
 
     // Raw pointer to the data with the correct type
-    [[nodiscard]] constexpr auto data() noexcept -> ptr_type { return reinterpret_cast<ptr_type>(_data.data()); }
+    [[nodiscard]] auto data() noexcept -> ptr_type { return reinterpret_cast<ptr_type>(_data.data()); }
 };
 
 enum class Alliance {
@@ -110,7 +110,7 @@ struct Unit
 
     float build_progress;
 
-    [[nodiscard]] constexpr auto operator==(const Unit &other) const noexcept -> bool = default;
+    [[nodiscard]] auto operator==(const Unit &other) const noexcept -> bool = default;
 };
 
 // template<typename... Ts> class aligned_union
@@ -135,21 +135,21 @@ struct Action
     Target_Type target_type;
     Target target;
 
-    [[nodiscard]] constexpr auto operator==(const Action &other) const noexcept -> bool
+    [[nodiscard]] auto operator==(const Action &other) const noexcept -> bool
     {
         bool ret = true;
-        ret &= this->unit_ids == other.unit_ids;
-        ret &= this->ability_id == other.ability_id;
-        ret &= this->target_type == other.target_type;
+        ret &= unit_ids == other.unit_ids;
+        ret &= ability_id == other.ability_id;
+        ret &= target_type == other.target_type;
         // Don't bother continue checking
         if (!ret) { return false; }
 
         // Check if the unions match depending on tag (skip self check)
-        switch (this->target_type) {
+        switch (target_type) {
         case Action::Target_Type::Position:
-            return this->target.point == other.target.point;
+            return target.point == other.target.point;
         case Action::Target_Type::OtherUnit:
-            return this->target.other == other.target.other;
+            return target.other == other.target.other;
         case Action::Target_Type::Self:
             return true;
         }
@@ -169,7 +169,7 @@ struct StepData
     std::vector<Action> actions;
     std::vector<Unit> units;
 
-    [[nodiscard]] constexpr auto operator==(const StepData &other) const noexcept -> bool = default;
+    [[nodiscard]] auto operator==(const StepData &other) const noexcept -> bool = default;
 };
 
 struct ReplayData
@@ -178,7 +178,7 @@ struct ReplayData
     std::vector<StepData> stepData;
     std::string replayHash;
 
-    [[nodiscard]] constexpr auto operator==(const ReplayData &other) const noexcept -> bool = default;
+    [[nodiscard]] auto operator==(const ReplayData &other) const noexcept -> bool = default;
 
     void clear() noexcept
     {

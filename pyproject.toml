@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel", "ninja", "cmake>=3.25"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sc2-replay-reader"
+authors = [{ name = "Bryce Ferenczi", email = "frenzi@hotmail.com.au" }]
+version = "0.0.1"
+description = "Python bindings to read generated database from sc2-serializer"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.10",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Natural Language :: English",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/5had3z/sc2-serializer"
