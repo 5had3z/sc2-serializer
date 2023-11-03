@@ -31,6 +31,11 @@ void Converter::OnGameStart()
     auto replayInfo = this->ReplayControl()->GetReplayInfo();
     // Preallocate Vector with expected duration
     currentReplay_.stepData.reserve(replayInfo.duration_gameloops);
+    const auto &playerInfo = replayInfo.players[currentReplay_.playerId];
+    currentReplay_.playerRace = static_cast<Race>(playerInfo.race);
+    currentReplay_.playerResult = static_cast<Result>(playerInfo.game_result);
+    currentReplay_.playerMMR = playerInfo.mmr;
+    currentReplay_.playerAPM = playerInfo.apm;
 }
 
 void Converter::OnGameEnd()
@@ -56,7 +61,11 @@ void Converter::OnStep()
     this->copyDynamicMapData();
 }
 
-void Converter::setReplayHash(const std::string_view hash) noexcept { currentReplay_.replayHash = hash; }
+void Converter::setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept
+{
+    currentReplay_.replayHash = hash;
+    currentReplay_.playerId = playerId;
+}
 
 void Converter::copyHeightMapData() noexcept
 {

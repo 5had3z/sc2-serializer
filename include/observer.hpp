@@ -14,7 +14,8 @@ class Converter : public sc2::ReplayObserver
   public:
     auto loadDB(const std::filesystem::path &path) noexcept -> bool;
 
-    void setReplayHash(const std::string_view hash) noexcept;
+    // Set Replay file hash + playerId before launching the coordinator
+    void setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept;
 
     void OnGameStart() final;
 

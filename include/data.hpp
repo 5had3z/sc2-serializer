@@ -170,11 +170,20 @@ struct StepData
     [[nodiscard]] auto operator==(const StepData &other) const noexcept -> bool = default;
 };
 
+enum class Race { Terran, Zerg, Protoss, Random };
+
+enum class Result { Win, Loss, Tie, Undecided };
+
 struct ReplayData
 {
     Image<std::uint8_t> heightMap;
     std::vector<StepData> stepData;
     std::string replayHash;
+    std::uint32_t playerId;
+    Race playerRace;
+    Result playerResult;
+    int playerMMR;
+    int playerAPM;
 
     [[nodiscard]] auto operator==(const ReplayData &other) const noexcept -> bool = default;
 
