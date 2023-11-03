@@ -24,7 +24,9 @@ cpmaddpackage(
   GITHUB_REPOSITORY
   gabime/spdlog
   VERSION
-  1.12.0)
+  1.12.0
+  OPTIONS
+  "SPDLOG_BUILD_PIC ON")
 cpmaddpackage(
   NAME
   googletest
@@ -44,11 +46,17 @@ cpmaddpackage(
   boostorg/pfr
   GIT_TAG
   2.1.0)
+cpmaddpackage(
+  NAME
+  pybind11
+  GITHUB_REPOSITORY
+  pybind/pybind11
+  VERSION
+  2.11.1)
 
-# ---- Main Library ----
+# ---- Main Library Components ----
 
-file(GLOB CXX_SRC src/*.cpp)
-add_library(replay_converter STATIC ${CXX_SRC})
+add_library(replay_converter STATIC src/database.cpp src/observer.cpp)
 target_compile_features(replay_converter PUBLIC cxx_std_23)
 target_link_libraries(
   replay_converter
@@ -67,6 +75,12 @@ target_link_libraries(
   replay_converter
   cxxopts
   spdlog::spdlog)
+
+pybind11_add_module(replay_reader src/database.cpp src/pyreader.cpp)
+target_compile_features(replay_reader PUBLIC cxx_std_23)
+target_link_libraries(replay_reader PUBLIC spdlog::spdlog boost_pfr)
+target_compile_options(replay_reader PUBLIC ${_COMPILE_OPTIONS})
+target_include_directories(replay_reader PUBLIC include)
 
 # ---- Testing Suite ----
 
