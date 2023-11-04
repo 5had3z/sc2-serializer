@@ -41,53 +41,59 @@ auto getReplaysFolder(const std::string_view folder) noexcept -> std::vector<std
     return replays;
 }
 
-void loopReplayFiles(sc2::Coordinator &coordinator,
-  const std::string_view replayFolder,
+void loopReplayFiles(const std::filesystem::path &replayFolder,
   const std::vector<std::string> &replayHashes,
-  cvt::Converter &converter)
+  sc2::Coordinator &coordinator,
+  cvt::BaseConverter *converter)
 {
     std::size_t nComplete = 0;
     for (auto &&replayHash : replayHashes) {
-        const auto replayPath = (std::filesystem::path(replayFolder) / replayHash).replace_extension(".SC2Replay");
+        const auto replayPath = (replayFolder / replayHash).replace_extension(".SC2Replay");
         if (!std::filesystem::exists(replayPath)) {
             SPDLOG_ERROR("Replay file doesn't exist {}", replayPath.string());
             continue;
         }
-        converter.setReplayInfo(replayHash, 0);
-        coordinator.SetReplayPath(replayPath.string());
-        coordinator.SetReplayPerspective(0);
 
-        while (coordinator.Update()) {}
-        SPDLOG_INFO("Completed {} of {} replays", nComplete++, replayHashes.size());
+        for (uint32_t playerId = 1; playerId < 3; ++playerId) {
+            // Setup Replay with Player
+            converter->setReplayInfo(replayHash, playerId);
+            coordinator.SetReplayPath(replayPath.string());
+            coordinator.SetReplayPerspective(playerId);
+            // Run Replay
+            while (coordinator.Update()) {}
+        }
+
+        SPDLOG_INFO("Completed {} of {} replays", ++nComplete, replayHashes.size());
     }
 }
 
 
 auto main(int argc, char *argv[]) -> int
 {
-    cxxopts::Options cliopts("SC2 Replay", "Run a folder of replays and see if it works");
+    cxxopts::Options cliParser("SC2 Replay", "Run a folder of replays and see if it works");
     // clang-format off
-    cliopts.add_options()
+    cliParser.add_options()
       ("r,replays", "path to folder of replays", cxxopts::value<std::string>())
       ("p,partition", "partition file to select replays", cxxopts::value<std::string>())
       ("o,output", "output directory for replays", cxxopts::value<std::string>())
+      ("c,converter", "type of converter to use 'action' or 'full'", cxxopts::value<std::string>())
       ("g,game", "path to game execuatable", cxxopts::value<std::string>());
     // clang-format on
-    auto result = cliopts.parse(argc, argv);
+    const auto cliOpts = cliParser.parse(argc, argv);
 
-    const auto replayFolder = result["replays"].as<std::string>();
+    const auto replayFolder = cliOpts["replays"].as<std::string>();
     if (!std::filesystem::exists(replayFolder)) {
         SPDLOG_ERROR("Replay folder doesn't exist: {}", replayFolder);
         return -1;
     }
 
-    const auto gamePath = result["game"].as<std::string>();
+    const auto gamePath = cliOpts["game"].as<std::string>();
     if (!std::filesystem::exists(gamePath)) {
         SPDLOG_ERROR("Game path doesn't exist: {}", gamePath);
         return -1;
     }
 
-    const auto dbPath = result["output"].as<std::string>();
+    const auto dbPath = cliOpts["output"].as<std::string>();
     const auto dbPathParent = std::filesystem::path(dbPath).parent_path();
     if (!std::filesystem::exists(dbPathParent)) {
         SPDLOG_INFO("Creating Output Directory: {}", dbPathParent.string());
@@ -97,15 +103,22 @@ auto main(int argc, char *argv[]) -> int
         }
     }
 
-    cvt::Converter converter;
-    if (!converter.loadDB(dbPath)) {
+    auto converter = [](const std::string &cvtType) -> std::unique_ptr<cvt::BaseConverter> {
+        if (cvtType == "full") { return std::make_unique<cvt::FullConverter>(); }
+        if (cvtType == "action") { return std::make_unique<cvt::ActionConverter>(); }
+        SPDLOG_ERROR("Got invalid --converter='{}', require 'action' or 'full'", cvtType);
+        return nullptr;
+    }(cliOpts["converter"].as<std::string>());
+
+    if (converter.get() == nullptr) { return -1; }
+    if (!converter->loadDB(dbPath)) {
         SPDLOG_ERROR("Unable to load/create replay db: {}", dbPath);
         return -1;
     }
 
     const auto replayFiles = [&]() -> std::vector<std::string> {
-        if (result["partition"].count()) {
-            const auto partitionFile = result["partition"].as<std::string>();
+        if (cliOpts["partition"].count()) {
+            const auto partitionFile = cliOpts["partition"].as<std::string>();
             if (!std::filesystem::exists(partitionFile)) {
                 SPDLOG_ERROR("Partition file doesn't exist: {}", partitionFile);
                 return {};
@@ -129,10 +142,10 @@ auto main(int argc, char *argv[]) -> int
         fSettings.minimap_y = mapSize;
         coordinator.SetFeatureLayers(fSettings);
     }
-    coordinator.AddReplayObserver(&converter);
+    coordinator.AddReplayObserver(converter.get());
     coordinator.SetProcessPath(gamePath);
 
-    loopReplayFiles(coordinator, replayFolder, replayFiles, converter);
+    loopReplayFiles(replayFolder, replayFiles, coordinator, converter.get());
 
     return 0;
 }

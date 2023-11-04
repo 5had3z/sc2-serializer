@@ -9,11 +9,8 @@
 
 namespace cvt {
 
-/**
- * @brief The alphastar dataset only saves the preceeding observation to the current action
- *        and writes that to disk for behaviour cloning.
- */
-class Converter : public sc2::ReplayObserver
+
+class BaseConverter : public sc2::ReplayObserver
 {
   public:
     auto loadDB(const std::filesystem::path &path) noexcept -> bool;
@@ -25,9 +22,7 @@ class Converter : public sc2::ReplayObserver
 
     void OnGameEnd() final;
 
-    void OnStep() final;
-
-  private:
+  protected:
     void copyHeightMapData() noexcept;
 
     void copyUnitData() noexcept;
@@ -40,6 +35,23 @@ class Converter : public sc2::ReplayObserver
     ReplayData currentReplay_;
     bool mapDynHasLogged_{ false };
     bool mapHeightHasLogged_{ false };
+};
+
+/**
+ * @brief Convert and serialize every observation. This could be big.
+ */
+class FullConverter : public BaseConverter
+{
+    void OnStep() final;
+};
+
+/**
+ * @brief The alphastar dataset only saves if the player makes an
+ *        action and its associated preceeding observation.
+ */
+class ActionConverter : public BaseConverter
+{
+    void OnStep() final;
 };
 
 }// namespace cvt

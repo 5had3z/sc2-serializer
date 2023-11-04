@@ -24,21 +24,22 @@ template<typename T> void copyMapData(Image<T> &dest, const SC2APIProtocol::Imag
 
 static_assert(sizeof(UID) == sizeof(sc2::Tag) && "Mismatch between unique id tags in SC2 and this Lib");
 
-auto Converter::loadDB(const std::filesystem::path &path) noexcept -> bool { return database_.open(path); }
+auto BaseConverter::loadDB(const std::filesystem::path &path) noexcept -> bool { return database_.open(path); }
 
-void Converter::OnGameStart()
+void BaseConverter::OnGameStart()
 {
     auto replayInfo = this->ReplayControl()->GetReplayInfo();
     // Preallocate Vector with expected duration
     currentReplay_.stepData.reserve(replayInfo.duration_gameloops);
-    const auto &playerInfo = replayInfo.players[currentReplay_.playerId];
+    assert(replayInfo.num_players >= currentReplay_.playerId && "Player ID should be at most be num_players");
+    const auto &playerInfo = replayInfo.players[currentReplay_.playerId - 1];
     currentReplay_.playerRace = static_cast<Race>(playerInfo.race);
     currentReplay_.playerResult = static_cast<Result>(playerInfo.game_result);
     currentReplay_.playerMMR = playerInfo.mmr;
     currentReplay_.playerAPM = playerInfo.apm;
 }
 
-void Converter::OnGameEnd()
+void BaseConverter::OnGameEnd()
 {
     // Save entry to DB
     database_.addEntry(currentReplay_);
@@ -47,27 +48,14 @@ void Converter::OnGameEnd()
     mapHeightHasLogged_ = false;
 }
 
-void Converter::OnStep()
-{
-    // Copy static height map if not already done
-    if (currentReplay_.heightMap.empty()) { this->copyHeightMapData(); }
 
-    // "Initialize" next item
-    currentReplay_.stepData.resize(currentReplay_.stepData.size() + 1);
-
-    // Write directly into stepData.back()
-    this->copyUnitData();
-    this->copyActionData();
-    this->copyDynamicMapData();
-}
-
-void Converter::setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept
+void BaseConverter::setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept
 {
     currentReplay_.replayHash = hash;
     currentReplay_.playerId = playerId;
 }
 
-void Converter::copyHeightMapData() noexcept
+void BaseConverter::copyHeightMapData() noexcept
 {
     const auto *rawObs = this->Observation()->GetRawObservation();
     const auto &minimapFeats = rawObs->feature_layer_data().minimap_renders();
@@ -79,7 +67,7 @@ void Converter::copyHeightMapData() noexcept
     copyMapData(currentReplay_.heightMap, minimapFeats.height_map());
 }
 
-void Converter::copyUnitData() noexcept
+void BaseConverter::copyUnitData() noexcept
 {
     const auto unitData = this->Observation()->GetUnits();
     auto &units = currentReplay_.stepData.back().units;
@@ -113,7 +101,7 @@ void Converter::copyUnitData() noexcept
     });
 }
 
-void Converter::copyActionData() noexcept
+void BaseConverter::copyActionData() noexcept
 {
     const auto actionData = this->Observation()->GetRawActions();
     auto &actions = currentReplay_.stepData.back().actions;
@@ -140,7 +128,7 @@ void Converter::copyActionData() noexcept
     });
 }
 
-void Converter::copyDynamicMapData() noexcept
+void BaseConverter::copyDynamicMapData() noexcept
 {
     const auto *rawObs = this->Observation()->GetRawObservation();
     const auto &minimapFeats = rawObs->feature_layer_data().minimap_renders();
@@ -167,5 +155,39 @@ void Converter::copyDynamicMapData() noexcept
     if (minimapFeats.has_buildable()) { copyMapData(step.buildable, minimapFeats.buildable()); }
     if (minimapFeats.has_pathable()) { copyMapData(step.buildable, minimapFeats.pathable()); }
 }
+
+void FullConverter::OnStep()
+{
+    // Copy static height map if not already done
+    if (currentReplay_.heightMap.empty()) { this->copyHeightMapData(); }
+
+    // "Initialize" next item
+    currentReplay_.stepData.resize(currentReplay_.stepData.size() + 1);
+
+    // Write directly into stepData.back()
+    this->copyUnitData();
+    this->copyActionData();
+    this->copyDynamicMapData();
+}
+
+
+void ActionConverter::OnStep()
+{
+    // Copy static height map if not already done
+    if (currentReplay_.heightMap.empty()) { this->copyHeightMapData(); }
+    // Need to have at least one buffer
+    if (currentReplay_.stepData.empty()) { currentReplay_.stepData.resize(1); }
+
+    if (!this->Observation()->GetRawActions().empty()) {
+        this->copyActionData();
+        // Previous observation locked in, current will write to new "space"
+        currentReplay_.stepData.resize(currentReplay_.stepData.size() + 1);
+    }
+
+    // Always copy observation, the next step might have an action
+    this->copyUnitData();
+    this->copyDynamicMapData();
+}
+
 
 }// namespace cvt
