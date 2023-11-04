@@ -37,6 +37,7 @@ cpmaddpackage(
   boostorg/pfr
   GIT_TAG
   2.1.0)
+find_package(Boost REQUIRED COMPONENTS iostreams)
 
 # ---- Main Library Components ----
 
@@ -52,7 +53,8 @@ if(SC2_CONVERTER)
            sc2lib
            sc2utils
            spdlog::spdlog
-           boost_pfr)
+           boost_pfr
+           Boost::iostreams)
   target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS})
   target_include_directories(replay_converter PUBLIC include 3rdparty/s2client-api/include
                                                      ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated)
@@ -77,7 +79,7 @@ if(SC2_PY_READER)
 
   pybind11_add_module(sc2_replay_reader src/database.cpp src/pyreader.cpp)
   target_compile_features(sc2_replay_reader PUBLIC cxx_std_23)
-  target_link_libraries(sc2_replay_reader PUBLIC spdlog::spdlog boost_pfr)
+  target_link_libraries(sc2_replay_reader PUBLIC spdlog::spdlog boost_pfr Boost::iostreams)
   target_compile_options(sc2_replay_reader PUBLIC ${_COMPILE_OPTIONS})
   target_include_directories(sc2_replay_reader PUBLIC include)
 endif()

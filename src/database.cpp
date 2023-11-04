@@ -1,9 +1,14 @@
 #include "database.hpp"
 #include "serialize.hpp"
 
+#include <boost/iostreams/device/file.hpp>
+#include <boost/iostreams/filter/zlib.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
+#include <fstream>
 #include <spdlog/spdlog.h>
 
 namespace fs = std::filesystem;
+namespace bio = boost::iostreams;
 
 namespace cvt {
 
@@ -78,11 +83,20 @@ bool ReplayDatabase::addEntry(const ReplayData &data)
 
     // Get the current endPos of the file
     std::ofstream dbStream(dbPath_, std::ios::binary | std::ios::ate | std::ios::in);
-    dbStream.seekp(0, std::ios::end);
     entryPtr_.push_back(dbStream.tellp());
 
-    // Write the data
-    serialize(data, dbStream);
+    // Write compressed data to the end of the file
+    {
+        bio::filtering_ostream filterStream;
+        filterStream.push(bio::zlib_compressor());
+        filterStream.push(dbStream);
+        serialize(data, filterStream);
+        if (filterStream.bad()) {
+            SPDLOG_ERROR("Error Serializing Replay Data");
+            return false;
+        }
+        filterStream.reset();
+    }
 
     // Go to the db index and write new entry
     const std::size_t nEntries = entryPtr_.size();
@@ -91,6 +105,11 @@ bool ReplayDatabase::addEntry(const ReplayData &data)
     // Write Offset (index) is nEntries - 1 + sizeof(nEntries)
     dbStream.seekp((nEntries - 1) * sizeof(std::streampos) + sizeof(std::size_t), std::ios::beg);
     dbStream.write(reinterpret_cast<const char *>(&entryPtr_.back()), sizeof(std::streampos));
+    if (dbStream.bad()) {
+        SPDLOG_ERROR("Error Writing Db Offset Entry");
+        return false;
+    }
+
     return true;
 }
 
@@ -105,9 +124,14 @@ auto ReplayDatabase::getEntry(std::size_t index) const -> ReplayData
     std::ifstream dbStream(dbPath_, std::ios::binary);
     dbStream.seekg(entryPtr_[index]);
 
+    bio::filtering_istream filterStream;
+    filterStream.push(bio::zlib_decompressor());
+    filterStream.push(dbStream);
+
     // Load and return the data
     ReplayData data;
-    deserialize(data, dbStream);
+    deserialize(data, filterStream);
+    filterStream.reset();
     return data;
 }
 

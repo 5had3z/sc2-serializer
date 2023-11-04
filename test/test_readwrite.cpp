@@ -4,6 +4,7 @@
 #include "serialize.hpp"
 
 #include <filesystem>
+#include <fstream>
 #include <numeric>
 #include <ranges>
 

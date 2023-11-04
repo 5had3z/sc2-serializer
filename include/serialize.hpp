@@ -3,7 +3,7 @@
 #include <boost/pfr.hpp>
 
 #include <concepts>
-#include <fstream>
+#include <iostream>
 
 
 namespace cvt {
@@ -12,69 +12,69 @@ namespace cvt {
 
 template<std::ranges::range T>
     requires std::is_trivially_copyable_v<typename T::value_type>
-void serialize(const T &data, std::ofstream &fstream)
+void serialize(const T &data, std::ostream &stream)
 {
     // First write the number of elements then the data
     std::size_t nElem = data.size();
-    fstream.write(reinterpret_cast<const char *>(&nElem), sizeof(nElem));
-    fstream.write(reinterpret_cast<const char *>(data.data()), sizeof(typename T::value_type) * nElem);
+    stream.write(reinterpret_cast<const char *>(&nElem), sizeof(nElem));
+    stream.write(reinterpret_cast<const char *>(data.data()), sizeof(typename T::value_type) * nElem);
 }
 
 template<std::ranges::range T>
     requires std::is_aggregate_v<typename T::value_type> && (!std::is_trivially_copyable_v<typename T::value_type>)
-void serialize(const T &data, std::ofstream &fstream)
+void serialize(const T &data, std::ostream &stream)
 {
     // First write the number of elements then each element one-by-one
     std::size_t nElem = data.size();
-    fstream.write(reinterpret_cast<const char *>(&nElem), sizeof(nElem));
-    for (const auto &elem : data) { serialize(elem, fstream); }
+    stream.write(reinterpret_cast<const char *>(&nElem), sizeof(nElem));
+    for (const auto &elem : data) { serialize(elem, stream); }
 }
 
 template<typename T>
     requires std::is_trivially_copyable_v<T>
-void serialize(const T &data, std::ofstream &fstream)
+void serialize(const T &data, std::ostream &stream)
 {
-    fstream.write(reinterpret_cast<const char *>(&data), sizeof(T));
+    stream.write(reinterpret_cast<const char *>(&data), sizeof(T));
 }
 
 template<typename T>
     requires std::is_aggregate_v<T> && (!std::is_trivially_copyable_v<T>)
-void serialize(const T &data, std::ofstream &fstream)
+void serialize(const T &data, std::ostream &stream)
 {
-    boost::pfr::for_each_field(data, [&fstream](const auto &field) { serialize(field, fstream); });
+    boost::pfr::for_each_field(data, [&stream](const auto &field) { serialize(field, stream); });
 }
 
 
 template<std::ranges::range T>
     requires std::is_trivially_copyable_v<typename T::value_type>
-void deserialize(T &data, std::ifstream &fstream)
+void deserialize(T &data, std::istream &stream)
 {
     std::size_t nElem = -1;
-    fstream.read(reinterpret_cast<char *>(&nElem), sizeof(nElem));
+    stream.read(reinterpret_cast<char *>(&nElem), sizeof(nElem));
     data.resize(nElem);
-    fstream.read(reinterpret_cast<char *>(data.data()), sizeof(typename T::value_type) * nElem);
+    stream.read(reinterpret_cast<char *>(data.data()), sizeof(typename T::value_type) * nElem);
 }
 
-template<std::ranges::range T> void deserialize(T &data, std::ifstream &fstream)
+template<std::ranges::range T> void deserialize(T &data, std::istream &stream)
 {
     std::size_t nElem = -1;
-    fstream.read(reinterpret_cast<char *>(&nElem), sizeof(nElem));
+    stream.read(reinterpret_cast<char *>(&nElem), sizeof(nElem));
     data.resize(nElem);
-    for (auto &&elem : data) { deserialize(elem, fstream); }
+    for (auto &&elem : data) { deserialize(elem, stream); }
 }
 
 template<typename T>
     requires std::is_trivially_copyable_v<T>
-auto deserialize(T &data, std::ifstream &fstream)
+auto deserialize(T &data, std::istream &stream)
 {
-    fstream.read(reinterpret_cast<char *>(&data), sizeof(T));
+    stream.read(reinterpret_cast<char *>(&data), sizeof(T));
 }
 
 template<typename T>
     requires std::is_aggregate_v<T> && (!std::is_trivially_copyable_v<T>)
-void deserialize(T &data, std::ifstream &fstream)
+void deserialize(T &data, std::istream &stream)
 {
-    boost::pfr::for_each_field(data, [&fstream](auto &field) { deserialize(field, fstream); });
+    boost::pfr::for_each_field(data, [&stream](auto &field) { deserialize(field, stream); });
 }
 
 // I feel like this is cleaner but function resolution isn't working correctly

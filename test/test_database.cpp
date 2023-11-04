@@ -1,4 +1,9 @@
 #include "database.hpp"
+
+#include <boost/iostreams/device/file.hpp>
+#include <boost/iostreams/filter/zlib.hpp>
+#include <boost/iostreams/filtering_stream.hpp>
+
 #include <gtest/gtest.h>
 #include <numeric>
 
@@ -69,6 +74,43 @@ class DatabaseTest : public testing::Test
     fs::path dbPath_ = "testdb.sc2db";
     cvt::ReplayDatabase replayDb_ = cvt::ReplayDatabase();
 };
+
+TEST(BoostZlib, WriteRead)
+{
+    const fs::path testFile = "test.zlib";
+    if (fs::exists(testFile)) { fs::remove(testFile); }
+    std::vector<int> writeData(8192, 0);
+
+    // Add some uncompressed header padding
+    const std::size_t skip = 293;
+    {
+        std::ofstream output(testFile, std::ios::binary);
+        output.write(reinterpret_cast<const char *>(writeData.data()), skip);
+    }
+
+    std::iota(writeData.begin(), writeData.end(), 0);
+    {
+        boost::iostreams::filtering_ostream output;
+        output.push(boost::iostreams::zlib_compressor());
+        output.push(boost::iostreams::file_sink(testFile, std::ios::binary | std::ios::app));
+        output.write(reinterpret_cast<const char *>(writeData.data()), writeData.size() * sizeof(int));
+        output.reset();
+    }
+
+    std::vector<int> readData;
+    readData.resize(writeData.size());
+    {
+        std::ifstream file(testFile, std::ios::binary);
+        file.seekg(skip);
+        boost::iostreams::filtering_istream input;
+        input.push(boost::iostreams::zlib_decompressor());
+        input.push(file);
+        input.read(reinterpret_cast<char *>(readData.data()), readData.size() * sizeof(int));
+        ASSERT_EQ(input.bad(), false);
+    }
+
+    ASSERT_EQ(writeData, readData);
+}
 
 TEST_F(DatabaseTest, CreateDB)
 {
