@@ -18,6 +18,7 @@ auto getReplaysFile(const std::string &partitionFile) noexcept -> std::vector<st
     std::ifstream partStream(partitionFile);
     std::istream_iterator<std::string> fileIt(partStream);
     std::copy(fileIt, {}, std::back_inserter(replays));
+    return replays;
 }
 
 auto getReplaysFolder(const std::string_view folder) noexcept -> std::vector<std::string>
@@ -27,6 +28,7 @@ auto getReplaysFolder(const std::string_view folder) noexcept -> std::vector<std
     std::ranges::transform(std::filesystem::directory_iterator{ folder }, std::back_inserter(replays), [](auto &&e) {
         return e.path().stem().string();
     });
+    return replays;
 }
 
 void loopReplayFiles(sc2::Coordinator &coordinator,
@@ -63,38 +65,39 @@ auto main(int argc, char *argv[]) -> int
     // clang-format on
     auto result = cliopts.parse(argc, argv);
 
-    auto replayFolder = result["replays"].as<std::string>();
+    const auto replayFolder = result["replays"].as<std::string>();
     if (!std::filesystem::exists(replayFolder)) {
         SPDLOG_ERROR("Replay folder doesn't exist: {}", replayFolder);
         return -1;
     }
 
-    auto gamePath = result["game"].as<std::string>();
+    const auto gamePath = result["game"].as<std::string>();
     if (!std::filesystem::exists(gamePath)) {
         SPDLOG_ERROR("Game path doesn't exist: {}", gamePath);
         return -1;
     }
 
-    auto dbPath = result["output"].as<std::string>();
+    const auto dbPath = result["output"].as<std::string>();
     cvt::Converter converter;
     if (!converter.loadDB(dbPath)) {
         SPDLOG_ERROR("Unable to load replay db: {}", dbPath);
         return -1;
     }
 
-    std::vector<std::string> replays;
-    if (result["partition"].count()) {
-        const auto partitionFile = result["partition"].as<std::string>();
-        if (!std::filesystem::exists(partitionFile)) {
-            SPDLOG_ERROR("Partition file doesn't exist: {}", partitionFile);
-            return -1;
+    const auto replayFiles = [&]() -> std::vector<std::string> {
+        if (result["partition"].count()) {
+            const auto partitionFile = result["partition"].as<std::string>();
+            if (!std::filesystem::exists(partitionFile)) {
+                SPDLOG_ERROR("Partition file doesn't exist: {}", partitionFile);
+                return {};
+            }
+            return getReplaysFile(partitionFile);
+        } else {
+            return getReplaysFolder(replayFolder);
         }
-        replays = getReplaysFile(partitionFile);
-    } else {
-        replays = getReplaysFolder(replayFolder);
-    }
+    }();
 
-    if (replays.empty()) {
+    if (replayFiles.empty()) {
         SPDLOG_ERROR("No replay files loaded");
         return -1;
     }
@@ -108,6 +111,8 @@ auto main(int argc, char *argv[]) -> int
         coordinator.SetFeatureLayers(fSettings);
     }
     coordinator.AddReplayObserver(&converter);
+
+    loopReplayFiles(coordinator, replayFolder, replayFiles, converter);
 
     return 0;
 }

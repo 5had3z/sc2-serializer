@@ -81,7 +81,6 @@ void Converter::copyHeightMapData() noexcept
 
 void Converter::copyUnitData() noexcept
 {
-    // Foo
     const auto unitData = this->Observation()->GetUnits();
     auto &units = currentReplay_.stepData.back().units;
     units.reserve(unitData.size());
@@ -116,7 +115,6 @@ void Converter::copyUnitData() noexcept
 
 void Converter::copyActionData() noexcept
 {
-    // Foo
     const auto actionData = this->Observation()->GetRawActions();
     auto &actions = currentReplay_.stepData.back().actions;
     actions.reserve(actionData.size());
