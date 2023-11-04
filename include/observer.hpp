@@ -9,6 +9,10 @@
 
 namespace cvt {
 
+/**
+ * @brief The alphastar dataset only saves the preceeding observation to the current action
+ *        and writes that to disk for behaviour cloning.
+ */
 class Converter : public sc2::ReplayObserver
 {
   public:

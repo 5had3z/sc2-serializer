@@ -10,7 +10,6 @@ namespace cvt {
 
 // ------- Generic Serialisation and Deserialisation Methods -------
 
-
 template<std::ranges::range T>
     requires std::is_trivially_copyable_v<typename T::value_type>
 void serialize(const T &data, std::ofstream &fstream)
@@ -21,7 +20,6 @@ void serialize(const T &data, std::ofstream &fstream)
     fstream.write(reinterpret_cast<const char *>(data.data()), sizeof(typename T::value_type) * nElem);
 }
 
-
 template<std::ranges::range T>
     requires std::is_aggregate_v<typename T::value_type> && (!std::is_trivially_copyable_v<typename T::value_type>)
 void serialize(const T &data, std::ofstream &fstream)
@@ -31,7 +29,6 @@ void serialize(const T &data, std::ofstream &fstream)
     fstream.write(reinterpret_cast<const char *>(&nElem), sizeof(nElem));
     for (const auto &elem : data) { serialize(elem, fstream); }
 }
-
 
 template<typename T>
     requires std::is_trivially_copyable_v<T>

@@ -7,7 +7,6 @@ namespace cvt {
 
 class ReplayDatabase
 {
-
   public:
     static const std::size_t maxEntries = 1'000'000;
 

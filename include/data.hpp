@@ -157,10 +157,10 @@ struct Action
 
 struct StepData
 {
-    Image<bool> visibility;
+    Image<std::uint8_t> visibility;
     Image<bool> creep;
     Image<std::uint8_t> player_relative;
-    Image<bool> alerts;
+    Image<std::uint8_t> alerts;
     Image<bool> buildable;
     Image<bool> pathable;
 

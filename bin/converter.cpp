@@ -7,10 +7,14 @@
 #include <fstream>
 #include <iostream>
 #include <ranges>
-#include <sstream>
 
 #include "observer.hpp"
 
+/**
+ * @brief Get Replay hashes from a file
+ * @param partitionFile File that contains newline separated hashes
+ * @return Vector of Hash Strings
+ */
 auto getReplaysFile(const std::string &partitionFile) noexcept -> std::vector<std::string>
 {
     SPDLOG_INFO("Loading replays from {}", partitionFile);
@@ -21,6 +25,12 @@ auto getReplaysFile(const std::string &partitionFile) noexcept -> std::vector<st
     return replays;
 }
 
+
+/**
+ * @brief Get replay hashes from folder of replays
+ * @param folder Folder that contains replays
+ * @return Vector of Hash Strings
+ */
 auto getReplaysFolder(const std::string_view folder) noexcept -> std::vector<std::string>
 {
     SPDLOG_INFO("Searching replays in {}", folder);
@@ -33,22 +43,22 @@ auto getReplaysFolder(const std::string_view folder) noexcept -> std::vector<std
 
 void loopReplayFiles(sc2::Coordinator &coordinator,
   const std::string_view replayFolder,
-  const std::vector<std::string> &replayFiles,
+  const std::vector<std::string> &replayHashes,
   cvt::Converter &converter)
 {
     std::size_t nComplete = 0;
-    for (auto &&replayFile : replayFiles) {
-        auto fullPath = std::filesystem::path(replayFolder) / replayFile;
-        if (!std::filesystem::exists(fullPath)) {
-            SPDLOG_ERROR("Replay file doesn't exist {}", fullPath.string());
+    for (auto &&replayHash : replayHashes) {
+        const auto replayPath = (std::filesystem::path(replayFolder) / replayHash).replace_extension(".SC2Replay");
+        if (!std::filesystem::exists(replayPath)) {
+            SPDLOG_ERROR("Replay file doesn't exist {}", replayPath.string());
             continue;
         }
-        converter.setReplayInfo(replayFile, 0);
-        coordinator.SetReplayPath(fullPath.string());
+        converter.setReplayInfo(replayHash, 0);
+        coordinator.SetReplayPath(replayPath.string());
         coordinator.SetReplayPerspective(0);
 
         while (coordinator.Update()) {}
-        SPDLOG_INFO("Completed {} of {} replays", nComplete++, replayFiles.size());
+        SPDLOG_INFO("Completed {} of {} replays", nComplete++, replayHashes.size());
     }
 }
 
@@ -78,9 +88,18 @@ auto main(int argc, char *argv[]) -> int
     }
 
     const auto dbPath = result["output"].as<std::string>();
+    const auto dbPathParent = std::filesystem::path(dbPath).parent_path();
+    if (!std::filesystem::exists(dbPathParent)) {
+        SPDLOG_INFO("Creating Output Directory: {}", dbPathParent.string());
+        if (!std::filesystem::create_directories(dbPathParent)) {
+            SPDLOG_ERROR("Unable to Create Output Directory");
+            return -1;
+        }
+    }
+
     cvt::Converter converter;
     if (!converter.loadDB(dbPath)) {
-        SPDLOG_ERROR("Unable to load replay db: {}", dbPath);
+        SPDLOG_ERROR("Unable to load/create replay db: {}", dbPath);
         return -1;
     }
 
@@ -111,6 +130,7 @@ auto main(int argc, char *argv[]) -> int
         coordinator.SetFeatureLayers(fSettings);
     }
     coordinator.AddReplayObserver(&converter);
+    coordinator.SetProcessPath(gamePath);
 
     loopReplayFiles(coordinator, replayFolder, replayFiles, converter);
 
