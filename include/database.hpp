@@ -2,6 +2,7 @@
 
 #include "data.hpp"
 #include <filesystem>
+#include <unordered_set>
 
 namespace cvt {
 
@@ -15,25 +16,28 @@ class ReplayDatabase
     explicit ReplayDatabase(const std::filesystem::path &dbPath) noexcept;
 
     // Add ReplayData to the database
-    bool addEntry(const ReplayDataSoA &data);
+    [[maybe_unused]] bool addEntry(const ReplayDataSoA &data);
 
     // Get ReplayData from the database
-    auto getEntry(std::size_t index) const -> ReplayDataSoA;
+    [[nodiscard]] auto getEntry(std::size_t index) const -> ReplayDataSoA;
 
     // Check if db is full
-    auto isFull() const noexcept -> bool;
+    [[nodiscard]] auto isFull() const noexcept -> bool;
 
     // Load existing or create new based on existance
-    auto open(std::filesystem::path dbPath) noexcept -> bool;
+    [[maybe_unused]] auto open(std::filesystem::path dbPath) noexcept -> bool;
 
-    auto size() const noexcept -> std::size_t;
+    [[nodiscard]] auto size() const noexcept -> std::size_t;
+
+    // Get hashes present in the db
+    [[nodiscard]] auto getHashes() const noexcept -> std::unordered_set<std::string>;
 
   private:
     // Load Existing database
-    auto load() noexcept -> bool;
+    [[maybe_unused]] auto load() noexcept -> bool;
 
     // Create new database, clears currently held data
-    auto create() noexcept -> bool;
+    [[maybe_unused]] auto create() noexcept -> bool;
 
     std::filesystem::path dbPath_{ "" };
     std::vector<std::streampos> entryPtr_{};

@@ -69,6 +69,8 @@ auto ReplayDatabase::isFull() const noexcept -> bool { return entryPtr_.size() >
 
 auto ReplayDatabase::size() const noexcept -> std::size_t { return entryPtr_.size(); }
 
+auto ReplayDatabase::getHashes() const noexcept -> std::unordered_set<std::string> { return {}; }
+
 bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
 {
     // First ensure that the db is not at the maximum 1M entries
