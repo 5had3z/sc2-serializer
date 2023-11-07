@@ -11,7 +11,7 @@ namespace cvt {
 // ------- Generic Serialisation and Deserialisation Methods -------
 
 template<std::ranges::range T>
-    requires std::is_trivially_copyable_v<typename T::value_type>
+    requires std::ranges::contiguous_range<T> && std::is_trivially_copyable_v<typename T::value_type>
 void serialize(const T &data, std::ostream &stream)
 {
     // First write the number of elements then the data
@@ -46,7 +46,7 @@ void serialize(const T &data, std::ostream &stream)
 
 
 template<std::ranges::range T>
-    requires std::is_trivially_copyable_v<typename T::value_type>
+    requires std::ranges::contiguous_range<T> && std::is_trivially_copyable_v<typename T::value_type>
 void deserialize(T &data, std::istream &stream)
 {
     std::size_t nElem = -1;

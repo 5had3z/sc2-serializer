@@ -88,13 +88,14 @@ bool ReplayDatabase::addEntry(const ReplayData &data)
     // Write compressed data to the end of the file
     {
         bio::filtering_ostream filterStream;
-        filterStream.push(bio::zlib_compressor());
+        filterStream.push(bio::zlib_compressor(bio::zlib::best_compression));
         filterStream.push(dbStream);
         serialize(data, filterStream);
         if (filterStream.bad()) {
             SPDLOG_ERROR("Error Serializing Replay Data");
             return false;
         }
+        filterStream.flush();
         filterStream.reset();
     }
 

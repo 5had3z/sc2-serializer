@@ -12,16 +12,16 @@ typedef std::uint64_t UID;// Type that represents unique identifier in the game
 
 struct Point2d
 {
-    int x;
-    int y;
+    int x{ 0 };
+    int y{ 0 };
     [[nodiscard]] auto operator==(const Point2d &other) const noexcept -> bool = default;
 };
 
 struct Point3f
 {
-    float x;
-    float y;
-    float z;
+    float x{ 0.f };
+    float y{ 0.f };
+    float z{ 0.f };
     [[nodiscard]] auto operator==(const Point3f &other) const noexcept -> bool = default;
 };
 
@@ -32,7 +32,7 @@ template<typename T> struct Image
 
     int _h = 0;
     int _w = 0;
-    std::vector<std::byte> _data;
+    std::vector<std::byte> _data{};
 
     [[nodiscard]] auto operator==(const Image &other) const noexcept -> bool = default;
 
@@ -86,27 +86,27 @@ enum class CloakState {
 
 struct Unit
 {
-    UID id;
-    int unitType;
-    Alliance alliance;
-    float health;
-    float health_max;
-    float shield;
-    float shield_max;
-    float energy;
-    float energy_max;
-    int cargo;
-    int cargo_max;
-    UID tgtId;
-    CloakState cloak_state;
-    bool is_blip;// detected by sensor
-    bool is_flying;// flying ship
-    bool is_burrowed;// zerg
-    bool is_powered;// pylon
-    Point3f pos;
-    float heading;
-    float radius;
-    float build_progress;
+    UID id{};
+    int unitType{};
+    Alliance alliance{ Alliance::Self };
+    float health{};
+    float health_max{};
+    float shield{};
+    float shield_max{};
+    float energy{};
+    float energy_max{};
+    int cargo{};
+    int cargo_max{};
+    UID tgtId{};
+    CloakState cloak_state{ CloakState::Unknown };
+    bool is_blip{ false };// detected by sensor
+    bool is_flying{ false };// flying ship
+    bool is_burrowed{ false };// zerg
+    bool is_powered{ false };// pylon
+    Point3f pos{};
+    float heading{};
+    float radius{};
+    float build_progress{};
 
     [[nodiscard]] auto operator==(const Unit &other) const noexcept -> bool = default;
 };
@@ -128,10 +128,10 @@ struct Action
         UID other;
     };
 
-    std::vector<UID> unit_ids;
-    int ability_id;
-    Target_Type target_type;
-    Target target;
+    std::vector<UID> unit_ids{};
+    int ability_id{};
+    Target_Type target_type{ Target_Type::Self };
+    Target target{};
 
     [[nodiscard]] auto operator==(const Action &other) const noexcept -> bool
     {
@@ -157,15 +157,15 @@ struct Action
 
 struct StepData
 {
-    Image<std::uint8_t> visibility;
-    Image<bool> creep;
-    Image<std::uint8_t> player_relative;
-    Image<std::uint8_t> alerts;
-    Image<bool> buildable;
-    Image<bool> pathable;
+    Image<std::uint8_t> visibility{};
+    Image<bool> creep{};
+    Image<std::uint8_t> player_relative{};
+    Image<std::uint8_t> alerts{};
+    Image<bool> buildable{};
+    Image<bool> pathable{};
 
-    std::vector<Action> actions;
-    std::vector<Unit> units;
+    std::vector<Action> actions{};
+    std::vector<Unit> units{};
 
     [[nodiscard]] auto operator==(const StepData &other) const noexcept -> bool = default;
 };
@@ -176,14 +176,14 @@ enum class Result { Win, Loss, Tie, Undecided };
 
 struct ReplayData
 {
-    Image<std::uint8_t> heightMap;
-    std::vector<StepData> stepData;
-    std::string replayHash;
-    std::uint32_t playerId;
-    Race playerRace;
-    Result playerResult;
-    int playerMMR;
-    int playerAPM;
+    Image<std::uint8_t> heightMap{};
+    std::vector<StepData> stepData{};
+    std::string replayHash{};
+    std::uint32_t playerId{};
+    Race playerRace{ Race::Random };
+    Result playerResult{ Result::Undecided };
+    int playerMMR{};
+    int playerAPM{};
 
     [[nodiscard]] auto operator==(const ReplayData &other) const noexcept -> bool = default;
 

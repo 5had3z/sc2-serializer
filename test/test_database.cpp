@@ -3,6 +3,7 @@
 #include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
+#include <spdlog/spdlog.h>
 
 #include <gtest/gtest.h>
 #include <numeric>
@@ -60,6 +61,7 @@ class DatabaseTest : public testing::Test
   protected:
     void SetUp() override
     {
+        spdlog::set_level(spdlog::level::warn);
         // Always want to create db fresh
         if (fs::exists(dbPath_)) { fs::remove(dbPath_); }
 
@@ -91,7 +93,7 @@ TEST(BoostZlib, WriteRead)
     std::iota(writeData.begin(), writeData.end(), 0);
     {
         boost::iostreams::filtering_ostream output;
-        output.push(boost::iostreams::zlib_compressor());
+        output.push(boost::iostreams::zlib_compressor(boost::iostreams::zlib::best_compression));
         output.push(boost::iostreams::file_sink(testFile, std::ios::binary | std::ios::app));
         output.write(reinterpret_cast<const char *>(writeData.data()), writeData.size() * sizeof(int));
         output.reset();
@@ -135,5 +137,5 @@ TEST_F(DatabaseTest, LoadDB)
 {
     cvt::ReplayDatabase loadDB(dbPath_);
     ASSERT_EQ(replayDb_.size(), loadDB.size());
-    ASSERT_EQ(replayDb_.getEntry(0), loadDB.getEntry(0));
+    for (std::size_t i = 0; i < replayDb_.size(); ++i) { ASSERT_EQ(replayDb_.getEntry(i), loadDB.getEntry(i)); }
 }

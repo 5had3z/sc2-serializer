@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <spdlog/spdlog.h>
 
 #include "data.hpp"
 #include "serialize.hpp"
@@ -13,6 +14,8 @@ class ReplayDataTest : public testing::Test
   protected:
     void SetUp() override
     {
+        spdlog::set_level(spdlog::level::warn);
+
         // Make some random action data
         replay_.stepData.resize(1);
         for (int i = 0; i < 3; ++i) {

@@ -5,8 +5,10 @@ project(sc2-cvt)
 option(SC2_CONVERTER "Build the Replay Conversion Engine" ON)
 option(SC2_PY_READER "Build the Python Reader" ON)
 option(SC2_TESTS "Build the test suite" ON)
+option(SC2_SANITIZERS "Build with sanitizers enabled" OFF)
 
-set(_WARNING_OPTIONS "-Wall;-Wfatal-errors;-Wextra;-Wshadow;")
+set(_WARNING_OPTIONS "-Wall;-Wfatal-errors;-Wextra;-Wshadow;-Wcast-align;-Wpedantic;
+    -Wconversion;-Wsign-conversion;-Wnull-dereference;-Wdouble-promotion")
 set(_COMPILE_OPTIONS
     "$<$<CONFIG:Debug>:-O0;-g;${WARNING_OPTIONS}>" "$<$<CONFIG:Release>:-O3;-march=native;${WARNING_OPTIONS}>"
     "$<$<CONFIG:RelWithDebInfo>:-O3;-march=native;-g;${WARNING_OPTIONS}>")
@@ -58,6 +60,11 @@ if(SC2_CONVERTER)
   target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS})
   target_include_directories(replay_converter PUBLIC include 3rdparty/s2client-api/include
                                                      ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated)
+
+  if(SC2_SANITIZERS)
+    target_compile_options(replay_converter PUBLIC -fsanitize=address,leak,undefined)
+    target_link_options(replay_converter PUBLIC -fsanitize=address,leak,undefined)
+  endif()
 
   add_executable(sc2_converter bin/converter.cpp)
   target_link_libraries(
