@@ -11,13 +11,13 @@ namespace cvt {
 // ------- Generic Serialisation and Deserialisation Methods -------
 
 template<std::ranges::range T>
-    requires std::ranges::contiguous_range<T> && std::is_trivially_copyable_v<typename T::value_type>
+    requires std::ranges::contiguous_range<T> && std::is_trivially_copyable_v<std::ranges::range_value_t<T>>
 void serialize(const T &data, std::ostream &stream)
 {
     // First write the number of elements then the data
     std::size_t nElem = data.size();
     stream.write(reinterpret_cast<const char *>(&nElem), sizeof(nElem));
-    stream.write(reinterpret_cast<const char *>(data.data()), sizeof(typename T::value_type) * nElem);
+    stream.write(reinterpret_cast<const char *>(data.data()), sizeof(std::ranges::range_value_t<T>) * nElem);
 }
 
 template<std::ranges::range T> void serialize(const T &data, std::ostream &stream)
@@ -44,13 +44,13 @@ void serialize(const T &data, std::ostream &stream)
 
 
 template<std::ranges::range T>
-    requires std::ranges::contiguous_range<T> && std::is_trivially_copyable_v<typename T::value_type>
+    requires std::ranges::contiguous_range<T> && std::is_trivially_copyable_v<std::ranges::range_value_t<T>>
 void deserialize(T &data, std::istream &stream)
 {
     std::size_t nElem = -1;
     stream.read(reinterpret_cast<char *>(&nElem), sizeof(nElem));
     data.resize(nElem);
-    stream.read(reinterpret_cast<char *>(data.data()), sizeof(typename T::value_type) * nElem);
+    stream.read(reinterpret_cast<char *>(data.data()), sizeof(std::ranges::range_value_t<T>) * nElem);
 }
 
 template<std::ranges::range T> void deserialize(T &data, std::istream &stream)

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/pfr.hpp>
+#include <cassert>
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -87,8 +89,11 @@ enum class CloakState {
 struct Unit
 {
     UID id{};
-    int unitType{};
+    UID tgtId{};
     Alliance alliance{ Alliance::Self };
+    CloakState cloak_state{ CloakState::Unknown };
+
+    int unitType{};
     float health{};
     float health_max{};
     float shield{};
@@ -97,19 +102,123 @@ struct Unit
     float energy_max{};
     int cargo{};
     int cargo_max{};
-    UID tgtId{};
-    CloakState cloak_state{ CloakState::Unknown };
-    bool is_blip{ false };// detected by sensor
-    bool is_flying{ false };// flying ship
-    bool is_burrowed{ false };// zerg
-    bool is_powered{ false };// pylon
+
     Point3f pos{};
     float heading{};
     float radius{};
     float build_progress{};
 
+    bool is_blip{ false };// detected by sensor
+    bool is_flying{ false };// flying ship
+    bool is_burrowed{ false };// zerg
+    bool is_powered{ false };// pylon
+
     [[nodiscard]] auto operator==(const Unit &other) const noexcept -> bool = default;
 };
+
+constexpr auto sz = sizeof(Unit);
+
+struct UnitSoA
+{
+    std::vector<UID> id{};
+    std::vector<int> unitType{};
+    std::vector<Alliance> alliance{};
+    std::vector<float> health{};
+    std::vector<float> health_max{};
+    std::vector<float> shield{};
+    std::vector<float> shield_max{};
+    std::vector<float> energy{};
+    std::vector<float> energy_max{};
+    std::vector<int> cargo{};
+    std::vector<int> cargo_max{};
+    std::vector<UID> tgtId{};
+    std::vector<CloakState> cloak_state{};
+
+    // Vector Bool is a pain to deal with, this should be reasonably compressible anyway
+    std::vector<char> is_blip{};// detected by sensor
+    std::vector<char> is_flying{};// flying ship
+    std::vector<char> is_burrowed{};// zerg
+    std::vector<char> is_powered{};// pylon
+
+    std::vector<Point3f> pos{};
+    std::vector<float> heading{};
+    std::vector<float> radius{};
+    std::vector<float> build_progress{};
+
+    [[nodiscard]] auto operator==(const UnitSoA &other) const noexcept -> bool = default;
+};
+
+
+[[nodiscard]] inline auto UnitAoStoSoA(const std::vector<Unit> &aos) noexcept -> UnitSoA
+{
+    UnitSoA soa{};
+    // Prealloc expected size
+    boost::pfr::for_each_field(soa, [sz = aos.size()](auto &field) { field.reserve(sz); });
+
+    // Tediously copy data
+    for (const Unit &unit : aos) {
+        soa.id.push_back(unit.id);
+        soa.unitType.push_back(unit.unitType);
+        soa.alliance.push_back(unit.alliance);
+        soa.health.push_back(unit.health);
+        soa.health_max.push_back(unit.health_max);
+        soa.shield.push_back(unit.shield);
+        soa.shield_max.push_back(unit.shield_max);
+        soa.energy.push_back(unit.energy);
+        soa.energy_max.push_back(unit.energy_max);
+        soa.cargo.push_back(unit.cargo);
+        soa.cargo_max.push_back(unit.cargo_max);
+        soa.tgtId.push_back(unit.tgtId);
+        soa.cloak_state.push_back(unit.cloak_state);
+        soa.is_blip.push_back(unit.is_blip);
+        soa.is_flying.push_back(unit.is_flying);
+        soa.is_burrowed.push_back(unit.is_burrowed);
+        soa.is_powered.push_back(unit.is_powered);
+        soa.pos.push_back(unit.pos);
+        soa.heading.push_back(unit.heading);
+        soa.radius.push_back(unit.radius);
+        soa.build_progress.push_back(unit.build_progress);
+    }
+    return soa;
+}
+
+[[nodiscard]] inline auto UnitSoAtoAoS(const UnitSoA &soa) noexcept -> std::vector<Unit>
+{
+    std::vector<Unit> aos{};
+
+    // Ensure SoA is all equally sized
+    std::vector<std::size_t> sizes;
+    boost::pfr::for_each_field(soa, [&](auto &field) { sizes.push_back(field.size()); });
+    assert(std::all_of(sizes.begin(), sizes.end(), [sz = sizes.front()](std::size_t s) { return s == sz; }));
+    aos.resize(sizes.front());
+
+    // Tediously copy data
+    for (std::size_t idx = 0; idx < sizes.front(); ++idx) {
+        auto &unit = aos[idx];
+        unit.id = soa.id[idx];
+        unit.unitType = soa.unitType[idx];
+        unit.alliance = soa.alliance[idx];
+        unit.health = soa.health[idx];
+        unit.health_max = soa.health_max[idx];
+        unit.shield = soa.shield[idx];
+        unit.shield_max = soa.shield_max[idx];
+        unit.energy = soa.energy[idx];
+        unit.energy_max = soa.energy_max[idx];
+        unit.cargo = soa.cargo[idx];
+        unit.cargo_max = soa.cargo_max[idx];
+        unit.tgtId = soa.tgtId[idx];
+        unit.cloak_state = soa.cloak_state[idx];
+        unit.is_blip = soa.is_blip[idx];
+        unit.is_flying = soa.is_flying[idx];
+        unit.is_burrowed = soa.is_burrowed[idx];
+        unit.is_powered = soa.is_powered[idx];
+        unit.pos = soa.pos[idx];
+        unit.heading = soa.heading[idx];
+        unit.radius = soa.radius[idx];
+        unit.build_progress = soa.build_progress[idx];
+    }
+    return aos;
+}
 
 // template<typename... Ts> class aligned_union
 // {
@@ -258,7 +367,7 @@ struct ReplayDataSoA
         auto &stepData = stepDataVec[idx];
         if (idx < soa.visibility.size()) { stepData.visibility = soa.visibility[idx]; }
         if (idx < soa.creep.size()) { stepData.creep = soa.creep[idx]; }
-        if (idx < soa.player_relative.size()) { stepData.player_relative = soa.visibility[idx]; }
+        if (idx < soa.player_relative.size()) { stepData.player_relative = soa.player_relative[idx]; }
         if (idx < soa.alerts.size()) { stepData.alerts = soa.alerts[idx]; }
         if (idx < soa.buildable.size()) { stepData.buildable = soa.buildable[idx]; }
         if (idx < soa.pathable.size()) { stepData.pathable = soa.pathable[idx]; }

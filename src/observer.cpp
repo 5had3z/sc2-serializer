@@ -1,13 +1,16 @@
 #include "observer.hpp"
 #include "serialize.hpp"
 
+// #include <boost/iostreams/device/file.hpp>
+// #include <boost/iostreams/filter/zlib.hpp>
+// #include <boost/iostreams/filtering_stream.hpp>
+
 #include <spdlog/spdlog.h>
 
 #include <cstring>
 #include <ranges>
 
 namespace cvt {
-
 
 /**
  * @brief Copy map data from protobuf return to Image struct.
@@ -39,10 +42,39 @@ void BaseConverter::OnGameStart()
     currentReplay_.playerAPM = playerInfo.apm;
 }
 
+
+// Helper for writing observation components
+// template<typename T> void write_data(T data, std::filesystem::path outPath)
+// {
+//     namespace bio = boost::iostreams;
+//     bio::filtering_ostream filterStream{};
+//     filterStream.push(bio::zlib_compressor(bio::zlib::best_compression));
+//     filterStream.push(bio::file_sink(outPath, std::ios::binary));
+//     serialize(data, filterStream);
+//     if (filterStream.bad()) { SPDLOG_ERROR("Error Serializing Replay Data"); }
+//     filterStream.flush();
+//     filterStream.reset();
+// }
+
 void BaseConverter::OnGameEnd()
 {
     // Save entry to DB
     const auto SoA = ReplayAoStoSoA(currentReplay_);
+
+    // For debugging storage space contribution of each observation component
+    // auto basePath =
+    //   std::filesystem::path("write_data") / std::format("{}_{}", currentReplay_.replayHash,
+    //   currentReplay_.playerId);
+    // write_data(SoA.visibility, basePath.replace_extension("visibility"));
+    // write_data(SoA.creep, basePath.replace_extension("creep"));
+    // write_data(SoA.player_relative, basePath.replace_extension("player_relative"));
+    // write_data(SoA.alerts, basePath.replace_extension("alerts"));
+    // write_data(SoA.buildable, basePath.replace_extension("buildable"));
+    // write_data(SoA.pathable, basePath.replace_extension("pathable"));
+    // write_data(SoA.actions, basePath.replace_extension("actions"));
+    // write_data(SoA.units, basePath.replace_extension("units"));
+    // write_data(SoA, basePath.replace_extension("all"));
+
     database_.addEntry(SoA);
     currentReplay_.clear();
     mapDynHasLogged_ = false;
@@ -72,8 +104,8 @@ void BaseConverter::copyUnitData() noexcept
 {
     const auto unitData = this->Observation()->GetUnits();
     auto &units = currentReplay_.stepData.back().units;
-    units.reserve(unitData.size());
-    std::ranges::transform(unitData, std::back_inserter(units), [](const sc2::Unit *src) -> Unit {
+    units.resize(unitData.size());
+    std::ranges::transform(unitData, units.begin(), [](const sc2::Unit *src) -> Unit {
         Unit dst;
         dst.id = src->tag;
         dst.unitType = src->unit_type;
@@ -138,8 +170,8 @@ void BaseConverter::copyDynamicMapData() noexcept
     if (!mapDynHasLogged_) {
         mapDynHasLogged_ = true;
         SPDLOG_INFO(
-          "Minimap Features: visibility {}, creep: {}, player_relative: {}, alerts: {}, buildable: {}, pathable: "
-          "{}",
+          "Minimap Features: visibility {}, creep: {}, player_relative: {}, "
+          "alerts: {}, buildable: {}, pathable: {}",
           minimapFeats.has_visibility_map(),
           minimapFeats.has_creep(),
           minimapFeats.has_player_relative(),

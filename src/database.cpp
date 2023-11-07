@@ -16,7 +16,7 @@ ReplayDatabase::ReplayDatabase(const std::filesystem::path &dbPath) noexcept { t
 
 auto ReplayDatabase::open(std::filesystem::path dbPath) noexcept -> bool
 {
-    if (dbPath.string() == "") {
+    if (dbPath.string().empty()) {
         SPDLOG_ERROR("Path to database not set");
         return false;
     }
@@ -87,7 +87,7 @@ bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
 
     // Write compressed data to the end of the file
     {
-        bio::filtering_ostream filterStream;
+        bio::filtering_ostream filterStream{};
         filterStream.push(bio::zlib_compressor(bio::zlib::best_compression));
         filterStream.push(dbStream);
         serialize(data, filterStream);
@@ -125,7 +125,7 @@ auto ReplayDatabase::getEntry(std::size_t index) const -> ReplayDataSoA
     std::ifstream dbStream(dbPath_, std::ios::binary);
     dbStream.seekg(entryPtr_[index]);
 
-    bio::filtering_istream filterStream;
+    bio::filtering_istream filterStream{};
     filterStream.push(bio::zlib_decompressor());
     filterStream.push(dbStream);
 
