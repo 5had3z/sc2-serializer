@@ -77,9 +77,15 @@ auto main(int argc, char *argv[]) -> int
       ("p,partition", "partition file to select replays", cxxopts::value<std::string>())
       ("o,output", "output directory for replays", cxxopts::value<std::string>())
       ("c,converter", "type of converter to use 'action' or 'full'", cxxopts::value<std::string>())
-      ("g,game", "path to game execuatable", cxxopts::value<std::string>());
+      ("g,game", "path to game execuatable", cxxopts::value<std::string>())
+      ("h,help", "This help");
     // clang-format on
     const auto cliOpts = cliParser.parse(argc, argv);
+
+    if (cliOpts.count("help")) {
+        fmt::print("{}", cliParser.help());
+        return 0;
+    }
 
     const auto replayFolder = cliOpts["replays"].as<std::string>();
     if (!std::filesystem::exists(replayFolder)) {

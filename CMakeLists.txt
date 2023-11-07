@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.25 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
 
 project(sc2-cvt)
 
@@ -129,13 +129,9 @@ endif()
 
 # ---- Executable for experimenting with the replay interface ----
 
-if(SC2_CONVERTER)
-  find_package(
-    OpenCV
-    REQUIRED
-    core
-    imgcodecs)
+find_package(OpenCV COMPONENTS core imgcodecs)
 
+if(SC2_CONVERTER AND OpenCV_FOUND)
   add_executable(game_exp bin/experiment.cpp)
   target_compile_features(game_exp PRIVATE cxx_std_23)
   target_compile_options(game_exp PUBLIC ${_COMPILE_OPTIONS})
@@ -150,4 +146,6 @@ if(SC2_CONVERTER)
     opencv_imgcodecs)
   target_include_directories(game_exp PRIVATE 3rdparty/s2client-api/include
                                               ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated)
+elseif(SC2_CONVERTER)
+  message("OpenCV Not Found, Not Building game_exp")
 endif()
