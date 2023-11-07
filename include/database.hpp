@@ -20,6 +20,9 @@ class ReplayDatabase
     // Get ReplayData from the database
     auto getEntry(std::size_t index) const -> ReplayDataSoA;
 
+    auto makeEmptyEntry() const -> ReplayDataSoA;
+
+
     // Check if db is full
     auto isFull() const noexcept -> bool;
 
