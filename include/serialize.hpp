@@ -20,9 +20,7 @@ void serialize(const T &data, std::ostream &stream)
     stream.write(reinterpret_cast<const char *>(data.data()), sizeof(typename T::value_type) * nElem);
 }
 
-template<std::ranges::range T>
-    requires std::is_aggregate_v<typename T::value_type> && (!std::is_trivially_copyable_v<typename T::value_type>)
-void serialize(const T &data, std::ostream &stream)
+template<std::ranges::range T> void serialize(const T &data, std::ostream &stream)
 {
     // First write the number of elements then each element one-by-one
     std::size_t nElem = data.size();

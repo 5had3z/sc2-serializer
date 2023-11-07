@@ -15,10 +15,10 @@ class ReplayDatabase
     explicit ReplayDatabase(const std::filesystem::path &dbPath) noexcept;
 
     // Add ReplayData to the database
-    bool addEntry(const ReplayData &data);
+    bool addEntry(const ReplayDataSoA &data);
 
     // Get ReplayData from the database
-    auto getEntry(std::size_t index) const -> ReplayData;
+    auto getEntry(std::size_t index) const -> ReplayDataSoA;
 
     // Check if db is full
     auto isFull() const noexcept -> bool;

@@ -10,7 +10,7 @@
 
 namespace fs = std::filesystem;
 
-auto createReplay(int seed) -> cvt::ReplayData
+auto createReplay(int seed) -> cvt::ReplayDataSoA
 {
     cvt::ReplayData replay_;
 
@@ -53,7 +53,7 @@ auto createReplay(int seed) -> cvt::ReplayData
 
     // Add a hash "name" to it
     replay_.replayHash = "FooBarBaz";
-    return replay_;
+    return ReplayAoStoSoA(replay_);
 }
 
 class DatabaseTest : public testing::Test

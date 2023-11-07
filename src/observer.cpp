@@ -42,7 +42,8 @@ void BaseConverter::OnGameStart()
 void BaseConverter::OnGameEnd()
 {
     // Save entry to DB
-    database_.addEntry(currentReplay_);
+    const auto SoA = ReplayAoStoSoA(currentReplay_);
+    database_.addEntry(SoA);
     currentReplay_.clear();
     mapDynHasLogged_ = false;
     mapHeightHasLogged_ = false;

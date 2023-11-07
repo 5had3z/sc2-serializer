@@ -69,7 +69,7 @@ auto ReplayDatabase::isFull() const noexcept -> bool { return entryPtr_.size() >
 
 auto ReplayDatabase::size() const noexcept -> std::size_t { return entryPtr_.size(); }
 
-bool ReplayDatabase::addEntry(const ReplayData &data)
+bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
 {
     // First ensure that the db is not at the maximum 1M entries
     if (!fs::exists(dbPath_)) {
@@ -114,7 +114,7 @@ bool ReplayDatabase::addEntry(const ReplayData &data)
     return true;
 }
 
-auto ReplayDatabase::getEntry(std::size_t index) const -> ReplayData
+auto ReplayDatabase::getEntry(std::size_t index) const -> ReplayDataSoA
 {
     // Check if valid index
     if (index >= entryPtr_.size()) {
@@ -130,7 +130,7 @@ auto ReplayDatabase::getEntry(std::size_t index) const -> ReplayData
     filterStream.push(dbStream);
 
     // Load and return the data
-    ReplayData data;
+    ReplayDataSoA data;
     deserialize(data, filterStream);
     filterStream.reset();
     return data;

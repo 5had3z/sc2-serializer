@@ -195,4 +195,77 @@ struct ReplayData
     }
 };
 
+struct ReplayDataSoA
+{
+    Image<std::uint8_t> heightMap{};
+    std::string replayHash{};
+    std::uint32_t playerId{};
+    Race playerRace{ Race::Random };
+    Result playerResult{ Result::Undecided };
+    int playerMMR{};
+    int playerAPM{};
+
+    // Step data
+    std::vector<Image<std::uint8_t>> visibility{};
+    std::vector<Image<bool>> creep{};
+    std::vector<Image<std::uint8_t>> player_relative{};
+    std::vector<Image<std::uint8_t>> alerts{};
+    std::vector<Image<bool>> buildable{};
+    std::vector<Image<bool>> pathable{};
+    std::vector<std::vector<Action>> actions{};
+    std::vector<std::vector<Unit>> units{};
+
+    [[nodiscard]] auto operator==(const ReplayDataSoA &other) const noexcept -> bool = default;
+};
+
+[[nodiscard]] inline auto ReplayAoStoSoA(const ReplayData &aos) noexcept -> ReplayDataSoA
+{
+    ReplayDataSoA soa = { .heightMap = aos.heightMap,
+        .replayHash = aos.replayHash,
+        .playerId = aos.playerId,
+        .playerRace = aos.playerRace,
+        .playerResult = aos.playerResult,
+        .playerMMR = aos.playerMMR,
+        .playerAPM = aos.playerAPM };
+
+    for (const StepData &step : aos.stepData) {
+        soa.visibility.push_back(step.visibility);
+        soa.creep.push_back(step.creep);
+        soa.player_relative.push_back(step.player_relative);
+        soa.alerts.push_back(step.alerts);
+        soa.buildable.push_back(step.buildable);
+        soa.pathable.push_back(step.pathable);
+        soa.actions.push_back(step.actions);
+        soa.units.push_back(step.units);
+    }
+    return soa;
+}
+
+[[nodiscard]] inline auto ReplaySoAtoAoS(const ReplayDataSoA &soa) noexcept -> ReplayData
+{
+    ReplayData aos = { .heightMap = soa.heightMap,
+        .replayHash = soa.replayHash,
+        .playerId = soa.playerId,
+        .playerRace = soa.playerRace,
+        .playerResult = soa.playerResult,
+        .playerMMR = soa.playerMMR,
+        .playerAPM = soa.playerAPM };
+
+    auto &stepDataVec = aos.stepData;
+    stepDataVec.resize(soa.units.size());
+
+    for (std::size_t idx = 0; idx < stepDataVec.size(); ++idx) {
+        auto &stepData = stepDataVec[idx];
+        if (idx < soa.visibility.size()) { stepData.visibility = soa.visibility[idx]; }
+        if (idx < soa.creep.size()) { stepData.creep = soa.creep[idx]; }
+        if (idx < soa.player_relative.size()) { stepData.player_relative = soa.visibility[idx]; }
+        if (idx < soa.alerts.size()) { stepData.alerts = soa.alerts[idx]; }
+        if (idx < soa.buildable.size()) { stepData.buildable = soa.buildable[idx]; }
+        if (idx < soa.pathable.size()) { stepData.pathable = soa.pathable[idx]; }
+        if (idx < soa.actions.size()) { stepData.actions = soa.actions[idx]; }
+        if (idx < soa.units.size()) { stepData.units = soa.units[idx]; }
+    }
+    return aos;
+}
+
 }// namespace cvt
