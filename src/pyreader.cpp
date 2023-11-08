@@ -15,14 +15,31 @@ template<typename T> void bindImage(py::module &m, const std::string &name)
 {
     py::class_<cvt::Image<T>>(m, name.c_str())
       .def(py::init<int, int>())
-      .def_readwrite("_h", &cvt::Image<T>::_h)
-      .def_readwrite("_w", &cvt::Image<T>::_w)
-      .def_readwrite("_data", &cvt::Image<T>::_data)
-      .def("resize", &cvt::Image<T>::resize)
-      .def("clear", &cvt::Image<T>::clear)
-      .def("size", &cvt::Image<T>::size)
-      .def("empty", &cvt::Image<T>::empty)
-      .def("data", &cvt::Image<T>::data);
+      .def_property_readonly("data", [](const cvt::Image<T> &img) {
+          py::dtype dtype = py::dtype::of<T>();
+          const T *data_ptr = reinterpret_cast<const T *>(img._data.data());
+          py::array_t<T> array({ img._h, img._w }, data_ptr);
+          return array;
+      });
+}
+
+void bindBoolImage(py::module &m, const std::string &name)
+{
+    py::class_<cvt::Image<bool>>(m, name.c_str())
+      .def(py::init<int, int>())
+      .def_property_readonly("data", [](const cvt::Image<bool> &img) {
+          std::vector<uint8_t> unpacked_data(img._h * img._w, 0);
+
+          for (std::size_t i = 0; i < img._h * img._w; ++i) {
+              // Extract the entire byte containing the boolean
+              uint8_t byte_value = static_cast<uint8_t>(img._data[i / 8]);
+              // Use bitwise AND and left shift to unpack the boolean
+              unpacked_data[i] = (byte_value & (1 << (i % 8))) ? 1 : 0;
+          }
+          py::dtype dtype = py::dtype::of<bool>();// NumPy boolean dtype
+          py::array_t<uint8_t> array = py::array_t<uint8_t>({ img._h, img._w }, unpacked_data.data());
+          return array;
+      });
 }
 
 
@@ -94,6 +111,49 @@ PYBIND11_MODULE(sc2_replay_reader, m)
       .export_values();
 
     bindImage<std::uint8_t>(m, "Image_uint8");
+    bindBoolImage(m, "Image_bool");
+
+    py::class_<cvt::Action::Target>(m, "ActionTarget")
+      .def(py::init<>())
+      .def_readwrite("point", &cvt::Action::Target::point)
+      .def_readwrite("other", &cvt::Action::Target::other);
+
+    py::enum_<cvt::Action::Target_Type>(m, "ActionTargetType")
+      .value("Self", cvt::Action::Target_Type::Self)
+      .value("OtherUnit", cvt::Action::Target_Type::OtherUnit)
+      .value("Position", cvt::Action::Target_Type::Position);
+
+    py::class_<cvt::Action>(m, "Action")
+      .def(py::init<>())
+      .def_readwrite("unit_ids", &cvt::Action::unit_ids)
+      .def_readwrite("ability_id", &cvt::Action::ability_id)
+      .def_readwrite("target_type", &cvt::Action::target_type)
+      .def_readwrite("target", &cvt::Action::target);
+
+    py::class_<cvt::Unit>(m, "Unit")
+      .def(py::init<>())
+      .def_readwrite("id", &cvt::Unit::id)
+      .def_readwrite("tgtId", &cvt::Unit::tgtId)
+      .def_readwrite("alliance", &cvt::Unit::alliance)
+      .def_readwrite("cloak_state", &cvt::Unit::cloak_state)
+      .def_readwrite("unitType", &cvt::Unit::unitType)
+      .def_readwrite("health", &cvt::Unit::health)
+      .def_readwrite("health_max", &cvt::Unit::health_max)
+      .def_readwrite("shield", &cvt::Unit::shield)
+      .def_readwrite("shield_max", &cvt::Unit::shield_max)
+      .def_readwrite("energy", &cvt::Unit::energy)
+      .def_readwrite("energy_max", &cvt::Unit::energy_max)
+      .def_readwrite("cargo", &cvt::Unit::cargo)
+      .def_readwrite("cargo_max", &cvt::Unit::cargo_max)
+      .def_readwrite("pos", &cvt::Unit::pos)
+      .def_readwrite("heading", &cvt::Unit::heading)
+      .def_readwrite("radius", &cvt::Unit::radius)
+      .def_readwrite("build_progress", &cvt::Unit::build_progress)
+      .def_readwrite("is_blip", &cvt::Unit::is_blip)
+      .def_readwrite("is_flying", &cvt::Unit::is_flying)
+      .def_readwrite("is_burrowed", &cvt::Unit::is_burrowed)
+      .def_readwrite("is_powered", &cvt::Unit::is_powered);
+
 
     // Expose ReplayDatabase class
     py::class_<cvt::ReplayDatabase>(m, "ReplayDatabase")

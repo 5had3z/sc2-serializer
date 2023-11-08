@@ -44,6 +44,9 @@ template<typename T> struct Image
     // Resize the buffer
     void resize(int height, int width)
     {
+        static_assert(!std::is_same_v<bool, value_type> || (height * width % 8 == 0),
+          "For bool type, height * width must be divisible by 8.");
+
         _h = height;
         _w = width;
         if constexpr (std::is_same_v<bool, value_type>) {
@@ -235,6 +238,9 @@ struct Action
     union Target {
         Point2d point;
         UID other;
+
+        // Provide a default constructor to avoid Pybind11's error
+        Target() {}
     };
 
     std::vector<UID> unit_ids{};
