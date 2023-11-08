@@ -117,12 +117,6 @@ bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
 }
 
 
-auto ReplayDatabase::makeEmptyEntry() const -> ReplayDataSoA
-{
-    ReplayDataSoA data;
-    return data;
-}
-
 auto ReplayDatabase::getEntry(std::size_t index) const -> ReplayDataSoA
 {
     // Check if valid index

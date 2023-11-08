@@ -132,7 +132,6 @@ PYBIND11_MODULE(sc2_replay_reader, m)
       .def("isFull", &cvt::ReplayDatabase::isFull)
       .def("size", &cvt::ReplayDatabase::size)
       .def("addEntry", &cvt::ReplayDatabase::addEntry)
-      .def("makeEmptyEntry", &cvt::ReplayDatabase::makeEmptyEntry)
       .def("getEntry", &cvt::ReplayDatabase::getEntry);
 
 
