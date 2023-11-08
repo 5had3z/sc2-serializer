@@ -118,7 +118,6 @@ struct Unit
     [[nodiscard]] auto operator==(const Unit &other) const noexcept -> bool = default;
 };
 
-constexpr auto sz = sizeof(Unit);
 
 struct UnitSoA
 {
@@ -222,12 +221,24 @@ struct UnitSoA
     return aos;
 }
 
-// template<typename... Ts> class aligned_union
-// {
-//   private:
-//     alignas(Ts...) std::byte buff[std::max({ sizeof(Ts)... })];
-// };
-// using Target = aligned_union<Point2d, int>;
+// Neutral Units such as VespeneGeysers are missing
+// many of the common player unit properties and therefore
+// should be handled separately
+struct NeutralUnit
+{
+    UID id{};
+    UID tgtId{};
+    int unitType{};
+    float health{};
+    float health_max{};
+    float shield{};
+    float shield_max{};
+    float energy{};
+    float energy_max{};
+    Point3f pos{};
+    float heading{};
+    float radius{};
+};
 
 struct Action
 {
