@@ -22,14 +22,14 @@ class ReplayDataTest : public testing::Test
             cvt::Action action = { .unit_ids = { 1, 2, 3 },
                 .ability_id = 6,
                 .target_type = cvt::Action::Target_Type::OtherUnit,
-                .target = 3 };
+                .target = cvt::Action::Target(static_cast<cvt::UID>(3)) };
             replay_.stepData[0].actions.emplace_back(std::move(action));
         }
         for (int i = 0; i < 3; ++i) {
             cvt::Action action = { .unit_ids = { 1, static_cast<cvt::UID>(i) },
                 .ability_id = 1,
                 .target_type = cvt::Action::Target_Type::Position,
-                .target = cvt::Point2d(i, 2) };
+                .target = cvt::Action::Target(cvt::Point2d(i, 2)) };
             replay_.stepData[0].actions.emplace_back(std::move(action));
         }
 
@@ -39,7 +39,7 @@ class ReplayDataTest : public testing::Test
                 .unitType = 2,
                 .health = 3,
                 .shield = 4,
-                .energy = 5 * i,
+                .energy = 5.f * i,
                 .pos = { 1.1f, 2.2f * i, 3.3f } };
             replay_.stepData[0].units.emplace_back(std::move(unit));
         }

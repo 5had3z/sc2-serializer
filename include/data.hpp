@@ -3,6 +3,7 @@
 #include <boost/pfr.hpp>
 #include <cassert>
 #include <cstdint>
+#include <cstring>
 #include <string>
 #include <vector>
 
@@ -44,12 +45,10 @@ template<typename T> struct Image
     // Resize the buffer
     void resize(int height, int width)
     {
-        static_assert(!std::is_same_v<bool, value_type> || (height * width % 8 == 0),
-          "For bool type, height * width must be divisible by 8.");
-
         _h = height;
         _w = width;
         if constexpr (std::is_same_v<bool, value_type>) {
+            assert(height * width % 8 == 0 && "For bool type, height * width must be divisible by 8.");
             _data.resize(_h * _w / 8);
         } else {
             _data.resize(_h * _w * sizeof(value_type));
@@ -238,9 +237,23 @@ struct Action
     union Target {
         Point2d point;
         UID other;
-
         // Provide a default constructor to avoid Pybind11's error
-        Target() {}
+        Target() { memset(this, 0, sizeof(Target)); }
+        explicit Target(Point2d &&d) noexcept : point(d) {}
+        explicit Target(const Point2d &d) noexcept : point(d) {}
+        auto operator=(Point2d &&d) noexcept -> Target &
+        {
+            point = d;
+            return *this;
+        }
+
+        explicit Target(UID &&d) noexcept : other(d) {}
+        explicit Target(const UID &d) noexcept : other(d) {}
+        auto operator=(UID &&d) noexcept -> Target &
+        {
+            other = d;
+            return *this;
+        }
     };
 
     std::vector<UID> unit_ids{};
