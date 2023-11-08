@@ -9,8 +9,6 @@
 
 namespace py = pybind11;
 
-int add(int i, int j) { return i + j; }
-
 template<typename T> void bindImage(py::module &m, const std::string &name)
 {
     py::class_<cvt::Image<T>>(m, name.c_str())
@@ -43,58 +41,8 @@ void bindBoolImage(py::module &m, const std::string &name)
 }
 
 
-void modify_array(py::array_t<double> input_array)
+void bindEnums(py::module &m)
 {
-    py::buffer_info buf_info = input_array.request();
-    double *ptr = static_cast<double *>(buf_info.ptr);
-
-    int X = buf_info.shape[0];
-
-    for (int i = 0; i < X; i++) { ptr[i] = ptr[i] * 2; }
-}
-template<typename T> py::array_t<T> image_to_array(const cvt::Image<T> &img)
-{
-    return py::array(py::buffer_info(img.data(), /* Pointer to data (nullptr indicates use the raw buffer allocation) */
-      sizeof(T), /* Size of one scalar */
-      py::format_descriptor<T>::format(), /* Python struct-style format descriptor */
-      2, /* Number of dimensions */
-      { img._h, img._w }, /* Buffer dimensions */
-      { sizeof(T) * img._w, sizeof(T) } /* Strides (in bytes) for each index */
-      ));
-}
-
-// Helper function to convert NumPy array to Image
-template<typename T> cvt::Image<T> array_to_image(const py::array_t<T> &array)
-{
-    py::buffer_info buf_info = array.request();
-    cvt::Image<T> img;
-    img._h = buf_info.shape[0];
-    img._w = buf_info.shape[1];
-    img._data.resize(buf_info.size * sizeof(T));
-    std::memcpy(img.data(), buf_info.ptr, buf_info.size * sizeof(T));
-    return img;
-}
-
-// Helper function to convert std::vector to NumPy array
-template<typename T> py::array_t<T> vector_to_array(const std::vector<T> &vec)
-{
-    return py::array(vec.size(), vec.data());
-}
-
-// Helper function to convert NumPy array to std::vector
-template<typename T> std::vector<T> array_to_vector(const py::array_t<T> &array)
-{
-    py::buffer_info buf_info = array.request();
-    T *ptr = static_cast<T *>(buf_info.ptr);
-    return std::vector<T>(ptr, ptr + buf_info.size);
-}
-
-PYBIND11_MODULE(sc2_replay_reader, m)
-{
-    m.doc() = "pbdoc(Python bindings for Starcraft II database reader)pbdoc";
-    m.def("add", &add, "pbdoc(Add two numbers test)pbdoc");
-    m.def("modify_array", &modify_array, "Function to double the values of a NumPy array");
-
     // Expose Enum
     py::enum_<cvt::Result>(m, "Result")
       .value("Win", cvt::Result::Win)
@@ -117,7 +65,6 @@ PYBIND11_MODULE(sc2_replay_reader, m)
       .value("Enemy", cvt::Alliance::Enemy)
       .export_values();
 
-
     py::enum_<cvt::CloakState>(m, "CloakState")
       .value("Unknown", cvt::CloakState::Unknown)
       .value("Cloaked", cvt::CloakState::Cloaked)
@@ -126,6 +73,17 @@ PYBIND11_MODULE(sc2_replay_reader, m)
       .value("Allied", cvt::CloakState::Allied)
       .export_values();
 
+    py::enum_<cvt::Action::Target_Type>(m, "ActionTargetType")
+      .value("Self", cvt::Action::Target_Type::Self)
+      .value("OtherUnit", cvt::Action::Target_Type::OtherUnit)
+      .value("Position", cvt::Action::Target_Type::Position);
+}
+
+PYBIND11_MODULE(sc2_replay_reader, m)
+{
+    m.doc() = "pbdoc(Python bindings for Starcraft II database reader)pbdoc";
+
+    bindEnums(m);
 
     bindImage<std::uint8_t>(m, "Image_uint8");
     bindBoolImage(m, "Image_bool");
@@ -134,11 +92,6 @@ PYBIND11_MODULE(sc2_replay_reader, m)
       .def(py::init<>())
       .def_readwrite("point", &cvt::Action::Target::point)
       .def_readwrite("other", &cvt::Action::Target::other);
-
-    py::enum_<cvt::Action::Target_Type>(m, "ActionTargetType")
-      .value("Self", cvt::Action::Target_Type::Self)
-      .value("OtherUnit", cvt::Action::Target_Type::OtherUnit)
-      .value("Position", cvt::Action::Target_Type::Position);
 
     py::class_<cvt::Action>(m, "Action")
       .def(py::init<>())
