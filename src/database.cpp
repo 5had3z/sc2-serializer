@@ -69,7 +69,25 @@ auto ReplayDatabase::isFull() const noexcept -> bool { return entryPtr_.size() >
 
 auto ReplayDatabase::size() const noexcept -> std::size_t { return entryPtr_.size(); }
 
-auto ReplayDatabase::getHashes() const noexcept -> std::unordered_set<std::string> { return {}; }
+auto ReplayDatabase::getHashes() const noexcept -> std::unordered_set<std::string>
+{
+    std::unordered_set<std::string> replayHashes{};
+
+    std::ifstream dbStream(dbPath_, std::ios::binary);
+    for (auto &&entry : entryPtr_) {
+        dbStream.seekg(entry);
+        // Maybe see if I can reuse the filter and seek
+        bio::filtering_istream filterStream{};
+        filterStream.push(bio::zlib_decompressor());
+        filterStream.push(dbStream);
+        std::string replayHash{};
+        deserialize(replayHash, filterStream);
+        filterStream.reset();
+        replayHashes.insert(replayHash);
+    }
+
+    return replayHashes;
+}
 
 bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
 {
