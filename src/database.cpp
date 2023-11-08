@@ -116,7 +116,6 @@ bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
     return true;
 }
 
-
 auto ReplayDatabase::getEntry(std::size_t index) const -> ReplayDataSoA
 {
     // Check if valid index
