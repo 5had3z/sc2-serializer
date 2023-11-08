@@ -110,6 +110,23 @@ PYBIND11_MODULE(sc2_replay_reader, m)
       .value("Random", cvt::Race::Random)
       .export_values();
 
+    py::enum_<cvt::Alliance>(m, "Alliance")
+      .value("Self", cvt::Alliance::Self)
+      .value("Ally", cvt::Alliance::Ally)
+      .value("Neutral", cvt::Alliance::Neutral)
+      .value("Enemy", cvt::Alliance::Enemy)
+      .export_values();
+
+
+    py::enum_<cvt::CloakState>(m, "CloakState")
+      .value("Unknown", cvt::CloakState::Unknown)
+      .value("Cloaked", cvt::CloakState::Cloaked)
+      .value("Detected", cvt::CloakState::Detected)
+      .value("UnCloaked", cvt::CloakState::UnCloaked)
+      .value("Allied", cvt::CloakState::Allied)
+      .export_values();
+
+
     bindImage<std::uint8_t>(m, "Image_uint8");
     bindBoolImage(m, "Image_bool");
 
