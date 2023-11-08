@@ -285,14 +285,14 @@ enum class Result { Win, Loss, Tie, Undecided };
 
 struct ReplayData
 {
-    Image<std::uint8_t> heightMap{};
-    std::vector<StepData> stepData{};
     std::string replayHash{};
     std::uint32_t playerId{};
     Race playerRace{ Race::Random };
     Result playerResult{ Result::Undecided };
     int playerMMR{};
     int playerAPM{};
+    std::vector<StepData> stepData{};
+    Image<std::uint8_t> heightMap{};
 
     [[nodiscard]] auto operator==(const ReplayData &other) const noexcept -> bool = default;
 
@@ -306,13 +306,13 @@ struct ReplayData
 
 struct ReplayDataSoA
 {
-    Image<std::uint8_t> heightMap{};
     std::string replayHash{};
     std::uint32_t playerId{};
     Race playerRace{ Race::Random };
     Result playerResult{ Result::Undecided };
     int playerMMR{};
     int playerAPM{};
+    Image<std::uint8_t> heightMap{};
 
     // Step data
     std::vector<Image<std::uint8_t>> visibility{};
@@ -329,13 +329,15 @@ struct ReplayDataSoA
 
 [[nodiscard]] inline auto ReplayAoStoSoA(const ReplayData &aos) noexcept -> ReplayDataSoA
 {
-    ReplayDataSoA soa = { .heightMap = aos.heightMap,
+    ReplayDataSoA soa = {
         .replayHash = aos.replayHash,
         .playerId = aos.playerId,
         .playerRace = aos.playerRace,
         .playerResult = aos.playerResult,
         .playerMMR = aos.playerMMR,
-        .playerAPM = aos.playerAPM };
+        .playerAPM = aos.playerAPM,
+        .heightMap = aos.heightMap,
+    };
 
     for (const StepData &step : aos.stepData) {
         soa.visibility.push_back(step.visibility);
@@ -352,13 +354,15 @@ struct ReplayDataSoA
 
 [[nodiscard]] inline auto ReplaySoAtoAoS(const ReplayDataSoA &soa) noexcept -> ReplayData
 {
-    ReplayData aos = { .heightMap = soa.heightMap,
+    ReplayData aos = {
         .replayHash = soa.replayHash,
         .playerId = soa.playerId,
         .playerRace = soa.playerRace,
         .playerResult = soa.playerResult,
         .playerMMR = soa.playerMMR,
-        .playerAPM = soa.playerAPM };
+        .playerAPM = soa.playerAPM,
+        .heightMap = soa.heightMap,
+    };
 
     auto &stepDataVec = aos.stepData;
     stepDataVec.resize(soa.units.size());

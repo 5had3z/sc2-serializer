@@ -72,6 +72,16 @@ if(SC2_CONVERTER)
     replay_converter
     cxxopts
     spdlog::spdlog)
+
+  add_executable(sc2_merger bin/merge.cpp src/database.cpp)
+  target_compile_features(sc2_merger PUBLIC cxx_std_23)
+  target_include_directories(sc2_merger PUBLIC include)
+  target_link_libraries(
+    sc2_merger
+    spdlog::spdlog
+    boost_pfr
+    cxxopts
+    Boost::iostreams)
 endif()
 
 if(SC2_PY_READER)
