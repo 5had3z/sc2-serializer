@@ -1,5 +1,6 @@
 #include "data.hpp"
 #include "database.hpp"
+#include <bitset>
 
 #include "pybind11/numpy.h"
 #include <pybind11/functional.h>// Include this header for Pybind11 string conversions
@@ -28,11 +29,10 @@ void bindBoolImage(py::module &m, const std::string &name)
       .def_property_readonly("data", [](const cvt::Image<bool> &img) {
           std::vector<uint8_t> unpacked_data(img._h * img._w, 0);
 
-          for (std::size_t i = 0; i < img._h * img._w; ++i) {
-              // Extract the entire byte containing the boolean
-              uint8_t byte_value = static_cast<uint8_t>(img._data[i / 8]);
-              // Use bitwise AND and left shift to unpack the boolean
-              unpacked_data[i] = (byte_value & (1 << (i % 8))) ? 1 : 0;
+          for (std::size_t i = 0; i < img._h * img._w / 8; ++i) {
+              auto b = img._data[i];
+              std::bitset<8> bitset = std::bitset<8>(std::to_integer<int>(b));
+              for (std::size_t j = 0; j < 8; ++j) { unpacked_data[j + i * 8] = bitset[j]; }
           }
           py::dtype dtype = py::dtype::of<bool>();// NumPy boolean dtype
           py::array_t<uint8_t> array = py::array_t<uint8_t>({ img._h, img._w }, unpacked_data.data());
