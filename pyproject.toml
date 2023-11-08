@@ -4,7 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sc2-replay-reader"
-authors = [{ name = "Bryce Ferenczi", email = "frenzi@hotmail.com.au" }]
+authors = [
+    { name = "Bryce Ferenczi", email = "frenzi@hotmail.com.au" },
+    { name = "Rhys Newbury", email = "newbury777@gmail.com" },
+]
 version = "0.0.1"
 description = "Python bindings to read generated database from sc2-serializer"
 readme = "README.md"
