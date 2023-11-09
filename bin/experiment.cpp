@@ -67,8 +67,9 @@ class Observer : public sc2::ReplayObserver
     void initResources(const sc2::Units &units)
     {
         for (auto &&unit : units) {
-            if (cvt::neutralUnitTypes.contains(unit->unit_type)) {
-                resourceQty_.emplace(unit->tag, 1, cvt::defaultResources.at(unit->unit_type));
+            if (cvt::defaultResources.contains(unit->unit_type)) {
+                std::vector<int> init(1, cvt::defaultResources.at(unit->unit_type));
+                resourceQty_.emplace(unit->tag, std::move(init));
                 if (unit->display_type == sc2::Unit::Visible) {
                     auto qty = std::max(unit->vespene_contents, unit->mineral_contents);
                     assert(qty == resourceQty_.at(unit->tag).front() && "First visible match != default?");
@@ -82,7 +83,16 @@ class Observer : public sc2::ReplayObserver
     void appendResources(const sc2::Units &units)
     {
         for (auto &&unit : units) {
-            if (cvt::neutralUnitTypes.contains(unit->unit_type)) {
+            if (cvt::defaultResources.contains(unit->unit_type)) {
+                if (!resourceQty_.contains(unit->tag)) {
+                    SPDLOG_INFO("Adding resource that wasn't observed at init");
+                    std::vector<int> init(1, cvt::defaultResources.at(unit->unit_type));
+                    resourceQty_.emplace(unit->tag, std::move(init));
+                    if (unit->display_type == sc2::Unit::Visible) {
+                        auto qty = std::max(unit->vespene_contents, unit->mineral_contents);
+                        assert(qty == resourceQty_.at(unit->tag).front() && "First visible match != default?");
+                    }
+                }
                 auto &obs = resourceQty_.at(unit->tag);
                 if (unit->display_type == sc2::Unit::Visible) {
                     auto qty = std::max(unit->vespene_contents, unit->mineral_contents);
