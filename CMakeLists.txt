@@ -154,7 +154,7 @@ if(SC2_CONVERTER AND OpenCV_FOUND)
     spdlog::spdlog
     opencv_core
     opencv_imgcodecs)
-  target_include_directories(game_exp PRIVATE 3rdparty/s2client-api/include
+  target_include_directories(game_exp PRIVATE include 3rdparty/s2client-api/include
                                               ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated)
 elseif(SC2_CONVERTER)
   message("OpenCV Not Found, Not Building game_exp")

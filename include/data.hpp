@@ -88,11 +88,14 @@ enum class CloakState {
     Allied = 4,
 };
 
+enum class Visibility { Visible = 1, Snapshot = 2, Hidden = 3 };
+
 struct Unit
 {
     UID id{};
     UID tgtId{};
-    Alliance alliance{ Alliance::Self };
+    Visibility observation{};
+    Alliance alliance{};
     CloakState cloak_state{ CloakState::Unknown };
 
     int unitType{};
@@ -123,6 +126,7 @@ struct UnitSoA
 {
     std::vector<UID> id{};
     std::vector<int> unitType{};
+    std::vector<Visibility> observation{};
     std::vector<Alliance> alliance{};
     std::vector<float> health{};
     std::vector<float> health_max{};
@@ -160,6 +164,7 @@ struct UnitSoA
     for (const Unit &unit : aos) {
         soa.id.push_back(unit.id);
         soa.unitType.push_back(unit.unitType);
+        soa.observation.push_back(unit.observation);
         soa.alliance.push_back(unit.alliance);
         soa.health.push_back(unit.health);
         soa.health_max.push_back(unit.health_max);
@@ -198,6 +203,7 @@ struct UnitSoA
         auto &unit = aos[idx];
         unit.id = soa.id[idx];
         unit.unitType = soa.unitType[idx];
+        unit.observation = soa.observation[idx];
         unit.alliance = soa.alliance[idx];
         unit.health = soa.health[idx];
         unit.health_max = soa.health_max[idx];
@@ -221,24 +227,90 @@ struct UnitSoA
     return aos;
 }
 
-// Neutral Units such as VespeneGeysers are missing
+// Static Neutral Units such as VespeneGeysers are missing
 // many of the common player unit properties and therefore
-// should be handled separately
+// should be handled separately to save space and better
+// separate neutral entities and dynamic agents
 struct NeutralUnit
 {
     UID id{};
-    UID tgtId{};
     int unitType{};
+    Visibility observation{};
     float health{};
     float health_max{};
-    float shield{};
-    float shield_max{};
-    float energy{};
-    float energy_max{};
     Point3f pos{};
     float heading{};
     float radius{};
+    bool is_alive{};
+    int contents{};// minerals or vespene
+
+    [[nodiscard]] auto operator==(const NeutralUnit &other) const noexcept -> bool = default;
 };
+
+struct NeutralUnitSoA
+{
+    std::vector<UID> id{};
+    std::vector<int> unitType{};
+    std::vector<Visibility> observation{};
+    std::vector<float> health{};
+    std::vector<float> health_max{};
+    std::vector<Point3f> pos{};
+    std::vector<float> heading{};
+    std::vector<float> radius{};
+    std::vector<char> is_alive{};
+    std::vector<int> contents{};
+
+    [[nodiscard]] auto operator==(const NeutralUnitSoA &other) const noexcept -> bool = default;
+};
+
+[[nodiscard]] inline auto NeutralUnitAoStoSoA(const std::vector<NeutralUnit> aos) noexcept -> NeutralUnitSoA
+{
+    NeutralUnitSoA soa{};
+    // Prealloc expected size
+    boost::pfr::for_each_field(soa, [sz = aos.size()](auto &field) { field.reserve(sz); });
+
+    for (auto &&unit : aos) {
+        soa.id.push_back(unit.id);
+        soa.unitType.push_back(unit.unitType);
+        soa.observation.push_back(unit.observation);
+        soa.health.push_back(unit.health);
+        soa.health_max.push_back(unit.health_max);
+        soa.pos.push_back(unit.pos);
+        soa.heading.push_back(unit.heading);
+        soa.radius.push_back(unit.radius);
+        soa.is_alive.push_back(static_cast<char>(unit.is_alive));
+        soa.contents.push_back(unit.contents);
+    }
+    return soa;
+}
+
+[[nodiscard]] inline auto NeutralUnitSoAtoAoS(const NeutralUnitSoA &soa) noexcept -> std::vector<NeutralUnit>
+{
+    std::vector<NeutralUnit> aos{};
+
+    // Ensure SoA is all equally sized
+    std::vector<std::size_t> sizes;
+    boost::pfr::for_each_field(soa, [&](auto &field) { sizes.push_back(field.size()); });
+    assert(std::all_of(sizes.begin(), sizes.end(), [sz = sizes.front()](std::size_t s) { return s == sz; }));
+    aos.resize(sizes.front());
+
+    // Tediously copy data
+    for (std::size_t idx = 0; idx < sizes.front(); ++idx) {
+        auto &unit = aos[idx];
+        unit.id = soa.id[idx];
+        unit.unitType = soa.unitType[idx];
+        unit.observation = soa.observation[idx];
+        unit.health = soa.health[idx];
+        unit.health_max = soa.health_max[idx];
+        unit.pos = soa.pos[idx];
+        unit.heading = soa.heading[idx];
+        unit.radius = soa.radius[idx];
+        unit.is_alive = soa.is_alive[idx];
+        unit.contents = soa.contents[idx];
+    }
+    return aos;
+}
+
 
 struct Action
 {
@@ -305,6 +377,7 @@ struct StepData
 
     std::vector<Action> actions{};
     std::vector<Unit> units{};
+    std::vector<NeutralUnit> neutralUnits{};
 
     [[nodiscard]] auto operator==(const StepData &other) const noexcept -> bool = default;
 };
@@ -353,6 +426,7 @@ struct ReplayDataSoA
     std::vector<Image<bool>> pathable{};
     std::vector<std::vector<Action>> actions{};
     std::vector<std::vector<Unit>> units{};
+    std::vector<std::vector<NeutralUnit>> neutralUnits{};
 
     [[nodiscard]] auto operator==(const ReplayDataSoA &other) const noexcept -> bool = default;
 };
@@ -378,6 +452,7 @@ struct ReplayDataSoA
         soa.pathable.push_back(step.pathable);
         soa.actions.push_back(step.actions);
         soa.units.push_back(step.units);
+        soa.neutralUnits.push_back(step.neutralUnits);
     }
     return soa;
 }
@@ -407,6 +482,7 @@ struct ReplayDataSoA
         if (idx < soa.pathable.size()) { stepData.pathable = soa.pathable[idx]; }
         if (idx < soa.actions.size()) { stepData.actions = soa.actions[idx]; }
         if (idx < soa.units.size()) { stepData.units = soa.units[idx]; }
+        if (idx < soa.neutralUnits.size()) { stepData.neutralUnits = soa.neutralUnits[idx]; }
     }
     return aos;
 }

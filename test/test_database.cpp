@@ -42,6 +42,15 @@ auto createReplay(int seed) -> cvt::ReplayDataSoA
         replay_.stepData[0].units.emplace_back(std::move(unit));
     }
 
+    // Fill all fields of unit with some data
+    {
+        cvt::Unit unit{};
+        auto *unitPtr = reinterpret_cast<char *>(&unit);
+        std::vector<char> unitData(unitPtr, unitPtr + sizeof(cvt::Unit));
+        std::iota(unitData.begin(), unitData.end(), seed % 10);
+        replay_.stepData[0].units.emplace_back(std::move(unit));
+    }
+
     // Duplicate entry
     replay_.stepData.push_back(replay_.stepData.back());
     // Change one thing about action and unit

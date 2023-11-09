@@ -1,6 +1,9 @@
+#include "unit_ids.hpp"
+
 #include <cxxopts.hpp>
 #include <opencv2/imgcodecs.hpp>
 #include <sc2api/sc2_api.h>
+#include <sc2api/sc2_typeenums.h>
 #include <spdlog/fmt/fmt.h>
 #include <spdlog/spdlog.h>
 
@@ -9,6 +12,16 @@
 #include <iostream>
 #include <ranges>
 #include <sstream>
+
+using TypeDisplay = std::pair<sc2::UnitTypeID, sc2::Unit::DisplayType>;
+
+template<> struct std::hash<TypeDisplay>
+{
+    auto operator()(const TypeDisplay &data) const noexcept -> std::size_t
+    {
+        return static_cast<std::size_t>(data.first) + static_cast<std::size_t>(data.second);
+    }
+};
 
 
 class Observer : public sc2::ReplayObserver
@@ -29,6 +42,16 @@ class Observer : public sc2::ReplayObserver
     {
         std::chrono::duration<float> totalDuration = std::chrono::system_clock::now() - mTime;
         SPDLOG_INFO("Sim took {:.1f}s", totalDuration.count());
+        for (auto &&[k, v] : neutralObs) {
+            fmt::print("Unit: [{}]{}, Visibility: {} - {}\n",
+              static_cast<uint64>(k.first),
+              UnitTypeToName(k.first),
+              static_cast<int>(k.second),
+              0);
+            fflush(stdout);
+            int a = 0;
+        }
+        fflush(stdout);
     }
 
     void OnStep() final
@@ -44,10 +67,10 @@ class Observer : public sc2::ReplayObserver
                   units, [tgt_tag = action.target_tag](const sc2::Unit *u) { return u->tag == tgt_tag; });
                 if (tgtUnit != units.end() && (*tgtUnit)->alliance == sc2::Unit::Alliance::Enemy) {
                     auto nUnits = action.unit_tags.size();
-                    SPDLOG_INFO("{} units attacking {}", nUnits, (*tgtUnit)->tag);
+                    SPDLOG_INFO("{} units attacking {}", nUnits, static_cast<uint64_t>((*tgtUnit)->tag));
                 }
             } else {
-                SPDLOG_INFO("Action: {}", action.target_type);
+                SPDLOG_INFO("Action: {}", static_cast<int>(action.target_type));
             }
         }
 
@@ -81,7 +104,20 @@ class Observer : public sc2::ReplayObserver
             SPDLOG_INFO(ss.str());
             step = std::chrono::system_clock::now();
         }
+
+        for (auto &&unit : units) {
+            if (cvt::neutralUnitTypes.contains(unit->unit_type)) {
+                // SPDLOG_INFO("Neutral unit {}, Visibility: {}",
+                //   UnitTypeToName(unit->unit_type),
+                //   static_cast<int>(unit->display_type));
+                auto key = std::make_pair(unit->unit_type, unit->display_type);
+                if (neutralObs.contains(key)) { continue; }
+                neutralObs[key] = *unit;
+            }
+        }
     }
+
+    std::unordered_map<TypeDisplay, sc2::Unit> neutralObs;
 
     bool IgnoreReplay(const sc2::ReplayInfo &replay_info, uint32_t &player_id) final { return false; }
 };
