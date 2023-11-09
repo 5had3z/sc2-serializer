@@ -1,5 +1,6 @@
 #include "observer.hpp"
 #include "serialize.hpp"
+#include "unit_ids.hpp"
 
 // #include <boost/iostreams/device/file.hpp>
 // #include <boost/iostreams/filter/zlib.hpp>
@@ -100,37 +101,71 @@ void BaseConverter::copyHeightMapData() noexcept
     copyMapData(currentReplay_.heightMap, minimapFeats.height_map());
 }
 
+// Convert StarCraft2 API Unit to Serializer Unit
+[[nodiscard]] auto convertSC2Unit(const sc2::Unit *src) noexcept -> Unit
+{
+    Unit dst;
+    dst.id = src->tag;
+    dst.unitType = src->unit_type;
+    dst.observation = static_cast<Visibility>(src->display_type);
+    dst.alliance = static_cast<Alliance>(src->alliance);// Enums deffs match here
+    dst.health = src->health;
+    dst.health_max = src->health_max;
+    dst.shield = src->shield;
+    dst.shield_max = src->shield_max;
+    dst.energy = src->energy_max;
+    dst.energy_max = src->energy_max;
+    dst.cargo = src->cargo_space_taken;
+    dst.cargo_max = src->cargo_space_max;
+    dst.tgtId = src->engaged_target_tag;
+    dst.cloak_state = static_cast<CloakState>(src->cloak);// These should match
+    dst.is_blip = src->is_blip;
+    dst.is_flying = src->is_flying;
+    dst.is_burrowed = src->is_burrowed;
+    dst.is_powered = src->is_powered;
+    dst.pos.x = src->pos.x;
+    dst.pos.y = src->pos.y;
+    dst.pos.z = src->pos.z;
+    dst.heading = src->facing;
+    dst.radius = src->radius;
+    dst.build_progress = src->build_progress;
+    return dst;
+}
+
+[[nodiscard]] auto convertSC2NeutralUnit(const sc2::Unit *src) noexcept -> NeutralUnit
+{
+    NeutralUnit dst;
+    dst.id = src->tag;
+    dst.unitType = src->unit_type;
+    dst.observation = static_cast<Visibility>(src->display_type);
+    dst.health = src->health;
+    dst.health_max = src->health_max;
+    dst.pos.x = src->pos.x;
+    dst.pos.y = src->pos.y;
+    dst.pos.z = src->pos.z;
+    dst.heading = src->facing;
+    dst.radius = src->radius;
+    dst.is_alive = src->is_alive;
+    dst.contents = std::max(src->vespene_contents, src->mineral_contents);
+    return dst;
+}
+
+
 void BaseConverter::copyUnitData() noexcept
 {
     const auto unitData = this->Observation()->GetUnits();
     auto &units = currentReplay_.stepData.back().units;
-    units.resize(unitData.size());
-    std::ranges::transform(unitData, units.begin(), [](const sc2::Unit *src) -> Unit {
-        Unit dst;
-        dst.id = src->tag;
-        dst.unitType = src->unit_type;
-        dst.alliance = static_cast<Alliance>(src->alliance);// Enums deffs match here
-        dst.health = src->health;
-        dst.health_max = src->health_max;
-        dst.shield = src->shield;
-        dst.shield_max = src->shield_max;
-        dst.energy = src->energy_max;
-        dst.energy_max = src->energy_max;
-        dst.cargo = src->cargo_space_taken;
-        dst.cargo_max = src->cargo_space_max;
-        dst.tgtId = src->engaged_target_tag;
-        dst.cloak_state = static_cast<CloakState>(src->cloak);// These should match
-        dst.is_blip = src->is_blip;
-        dst.is_flying = src->is_flying;
-        dst.is_burrowed = src->is_burrowed;
-        dst.is_powered = src->is_powered;
-        dst.pos.x = src->pos.x;
-        dst.pos.y = src->pos.y;
-        dst.pos.z = src->pos.z;
-        dst.heading = src->facing;
-        dst.radius = src->radius;
-        dst.build_progress = src->build_progress;
-        return dst;
+    units.clear();
+    units.reserve(unitData.size());
+    auto &neutralUnits = currentReplay_.stepData.back().neutralUnits;
+    neutralUnits.clear();
+    neutralUnits.reserve(unitData.size());
+    std::ranges::for_each(unitData, [&](const sc2::Unit *src) {
+        if (neutralUnitTypes.contains(src->unit_type)) {
+            neutralUnits.emplace_back(convertSC2NeutralUnit(src));
+        } else {
+            units.emplace_back(convertSC2Unit(src));
+        }
     });
 }
 
