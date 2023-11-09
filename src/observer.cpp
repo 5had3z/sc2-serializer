@@ -1,6 +1,6 @@
 #include "observer.hpp"
+#include "generated_info.hpp"
 #include "serialize.hpp"
-#include "unit_ids.hpp"
 
 // #include <boost/iostreams/device/file.hpp>
 // #include <boost/iostreams/filter/zlib.hpp>
