@@ -6,6 +6,7 @@
 
 #include <filesystem>
 #include <string_view>
+#include <unordered_map>
 
 namespace cvt {
 
@@ -31,8 +32,16 @@ class BaseConverter : public sc2::ReplayObserver
 
     void copyDynamicMapData() noexcept;
 
+    // Run over the neutral units in database_.stepData.back()
+    // if the neutral unit is a resource and not in resouceQty_,
+    // initialise and assign default.
+    // If the resource observation is Snapshot, assign the
+    // last resourceQty_ value, if Viewable update resourceQty_
+    void manageResourceObservation() noexcept;
+
     ReplayDatabase database_;
     ReplayData currentReplay_;
+    std::unordered_map<UID, int> resourceQty_;
     bool mapDynHasLogged_{ false };
     bool mapHeightHasLogged_{ false };
 };

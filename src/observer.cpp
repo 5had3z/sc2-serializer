@@ -167,6 +167,31 @@ void BaseConverter::copyUnitData() noexcept
             units.emplace_back(convertSC2Unit(src));
         }
     });
+    this->manageResourceObservation();
+}
+
+void BaseConverter::manageResourceObservation() noexcept
+{
+    auto &neutralUnits = currentReplay_.stepData.back().neutralUnits;
+    for (auto &unit : neutralUnits) {
+        // Skip Not a mineral/gas resource
+        if (!defaultResources.contains(unit.unitType)) { continue; }
+
+        // Add default value if it doesn't already exist
+        resourceQty_.try_emplace(unit.id, defaultResources.at(unit.unitType));
+
+        // Update resourceQty_ or set unit.contents to last observation
+        switch (unit.observation) {
+        case Visibility::Visible:
+            resourceQty_.at(unit.id) = unit.contents;
+            break;
+        case Visibility::Snapshot:
+            unit.contents = resourceQty_.at(unit.id);
+            break;
+        case Visibility::Hidden:
+            throw std::logic_error("Resource Observation should never be hidden");
+        }
+    }
 }
 
 void BaseConverter::copyActionData() noexcept

@@ -9,10 +9,12 @@
 
 #include <chrono>
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <ranges>
 #include <sstream>
 
+namespace fs = std::filesystem;
 using TypeDisplay = std::pair<sc2::UnitTypeID, sc2::Unit::DisplayType>;
 
 template<> struct std::hash<TypeDisplay>
@@ -32,6 +34,7 @@ class Observer : public sc2::ReplayObserver
     void OnGameStart() final
     {
         mTime = std::chrono::system_clock::now();
+        hasResourceInit = false;
         auto rInfo = this->ReplayControl()->GetReplayInfo();
         SPDLOG_INFO("Player: {}, Map Name: {}", rInfo.players->player_id, rInfo.map_name);
     }
@@ -52,6 +55,43 @@ class Observer : public sc2::ReplayObserver
             int a = 0;
         }
         fflush(stdout);
+
+        std::ofstream stream(fs::path("resources.txt"), std::ios::trunc);
+        for (auto &&[tag, values] : resourceQty_) {
+            stream << std::to_string(tag);
+            for (auto &&value : values) { stream << fmt::format("{}, ", value); }
+            stream << "\n";
+        }
+    }
+
+    void initResources(const sc2::Units &units)
+    {
+        for (auto &&unit : units) {
+            if (cvt::neutralUnitTypes.contains(unit->unit_type)) {
+                resourceQty_.emplace(unit->tag, 1, cvt::defaultResources.at(unit->unit_type));
+                if (unit->display_type == sc2::Unit::Visible) {
+                    auto qty = std::max(unit->vespene_contents, unit->mineral_contents);
+                    assert(qty == resourceQty_.at(unit->tag).front() && "First visible match != default?");
+                }
+                assert(unit->display_type != sc2::Unit::Hidden);
+            }
+        }
+        hasResourceInit = true;
+    }
+
+    void appendResources(const sc2::Units &units)
+    {
+        for (auto &&unit : units) {
+            if (cvt::neutralUnitTypes.contains(unit->unit_type)) {
+                auto &obs = resourceQty_.at(unit->tag);
+                if (unit->display_type == sc2::Unit::Visible) {
+                    auto qty = std::max(unit->vespene_contents, unit->mineral_contents);
+                    obs.push_back(qty);
+                } else {
+                    obs.push_back(obs.back());
+                }
+            }
+        }
     }
 
     void OnStep() final
@@ -72,6 +112,12 @@ class Observer : public sc2::ReplayObserver
             } else {
                 SPDLOG_INFO("Action: {}", static_cast<int>(action.target_type));
             }
+        }
+
+        if (!hasResourceInit) {
+            this->initResources(units);
+        } else {
+            this->appendResources(units);
         }
 
         const auto *rawObs = obs->GetRawObservation();
@@ -118,6 +164,8 @@ class Observer : public sc2::ReplayObserver
     }
 
     std::unordered_map<TypeDisplay, sc2::Unit> neutralObs;
+    std::unordered_map<sc2::Tag, std::vector<int>> resourceQty_;
+    bool hasResourceInit{ false };
 
     bool IgnoreReplay(const sc2::ReplayInfo &replay_info, uint32_t &player_id) final { return false; }
 };
