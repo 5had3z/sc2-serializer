@@ -78,6 +78,7 @@ void BaseConverter::OnGameEnd()
 
     database_.addEntry(SoA);
     currentReplay_.clear();
+    resourceObs_.clear();
     mapDynHasLogged_ = false;
     mapHeightHasLogged_ = false;
 }
@@ -167,31 +168,49 @@ void BaseConverter::copyUnitData() noexcept
             units.emplace_back(convertSC2Unit(src));
         }
     });
-    this->manageResourceObservation();
+    if (resourceObs_.empty()) { this->initResourceObs(); }
+    this->updateResourceObs();
 }
 
-void BaseConverter::manageResourceObservation() noexcept
+void BaseConverter::initResourceObs() noexcept
+{
+    auto &neutralUnits = currentReplay_.stepData.back().neutralUnits;
+    for (auto &unit : neutralUnits) {
+        // Skip Not a mineral/gas resource
+        if (!defaultResources.contains(unit.unitType)) { continue; }
+        resourceObs_[unit.id] = ResourceObs(unit.id, unit.pos, defaultResources.at(unit.unitType));
+    }
+}
+
+void BaseConverter::updateResourceObs() noexcept
 {
     auto &neutralUnits = currentReplay_.stepData.back().neutralUnits;
     for (auto &unit : neutralUnits) {
         // Skip Not a mineral/gas resource
         if (!defaultResources.contains(unit.unitType)) { continue; }
 
-        // Add default value if it doesn't already exist
-        resourceQty_.try_emplace(unit.id, defaultResources.at(unit.unitType));
+        // Reassign map id if it has changed
+        if (!resourceObs_.contains(unit.id)) { this->reassignResourceId(unit); }
 
-        // Update resourceQty_ or set unit.contents to last observation
-        switch (unit.observation) {
-        case Visibility::Visible:
-            resourceQty_.at(unit.id) = unit.contents;
-            break;
-        case Visibility::Snapshot:
-            unit.contents = resourceQty_.at(unit.id);
-            break;
-        case Visibility::Hidden:
-            throw std::logic_error("Resource Observation should never be hidden");
-        }
+        auto &prev = resourceObs_.at(unit.id);
+        // Update resourceObs_ if visible
+        if (unit.observation == Visibility::Visible) { prev.qty = unit.contents; }
+
+        // Set current step's neutral unit with consistent id and last observed qty
+        unit.contents = prev.qty;
+        unit.id = prev.id;
     }
+}
+
+void BaseConverter::reassignResourceId(const NeutralUnit &unit) noexcept
+{
+    auto oldKV = std::ranges::find_if(resourceObs_, [=](auto &&keyValue) {
+        auto &value = keyValue.second;
+        return value.pos == unit.pos;
+    });
+    assert(oldKV != resourceObs_.end() && "No position match found???");
+    resourceObs_.emplace(unit.id, std::move(oldKV->second));
+    resourceObs_.erase(oldKV->first);
 }
 
 void BaseConverter::copyActionData() noexcept

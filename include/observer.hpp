@@ -10,6 +10,12 @@
 
 namespace cvt {
 
+struct ResourceObs
+{
+    UID id;// Original ID
+    Point3f pos;// Point on map
+    int qty;// Last observation
+};
 
 class BaseConverter : public sc2::ReplayObserver
 {
@@ -32,16 +38,22 @@ class BaseConverter : public sc2::ReplayObserver
 
     void copyDynamicMapData() noexcept;
 
-    // Run over the neutral units in database_.stepData.back()
-    // if the neutral unit is a resource and not in resouceQty_,
-    // initialise and assign default.
-    // If the resource observation is Snapshot, assign the
-    // last resourceQty_ value, if Viewable update resourceQty_
-    void manageResourceObservation() noexcept;
+    // Update resourceObs_ based on visisble units
+    // reassign jumbled UIDs to be consistent over the game
+    // assign snapshot unis the last known quantity
+    void updateResourceObs() noexcept;
+
+    // Resource UID changes when going in and out of view
+    // this is chat and we want to make UID consistent
+    void reassignResourceId(const NeutralUnit &unit) noexcept;
+
+    // Get the initial UID for each natural resource and
+    // initialize with the default value
+    void initResourceObs() noexcept;
 
     ReplayDatabase database_;
     ReplayData currentReplay_;
-    std::unordered_map<UID, int> resourceQty_;
+    std::unordered_map<UID, ResourceObs> resourceObs_;
     bool mapDynHasLogged_{ false };
     bool mapHeightHasLogged_{ false };
 };
