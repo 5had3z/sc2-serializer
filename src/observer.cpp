@@ -223,7 +223,7 @@ void BaseConverter::copyActionData() noexcept
         Action dst;
         dst.unit_ids.reserve(src.unit_tags.size());
         std::ranges::transform(
-          src.unit_tags, std::back_inserter(dst.unit_ids), [](sc2::Tag tag) { return static_cast<UID>(tag); });
+            src.unit_tags, std::back_inserter(dst.unit_ids), [](sc2::Tag tag) { return static_cast<UID>(tag); });
         dst.ability_id = src.ability_id;
         dst.target_type = static_cast<Action::Target_Type>(src.target_type);// These should match
         switch (dst.target_type) {
@@ -250,14 +250,14 @@ void BaseConverter::copyDynamicMapData() noexcept
     if (!mapDynHasLogged_) {
         mapDynHasLogged_ = true;
         SPDLOG_INFO(
-          "Minimap Features: visibility {}, creep: {}, player_relative: {}, "
-          "alerts: {}, buildable: {}, pathable: {}",
-          minimapFeats.has_visibility_map(),
-          minimapFeats.has_creep(),
-          minimapFeats.has_player_relative(),
-          minimapFeats.has_alerts(),
-          minimapFeats.has_buildable(),
-          minimapFeats.has_pathable());
+            "Minimap Features: visibility {}, creep: {}, player_relative: {}, "
+            "alerts: {}, buildable: {}, pathable: {}",
+            minimapFeats.has_visibility_map(),
+            minimapFeats.has_creep(),
+            minimapFeats.has_player_relative(),
+            minimapFeats.has_alerts(),
+            minimapFeats.has_buildable(),
+            minimapFeats.has_pathable());
     }
 
     auto &step = currentReplay_.stepData.back();

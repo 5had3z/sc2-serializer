@@ -47,8 +47,8 @@ enum class Stratergy { Replace, Append, Merge };
 }
 
 auto mergeDb(cvt::ReplayDatabase &target,
-  const cvt::ReplayDatabase &source,
-  const std::unordered_set<std::string> &knownHashes) -> bool
+    const cvt::ReplayDatabase &source,
+    const std::unordered_set<std::string> &knownHashes) -> bool
 {
     const std::size_t nItems = source.size();
     for (std::size_t idx = 0; idx < nItems; ++idx) {
@@ -61,8 +61,8 @@ auto mergeDb(cvt::ReplayDatabase &target,
 }
 
 auto runOverFolder(cvt::ReplayDatabase &mainDb,
-  const fs::path &folder,
-  const std::unordered_set<std::string> &knownReplays) noexcept -> bool
+    const fs::path &folder,
+    const std::unordered_set<std::string> &knownReplays) noexcept -> bool
 {
     auto replayFiles = getReplayParts(folder);
     for (auto &&replayFile : replayFiles) {
@@ -76,8 +76,8 @@ auto runOverFolder(cvt::ReplayDatabase &mainDb,
 int main(int argc, char *argv[])
 {
     cxxopts::Options cliParser("SC2 DB Merger",
-      "Merge a list of DB paritions into a single DB. A --folder that contains"
-      " .SC2Replays will be merged into a single file specified by --output");
+        "Merge a list of DB paritions into a single DB. A --folder that contains"
+        " .SC2Replays will be merged into a single file specified by --output");
     // clang-format off
     cliParser.add_options()
         ("f,folder", "Folder with partitions to merge", cxxopts::value<std::string>())

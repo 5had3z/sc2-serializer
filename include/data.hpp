@@ -13,6 +13,12 @@ namespace cvt {
 
 typedef std::uint64_t UID;// Type that represents unique identifier in the game
 
+
+// Converts an enum value to a one-hot encoding
+template<typename E, typename T>
+    requires std::is_enum_v<E>
+auto enumToOneHot(E e) noexcept -> std::vector<T>;
+
 struct Point2d
 {
     int x{ 0 };
@@ -80,6 +86,16 @@ enum class Alliance {
     Enemy = 4,
 };
 
+template<typename T> auto enumToOneHot(Alliance e) noexcept -> std::vector<T>
+{
+    constexpr std::array vals = { Alliance::Self, Alliance::Ally, Alliance::Neutral, Alliance::Enemy };
+    static_assert(std::is_sorted(vals.begin(), vals.end()));
+    auto it = std::ranges::find(vals, e);
+    std::vector<T> ret(vals.size());
+    ret[std::distance(vals.begin(), it)] = static_cast<T>(1);
+    return ret;
+}
+
 enum class CloakState {
     Unknown = 0,
     Cloaked = 1,
@@ -88,7 +104,30 @@ enum class CloakState {
     Allied = 4,
 };
 
+template<typename T> auto enumToOneHot(CloakState e) noexcept -> std::vector<T>
+{
+    constexpr std::array vals = {
+        CloakState::Unknown, CloakState::Cloaked, CloakState::Detected, CloakState::UnCloaked, CloakState::Allied
+    };
+    static_assert(std::is_sorted(vals.begin(), vals.end()));
+    auto it = std::ranges::find(vals, e);
+    std::vector<T> ret(vals.size());
+    ret[std::distance(vals.begin(), it)] = static_cast<T>(1);
+    return ret;
+}
+
+
 enum class Visibility { Visible = 1, Snapshot = 2, Hidden = 3 };
+
+template<typename T> auto enumToOneHot(Visibility e) noexcept -> std::vector<T>
+{
+    constexpr std::array vals = { Visibility::Visible, Visibility::Snapshot, Visibility::Hidden };
+    static_assert(std::is_sorted(vals.begin(), vals.end()));
+    auto it = std::ranges::find(vals, e);
+    std::vector<T> ret(vals.size());
+    ret[std::distance(vals.begin(), it)] = static_cast<T>(1);
+    return ret;
+}
 
 struct Unit
 {
@@ -362,6 +401,17 @@ struct Action
     }
 };
 
+template<typename T> auto enumToOneHot(Action::Target_Type e) noexcept -> std::vector<T>
+{
+    using E = Action::Target_Type;
+    constexpr std::array vals = { E::Self, E::OtherUnit, E::Position };
+    static_assert(std::is_sorted(vals.begin(), vals.end()));
+    auto it = std::ranges::find(vals, e);
+    std::vector<T> ret(vals.size());
+    ret[std::distance(vals.begin(), it)] = static_cast<T>(1);
+    return ret;
+}
+
 struct StepData
 {
     Image<std::uint8_t> visibility{};
@@ -380,7 +430,27 @@ struct StepData
 
 enum class Race { Terran, Zerg, Protoss, Random };
 
+template<typename T> auto enumToOneHot(Race e) noexcept -> std::vector<T>
+{
+    constexpr std::array vals = { Race::Terran, Race::Zerg, Race::Protoss, Race::Random };
+    static_assert(std::is_sorted(vals.begin(), vals.end()));
+    auto it = std::ranges::find(vals, e);
+    std::vector<T> ret(vals.size());
+    ret[std::distance(vals.begin(), it)] = static_cast<T>(1);
+    return ret;
+}
+
 enum class Result { Win, Loss, Tie, Undecided };
+
+template<typename T> auto enumToOneHot(Result e) noexcept -> std::vector<T>
+{
+    constexpr std::array vals = { Result::Win, Result::Loss, Result::Tie, Result::Undecided };
+    static_assert(std::is_sorted(vals.begin(), vals.end()));
+    auto it = std::ranges::find(vals, e);
+    std::vector<T> ret(vals.size());
+    ret[std::distance(vals.begin(), it)] = static_cast<T>(1);
+    return ret;
+}
 
 struct ReplayData
 {
