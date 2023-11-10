@@ -148,7 +148,6 @@ void BaseConverter::copyHeightMapData() noexcept
     dst.pos.z = src->pos.z;
     dst.heading = src->facing;
     dst.radius = src->radius;
-    dst.is_alive = src->is_alive;
     dst.contents = std::max(src->vespene_contents, src->mineral_contents);
     return dst;
 }

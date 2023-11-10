@@ -241,7 +241,6 @@ struct NeutralUnit
     Point3f pos{};
     float heading{};
     float radius{};
-    bool is_alive{};
     int contents{};// minerals or vespene
 
     [[nodiscard]] auto operator==(const NeutralUnit &other) const noexcept -> bool = default;
@@ -257,7 +256,6 @@ struct NeutralUnitSoA
     std::vector<Point3f> pos{};
     std::vector<float> heading{};
     std::vector<float> radius{};
-    std::vector<char> is_alive{};
     std::vector<int> contents{};
 
     [[nodiscard]] auto operator==(const NeutralUnitSoA &other) const noexcept -> bool = default;
@@ -278,7 +276,6 @@ struct NeutralUnitSoA
         soa.pos.push_back(unit.pos);
         soa.heading.push_back(unit.heading);
         soa.radius.push_back(unit.radius);
-        soa.is_alive.push_back(static_cast<char>(unit.is_alive));
         soa.contents.push_back(unit.contents);
     }
     return soa;
@@ -305,7 +302,6 @@ struct NeutralUnitSoA
         unit.pos = soa.pos[idx];
         unit.heading = soa.heading[idx];
         unit.radius = soa.radius[idx];
-        unit.is_alive = soa.is_alive[idx];
         unit.contents = soa.contents[idx];
     }
     return aos;
