@@ -41,6 +41,12 @@ void BaseConverter::OnGameStart()
     currentReplay_.playerResult = static_cast<Result>(playerInfo.game_result);
     currentReplay_.playerMMR = playerInfo.mmr;
     currentReplay_.playerAPM = playerInfo.apm;
+
+    stepCounter_ = 0;
+    currentReplay_.clear();
+    resourceObs_.clear();
+    mapDynHasLogged_ = false;
+    mapHeightHasLogged_ = false;
 }
 
 
@@ -77,10 +83,6 @@ void BaseConverter::OnGameEnd()
     // write_data(SoA, basePath.replace_extension("all"));
 
     database_.addEntry(SoA);
-    currentReplay_.clear();
-    resourceObs_.clear();
-    mapDynHasLogged_ = false;
-    mapHeightHasLogged_ = false;
 }
 
 
@@ -265,7 +267,7 @@ void BaseConverter::copyDynamicMapData() noexcept
     if (minimapFeats.has_player_relative()) { copyMapData(step.player_relative, minimapFeats.player_relative()); }
     if (minimapFeats.has_alerts()) { copyMapData(step.alerts, minimapFeats.alerts()); }
     if (minimapFeats.has_buildable()) { copyMapData(step.buildable, minimapFeats.buildable()); }
-    if (minimapFeats.has_pathable()) { copyMapData(step.buildable, minimapFeats.pathable()); }
+    if (minimapFeats.has_pathable()) { copyMapData(step.pathable, minimapFeats.pathable()); }
 }
 
 void FullConverter::OnStep()
@@ -280,6 +282,7 @@ void FullConverter::OnStep()
     this->copyUnitData();
     this->copyActionData();
     this->copyDynamicMapData();
+    stepCounter_++;
 }
 
 
@@ -299,6 +302,7 @@ void ActionConverter::OnStep()
     // Always copy observation, the next step might have an action
     this->copyUnitData();
     this->copyDynamicMapData();
+    stepCounter_++;
 }
 
 

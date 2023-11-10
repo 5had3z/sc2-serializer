@@ -56,6 +56,7 @@ class BaseConverter : public sc2::ReplayObserver
     std::unordered_map<UID, ResourceObs> resourceObs_;
     bool mapDynHasLogged_{ false };
     bool mapHeightHasLogged_{ false };
+    std::size_t stepCounter_{ 0 };
 };
 
 /**

@@ -32,6 +32,7 @@ void bindBoolImage(py::module &m, const std::string &name)
           for (std::size_t i = 0; i < img._h * img._w / 8; ++i) {
               auto b = img._data[i];
               std::bitset<8> bitset = std::bitset<8>(std::to_integer<int>(b));
+#pragma unroll
               for (std::size_t j = 0; j < 8; ++j) { unpacked_data[j + i * 8] = bitset[j]; }
           }
           py::dtype dtype = py::dtype::of<bool>();// NumPy boolean dtype
@@ -76,7 +77,14 @@ void bindEnums(py::module &m)
     py::enum_<cvt::Action::Target_Type>(m, "ActionTargetType")
       .value("Self", cvt::Action::Target_Type::Self)
       .value("OtherUnit", cvt::Action::Target_Type::OtherUnit)
-      .value("Position", cvt::Action::Target_Type::Position);
+      .value("Position", cvt::Action::Target_Type::Position)
+      .export_values();
+
+    py::enum_<cvt::Visibility>(m, "Visibility")
+      .value("Visible", cvt::Visibility::Visible)
+      .value("Snapshot", cvt::Visibility::Snapshot)
+      .value("Hidden", cvt::Visibility::Hidden)
+      .export_values();
 }
 
 PYBIND11_MODULE(sc2_replay_reader, m)
@@ -100,10 +108,22 @@ PYBIND11_MODULE(sc2_replay_reader, m)
       .def_readwrite("target_type", &cvt::Action::target_type)
       .def_readwrite("target", &cvt::Action::target);
 
+    py::class_<cvt::Point3f>(m, "Point3f")
+      .def(py::init<>())
+      .def_readwrite("x", &cvt::Point3f::x)
+      .def_readwrite("y", &cvt::Point3f::y)
+      .def_readwrite("z", &cvt::Point3f::z);
+
+    py::class_<cvt::Point2d>(m, "Point2d")
+      .def(py::init<>())
+      .def_readwrite("x", &cvt::Point2d::x)
+      .def_readwrite("y", &cvt::Point2d::y);
+
     py::class_<cvt::Unit>(m, "Unit")
       .def(py::init<>())
       .def_readwrite("id", &cvt::Unit::id)
       .def_readwrite("tgtId", &cvt::Unit::tgtId)
+      .def_readwrite("observation", &cvt::Unit::observation)
       .def_readwrite("alliance", &cvt::Unit::alliance)
       .def_readwrite("cloak_state", &cvt::Unit::cloak_state)
       .def_readwrite("unitType", &cvt::Unit::unitType)
@@ -124,6 +144,19 @@ PYBIND11_MODULE(sc2_replay_reader, m)
       .def_readwrite("is_burrowed", &cvt::Unit::is_burrowed)
       .def_readwrite("is_powered", &cvt::Unit::is_powered);
 
+
+    py::class_<cvt::NeutralUnit>(m, "NeutralUnit")
+      .def(py::init<>())
+      .def_readwrite("id", &cvt::NeutralUnit::id)
+      .def_readwrite("unitType", &cvt::NeutralUnit::unitType)
+      .def_readwrite("observation", &cvt::NeutralUnit::observation)
+      .def_readwrite("health", &cvt::NeutralUnit::health)
+      .def_readwrite("health_max", &cvt::NeutralUnit::health_max)
+      .def_readwrite("pos", &cvt::NeutralUnit::pos)
+      .def_readwrite("heading", &cvt::NeutralUnit::heading)
+      .def_readwrite("radius", &cvt::NeutralUnit::radius)
+      .def_readwrite("is_alive", &cvt::NeutralUnit::is_alive)
+      .def_readwrite("contents", &cvt::NeutralUnit::contents);
 
     // Expose ReplayDatabase class
     py::class_<cvt::ReplayDatabase>(m, "ReplayDatabase")
@@ -151,7 +184,8 @@ PYBIND11_MODULE(sc2_replay_reader, m)
       .def_readwrite("buildable", &cvt::ReplayDataSoA::buildable)
       .def_readwrite("pathable", &cvt::ReplayDataSoA::pathable)
       .def_readwrite("actions", &cvt::ReplayDataSoA::actions)
-      .def_readwrite("units", &cvt::ReplayDataSoA::units);
+      .def_readwrite("units", &cvt::ReplayDataSoA::units)
+      .def_readwrite("neutralUnits", &cvt::ReplayDataSoA::neutralUnits);
 
     m.attr("__version__") = "0.0.1";
 }
