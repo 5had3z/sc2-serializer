@@ -112,12 +112,24 @@ PYBIND11_MODULE(sc2_replay_reader, m)
       .def(py::init<>())
       .def_readwrite("x", &cvt::Point3f::x)
       .def_readwrite("y", &cvt::Point3f::y)
-      .def_readwrite("z", &cvt::Point3f::z);
+      .def_readwrite("z", &cvt::Point3f::z)
+      .def_buffer([](cvt::Point3f &d) -> py::buffer_info {
+          return py::buffer_info(reinterpret_cast<float *>(&d),
+            sizeof(float),
+            py::format_descriptor<float>::format(),
+            1,
+            { 3 },
+            { sizeof(float) });
+      });
 
     py::class_<cvt::Point2d>(m, "Point2d")
       .def(py::init<>())
       .def_readwrite("x", &cvt::Point2d::x)
-      .def_readwrite("y", &cvt::Point2d::y);
+      .def_readwrite("y", &cvt::Point2d::y)
+      .def_buffer([](cvt::Point2d &d) -> py::buffer_info {
+          return py::buffer_info(
+            reinterpret_cast<int *>(&d), sizeof(int), py::format_descriptor<int>::format(), 1, { 2 }, { sizeof(int) });
+      });
 
     py::class_<cvt::Unit>(m, "Unit")
       .def(py::init<>())
