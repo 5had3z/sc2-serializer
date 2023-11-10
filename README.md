@@ -3,7 +3,7 @@ Alternative to generating the "100's of TB" format from alphastar unplugged.
 
 ## General Notes
 
- - If the generated_info.hpp is out-of-date compared to info found in PySC2, re-run scripts/gen_info_headder.py.
+ - If the generated_info.hpp is out-of-date compared to info found in PySC2, re-run scripts/gen_info_header.py.
 
  - The SC2 API Zeros out the mineral and vesper resources if they are in the fog-of-war. Instead we default them to the correct value and keep track of their last observed value. We still include the visibility so it is trivial to revert back to zero'd out observations.
 
