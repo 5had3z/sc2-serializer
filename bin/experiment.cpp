@@ -25,6 +25,20 @@ template<> struct std::hash<TypeDisplay>
     }
 };
 
+struct ResourceObs
+{
+    sc2::Point3D pos;
+    std::vector<int> qty;
+
+    operator std::string() const noexcept
+    {
+        std::stringstream ret;
+        ret << fmt::format("{}, {}, {}", pos.x, pos.y, pos.z);
+        for (auto &&q : qty) { ret << fmt::format(", {}", q); }
+        return ret.str();
+    }
+};
+
 
 class Observer : public sc2::ReplayObserver
 {
@@ -37,6 +51,8 @@ class Observer : public sc2::ReplayObserver
         hasResourceInit = false;
         auto rInfo = this->ReplayControl()->GetReplayInfo();
         SPDLOG_INFO("Player: {}, Map Name: {}", rInfo.players->player_id, rInfo.map_name);
+        replaySize = rInfo.duration_gameloops;
+        replayStep = 0;
     }
 
     // void OnUnitCreated(const sc2::Unit *unit) { SPDLOG_INFO("Unit created: {}", unit->unit_type); }
@@ -55,12 +71,12 @@ class Observer : public sc2::ReplayObserver
             int a = 0;
         }
         fflush(stdout);
+        replaySize = 0;
+        replayStep = 0;
 
         std::ofstream stream(fs::path("resources.txt"), std::ios::trunc);
         for (auto &&[tag, values] : resourceQty_) {
-            stream << std::to_string(tag);
-            for (auto &&value : values) { stream << fmt::format("{}, ", value); }
-            stream << "\n";
+            stream << fmt::format("{}, {}\n", std::to_string(tag), std::string(values));
         }
     }
 
@@ -68,37 +84,44 @@ class Observer : public sc2::ReplayObserver
     {
         for (auto &&unit : units) {
             if (cvt::defaultResources.contains(unit->unit_type)) {
-                std::vector<int> init(1, cvt::defaultResources.at(unit->unit_type));
-                resourceQty_.emplace(unit->tag, std::move(init));
+                ResourceObs init{ unit->pos, std::vector<int>(replaySize) };
                 if (unit->display_type == sc2::Unit::Visible) {
                     auto qty = std::max(unit->vespene_contents, unit->mineral_contents);
-                    assert(qty == resourceQty_.at(unit->tag).front() && "First visible match != default?");
+                    init.qty[replayStep] = qty;
+                    assert(qty == cvt::defaultResources.at(unit->unit_type) && "First visible match != default?");
+                } else {
+                    init.qty[replayStep] = cvt::defaultResources.at(unit->unit_type);
                 }
+                resourceQty_.emplace(unit->tag, std::move(init));
                 assert(unit->display_type != sc2::Unit::Hidden);
             }
         }
         hasResourceInit = true;
     }
 
+    void reassignResourceId(const sc2::Unit *unit)
+    {
+        auto oldKV = std::ranges::find_if(resourceQty_, [=](auto &&keyValue) {
+            auto &value = keyValue.second;
+            return value.pos == unit->pos;
+        });
+        assert(oldKV != resourceQty_.end() && "No position match found???");
+        resourceQty_.emplace(unit->tag, std::move(oldKV->second));
+        resourceQty_.erase(oldKV->first);
+    }
+
     void appendResources(const sc2::Units &units)
     {
         for (auto &&unit : units) {
             if (cvt::defaultResources.contains(unit->unit_type)) {
-                if (!resourceQty_.contains(unit->tag)) {
-                    SPDLOG_INFO("Adding resource that wasn't observed at init");
-                    std::vector<int> init(1, cvt::defaultResources.at(unit->unit_type));
-                    resourceQty_.emplace(unit->tag, std::move(init));
-                    if (unit->display_type == sc2::Unit::Visible) {
-                        auto qty = std::max(unit->vespene_contents, unit->mineral_contents);
-                        assert(qty == resourceQty_.at(unit->tag).front() && "First visible match != default?");
-                    }
-                }
+                if (!resourceQty_.contains(unit->tag)) { this->reassignResourceId(unit); }
+
                 auto &obs = resourceQty_.at(unit->tag);
                 if (unit->display_type == sc2::Unit::Visible) {
                     auto qty = std::max(unit->vespene_contents, unit->mineral_contents);
-                    obs.push_back(qty);
+                    obs.qty[replayStep] = qty;
                 } else {
-                    obs.push_back(obs.back());
+                    obs.qty[replayStep] = obs.qty[replayStep - 1];
                 }
             }
         }
@@ -111,18 +134,18 @@ class Observer : public sc2::ReplayObserver
         auto obs = this->Observation();
         auto actions = obs->GetRawActions();
         auto units = obs->GetUnits();
-        for (auto action : actions) {
-            if (action.target_type == sc2::ActionRaw::TargetUnitTag) {
-                auto tgtUnit = std::ranges::find_if(
-                  units, [tgt_tag = action.target_tag](const sc2::Unit *u) { return u->tag == tgt_tag; });
-                if (tgtUnit != units.end() && (*tgtUnit)->alliance == sc2::Unit::Alliance::Enemy) {
-                    auto nUnits = action.unit_tags.size();
-                    SPDLOG_INFO("{} units attacking {}", nUnits, static_cast<uint64_t>((*tgtUnit)->tag));
-                }
-            } else {
-                SPDLOG_INFO("Action: {}", static_cast<int>(action.target_type));
-            }
-        }
+        // for (auto action : actions) {
+        //     if (action.target_type == sc2::ActionRaw::TargetUnitTag) {
+        //         auto tgtUnit = std::ranges::find_if(
+        //           units, [tgt_tag = action.target_tag](const sc2::Unit *u) { return u->tag == tgt_tag; });
+        //         if (tgtUnit != units.end() && (*tgtUnit)->alliance == sc2::Unit::Alliance::Enemy) {
+        //             auto nUnits = action.unit_tags.size();
+        //             SPDLOG_INFO("{} units attacking {}", nUnits, static_cast<uint64_t>((*tgtUnit)->tag));
+        //         }
+        //     } else {
+        //         SPDLOG_INFO("Action: {}", static_cast<int>(action.target_type));
+        //     }
+        // }
 
         if (!hasResourceInit) {
             this->initResources(units);
@@ -136,30 +159,30 @@ class Observer : public sc2::ReplayObserver
         //     auto hMapSz = hMapDesc.size();
         //     SPDLOG_INFO("Height map size {},{}", hMapSz.x(), hMapSz.y());
         // }
-        static bool hasWritten = false;
-        if (rawObs->feature_layer_data().has_minimap_renders() && !hasWritten) {
-            auto hMapDesc = rawObs->feature_layer_data().minimap_renders().height_map();
-            auto hMapSz = hMapDesc.size();
-            SPDLOG_INFO("Mini Height map size {},{}", hMapSz.x(), hMapSz.y());
-            cv::Mat heightMap(hMapSz.x(), hMapSz.y(), CV_8U);
-            std::memcpy(heightMap.data, hMapDesc.data().data(), heightMap.total());
-            cv::imwrite("heightmap.png", heightMap);
-            hasWritten = true;
-        }
+        // static bool hasWritten = false;
+        // if (rawObs->feature_layer_data().has_minimap_renders() && !hasWritten) {
+        //     auto hMapDesc = rawObs->feature_layer_data().minimap_renders().height_map();
+        //     auto hMapSz = hMapDesc.size();
+        //     SPDLOG_INFO("Mini Height map size {},{}", hMapSz.x(), hMapSz.y());
+        //     cv::Mat heightMap(hMapSz.x(), hMapSz.y(), CV_8U);
+        //     std::memcpy(heightMap.data, hMapDesc.data().data(), heightMap.total());
+        //     cv::imwrite("heightmap.png", heightMap);
+        //     hasWritten = true;
+        // }
 
-        static auto step = std::chrono::system_clock::now();
-        auto diff = std::chrono::system_clock::now() - step;
-        if (diff > 1s) {
-            std::stringstream ss;
-            ss << fmt::format("step {}, minerals: {} units ({}/{}): ",
-              obs->GetGameLoop(),
-              obs->GetMinerals(),
-              units.size(),
-              obs->GetArmyCount());
-            for (auto unit : units) { ss << fmt::format("[{},{}], ", unit->pos.x, unit->pos.y); }
-            SPDLOG_INFO(ss.str());
-            step = std::chrono::system_clock::now();
-        }
+        // static auto step = std::chrono::system_clock::now();
+        // auto diff = std::chrono::system_clock::now() - step;
+        // if (diff > 1s) {
+        //     std::stringstream ss;
+        //     ss << fmt::format("step {}, minerals: {} units ({}/{}): ",
+        //       obs->GetGameLoop(),
+        //       obs->GetMinerals(),
+        //       units.size(),
+        //       obs->GetArmyCount());
+        //     for (auto unit : units) { ss << fmt::format("[{},{}], ", unit->pos.x, unit->pos.y); }
+        //     SPDLOG_INFO(ss.str());
+        //     step = std::chrono::system_clock::now();
+        // }
 
         for (auto &&unit : units) {
             if (cvt::neutralUnitTypes.contains(unit->unit_type)) {
@@ -171,11 +194,14 @@ class Observer : public sc2::ReplayObserver
                 neutralObs[key] = *unit;
             }
         }
+        replayStep++;
     }
 
     std::unordered_map<TypeDisplay, sc2::Unit> neutralObs;
-    std::unordered_map<sc2::Tag, std::vector<int>> resourceQty_;
+    std::unordered_map<sc2::Tag, ResourceObs> resourceQty_;
     bool hasResourceInit{ false };
+    std::size_t replaySize{ 0 };
+    std::size_t replayStep{ 0 };
 
     bool IgnoreReplay(const sc2::ReplayInfo &replay_info, uint32_t &player_id) final { return false; }
 };

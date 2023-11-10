@@ -48,7 +48,7 @@ namespace cvt {
 
     # Add mapping from type id to default resource quantity
     content += "\n// Default vespene or minerals from each resource type id\n"
-    content += "const static std::unordered_map<int, int> defaultResources = {{ "
+    content += "const static std::unordered_map<int, int> defaultResources = { "
     content += ", ".join([f"{{{t},{q}}}" for t, q in make_default_resources().items()])
     content += " };\n"
 
