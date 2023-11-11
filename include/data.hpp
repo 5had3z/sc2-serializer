@@ -4,6 +4,7 @@
 #include <cassert>
 #include <cstdint>
 #include <cstring>
+#include <ranges>
 #include <string>
 #include <vector>
 
@@ -14,16 +15,69 @@ namespace cvt {
 typedef std::uint64_t UID;// Type that represents unique identifier in the game
 
 
+template<typename T, typename It>
+    requires std::is_arithmetic_v<T>
+void vectorize_helper(T d, It &it, bool onehotEnum)
+{
+    *it++ = d;
+}
+
+template<std::ranges::range T, typename It>
+    requires std::is_arithmetic_v<std::ranges::range_value_t<T>>
+void vectorize_helper(const T &d, It &it, bool onehotEnum)
+{
+    it = std::copy(d.cbegin(), d.cend(), it);
+}
+
 // Converts an enum value to a one-hot encoding
 template<typename E, typename T>
     requires std::is_enum_v<E>
 auto enumToOneHot(E e) noexcept -> std::vector<T>;
+
+
+template<typename T> auto enumToOneHot_helper(auto enumVal, const std::ranges::range auto &enumValues) -> std::vector<T>
+{
+    auto it = std::ranges::find(enumValues, enumVal);
+    std::vector<T> ret(enumValues.size());
+    ret[std::distance(enumValues.begin(), it)] = static_cast<T>(1);
+    return ret;
+}
+
+template<typename T, typename It>
+    requires std::is_enum_v<T>
+void vectorize_helper(T d, It &it, bool onehotEnum)
+{
+    using value_type = It::container_type::value_type;
+    if (onehotEnum) {
+        const auto onehot = enumToOneHot<value_type>(d);
+        it = std::copy(onehot.cbegin(), onehot.cend(), it);
+    } else {
+        *it++ = static_cast<value_type>(d);
+    }
+}
+
+template<typename T, typename S>
+    requires std::is_aggregate_v<S>
+auto vectorize(S s, bool onehotEnum = false) -> std::vector<T>
+{
+    std::vector<T> out;
+    auto it = std::back_inserter(out);
+    boost::pfr::for_each_field(s, [&it, onehotEnum](const auto &field) { vectorize_helper(field, it, onehotEnum); });
+    return out;
+}
+
 
 struct Point2d
 {
     int x{ 0 };
     int y{ 0 };
     [[nodiscard]] auto operator==(const Point2d &other) const noexcept -> bool = default;
+
+    auto begin() noexcept -> int * { return &x; }
+    auto end() noexcept -> int * { return &y + 1; }
+
+    auto cbegin() const noexcept -> const int * { return &x; }
+    auto cend() const noexcept -> const int * { return &y + 1; }
 };
 
 struct Point3f
@@ -32,6 +86,12 @@ struct Point3f
     float y{ 0.f };
     float z{ 0.f };
     [[nodiscard]] auto operator==(const Point3f &other) const noexcept -> bool = default;
+
+    auto begin() noexcept -> float * { return &x; }
+    auto end() noexcept -> float * { return &z + 1; }
+
+    auto cbegin() const noexcept -> const float * { return &x; }
+    auto cend() const noexcept -> const float * { return &z + 1; }
 };
 
 template<typename T> struct Image
@@ -88,12 +148,9 @@ enum class Alliance {
 
 template<typename T> auto enumToOneHot(Alliance e) noexcept -> std::vector<T>
 {
-    constexpr std::array vals = { Alliance::Self, Alliance::Ally, Alliance::Neutral, Alliance::Enemy };
+    constexpr std::array vals = std::array{ Alliance::Self, Alliance::Ally, Alliance::Neutral, Alliance::Enemy };
     static_assert(std::is_sorted(vals.begin(), vals.end()));
-    auto it = std::ranges::find(vals, e);
-    std::vector<T> ret(vals.size());
-    ret[std::distance(vals.begin(), it)] = static_cast<T>(1);
-    return ret;
+    return enumToOneHot_helper<T>(e, vals);
 }
 
 enum class CloakState {
@@ -110,10 +167,7 @@ template<typename T> auto enumToOneHot(CloakState e) noexcept -> std::vector<T>
         CloakState::Unknown, CloakState::Cloaked, CloakState::Detected, CloakState::UnCloaked, CloakState::Allied
     };
     static_assert(std::is_sorted(vals.begin(), vals.end()));
-    auto it = std::ranges::find(vals, e);
-    std::vector<T> ret(vals.size());
-    ret[std::distance(vals.begin(), it)] = static_cast<T>(1);
-    return ret;
+    return enumToOneHot_helper<T>(e, vals);
 }
 
 
@@ -123,10 +177,7 @@ template<typename T> auto enumToOneHot(Visibility e) noexcept -> std::vector<T>
 {
     constexpr std::array vals = { Visibility::Visible, Visibility::Snapshot, Visibility::Hidden };
     static_assert(std::is_sorted(vals.begin(), vals.end()));
-    auto it = std::ranges::find(vals, e);
-    std::vector<T> ret(vals.size());
-    ret[std::distance(vals.begin(), it)] = static_cast<T>(1);
-    return ret;
+    return enumToOneHot_helper<T>(e, vals);
 }
 
 struct Unit
@@ -136,7 +187,6 @@ struct Unit
     Visibility observation{};
     Alliance alliance{};
     CloakState cloak_state{ CloakState::Unknown };
-
     int unitType{};
     float health{};
     float health_max{};
@@ -146,12 +196,12 @@ struct Unit
     float energy_max{};
     int cargo{};
     int cargo_max{};
-
-    Point3f pos{};
+    Point3f pos{};// x
+    // y
+    // z
     float heading{};
     float radius{};
     float build_progress{};
-
     bool is_blip{ false };// detected by sensor
     bool is_flying{ false };// flying ship
     bool is_burrowed{ false };// zerg
@@ -277,7 +327,9 @@ struct NeutralUnit
     Visibility observation{};
     float health{};
     float health_max{};
-    Point3f pos{};
+    Point3f pos{};// x
+    // y
+    // z
     float heading{};
     float radius{};
     int contents{};// minerals or vespene

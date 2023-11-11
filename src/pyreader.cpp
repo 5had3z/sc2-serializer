@@ -159,7 +159,10 @@ PYBIND11_MODULE(sc2_replay_reader, m)
         .def_readwrite("is_blip", &cvt::Unit::is_blip)
         .def_readwrite("is_flying", &cvt::Unit::is_flying)
         .def_readwrite("is_burrowed", &cvt::Unit::is_burrowed)
-        .def_readwrite("is_powered", &cvt::Unit::is_powered);
+        .def_readwrite("is_powered", &cvt::Unit::is_powered)
+        .def("as_array", [](const cvt::Unit &data, bool expand_enum = false) -> py::array_t<float> {
+            return py::cast(cvt::vectorize<float>(data, expand_enum));
+        });
 
 
     py::class_<cvt::NeutralUnit>(m, "NeutralUnit")
@@ -174,30 +177,7 @@ PYBIND11_MODULE(sc2_replay_reader, m)
         .def_readwrite("radius", &cvt::NeutralUnit::radius)
         .def_readwrite("contents", &cvt::NeutralUnit::contents)
         .def("as_array", [](const cvt::NeutralUnit &data, bool expand_enum = false) -> py::array_t<float> {
-            std::size_t vecSize = 13;
-            if (expand_enum) { vecSize += 2; }// enum is 1-3 so add 2
-            py::array_t<float> array({ vecSize }, { 1 });
-
-            auto view = array.mutable_data();
-            std::size_t dataIdx = 0;
-            view[dataIdx++] = static_cast<float>(data.id);
-            view[dataIdx++] = static_cast<float>(data.pos.x);
-            view[dataIdx++] = static_cast<float>(data.pos.y);
-            view[dataIdx++] = static_cast<float>(data.pos.z);
-            view[dataIdx++] = static_cast<float>(data.heading);
-            view[dataIdx++] = static_cast<float>(data.unitType);
-            if (expand_enum) {
-                const auto onehot = cvt::enumToOneHot<float>(data.observation);
-                std::copy(onehot.begin(), onehot.end(), &view[dataIdx]);
-                dataIdx += onehot.size();
-            } else {
-                view[dataIdx++] = static_cast<float>(data.observation);
-            }
-            view[dataIdx++] = static_cast<float>(data.health);
-            view[dataIdx++] = static_cast<float>(data.health_max);
-            view[dataIdx++] = static_cast<float>(data.contents);
-
-            return array;
+            return py::cast(cvt::vectorize<float>(data, expand_enum));
         });
 
     // Expose ReplayDatabase class
