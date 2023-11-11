@@ -50,7 +50,7 @@ def main(
     ]
     # fmt: on
 
-    feat = replay_data.neutralUnits[0][0].as_array()
+    feat = np.stack([i.as_array() for i in replay_data.neutralUnits[0]])
 
     for attr in img_attrs:
         image_sequence = getattr(replay_data, attr)

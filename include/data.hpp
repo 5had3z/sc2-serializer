@@ -496,8 +496,10 @@ struct ReplayData
     Result playerResult{ Result::Undecided };
     int playerMMR{};
     int playerAPM{};
-    std::vector<StepData> stepData{};
+    int mapWidth{};
+    int mapHeight{};
     Image<std::uint8_t> heightMap{};
+    std::vector<StepData> stepData{};
 
     [[nodiscard]] auto operator==(const ReplayData &other) const noexcept -> bool = default;
 
@@ -517,6 +519,8 @@ struct ReplayDataSoA
     Result playerResult{ Result::Undecided };
     int playerMMR{};
     int playerAPM{};
+    int mapWidth{};
+    int mapHeight{};
     Image<std::uint8_t> heightMap{};
 
     // Step data

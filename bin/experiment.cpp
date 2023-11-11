@@ -50,9 +50,13 @@ class Observer : public sc2::ReplayObserver
         mTime = std::chrono::system_clock::now();
         hasResourceInit = false;
         auto rInfo = this->ReplayControl()->GetReplayInfo();
-        SPDLOG_INFO("Player: {}, Map Name: {}", rInfo.players->player_id, rInfo.map_name);
-        replaySize = rInfo.duration_gameloops;
-        replayStep = 0;
+        auto gameInfo = this->Observation()->GetGameInfo();
+        SPDLOG_INFO("Player: {}, Map Name: {}, Steps: {}, Map Dims: {},{}",
+            rInfo.players->player_id,
+            rInfo.map_name,
+            rInfo.duration_gameloops,
+            gameInfo.width,
+            gameInfo.height);
     }
 
     // void OnUnitCreated(const sc2::Unit *unit) { SPDLOG_INFO("Unit created: {}", unit->unit_type); }
@@ -63,16 +67,14 @@ class Observer : public sc2::ReplayObserver
         SPDLOG_INFO("Sim took {:.1f}s", totalDuration.count());
         for (auto &&[k, v] : neutralObs) {
             fmt::print("Unit: [{}]{}, Visibility: {} - {}\n",
-              static_cast<uint64>(k.first),
-              UnitTypeToName(k.first),
-              static_cast<int>(k.second),
-              0);
+                static_cast<uint64>(k.first),
+                UnitTypeToName(k.first),
+                static_cast<int>(k.second),
+                0);
             fflush(stdout);
             int a = 0;
         }
         fflush(stdout);
-        replaySize = 0;
-        replayStep = 0;
 
         std::ofstream stream(fs::path("resources.txt"), std::ios::trunc);
         for (auto &&[tag, values] : resourceQty_) {
@@ -82,6 +84,8 @@ class Observer : public sc2::ReplayObserver
 
     void initResources(const sc2::Units &units)
     {
+        const auto replayStep = this->Observation()->GetGameLoop();
+        const auto replaySize = this->ReplayControl()->GetReplayInfo().duration_gameloops;
         for (auto &&unit : units) {
             if (cvt::defaultResources.contains(unit->unit_type)) {
                 ResourceObs init{ unit->pos, std::vector<int>(replaySize) };
@@ -112,6 +116,7 @@ class Observer : public sc2::ReplayObserver
 
     void appendResources(const sc2::Units &units)
     {
+        const auto replayStep = this->Observation()->GetGameLoop();
         for (auto &&unit : units) {
             if (cvt::defaultResources.contains(unit->unit_type)) {
                 if (!resourceQty_.contains(unit->tag)) { this->reassignResourceId(unit); }
@@ -194,14 +199,11 @@ class Observer : public sc2::ReplayObserver
                 neutralObs[key] = *unit;
             }
         }
-        replayStep++;
     }
 
     std::unordered_map<TypeDisplay, sc2::Unit> neutralObs;
     std::unordered_map<sc2::Tag, ResourceObs> resourceQty_;
     bool hasResourceInit{ false };
-    std::size_t replaySize{ 0 };
-    std::size_t replayStep{ 0 };
 
     bool IgnoreReplay(const sc2::ReplayInfo &replay_info, uint32_t &player_id) final { return false; }
 };
