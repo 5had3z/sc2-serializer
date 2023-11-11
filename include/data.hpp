@@ -36,16 +36,6 @@ namespace detail {
         it = std::copy(d.cbegin(), d.cend(), it);
     }
 
-
-    template<typename T>
-    auto enumToOneHot_helper(auto enumVal, const std::ranges::range auto &enumValues) -> std::vector<T>
-    {
-        auto it = std::ranges::find(enumValues, enumVal);
-        std::vector<T> ret(enumValues.size());
-        ret[std::distance(enumValues.begin(), it)] = static_cast<T>(1);
-        return ret;
-    }
-
     template<typename T, typename It>
         requires std::is_enum_v<T>
     void vectorize_helper(T d, It &it, bool onehotEnum)
@@ -57,6 +47,15 @@ namespace detail {
         } else {
             *it++ = static_cast<value_type>(d);
         }
+    }
+
+    template<typename T>
+    auto enumToOneHot_helper(auto enumVal, const std::ranges::range auto &enumValues) -> std::vector<T>
+    {
+        auto it = std::ranges::find(enumValues, enumVal);
+        std::vector<T> ret(enumValues.size());
+        ret[std::distance(enumValues.begin(), it)] = static_cast<T>(1);
+        return ret;
     }
 
 }// namespace detail
@@ -145,12 +144,7 @@ template<typename T> struct Image
     [[nodiscard]] auto data() noexcept -> ptr_type { return reinterpret_cast<ptr_type>(_data.data()); }
 };
 
-enum class Alliance {
-    Self = 1,
-    Ally = 2,
-    Neutral = 3,
-    Enemy = 4,
-};
+enum class Alliance { Self = 1, Ally = 2, Neutral = 3, Enemy = 4 };
 
 template<typename T> auto enumToOneHot(Alliance e) noexcept -> std::vector<T>
 {
@@ -159,13 +153,7 @@ template<typename T> auto enumToOneHot(Alliance e) noexcept -> std::vector<T>
     return detail::enumToOneHot_helper<T>(e, vals);
 }
 
-enum class CloakState {
-    Unknown = 0,
-    Cloaked = 1,
-    Detected = 2,
-    UnCloaked = 3,
-    Allied = 4,
-};
+enum class CloakState { Unknown = 0, Cloaked = 1, Detected = 2, UnCloaked = 3, Allied = 4 };
 
 template<typename T> auto enumToOneHot(CloakState e) noexcept -> std::vector<T>
 {
