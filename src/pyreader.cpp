@@ -160,9 +160,13 @@ PYBIND11_MODULE(sc2_replay_reader, m)
         .def_readwrite("is_flying", &cvt::Unit::is_flying)
         .def_readwrite("is_burrowed", &cvt::Unit::is_burrowed)
         .def_readwrite("is_powered", &cvt::Unit::is_powered)
-        .def("as_array", [](const cvt::Unit &data, bool expand_enum = false) -> py::array_t<float> {
-            return py::cast(cvt::vectorize<float>(data, expand_enum));
-        });
+        .def(
+            "as_array",
+            [](const cvt::Unit &data, bool onehot_enum) -> py::array_t<float> {
+                return py::cast(cvt::vectorize<float>(data, onehot_enum));
+            },
+            py::kw_only(),
+            py::arg("onehot_enum") = false);
 
 
     py::class_<cvt::NeutralUnit>(m, "NeutralUnit")
@@ -176,9 +180,13 @@ PYBIND11_MODULE(sc2_replay_reader, m)
         .def_readwrite("heading", &cvt::NeutralUnit::heading)
         .def_readwrite("radius", &cvt::NeutralUnit::radius)
         .def_readwrite("contents", &cvt::NeutralUnit::contents)
-        .def("as_array", [](const cvt::NeutralUnit &data, bool expand_enum = false) -> py::array_t<float> {
-            return py::cast(cvt::vectorize<float>(data, expand_enum));
-        });
+        .def(
+            "as_array",
+            [](const cvt::NeutralUnit &data, bool onehot_enum) -> py::array_t<float> {
+                return py::cast(cvt::vectorize<float>(data, onehot_enum));
+            },
+            py::kw_only(),
+            py::arg("onehot_enum") = false);
 
     // Expose ReplayDatabase class
     py::class_<cvt::ReplayDatabase>(m, "ReplayDatabase")

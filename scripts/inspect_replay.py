@@ -48,6 +48,8 @@ def main(
     ]
     # fmt: on
 
+    feat = replay_data.neutralUnits[0][0].as_array()
+
     for attr in img_attrs:
         image_sequence = getattr(replay_data, attr)
         make_video(image_sequence, outfolder / f"{attr}.webm")
