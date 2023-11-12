@@ -456,6 +456,7 @@ template<typename T> auto enumToOneHot(Action::Target_Type e) noexcept -> std::v
 
 struct StepData
 {
+    std::uint32_t gameStep{};
     Image<std::uint8_t> visibility{};
     Image<bool> creep{};
     Image<std::uint8_t> player_relative{};
@@ -524,6 +525,7 @@ struct ReplayDataSoA
     Image<std::uint8_t> heightMap{};
 
     // Step data
+    std::vector<std::uint32_t> gameStep{};
     std::vector<Image<std::uint8_t>> visibility{};
     std::vector<Image<bool>> creep{};
     std::vector<Image<std::uint8_t>> player_relative{};
@@ -550,6 +552,7 @@ struct ReplayDataSoA
     };
 
     for (const StepData &step : aos.stepData) {
+        soa.gameStep.push_back(step.gameStep);
         soa.visibility.push_back(step.visibility);
         soa.creep.push_back(step.creep);
         soa.player_relative.push_back(step.player_relative);
@@ -580,6 +583,7 @@ struct ReplayDataSoA
 
     for (std::size_t idx = 0; idx < stepDataVec.size(); ++idx) {
         auto &stepData = stepDataVec[idx];
+        if (idx < soa.gameStep.size()) { stepData.gameStep = soa.gameStep[idx]; }
         if (idx < soa.visibility.size()) { stepData.visibility = soa.visibility[idx]; }
         if (idx < soa.creep.size()) { stepData.creep = soa.creep[idx]; }
         if (idx < soa.player_relative.size()) { stepData.player_relative = soa.player_relative[idx]; }

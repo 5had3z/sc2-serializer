@@ -282,6 +282,7 @@ void FullConverter::OnStep()
     currentReplay_.stepData.resize(currentReplay_.stepData.size() + 1);
 
     // Write directly into stepData.back()
+    currentReplay_.stepData.back().gameStep = this->Observation()->GetGameLoop();
     this->copyUnitData();
     this->copyActionData();
     this->copyDynamicMapData();
@@ -302,6 +303,7 @@ void ActionConverter::OnStep()
     }
 
     // Always copy observation, the next step might have an action
+    currentReplay_.stepData.back().gameStep = this->Observation()->GetGameLoop();
     this->copyUnitData();
     this->copyDynamicMapData();
 }
@@ -309,7 +311,7 @@ void ActionConverter::OnStep()
 void StridedConverter::OnStep()
 {
     // Check if a logging step
-    auto gameStep = this->Observation()->GetGameLoop();
+    const auto gameStep = this->Observation()->GetGameLoop();
     if (gameStep % stride_ != 0) { return; }
 
     // Copy static height map if not already done
@@ -319,6 +321,7 @@ void StridedConverter::OnStep()
     currentReplay_.stepData.resize(currentReplay_.stepData.size() + 1);
 
     // Write directly into stepData.back()
+    currentReplay_.stepData.back().gameStep = gameStep;
     this->copyUnitData();
     this->copyActionData();
     this->copyDynamicMapData();
