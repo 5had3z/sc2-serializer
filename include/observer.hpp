@@ -25,9 +25,9 @@ class BaseConverter : public sc2::ReplayObserver
     // Set Replay file hash + playerId before launching the coordinator
     void setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept;
 
-    void OnGameStart() final;
+    void OnGameStart() override;
 
-    void OnGameEnd() final;
+    void OnGameEnd() override;
 
   protected:
     void copyHeightMapData() noexcept;
@@ -56,7 +56,6 @@ class BaseConverter : public sc2::ReplayObserver
     std::unordered_map<UID, ResourceObs> resourceObs_;
     bool mapDynHasLogged_{ false };
     bool mapHeightHasLogged_{ false };
-    std::size_t stepCounter_{ 0 };
 };
 
 /**
@@ -74,6 +73,26 @@ class FullConverter : public BaseConverter
 class ActionConverter : public BaseConverter
 {
     void OnStep() final;
+};
+
+/**
+ * @brief Convert and serialize at a particular stride (i.e. every 10 steps)
+ */
+class StridedConverter : public BaseConverter
+{
+  public:
+    // Set the sampling stride
+    void SetStride(std::size_t stride) noexcept;
+
+    // Get the current sampling stride
+    auto GetStride() const noexcept -> std::size_t;
+
+    void OnGameStart() final;
+
+  private:
+    void OnStep() final;
+
+    std::size_t stride_{ 0 };
 };
 
 }// namespace cvt

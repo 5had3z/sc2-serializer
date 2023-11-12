@@ -42,9 +42,9 @@ auto getReplaysFolder(const std::string_view folder) noexcept -> std::vector<std
 }
 
 void loopReplayFiles(const std::filesystem::path &replayFolder,
-  const std::vector<std::string> &replayHashes,
-  sc2::Coordinator &coordinator,
-  cvt::BaseConverter *converter)
+    const std::vector<std::string> &replayHashes,
+    sc2::Coordinator &coordinator,
+    cvt::BaseConverter *converter)
 {
     std::size_t nComplete = 0;
     for (auto &&replayHash : replayHashes) {
@@ -76,7 +76,8 @@ auto main(int argc, char *argv[]) -> int
       ("r,replays", "path to folder of replays", cxxopts::value<std::string>())
       ("p,partition", "partition file to select replays", cxxopts::value<std::string>())
       ("o,output", "output directory for replays", cxxopts::value<std::string>())
-      ("c,converter", "type of converter to use 'action' or 'full'", cxxopts::value<std::string>())
+      ("c,converter", "type of converter to use [action|full|strided]", cxxopts::value<std::string>())
+      ("s,stride", "stride for the strided converter", cxxopts::value<std::size_t>())
       ("g,game", "path to game execuatable", cxxopts::value<std::string>())
       ("h,help", "This help");
     // clang-format on
@@ -109,10 +110,19 @@ auto main(int argc, char *argv[]) -> int
         }
     }
 
-    auto converter = [](const std::string &cvtType) -> std::unique_ptr<cvt::BaseConverter> {
+    auto converter = [&](const std::string &cvtType) -> std::unique_ptr<cvt::BaseConverter> {
         if (cvtType == "full") { return std::make_unique<cvt::FullConverter>(); }
         if (cvtType == "action") { return std::make_unique<cvt::ActionConverter>(); }
-        SPDLOG_ERROR("Got invalid --converter='{}', require 'action' or 'full'", cvtType);
+        if (cvtType == "strided") {
+            auto converter = std::make_unique<cvt::StridedConverter>();
+            if (cliOpts["stride"].count() == 0) {
+                SPDLOG_ERROR("Strided converter used but no --stride set");
+                return nullptr;
+            }
+            converter->SetStride(cliOpts["stride"].as<std::size_t>());
+            return converter;
+        }
+        SPDLOG_ERROR("Got invalid --converter='{}', require [full|action|strided]", cvtType);
         return nullptr;
     }(cliOpts["converter"].as<std::string>());
 

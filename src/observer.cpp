@@ -47,7 +47,6 @@ void BaseConverter::OnGameStart()
     currentReplay_.mapHeight = gameInfo.height;
     currentReplay_.mapWidth = gameInfo.width;
 
-    stepCounter_ = 0;
     currentReplay_.clear();
     resourceObs_.clear();
     mapDynHasLogged_ = false;
@@ -286,7 +285,6 @@ void FullConverter::OnStep()
     this->copyUnitData();
     this->copyActionData();
     this->copyDynamicMapData();
-    stepCounter_++;
 }
 
 
@@ -306,7 +304,40 @@ void ActionConverter::OnStep()
     // Always copy observation, the next step might have an action
     this->copyUnitData();
     this->copyDynamicMapData();
-    stepCounter_++;
+}
+
+void StridedConverter::OnStep()
+{
+    // Check if a logging step
+    auto gameStep = this->Observation()->GetGameLoop();
+    if (gameStep % stride_ != 0) { return; }
+
+    // Copy static height map if not already done
+    if (currentReplay_.heightMap.empty()) { this->copyHeightMapData(); }
+
+    // "Initialize" next item
+    currentReplay_.stepData.resize(currentReplay_.stepData.size() + 1);
+
+    // Write directly into stepData.back()
+    this->copyUnitData();
+    this->copyActionData();
+    this->copyDynamicMapData();
+}
+
+void StridedConverter::SetStride(std::size_t stride) noexcept
+{
+    if (stride == 0 || stride > 10000) {
+        throw std::logic_error(fmt::format("SetStride got a bad stride: {}", stride));
+    }
+    stride_ = stride;
+}
+
+auto StridedConverter::GetStride() const noexcept -> std::size_t { return stride_; }
+
+void StridedConverter::OnGameStart()
+{
+    if (stride_ == 0) { throw std::logic_error(fmt::format("Stride not set: {}", stride_)); }
+    BaseConverter::OnGameStart();
 }
 
 
