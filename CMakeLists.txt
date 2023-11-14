@@ -94,11 +94,11 @@ if(SC2_PY_READER)
     VERSION
     2.11.1)
 
-  pybind11_add_module(sc2_replay_reader src/database.cpp src/pyreader.cpp)
-  target_compile_features(sc2_replay_reader PUBLIC cxx_std_23)
-  target_link_libraries(sc2_replay_reader PUBLIC spdlog::spdlog boost_pfr Boost::iostreams)
-  target_compile_options(sc2_replay_reader PUBLIC ${_COMPILE_OPTIONS})
-  target_include_directories(sc2_replay_reader PUBLIC include)
+  pybind11_add_module(_sc2_replay_reader src/database.cpp src/pyreader.cpp)
+  target_compile_features(_sc2_replay_reader PUBLIC cxx_std_23)
+  target_link_libraries(_sc2_replay_reader PUBLIC spdlog::spdlog boost_pfr Boost::iostreams)
+  target_compile_options(_sc2_replay_reader PUBLIC ${_COMPILE_OPTIONS})
+  target_include_directories(_sc2_replay_reader PUBLIC include)
 endif()
 # ---- Testing Suite ----
 

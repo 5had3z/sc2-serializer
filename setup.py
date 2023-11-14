@@ -24,7 +24,7 @@ class CMakeBuild(build_ext):
         extdir = ext_fullpath.parent.resolve()
 
         cmake_args = [
-            f"-DCMAKE_BUILD_TYPE={'Debug' if self.debug else 'Release' }",
+            f"-DCMAKE_BUILD_TYPE={'Debug' if self.debug else 'Release'}",
             f"-DPYTHON_EXECUTABLE={sys.executable}",
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}{os.sep}",
             f"-DCMAKE_MAKE_PROGRAM:FILEPATH={Path(ninja.BIN_DIR)/'ninja'}",
@@ -49,7 +49,7 @@ class CMakeBuild(build_ext):
 
 if __name__ == "__main__":
     setup(
-        ext_modules=[CMakeExtension("sc2-replay-reader")],
+        ext_modules=[CMakeExtension("_sc2_replay_reader")],
         cmdclass={"build_ext": CMakeBuild},
         zip_safe=False,
     )

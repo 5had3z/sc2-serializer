@@ -88,7 +88,7 @@ void bindEnums(py::module &m)
         .export_values();
 }
 
-PYBIND11_MODULE(sc2_replay_reader, m)
+PYBIND11_MODULE(_sc2_replay_reader, m)
 {
     m.doc() = "pbdoc(Python bindings for Starcraft II database reader)pbdoc";
 

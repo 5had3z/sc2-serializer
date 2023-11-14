@@ -2,6 +2,9 @@
 requires = ["setuptools>=61.0", "wheel", "ninja", "cmake>=3.25"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools.packages.find]
+where = ["src"]
+
 [project]
 name = "sc2-replay-reader"
 authors = [

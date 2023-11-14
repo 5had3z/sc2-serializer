@@ -11,7 +11,7 @@ import typer
 from typing_extensions import Annotated
 from matplotlib import pyplot as plt
 
-from type_info import Unit, UnitOH, NeutralUnit, NeutralUnitOH
+from sc2_replay_reader.type_info import Unit, UnitOH, NeutralUnit, NeutralUnitOH
 
 app = typer.Typer()
 
