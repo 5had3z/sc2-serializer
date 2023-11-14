@@ -78,11 +78,11 @@ struct Point2d
     int y{ 0 };
     [[nodiscard]] auto operator==(const Point2d &other) const noexcept -> bool = default;
 
-    auto begin() noexcept -> int * { return &x; }
-    auto end() noexcept -> int * { return &y + 1; }
+    [[nodiscard]] auto begin() noexcept -> int * { return &x; }
+    [[nodiscard]] auto end() noexcept -> int * { return &y + 1; }
 
-    auto cbegin() const noexcept -> const int * { return &x; }
-    auto cend() const noexcept -> const int * { return &y + 1; }
+    [[nodiscard]] auto cbegin() const noexcept -> const int * { return &x; }
+    [[nodiscard]] auto cend() const noexcept -> const int * { return &y + 1; }
 };
 
 struct Point3f
@@ -92,11 +92,11 @@ struct Point3f
     float z{ 0.f };
     [[nodiscard]] auto operator==(const Point3f &other) const noexcept -> bool = default;
 
-    auto begin() noexcept -> float * { return &x; }
-    auto end() noexcept -> float * { return &z + 1; }
+    [[nodiscard]] auto begin() noexcept -> float * { return &x; }
+    [[nodiscard]] auto end() noexcept -> float * { return &z + 1; }
 
-    auto cbegin() const noexcept -> const float * { return &x; }
-    auto cend() const noexcept -> const float * { return &z + 1; }
+    [[nodiscard]] auto cbegin() const noexcept -> const float * { return &x; }
+    [[nodiscard]] auto cend() const noexcept -> const float * { return &z + 1; }
 };
 
 template<typename T> struct Image
