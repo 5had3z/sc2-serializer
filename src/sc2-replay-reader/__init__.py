@@ -1,1 +1,1 @@
-from _sc2_replay_reader import *
+from _sc2_replay_reader import *  # noqa : F403

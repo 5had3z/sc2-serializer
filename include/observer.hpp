@@ -38,7 +38,7 @@ class BaseConverter : public sc2::ReplayObserver
 
     void copyDynamicMapData() noexcept;
 
-    // Update resourceObs_ based on visisble units
+    // Update resourceObs_ based on visible units
     // reassign jumbled UIDs to be consistent over the game
     // assign snapshot unis the last known quantity
     void updateResourceObs() noexcept;
@@ -68,7 +68,7 @@ class FullConverter : public BaseConverter
 
 /**
  * @brief The alphastar dataset only saves if the player makes an
- *        action and its associated preceeding observation.
+ *        action and its associated preceding observation.
  */
 class ActionConverter : public BaseConverter
 {

@@ -1,6 +1,7 @@
-""" 
+"""
 Explore SC2Replays data with python API
 """
+# ruff: noqa
 from pathlib import Path
 from typing import Sequence
 

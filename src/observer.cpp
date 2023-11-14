@@ -101,7 +101,7 @@ void BaseConverter::copyHeightMapData() noexcept
     const auto *rawObs = this->Observation()->GetRawObservation();
     const auto &minimapFeats = rawObs->feature_layer_data().minimap_renders();
     if (!mapHeightHasLogged_) {
-        SPDLOG_INFO("Static HeightMap Availablity : {}", minimapFeats.has_height_map());
+        SPDLOG_INFO("Static HeightMap Availability : {}", minimapFeats.has_height_map());
         mapHeightHasLogged_ = true;
     }
     if (!minimapFeats.has_height_map()) { return; }
@@ -250,7 +250,7 @@ void BaseConverter::copyDynamicMapData() noexcept
     const auto *rawObs = this->Observation()->GetRawObservation();
     const auto &minimapFeats = rawObs->feature_layer_data().minimap_renders();
 
-    // Log available visibilty per replay
+    // Log available visibility per replay
     if (!mapDynHasLogged_) {
         mapDynHasLogged_ = true;
         SPDLOG_INFO(

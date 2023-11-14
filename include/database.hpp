@@ -24,7 +24,7 @@ class ReplayDatabase
     // Check if db is full
     [[nodiscard]] auto isFull() const noexcept -> bool;
 
-    // Load existing or create new based on existance
+    // Load existing or create new based on existence
     [[maybe_unused]] auto open(std::filesystem::path dbPath) noexcept -> bool;
 
     [[nodiscard]] auto size() const noexcept -> std::size_t;

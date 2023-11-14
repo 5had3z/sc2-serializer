@@ -214,7 +214,7 @@ int main(int argc, char *argv[])
     // clang-format off
     cliopts.add_options()
       ("r,replays", "path to folder of replays", cxxopts::value<std::string>())
-      ("g,game", "path to game execuatable", cxxopts::value<std::string>())
+      ("g,game", "path to game executable", cxxopts::value<std::string>())
       ("p,player", "Player perspective to use (0,1)", cxxopts::value<int>()->default_value("1"));
     // clang-format on
     auto result = cliopts.parse(argc, argv);

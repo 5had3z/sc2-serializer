@@ -78,7 +78,7 @@ auto main(int argc, char *argv[]) -> int
       ("o,output", "output directory for replays", cxxopts::value<std::string>())
       ("c,converter", "type of converter to use [action|full|strided]", cxxopts::value<std::string>())
       ("s,stride", "stride for the strided converter", cxxopts::value<std::size_t>())
-      ("g,game", "path to game execuatable", cxxopts::value<std::string>())
+      ("g,game", "path to game executable", cxxopts::value<std::string>())
       ("h,help", "This help");
     // clang-format on
     const auto cliOpts = cliParser.parse(argc, argv);
