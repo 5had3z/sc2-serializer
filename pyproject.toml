@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 
 [project]
-name = "sc2-replay-reader"
+name = "sc2_replay_reader"
 authors = [
     { name = "Bryce Ferenczi", email = "frenzi@hotmail.com.au" },
     { name = "Rhys Newbury", email = "newbury777@gmail.com" },
