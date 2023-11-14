@@ -177,17 +177,27 @@ class Observer : public sc2::ReplayObserver
 
         // static auto step = std::chrono::system_clock::now();
         // auto diff = std::chrono::system_clock::now() - step;
-        // if (diff > 1s) {
-        //     std::stringstream ss;
-        //     ss << fmt::format("step {}, minerals: {} units ({}/{}): ",
-        //       obs->GetGameLoop(),
-        //       obs->GetMinerals(),
-        //       units.size(),
-        //       obs->GetArmyCount());
-        //     for (auto unit : units) { ss << fmt::format("[{},{}], ", unit->pos.x, unit->pos.y); }
-        //     SPDLOG_INFO(ss.str());
-        //     step = std::chrono::system_clock::now();
-        // }
+        auto loop = this->Observation()->GetGameLoop();
+        if (loop % 100 == 0) {
+            // std::stringstream ss;
+            // ss << fmt::format("step {}, minerals: {} units ({}/{}): ",
+            //   obs->GetGameLoop(),
+            //   obs->GetMinerals(),
+            //   units.size(),
+            //   obs->GetArmyCount());
+            // for (auto unit : units) { ss << fmt::format("[{},{}], ", unit->pos.x, unit->pos.y); }
+            // SPDLOG_INFO(ss.str());
+            auto hMapDesc = rawObs->feature_layer_data().minimap_renders().player_id();
+            cv::Mat heightMap(hMapDesc.size().x(), hMapDesc.size().y(), CV_8U);
+            std::transform(hMapDesc.data().data(),
+                hMapDesc.data().data() + heightMap.total(),
+                heightMap.data,
+                [](const char &elem) { return elem == 16 ? 3 : elem; });
+            cv::normalize(heightMap, heightMap, 0, 255, cv::NORM_MINMAX, CV_8U);
+            std::string fname = fmt::format("workspace/player_id_{}.png", loop);
+            cv::imwrite(fname, heightMap);
+            // step = std::chrono::system_clock::now();
+        }
 
         for (auto &&unit : units) {
             if (cvt::neutralUnitTypes.contains(unit->unit_type)) {
@@ -215,7 +225,7 @@ int main(int argc, char *argv[])
     cliopts.add_options()
       ("r,replays", "path to folder of replays", cxxopts::value<std::string>())
       ("g,game", "path to game execuatable", cxxopts::value<std::string>())
-      ("p,player", "Player perspective to use (0,1)", cxxopts::value<int>()->default_value("1"));
+      ("p,player", "Player perspective to use (0,1,2) where 0 is neutral observer", cxxopts::value<int>()->default_value("1"));
     // clang-format on
     auto result = cliopts.parse(argc, argv);
 
@@ -232,8 +242,8 @@ int main(int argc, char *argv[])
     }
 
     auto playerId = result["player"].as<int>();
-    if (playerId < 1 || playerId > 2) {
-        SPDLOG_ERROR("Player id should be 1 or 2, got {}", playerId);
+    if (playerId < 0 || playerId > 2) {
+        SPDLOG_ERROR("Player id should be 0, 1 or 2, got {}", playerId);
         return -1;
     }
 

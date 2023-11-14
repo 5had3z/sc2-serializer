@@ -457,6 +457,11 @@ template<typename T> auto enumToOneHot(Action::Target_Type e) noexcept -> std::v
 struct StepData
 {
     std::uint32_t gameStep{};
+    std::uint32_t minearals{};
+    std::uint32_t vespere{};
+    std::uint32_t popMax{};
+    std::uint32_t popArmy{};
+    std::uint32_t popWorkers{};
     Image<std::uint8_t> visibility{};
     Image<bool> creep{};
     Image<std::uint8_t> player_relative{};
