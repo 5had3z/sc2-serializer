@@ -101,10 +101,41 @@ terran_id_to_str = {FUNCTIONS[p].ability_id: p for p in terran_wiki_entries}
 
 
 def generate_zerg_entries():
-    return []
+    entries = []
+    levels = ["1", "2", "3"]
+
+    # Melee Missle and Flyer Attack
+    for a, l in product(["Melee", "Missile"], levels):
+        entries.append(f"{a}WeaponsLevel{l}")
+    entries.extend([f"FlyerAttackLevel{l}" for l in levels])
+
+    # Ground and flyer armor
+    for a, l in product(["Ground", "Flyer"], levels):
+        entries.append(f"{a}ArmorLevel{l}")
+    entries = [f"Research_Zerg{e}_quick" for e in entries]
+    return entries
 
 
-zerg_wiki_entries = []
+zerg_wiki_entries = [
+    # "ChitinousPlating",
+    "AdaptiveTalons",
+    "AnabolicSynthesis",
+    "CentrifugalHooks",
+    "GlialRegeneration",  # Wiki is Reconstitution
+    "ZerglingMetabolicBoost",
+    "PneumatizedCarapace",
+    "MuscularAugments",
+    "GroovedSpines",
+    # "SeismicSpines",
+    "Burrow",
+    "NeuralParasite",
+    # "EvolveMicrobialShroud",
+    "PathogenGlands",
+    # "VentralSacs",
+    "ZerglingAdrenalGlands",
+    "TunnelingClaws",
+    # "FlyingLocusts",
+]
 zerg_wiki_entries = [f"Research_{e}_quick" for e in zerg_wiki_entries]
 zerg_wiki_entries.extend(generate_zerg_entries())
 # Create mapping
