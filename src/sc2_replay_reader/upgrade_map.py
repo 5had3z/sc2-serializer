@@ -23,7 +23,6 @@ def _gen_protoss():
         # "TectonicDestabilizers", # On wiki but not sc2 api
         "InterceptorGravitonCatapult",
     ]
-    entries = []
     levels = ["1", "2", "3"]
     for a, b, c in product(["Ground", "Air"], ["Armor", "Weapons"], levels):
         entries.append(f"Protoss{a}{b}Level{c}")
@@ -32,8 +31,12 @@ def _gen_protoss():
     return entries
 
 
-# Create mapping
-PROTOSS = {FUNCTIONS[p].ability_id: p for p in _gen_protoss()}
+# Protoss Research ID and Name mapping
+PROTOSS: dict[int, str] = {FUNCTIONS[p].ability_id: p for p in _gen_protoss()}
+# Protoss Research ID to State Feature Index Mapping
+PROTOSS_IDX: dict[int, int] = {
+    _id: idx for idx, _id in enumerate(sorted(PROTOSS.keys()))
+}
 
 
 # --- Terran ---
@@ -83,8 +86,10 @@ def _gen_terran():
     return entries
 
 
-# Create mapping
-TERRAN = {FUNCTIONS[p].ability_id: p for p in _gen_terran()}
+# Terran Research ID and Name mapping
+TERRAN: dict[int, str] = {FUNCTIONS[p].ability_id: p for p in _gen_terran()}
+# Terran Research ID to State Feature Index Mapping
+TERRAN_IDX: dict[int, int] = {_id: idx for idx, _id in enumerate(sorted(TERRAN.keys()))}
 
 
 # --- Zerg ---
@@ -123,5 +128,7 @@ def _gen_zerg():
     return entries
 
 
-# Create mapping
-ZERG = {FUNCTIONS[p].ability_id: p for p in _gen_zerg()}
+# Zerg Research ID and Name mapping
+ZERG: dict[int, str] = {FUNCTIONS[p].ability_id: p for p in _gen_zerg()}
+# Zerg Research ID to State Feature Index Mapping
+ZERG_IDX: dict[int, int] = {_id: idx for idx, _id in enumerate(sorted(ZERG.keys()))}
