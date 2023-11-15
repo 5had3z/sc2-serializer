@@ -497,6 +497,7 @@ template<typename T> auto enumToOneHot(Result e) noexcept -> std::vector<T>
 struct ReplayData
 {
     std::string replayHash{};
+    std::string gameVersion{};
     std::uint32_t playerId{};
     Race playerRace{ Race::Random };
     Result playerResult{ Result::Undecided };

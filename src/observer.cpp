@@ -41,6 +41,7 @@ void BaseConverter::OnGameStart()
     currentReplay_.playerResult = static_cast<Result>(playerInfo.game_result);
     currentReplay_.playerMMR = playerInfo.mmr;
     currentReplay_.playerAPM = playerInfo.apm;
+    currentReplay_.gameVersion = replayInfo.version;
 
     auto gameInfo = this->Observation()->GetGameInfo();
     assert(gameInfo.height > 0 && gameInfo.width > 0 && "Missing map size data");
