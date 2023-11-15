@@ -51,12 +51,13 @@ class Observer : public sc2::ReplayObserver
         hasResourceInit = false;
         auto rInfo = this->ReplayControl()->GetReplayInfo();
         auto gameInfo = this->Observation()->GetGameInfo();
-        SPDLOG_INFO("Player: {}, Map Name: {}, Steps: {}, Map Dims: {},{}",
+        SPDLOG_INFO("Player: {}, Map Name: {}, Steps: {}, Map Dims: {},{}, GameVersion: {}",
             rInfo.players->player_id,
             rInfo.map_name,
             rInfo.duration_gameloops,
             gameInfo.width,
-            gameInfo.height);
+            gameInfo.height,
+            rInfo.version);
     }
 
     // void OnUnitCreated(const sc2::Unit *unit) { SPDLOG_INFO("Unit created: {}", unit->unit_type); }
