@@ -7,6 +7,7 @@ ReplayParser::ReplayParser(const std::filesystem::path &dataFile) noexcept : upg
 void ReplayParser::parseReplay(ReplayDataSoA replayData)
 {
     replayData_ = std::move(replayData);
+    upgrade_.setRace(replayData_.playerRace);
     upgrade_.setVersion(replayData_.gameVersion);
     upgrade_.setActions(replayData_.actions, replayData_.gameStep);
 }
