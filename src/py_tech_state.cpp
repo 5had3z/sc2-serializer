@@ -82,7 +82,8 @@ void UpgradeTiming::setActions(const std::vector<std::vector<Action>> &actionsRe
 
     const auto &raceUpgradeIds = this->getValidIds();
     upgradeTimes_.resize(raceUpgradeIds.size());
-    std::ranges::fill(upgradeTimes_, std::numeric_limits<std::ranges::range_value_t<decltype(upgradeTimes_)>>::max());
+    constexpr auto maxTime = std::numeric_limits<std::ranges::range_value_t<decltype(upgradeTimes_)>>::max();
+    std::ranges::fill(upgradeTimes_, maxTime);
 
     for (std::size_t idx = 0; idx < actionsReplay.size(); ++idx) {
         const auto &actionsStep = actionsReplay[idx];
@@ -94,6 +95,8 @@ void UpgradeTiming::setActions(const std::vector<std::vector<Action>> &actionsRe
             }
         }
     }
+    auto count = std::ranges::count_if(upgradeTimes_, [](int32_t e) { return e != maxTime; });
+    SPDLOG_INFO("Number of upgrades applied {}", count);
 }
 
 }// namespace cvt

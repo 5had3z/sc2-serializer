@@ -31,6 +31,12 @@ def make_video(image_sequence: Sequence, fname: Path):
     writer.release()
 
 
+def test_parse(db, idx):
+    replay_data = db.getEntry(idx)
+    parser = sc2_replay_reader.ReplayParser(sc2_replay_reader.UNIT_INFOS_FILE)
+    parser.parse_replay(replay_data)
+
+
 @app.command()
 def main(
     file: Annotated[Path, typer.Option(help="SC2Replays file")],
@@ -42,6 +48,9 @@ def main(
 ):
     """"""
     db = sc2_replay_reader.ReplayDatabase(file)
+    for i in range(db.size()):
+        test_parse(db, i)
+
     replay_data = db.getEntry(idx)
 
     # fmt: off
@@ -56,11 +65,9 @@ def main(
 
     sample = parser.sample(10)
 
-    feat = np.stack([i.as_array() for i in replay_data.neutralUnits[0]])
-
-    for attr in img_attrs:
-        image_sequence = getattr(replay_data, attr)
-        make_video(image_sequence, outfolder / f"{attr}.webm")
+    # for attr in img_attrs:
+    #     image_sequence = getattr(replay_data, attr)
+    #     make_video(image_sequence, outfolder / f"{attr}.webm")
 
 
 if __name__ == "__main__":

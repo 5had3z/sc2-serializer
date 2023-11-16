@@ -228,9 +228,7 @@ void BaseConverter::copyHeightMapData() noexcept
     static_assert(std::is_same_v<std::underlying_type_t<sc2::BUFF_ID>, int>);
     if (src->buffs.size() >= 1) { dst.buff0 = static_cast<int>(src->buffs[0]); }
     if (src->buffs.size() >= 2) { dst.buff1 = static_cast<int>(src->buffs[1]); }
-
-    dst.add_on_tag = find_tagged_unit(src->add_on_tag, units);
-
+    if (src->add_on_tag != 0) { dst.add_on_tag = find_tagged_unit(src->add_on_tag, units); }
 
     return dst;
 }
