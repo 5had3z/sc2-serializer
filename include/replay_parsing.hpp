@@ -4,6 +4,7 @@
 #include <pybind11/pybind11.h>
 #include <spdlog/fmt/fmt.h>
 
+#include <filesystem>
 #include <set>
 
 namespace py = pybind11;
@@ -12,7 +13,7 @@ namespace cvt {
 class UpgradeTiming
 {
   public:
-    UpgradeTiming(std::string dataFile);
+    UpgradeTiming(std::filesystem::path dataFile);
 
     // Set the game version
     void setVersion(std::string_view version);
@@ -43,7 +44,7 @@ class UpgradeTiming
     std::unordered_map<int, int> id2delay_{};
     Race currentRace_{ Race::Random };
     std::vector<int32_t> upgradeTimes_;
-    std::string dataFile_;
+    std::filesystem::path dataFile_;
     std::string gameVersion_{};
 };
 
@@ -51,7 +52,7 @@ class UpgradeTiming
 class ReplayParser
 {
   public:
-    ReplayParser(std::string dataPath) noexcept;
+    ReplayParser(const std::filesystem::path &dataPath) noexcept;
 
     // Parse replay data, ready to sample from
     void parseReplay(ReplayDataSoA replayData);

@@ -2,7 +2,7 @@
 
 namespace cvt {
 
-ReplayParser::ReplayParser(std::string dataFile) noexcept : upgrade_(std::move(dataFile)) {}
+ReplayParser::ReplayParser(const std::filesystem::path &dataFile) noexcept : upgrade_(dataFile) {}
 
 void ReplayParser::parseReplay(ReplayDataSoA replayData)
 {

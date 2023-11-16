@@ -15,13 +15,12 @@
 #include <spdlog/spdlog.h>
 #include <yaml-cpp/yaml.h>
 
-#include <filesystem>
 #include <limits>
 
 namespace cvt {
 
 
-UpgradeTiming::UpgradeTiming(std::string dataFile) : dataFile_(std::move(dataFile)) {}
+UpgradeTiming::UpgradeTiming(std::filesystem::path dataFile) : dataFile_(std::move(dataFile)) {}
 
 void UpgradeTiming::setVersion(std::string_view version)
 {
@@ -36,13 +35,13 @@ void UpgradeTiming::setVersion(std::string_view version)
 void UpgradeTiming::loadInfo()
 {
     if (!std::filesystem::exists(dataFile_)) {
-        throw std::runtime_error(fmt::format("Data file does not exist: {}", dataFile_));
+        throw std::runtime_error(fmt::format("Data file does not exist: {}", dataFile_.string()));
     }
     YAML::Node root = YAML::LoadFile(dataFile_);
     auto node = std::find_if(
         root.begin(), root.end(), [&](const YAML::Node &n) { return n["version"].as<std::string>() == gameVersion_; });
     if (node == root.end()) {
-        throw std::runtime_error(fmt::format("Game Version {} not in data file {}", gameVersion_, dataFile_));
+        throw std::runtime_error(fmt::format("Game Version {} not in data file {}", gameVersion_, dataFile_.string()));
     }
 
     // Clear current mapping
