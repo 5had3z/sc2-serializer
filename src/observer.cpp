@@ -42,6 +42,7 @@ void BaseConverter::OnGameStart()
     currentReplay_.playerResult = static_cast<Result>(playerInfo.game_result);
     currentReplay_.playerMMR = playerInfo.mmr;
     currentReplay_.playerAPM = playerInfo.apm;
+    currentReplay_.gameVersion = replayInfo.version;
 
     auto gameInfo = this->Observation()->GetGameInfo();
     assert(gameInfo.height > 0 && gameInfo.width > 0 && "Missing map size data");
@@ -327,16 +328,26 @@ void BaseConverter::copyDynamicMapData() noexcept
     if (minimapFeats.has_pathable()) { copyMapData(step.pathable, minimapFeats.pathable()); }
 }
 
-void FullConverter::OnStep()
+void BaseConverter::copyCommonData() noexcept
 {
     // Copy static height map if not already done
     if (currentReplay_.heightMap.empty()) { this->copyHeightMapData(); }
 
+    // Write directly into stepData.back()
+    currentReplay_.stepData.back().gameStep = this->Observation()->GetGameLoop();
+    currentReplay_.stepData.back().minearals = this->Observation()->GetMinerals();
+    currentReplay_.stepData.back().vespere = this->Observation()->GetVespene();
+    currentReplay_.stepData.back().popMax = this->Observation()->GetFoodCap();
+    currentReplay_.stepData.back().popArmy = this->Observation()->GetFoodArmy();
+    currentReplay_.stepData.back().popWorkers = this->Observation()->GetFoodWorkers();
+}
+
+void FullConverter::OnStep()
+{
     // "Initialize" next item
     currentReplay_.stepData.resize(currentReplay_.stepData.size() + 1);
 
-    // Write directly into stepData.back()
-    currentReplay_.stepData.back().gameStep = this->Observation()->GetGameLoop();
+    this->copyCommonData();
     this->copyUnitData();
     this->copyActionData();
     this->copyDynamicMapData();
@@ -345,8 +356,6 @@ void FullConverter::OnStep()
 
 void ActionConverter::OnStep()
 {
-    // Copy static height map if not already done
-    if (currentReplay_.heightMap.empty()) { this->copyHeightMapData(); }
     // Need to have at least one buffer
     if (currentReplay_.stepData.empty()) { currentReplay_.stepData.resize(1); }
 
@@ -357,7 +366,7 @@ void ActionConverter::OnStep()
     }
 
     // Always copy observation, the next step might have an action
-    currentReplay_.stepData.back().gameStep = this->Observation()->GetGameLoop();
+    this->copyCommonData();
     this->copyUnitData();
     this->copyDynamicMapData();
 }
@@ -368,14 +377,11 @@ void StridedConverter::OnStep()
     const auto gameStep = this->Observation()->GetGameLoop();
     if (gameStep % stride_ != 0) { return; }
 
-    // Copy static height map if not already done
-    if (currentReplay_.heightMap.empty()) { this->copyHeightMapData(); }
-
     // "Initialize" next item
     currentReplay_.stepData.resize(currentReplay_.stepData.size() + 1);
 
     // Write directly into stepData.back()
-    currentReplay_.stepData.back().gameStep = gameStep;
+    this->copyCommonData();
     this->copyUnitData();
     this->copyActionData();
     this->copyDynamicMapData();

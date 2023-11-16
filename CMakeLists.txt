@@ -39,6 +39,7 @@ cpmaddpackage(
   boostorg/pfr
   GIT_TAG
   2.1.0)
+
 find_package(Boost REQUIRED COMPONENTS iostreams)
 
 # ---- Main Library Components ----
@@ -93,10 +94,24 @@ if(SC2_PY_READER)
     pybind/pybind11
     VERSION
     2.11.1)
+  cpmaddpackage(
+    GITHUB_REPOSITORY
+    jbeder/yaml-cpp
+    GIT_TAG
+    0.8.0)
 
-  pybind11_add_module(_sc2_replay_reader src/database.cpp src/pyreader.cpp)
+  pybind11_add_module(
+    _sc2_replay_reader
+    src/database.cpp
+    src/pyreader.cpp
+    src/py_tech_state.cpp)
   target_compile_features(_sc2_replay_reader PUBLIC cxx_std_23)
-  target_link_libraries(_sc2_replay_reader PUBLIC spdlog::spdlog boost_pfr Boost::iostreams)
+  target_link_libraries(
+    _sc2_replay_reader
+    PUBLIC spdlog::spdlog
+           boost_pfr
+           Boost::iostreams
+           yaml-cpp)
   target_compile_options(_sc2_replay_reader PUBLIC ${_COMPILE_OPTIONS})
   target_include_directories(_sc2_replay_reader PUBLIC include)
 endif()

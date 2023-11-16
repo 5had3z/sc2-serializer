@@ -87,11 +87,11 @@ struct Point2d
     int y{ 0 };
     [[nodiscard]] auto operator==(const Point2d &other) const noexcept -> bool = default;
 
-    auto begin() noexcept -> int * { return &x; }
-    auto end() noexcept -> int * { return &y + 1; }
+    [[nodiscard]] auto begin() noexcept -> int * { return &x; }
+    [[nodiscard]] auto end() noexcept -> int * { return &y + 1; }
 
-    auto cbegin() const noexcept -> const int * { return &x; }
-    auto cend() const noexcept -> const int * { return &y + 1; }
+    [[nodiscard]] auto cbegin() const noexcept -> const int * { return &x; }
+    [[nodiscard]] auto cend() const noexcept -> const int * { return &y + 1; }
 };
 
 struct Point3f
@@ -101,11 +101,11 @@ struct Point3f
     float z{ 0.f };
     [[nodiscard]] auto operator==(const Point3f &other) const noexcept -> bool = default;
 
-    auto begin() noexcept -> float * { return &x; }
-    auto end() noexcept -> float * { return &z + 1; }
+    [[nodiscard]] auto begin() noexcept -> float * { return &x; }
+    [[nodiscard]] auto end() noexcept -> float * { return &z + 1; }
 
-    auto cbegin() const noexcept -> const float * { return &x; }
-    auto cend() const noexcept -> const float * { return &z + 1; }
+    [[nodiscard]] auto cbegin() const noexcept -> const float * { return &x; }
+    [[nodiscard]] auto cend() const noexcept -> const float * { return &z + 1; }
 };
 
 template<typename T> struct Image
@@ -531,6 +531,11 @@ template<typename T> auto enumToOneHot(Action::Target_Type e) noexcept -> std::v
 struct StepData
 {
     std::uint32_t gameStep{};
+    std::uint32_t minearals{};
+    std::uint32_t vespere{};
+    std::uint32_t popMax{};
+    std::uint32_t popArmy{};
+    std::uint32_t popWorkers{};
     Image<std::uint8_t> visibility{};
     Image<bool> creep{};
     Image<std::uint8_t> player_relative{};
@@ -566,6 +571,7 @@ template<typename T> auto enumToOneHot(Result e) noexcept -> std::vector<T>
 struct ReplayData
 {
     std::string replayHash{};
+    std::string gameVersion{};
     std::uint32_t playerId{};
     Race playerRace{ Race::Random };
     Result playerResult{ Result::Undecided };

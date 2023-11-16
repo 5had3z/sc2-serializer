@@ -39,6 +39,9 @@ class BaseConverter : public sc2::ReplayObserver
     void copyDynamicMapData() noexcept;
 
     // Update resourceObs_ based on visible units
+    void copyCommonData() noexcept;
+
+    // Update resourceObs_ based on visible units
     // reassign jumbled UIDs to be consistent over the game
     // assign snapshot unis the last known quantity
     void updateResourceObs() noexcept;
