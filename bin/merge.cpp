@@ -76,12 +76,12 @@ auto runOverFolder(cvt::ReplayDatabase &mainDb,
 int main(int argc, char *argv[])
 {
     cxxopts::Options cliParser("SC2 DB Merger",
-        "Merge a list of DB paritions into a single DB. A --folder that contains"
+        "Merge a list of DB partitions into a single DB. A --folder that contains"
         " .SC2Replays will be merged into a single file specified by --output");
     // clang-format off
     cliParser.add_options()
         ("f,folder", "Folder with partitions to merge", cxxopts::value<std::string>())
-        ("o,output", "Ouput .SC2Replays file", cxxopts::value<std::string>())
+        ("o,output", "Output .SC2Replays file", cxxopts::value<std::string>())
         ("a,append", "Append to existing without prompting (fast but may result in duplicate data)", cxxopts::value<bool>()->default_value("false"))
         ("r,replace", "Replace existing without prompting", cxxopts::value<bool>()->default_value("false"))
         ("m,merge", "Merge with existing without prompting, check for duplicates", cxxopts::value<bool>()->default_value("true"))

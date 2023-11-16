@@ -49,6 +49,15 @@ namespace detail {
         }
     }
 
+    template<typename T, typename It>
+        requires std::is_aggregate_v<T> && (!std::ranges::range<T>)
+    void vectorize_helper(T d, It &it, bool onehotEnum)
+    {
+        boost::pfr::for_each_field(
+            d, [&it, onehotEnum](const auto &field) { detail::vectorize_helper(field, it, onehotEnum); });
+    }
+
+
     template<typename T>
     auto enumToOneHot_helper(auto enumVal, const std::ranges::range auto &enumValues) -> std::vector<T>
     {
@@ -164,7 +173,6 @@ template<typename T> auto enumToOneHot(CloakState e) noexcept -> std::vector<T>
     return detail::enumToOneHot_helper<T>(e, vals);
 }
 
-
 enum class Visibility { Visible = 1, Snapshot = 2, Hidden = 3 };
 
 template<typename T> auto enumToOneHot(Visibility e) noexcept -> std::vector<T>
@@ -173,6 +181,29 @@ template<typename T> auto enumToOneHot(Visibility e) noexcept -> std::vector<T>
     static_assert(std::is_sorted(vals.begin(), vals.end()));
     return detail::enumToOneHot_helper<T>(e, vals);
 }
+
+enum class AddOn { None = 0, Reactor = 1, TechLab = 2 };
+
+template<typename T> auto enumToOneHot(AddOn e) noexcept -> std::vector<T>
+{
+    constexpr std::array vals = { AddOn::None, AddOn::Reactor, AddOn::TechLab };
+    static_assert(std::is_sorted(vals.begin(), vals.end()));
+    return detail::enumToOneHot_helper<T>(e, vals);
+}
+
+
+struct UnitOrder
+{
+    int ability_id;
+    //! Target unit of the order, if there is one.
+    UID tgtId{ 0 };
+    //! Target position of the order, if there is one.
+    Point2d target_pos{ 0, 0 };
+    //! Progress of the order.
+    float progress{ 0.0 };
+
+    [[nodiscard]] auto operator==(const UnitOrder &other) const noexcept -> bool = default;
+};
 
 struct Unit
 {
@@ -190,6 +221,9 @@ struct Unit
     float energy_max{};
     int cargo{};
     int cargo_max{};
+    int assigned_harvesters{};
+    int ideal_harvesters{};
+    float weapon_cooldown{};
     Point3f pos{};// x
     // y
     // z
@@ -200,6 +234,16 @@ struct Unit
     bool is_flying{ false };// flying ship
     bool is_burrowed{ false };// zerg
     bool is_powered{ false };// pylon
+    bool in_cargo{ false };
+
+    UnitOrder order0;
+    UnitOrder order1;
+    UnitOrder order2;
+    UnitOrder order3;
+    int buff0;
+    int buff1;
+    AddOn add_on_tag{ AddOn::None };
+
 
     [[nodiscard]] auto operator==(const Unit &other) const noexcept -> bool = default;
 };
@@ -219,6 +263,9 @@ struct UnitSoA
     std::vector<float> energy_max{};
     std::vector<int> cargo{};
     std::vector<int> cargo_max{};
+    std::vector<int> assigned_harvesters{};
+    std::vector<int> ideal_harvesters{};
+    std::vector<int> weapon_cooldown{};
     std::vector<UID> tgtId{};
     std::vector<CloakState> cloak_state{};
 
@@ -227,11 +274,23 @@ struct UnitSoA
     std::vector<char> is_flying{};// flying ship
     std::vector<char> is_burrowed{};// zerg
     std::vector<char> is_powered{};// pylon
+    std::vector<char> in_cargo{};// pylon
 
     std::vector<Point3f> pos{};
+    std::vector<UnitOrder> order0{};
+    std::vector<UnitOrder> order1{};
+    std::vector<UnitOrder> order2{};
+    std::vector<UnitOrder> order3{};
+
+    std::vector<int> buff0{};
+    std::vector<int> buff1{};
+
     std::vector<float> heading{};
     std::vector<float> radius{};
     std::vector<float> build_progress{};
+
+    std::vector<AddOn> add_on_tag{};// todo
+
 
     [[nodiscard]] auto operator==(const UnitSoA &other) const noexcept -> bool = default;
 };
@@ -257,16 +316,29 @@ struct UnitSoA
         soa.energy_max.push_back(unit.energy_max);
         soa.cargo.push_back(unit.cargo);
         soa.cargo_max.push_back(unit.cargo_max);
+        soa.assigned_harvesters.push_back(unit.assigned_harvesters);
+        soa.ideal_harvesters.push_back(unit.ideal_harvesters);
+        soa.weapon_cooldown.push_back(unit.weapon_cooldown);
+
         soa.tgtId.push_back(unit.tgtId);
         soa.cloak_state.push_back(unit.cloak_state);
         soa.is_blip.push_back(unit.is_blip);
         soa.is_flying.push_back(unit.is_flying);
         soa.is_burrowed.push_back(unit.is_burrowed);
         soa.is_powered.push_back(unit.is_powered);
+        soa.in_cargo.push_back(unit.in_cargo);
         soa.pos.push_back(unit.pos);
         soa.heading.push_back(unit.heading);
         soa.radius.push_back(unit.radius);
         soa.build_progress.push_back(unit.build_progress);
+
+        soa.order0.push_back(unit.order0);
+        soa.order1.push_back(unit.order1);
+        soa.order2.push_back(unit.order2);
+        soa.order3.push_back(unit.order3);
+        soa.buff0.push_back(unit.buff0);
+        soa.buff1.push_back(unit.buff1);
+        soa.add_on_tag.push_back(unit.add_on_tag);
     }
     return soa;
 }
@@ -296,16 +368,27 @@ struct UnitSoA
         unit.energy_max = soa.energy_max[idx];
         unit.cargo = soa.cargo[idx];
         unit.cargo_max = soa.cargo_max[idx];
+        unit.assigned_harvesters = soa.assigned_harvesters[idx];
+        unit.ideal_harvesters = soa.ideal_harvesters[idx];
+        unit.weapon_cooldown = soa.weapon_cooldown[idx];
         unit.tgtId = soa.tgtId[idx];
         unit.cloak_state = soa.cloak_state[idx];
         unit.is_blip = soa.is_blip[idx];
         unit.is_flying = soa.is_flying[idx];
         unit.is_burrowed = soa.is_burrowed[idx];
         unit.is_powered = soa.is_powered[idx];
+        unit.in_cargo = soa.in_cargo[idx];
         unit.pos = soa.pos[idx];
         unit.heading = soa.heading[idx];
         unit.radius = soa.radius[idx];
         unit.build_progress = soa.build_progress[idx];
+        unit.order0 = soa.order0[idx];
+        unit.order1 = soa.order1[idx];
+        unit.order2 = soa.order2[idx];
+        unit.order3 = soa.order3[idx];
+        unit.buff0 = soa.buff0[idx];
+        unit.buff1 = soa.buff1[idx];
+        unit.add_on_tag = soa.add_on_tag[idx];
     }
     return aos;
 }

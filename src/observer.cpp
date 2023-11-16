@@ -1,6 +1,7 @@
 #include "observer.hpp"
 #include "generated_info.hpp"
 #include "serialize.hpp"
+#include <unordered_set>
 
 // #include <boost/iostreams/device/file.hpp>
 // #include <boost/iostreams/filter/zlib.hpp>
@@ -102,15 +103,57 @@ void BaseConverter::copyHeightMapData() noexcept
     const auto *rawObs = this->Observation()->GetRawObservation();
     const auto &minimapFeats = rawObs->feature_layer_data().minimap_renders();
     if (!mapHeightHasLogged_) {
-        SPDLOG_INFO("Static HeightMap Availablity : {}", minimapFeats.has_height_map());
+        SPDLOG_INFO("Static HeightMap Availability : {}", minimapFeats.has_height_map());
         mapHeightHasLogged_ = true;
     }
     if (!minimapFeats.has_height_map()) { return; }
     copyMapData(currentReplay_.heightMap, minimapFeats.height_map());
 }
 
+[[nodiscard]] auto find_tagged_unit(const sc2::Tag add_on_tag, const sc2::Units &units) noexcept -> AddOn
+{
+    auto same_tag = [add_on_tag](const sc2::Unit *other) { return other->tag == add_on_tag; };
+    auto it = std::ranges::find_if(units.begin(), units.end(), same_tag);
+    if (it == std::end(units)) {
+        throw std::out_of_range(fmt::format("Tagged unit was not found!", static_cast<int>(add_on_tag)));
+    } else {
+
+        const sc2::UNIT_TYPEID type = (*it)->unit_type.ToType();
+
+        const std::unordered_set<sc2::UNIT_TYPEID> techlabs = { sc2::UNIT_TYPEID::TERRAN_BARRACKSTECHLAB,
+            sc2::UNIT_TYPEID::TERRAN_FACTORYTECHLAB,
+            sc2::UNIT_TYPEID::TERRAN_STARPORTTECHLAB,
+            sc2::UNIT_TYPEID::TERRAN_TECHLAB };
+
+        if (techlabs.contains(type)) { return AddOn::TechLab; }
+
+        const std::unordered_set<sc2::UNIT_TYPEID> reactors = { sc2::UNIT_TYPEID::TERRAN_BARRACKSREACTOR,
+            sc2::UNIT_TYPEID::TERRAN_FACTORYREACTOR,
+            sc2::UNIT_TYPEID::TERRAN_STARPORTREACTOR,
+            sc2::UNIT_TYPEID::TERRAN_REACTOR };
+
+        if (reactors.contains(type)) { return AddOn::Reactor; }
+
+        throw std::out_of_range(fmt::format("Invalid Add On Type, type was {}!", static_cast<int>(type)));
+    }
+}
+
+
+[[nodiscard]] auto convertSC2UnitOrder(const sc2::UnitOrder *src) noexcept -> UnitOrder
+{
+    UnitOrder dst;
+    static_assert(std::is_same_v<std::underlying_type_t<sc2::ABILITY_ID>, int>);
+    dst.ability_id = static_cast<int>(src->ability_id);
+    dst.tgtId = src->target_unit_tag;
+    dst.target_pos.x = src->target_pos.x;
+    dst.target_pos.y = src->target_pos.y;
+    dst.progress = src->progress;
+    return dst;
+}
+
 // Convert StarCraft2 API Unit to Serializer Unit
-[[nodiscard]] auto convertSC2Unit(const sc2::Unit *src) noexcept -> Unit
+[[nodiscard]] auto convertSC2Unit(const sc2::Unit *src, const sc2::Units &units, const bool isPassenger) noexcept
+    -> Unit
 {
     Unit dst;
     dst.id = src->tag;
@@ -125,20 +168,38 @@ void BaseConverter::copyHeightMapData() noexcept
     dst.energy_max = src->energy_max;
     dst.cargo = src->cargo_space_taken;
     dst.cargo_max = src->cargo_space_max;
+    dst.assigned_harvesters = src->assigned_harvesters;
+    dst.ideal_harvesters = src->ideal_harvesters;
+    dst.weapon_cooldown = src->weapon_cooldown;
     dst.tgtId = src->engaged_target_tag;
     dst.cloak_state = static_cast<CloakState>(src->cloak);// These should match
     dst.is_blip = src->is_blip;
     dst.is_flying = src->is_flying;
     dst.is_burrowed = src->is_burrowed;
     dst.is_powered = src->is_powered;
+    dst.in_cargo = isPassenger;
     dst.pos.x = src->pos.x;
     dst.pos.y = src->pos.y;
     dst.pos.z = src->pos.z;
     dst.heading = src->facing;
     dst.radius = src->radius;
     dst.build_progress = src->build_progress;
+
+    if (src->orders.size() >= 1) { dst.order0 = convertSC2UnitOrder(&src->orders[0]); }
+    if (src->orders.size() >= 2) { dst.order1 = convertSC2UnitOrder(&src->orders[1]); }
+    if (src->orders.size() >= 3) { dst.order2 = convertSC2UnitOrder(&src->orders[2]); }
+    if (src->orders.size() >= 4) { dst.order3 = convertSC2UnitOrder(&src->orders[3]); }
+
+    static_assert(std::is_same_v<std::underlying_type_t<sc2::BUFF_ID>, int>);
+    if (src->buffs.size() >= 1) { dst.buff0 = static_cast<int>(src->buffs[0]); }
+    if (src->buffs.size() >= 2) { dst.buff1 = static_cast<int>(src->buffs[1]); }
+
+    dst.add_on_tag = find_tagged_unit(src->add_on_tag, units);
+
+
     return dst;
 }
+
 
 [[nodiscard]] auto convertSC2NeutralUnit(const sc2::Unit *src) noexcept -> NeutralUnit
 {
@@ -167,11 +228,20 @@ void BaseConverter::copyUnitData() noexcept
     auto &neutralUnits = currentReplay_.stepData.back().neutralUnits;
     neutralUnits.clear();
     neutralUnits.reserve(unitData.size());
+
+    // Find all passengers across all units
+    auto r = unitData | std::views::transform([](const sc2::Unit *unit) { return unit->passengers; }) | std::views::join
+             | std::views::transform([](const sc2::PassengerUnit &p) { return p.tag; }) | std::views::common;
+
+    std::unordered_set<sc2::Tag> p_tags(std::begin(r), std::end(r));
+
     std::ranges::for_each(unitData, [&](const sc2::Unit *src) {
+        const bool isPassenger = p_tags.contains(src->tag);
         if (neutralUnitTypes.contains(src->unit_type)) {
+            assert(!isPassenger);
             neutralUnits.emplace_back(convertSC2NeutralUnit(src));
         } else {
-            units.emplace_back(convertSC2Unit(src));
+            units.emplace_back(convertSC2Unit(src, unitData, isPassenger));
         }
     });
     if (resourceObs_.empty()) { this->initResourceObs(); }
@@ -251,7 +321,7 @@ void BaseConverter::copyDynamicMapData() noexcept
     const auto *rawObs = this->Observation()->GetRawObservation();
     const auto &minimapFeats = rawObs->feature_layer_data().minimap_renders();
 
-    // Log available visibilty per replay
+    // Log available visibility per replay
     if (!mapDynHasLogged_) {
         mapDynHasLogged_ = true;
         SPDLOG_INFO(

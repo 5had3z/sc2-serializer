@@ -1,4 +1,4 @@
-""" 
+"""
 Use PySC2 and run over each game version in a folder and write out
 information about different upgrades.
 """
@@ -139,7 +139,7 @@ def main(unused_argv):
     output = Path(FLAGS.output)
 
     assert output.parent.exists(), f"Output directory doesn't exist: {output.parent}"
-    assert output.suffix == ".yaml", f"Output must be a yaml file"
+    assert output.suffix == ".yaml", "Output must be a yaml file"
 
     versions = FLAGS.versions if FLAGS.versions else [p.name for p in root.iterdir()]
 

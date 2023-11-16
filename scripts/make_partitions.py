@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" 
+"""
 Script that creates the partition files
 for running conversions in parallel.
 """

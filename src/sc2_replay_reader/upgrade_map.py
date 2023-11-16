@@ -116,7 +116,7 @@ def _gen_zerg():
     ]
     levels = ["1", "2", "3"]
 
-    # Melee Missle and Flyer Attack
+    # Melee Missile and Flyer Attack
     for a, l in product(["Melee", "Missile"], levels):
         entries.append(f"Zerg{a}WeaponsLevel{l}")
     entries.extend([f"ZergFlyerAttackLevel{l}" for l in levels])

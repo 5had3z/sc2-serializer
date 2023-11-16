@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" 
+"""
 Analyse how the resources in the map change over time.
 """
 from dataclasses import dataclass

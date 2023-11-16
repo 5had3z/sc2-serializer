@@ -8,7 +8,7 @@ _ClkSize = len(sc2.CloakState.__entries)
 
 
 class Unit(IntEnum):
-    """SC2 Unit Feature Indicies"""
+    """SC2 Unit Feature Indices"""
 
     @staticmethod
     def _generate_next_value_(
@@ -31,6 +31,9 @@ class Unit(IntEnum):
     energy_max = auto()
     cargo = auto()
     cargo_max = auto()
+    assigned_harvesters = auto()
+    ideal_harvesters = auto()
+    weapon_cooldown = auto()
     x = auto()
     y = auto()
     z = auto()
@@ -40,10 +43,18 @@ class Unit(IntEnum):
     is_blip = auto()
     is_burrowed = auto()
     is_powered = auto()
+    in_cargo = auto()
+    order0 = auto()
+    order1 = auto()
+    order2 = auto()
+    order3 = auto()
+    buff0 = auto()
+    buff1 = auto()
+    add_on_tag = auto()
 
 
 class UnitOH(IntEnum):
-    """SC2 Unit Feature Indicies with OneHot Enums"""
+    """SC2 Unit Feature Indices with OneHot Enums"""
 
     @staticmethod
     def _generate_next_value_(
@@ -74,6 +85,9 @@ class UnitOH(IntEnum):
     energy_max = auto()
     cargo = auto()
     cargo_max = auto()
+    assigned_harvesters = auto()
+    ideal_harvesters = auto()
+    weapon_cooldown = auto()
     x = auto()
     y = auto()
     z = auto()
@@ -83,10 +97,18 @@ class UnitOH(IntEnum):
     is_blip = auto()
     is_burrowed = auto()
     is_powered = auto()
+    in_cargo = auto()
+    order0 = auto()
+    order1 = auto()
+    order2 = auto()
+    order3 = auto()
+    buff0 = auto()
+    buff1 = auto()
+    add_on_tag = auto()
 
 
 class NeutralUnit(IntEnum):
-    """SC2 Neutral Unit Feature Indicies"""
+    """SC2 Neutral Unit Feature Indices"""
 
     @staticmethod
     def _generate_next_value_(
@@ -109,7 +131,7 @@ class NeutralUnit(IntEnum):
 
 
 class NeutralUnitOH(IntEnum):
-    """SC2 Neutral Unit Feature Indicies with OneHot Enums"""
+    """SC2 Neutral Unit Feature Indices with OneHot Enums"""
 
     @staticmethod
     def _generate_next_value_(
