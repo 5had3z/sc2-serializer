@@ -468,7 +468,6 @@ struct StepData
     Image<std::uint8_t> alerts{};
     Image<bool> buildable{};
     Image<bool> pathable{};
-
     std::vector<Action> actions{};
     std::vector<Unit> units{};
     std::vector<NeutralUnit> neutralUnits{};
@@ -521,6 +520,7 @@ struct ReplayData
 struct ReplayDataSoA
 {
     std::string replayHash{};
+    std::string gameVersion{};
     std::uint32_t playerId{};
     Race playerRace{ Race::Random };
     Result playerResult{ Result::Undecided };
@@ -532,6 +532,11 @@ struct ReplayDataSoA
 
     // Step data
     std::vector<std::uint32_t> gameStep{};
+    std::vector<std::uint32_t> minearals{};
+    std::vector<std::uint32_t> vespere{};
+    std::vector<std::uint32_t> popMax{};
+    std::vector<std::uint32_t> popArmy{};
+    std::vector<std::uint32_t> popWorkers{};
     std::vector<Image<std::uint8_t>> visibility{};
     std::vector<Image<bool>> creep{};
     std::vector<Image<std::uint8_t>> player_relative{};
@@ -549,6 +554,7 @@ struct ReplayDataSoA
 {
     ReplayDataSoA soa = {
         .replayHash = aos.replayHash,
+        .gameVersion = aos.gameVersion,
         .playerId = aos.playerId,
         .playerRace = aos.playerRace,
         .playerResult = aos.playerResult,
@@ -559,6 +565,11 @@ struct ReplayDataSoA
 
     for (const StepData &step : aos.stepData) {
         soa.gameStep.push_back(step.gameStep);
+        soa.minearals.push_back(step.minearals);
+        soa.vespere.push_back(step.vespere);
+        soa.popMax.push_back(step.popMax);
+        soa.popArmy.push_back(step.popArmy);
+        soa.popWorkers.push_back(step.popWorkers);
         soa.visibility.push_back(step.visibility);
         soa.creep.push_back(step.creep);
         soa.player_relative.push_back(step.player_relative);
@@ -576,6 +587,7 @@ struct ReplayDataSoA
 {
     ReplayData aos = {
         .replayHash = soa.replayHash,
+        .gameVersion = soa.gameVersion,
         .playerId = soa.playerId,
         .playerRace = soa.playerRace,
         .playerResult = soa.playerResult,
@@ -590,6 +602,11 @@ struct ReplayDataSoA
     for (std::size_t idx = 0; idx < stepDataVec.size(); ++idx) {
         auto &stepData = stepDataVec[idx];
         if (idx < soa.gameStep.size()) { stepData.gameStep = soa.gameStep[idx]; }
+        if (idx < soa.minearals.size()) { stepData.minearals = soa.minearals[idx]; }
+        if (idx < soa.vespere.size()) { stepData.vespere = soa.vespere[idx]; }
+        if (idx < soa.popMax.size()) { stepData.popMax = soa.popMax[idx]; }
+        if (idx < soa.popArmy.size()) { stepData.popArmy = soa.popArmy[idx]; }
+        if (idx < soa.popWorkers.size()) { stepData.popWorkers = soa.popWorkers[idx]; }
         if (idx < soa.visibility.size()) { stepData.visibility = soa.visibility[idx]; }
         if (idx < soa.creep.size()) { stepData.creep = soa.creep[idx]; }
         if (idx < soa.player_relative.size()) { stepData.player_relative = soa.player_relative[idx]; }
