@@ -50,6 +50,11 @@ def main(
     ]
     # fmt: on
 
+    parser = sc2_replay_reader.ReplayParser(sc2_replay_reader.UNIT_INFOS_FILE)
+    parser.parse_replay(replay_data)
+
+    sample = parser.sample(10)
+
     feat = np.stack([i.as_array() for i in replay_data.neutralUnits[0]])
 
     for attr in img_attrs:

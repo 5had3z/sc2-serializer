@@ -1,5 +1,5 @@
-#include "data.hpp"
 #include "database.hpp"
+#include "replay_parsing.hpp"
 
 #include <pybind11/functional.h>// Include this header for Pybind11 string conversions
 #include <pybind11/numpy.h>
@@ -216,6 +216,11 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readwrite("actions", &cvt::ReplayDataSoA::actions)
         .def_readwrite("units", &cvt::ReplayDataSoA::units)
         .def_readwrite("neutralUnits", &cvt::ReplayDataSoA::neutralUnits);
+
+    py::class_<cvt::ReplayParser>(m, "ReplayParser")
+        .def(py::init<const std::filesystem::path &>())
+        .def("sample", &cvt::ReplayParser::sample)
+        .def("parse_replay", &cvt::ReplayParser::parseReplay);
 
     m.attr("__version__") = "0.0.1";
 }
