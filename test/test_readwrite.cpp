@@ -245,12 +245,12 @@ TEST(AutoVectorTest, Unit)
         ASSERT_EQ(static_cast<float>(unit.alliance), vec[3]);
         ASSERT_EQ(static_cast<float>(unit.cloak_state), vec[4]);
         ASSERT_EQ(unit.energy, vec[10]);
-        ASSERT_EQ(unit.pos.x, vec[14]);
-        ASSERT_EQ(unit.pos.y, vec[15]);
-        ASSERT_EQ(unit.pos.z, vec[16]);
-        ASSERT_EQ(unit.heading, vec[17]);
-        ASSERT_EQ(unit.build_progress, vec[19]);
-        ASSERT_EQ(unit.is_flying, vec[21]);
+        ASSERT_EQ(unit.pos.x, vec[17]);
+        ASSERT_EQ(unit.pos.y, vec[18]);
+        ASSERT_EQ(unit.pos.z, vec[19]);
+        ASSERT_EQ(unit.heading, vec[20]);
+        ASSERT_EQ(unit.build_progress, vec[22]);
+        ASSERT_EQ(unit.is_flying, vec[24]);
     }
     {
         const auto vec = cvt::vectorize<float>(unit, true);
@@ -270,11 +270,11 @@ TEST(AutoVectorTest, Unit)
         ASSERT_EQ(0.f, vec[4 + aliOff + 3]);// uncloaked
         ASSERT_EQ(0.f, vec[4 + aliOff + 4]);// allied
         ASSERT_EQ(unit.energy, vec[10 + clkOff]);
-        ASSERT_EQ(unit.pos.x, vec[14 + clkOff]);
-        ASSERT_EQ(unit.pos.y, vec[15 + clkOff]);
-        ASSERT_EQ(unit.pos.z, vec[16 + clkOff]);
-        ASSERT_EQ(unit.heading, vec[17 + clkOff]);
-        ASSERT_EQ(unit.build_progress, vec[19 + clkOff]);
-        ASSERT_EQ(unit.is_flying, vec[21 + clkOff]);
+        ASSERT_EQ(unit.pos.x, vec[17 + clkOff]);
+        ASSERT_EQ(unit.pos.y, vec[18 + clkOff]);
+        ASSERT_EQ(unit.pos.z, vec[19 + clkOff]);
+        ASSERT_EQ(unit.heading, vec[20 + clkOff]);
+        ASSERT_EQ(unit.build_progress, vec[22 + clkOff]);
+        ASSERT_EQ(unit.is_flying, vec[24 + clkOff]);
     }
 }
