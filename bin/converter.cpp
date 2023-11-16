@@ -135,7 +135,20 @@ auto main(int argc, char *argv[]) -> int
     const auto replayFiles = [&]() -> std::vector<std::string> {
         if (cliOpts["partition"].count()) {
             const auto partitionFile = cliOpts["partition"].as<std::string>();
-            if (!std::filesystem::exists(partitionFile)) {
+
+            std::string partitionFileIndex = partitionFile;
+            char const *tmp = getenv("POD_NAME");
+            if (tmp == NULL) {
+                SPDLOG_WARN("No partition file chosen, assuming no index");
+            } else {
+                std::string s(tmp);
+                size_t lastDelimiterPos = s.find_last_of('-');
+
+                // Extract the substring from the last delimiter to the end
+                std::string lastValue = s.substr(lastDelimiterPos + 1);
+                partitionFileIndex = partitionFile + "_" + lastValue;
+            }
+            if (!std::filesystem::exists(partitionFileIndex)) {
                 SPDLOG_ERROR("Partition file doesn't exist: {}", partitionFile);
                 return {};
             }

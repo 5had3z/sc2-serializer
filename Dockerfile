@@ -26,7 +26,10 @@ RUN apt-get update && \
     add-apt-repository ppa:ubuntu-toolchain-r/test && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y libboost-iostreams1.74.0 libstdc++6
 
-COPY --from=builder /app/build/sc2_converter /app
+COPY --from=builder /app/build/sc2_converter /sc2_converter
+COPY --from=builder /app/build/sc2_merger /sc2_merger
+# COPY --from=builder /app/build/game_exp /game_exp
+
 
 ENTRYPOINT [ "/app" ]
 CMD [ "-h" ]

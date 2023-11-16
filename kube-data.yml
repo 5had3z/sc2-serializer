@@ -1,0 +1,61 @@
+apiVersion: batch.volcano.sh/v1alpha1
+kind: Job
+metadata:
+  name: sc2
+spec:
+  maxRetry: 1
+  minAvailable: 1
+  schedulerName: volcano
+  queue: default
+  tasks:
+    - replicas: 1
+      name: extract
+      template:
+        spec:
+          restartPolicy: OnFailure
+          imagePullSecrets:
+            - name: dkr-creds
+            - name: taco
+          securityContext:
+            runAsUser: 1000
+          containers:
+            - name: runner
+              image: mu00120825.eng.monash.edu.au:5021/sc2-serializer:latest
+              command:
+                [
+                  "./sc2_converter",
+                  "--replays=/mnt/storage/SC2/game/4.9.2/Replays/",
+                  "--game=/mnt/storage/SC2/game/4.9.2/Versions/Base74741/SC2_x64",
+                  "--converter=action",
+                  "--output=/mnt/storage/converted/4.9.2",
+                ]
+              # command: ["/bin/bash", "-c", "--"]
+              # args: ["while true; do sleep 30; done;"]
+              env:
+                - name: SC2PATH
+                  value: /mnt/storage2/SC2/4.9.2/
+                - name: CUDA_VISIBLE_DEVICES
+                  value: "-1"
+                - name: POD_NAME
+                  valueFrom:
+                    fieldRef:
+                      fieldPath: metadata.name
+              resources:
+                requests:
+                  memory: 1.5Gi
+                limits:
+                  memory: 2Gi
+                  cpu: 1500m
+              volumeMounts:
+                - name: storage
+                  mountPath: /mnt/storage
+          volumes:
+            - name: storage
+              flexVolume:
+                driver: fstab/cifs
+                fsType: cifs
+                secretRef:
+                  name: smb-creds
+                options:
+                  networkPath: //130.194.128.238/bryce-rhys
+                  mountOptions: dir_mode=0777,file_mode=0777,noperm
