@@ -33,7 +33,7 @@ spec:
               # args: ["while true; do sleep 30; done;"]
               env:
                 - name: SC2PATH
-                  value: /mnt/storage2/SC2/4.9.2/
+                  value: /mnt/storage/SC2/4.9.2/
                 - name: CUDA_VISIBLE_DEVICES
                   value: "-1"
                 - name: POD_NAME
