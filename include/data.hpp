@@ -248,6 +248,36 @@ struct Unit
     [[nodiscard]] auto operator==(const Unit &other) const noexcept -> bool = default;
 };
 
+struct Score
+{
+    float score_float;
+    float idle_production_time;
+    float idle_worker_time;
+    float total_value_units;
+    float total_value_structures;
+    float killed_value_units;
+    float killed_value_structures;
+    float collected_minerals;
+    float collected_vespene;
+    float collection_rate_minerals;
+    float collection_rate_vespene;
+    float spent_minerals;
+    float spent_vespene;
+
+    float total_damage_dealt_life;
+    float total_damage_dealt_shields;
+    float total_damage_dealt_energy;
+
+    float total_damage_taken_life;
+    float total_damage_taken_shields;
+    float total_damage_taken_energy;
+
+    float total_healed_life;
+    float total_healed_shields;
+    float total_healed_energy;
+
+    [[nodiscard]] auto operator==(const Score &other) const noexcept -> bool = default;
+};
 
 struct UnitSoA
 {
@@ -545,6 +575,7 @@ struct StepData
     std::uint32_t popMax{};
     std::uint32_t popArmy{};
     std::uint32_t popWorkers{};
+    Score score{};
     Image<std::uint8_t> visibility{};
     Image<bool> creep{};
     Image<std::uint8_t> player_relative{};
@@ -620,6 +651,7 @@ struct ReplayDataSoA
     std::vector<std::uint32_t> popMax{};
     std::vector<std::uint32_t> popArmy{};
     std::vector<std::uint32_t> popWorkers{};
+    std::vector<Score> score{};
     std::vector<Image<std::uint8_t>> visibility{};
     std::vector<Image<bool>> creep{};
     std::vector<Image<std::uint8_t>> player_relative{};
@@ -653,6 +685,7 @@ struct ReplayDataSoA
         soa.popMax.push_back(step.popMax);
         soa.popArmy.push_back(step.popArmy);
         soa.popWorkers.push_back(step.popWorkers);
+        soa.score.push_back(step.score);
         soa.visibility.push_back(step.visibility);
         soa.creep.push_back(step.creep);
         soa.player_relative.push_back(step.player_relative);
@@ -690,6 +723,7 @@ struct ReplayDataSoA
         if (idx < soa.popMax.size()) { stepData.popMax = soa.popMax[idx]; }
         if (idx < soa.popArmy.size()) { stepData.popArmy = soa.popArmy[idx]; }
         if (idx < soa.popWorkers.size()) { stepData.popWorkers = soa.popWorkers[idx]; }
+        if (idx < soa.score.size()) { stepData.score = soa.score[idx]; }
         if (idx < soa.visibility.size()) { stepData.visibility = soa.visibility[idx]; }
         if (idx < soa.creep.size()) { stepData.creep = soa.creep[idx]; }
         if (idx < soa.player_relative.size()) { stepData.player_relative = soa.player_relative[idx]; }

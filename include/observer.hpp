@@ -1,6 +1,7 @@
 #pragma once
 
 #include <sc2api/sc2_api.h>
+#include <sc2api/sc2_score.h>
 
 #include "database.hpp"
 
