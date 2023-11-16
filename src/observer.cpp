@@ -141,8 +141,9 @@ void BaseConverter::copyHeightMapData() noexcept
 
 [[nodiscard]] auto convertSC2UnitOrder(const sc2::UnitOrder *src) noexcept -> UnitOrder
 {
-    // todo abilities
     UnitOrder dst;
+    static_assert(std::is_same_v<std::underlying_type_t<sc2::ABILITY_ID>, int>);
+    dst.ability_id = static_cast<int>(src->ability_id);
     dst.tgtId = src->target_unit_tag;
     dst.target_pos.x = src->target_pos.x;
     dst.target_pos.y = src->target_pos.y;
@@ -189,6 +190,7 @@ void BaseConverter::copyHeightMapData() noexcept
     if (src->orders.size() >= 3) { dst.order2 = convertSC2UnitOrder(&src->orders[2]); }
     if (src->orders.size() >= 4) { dst.order3 = convertSC2UnitOrder(&src->orders[3]); }
 
+    static_assert(std::is_same_v<std::underlying_type_t<sc2::BUFF_ID>, int>);
     if (src->buffs.size() >= 1) { dst.buff0 = static_cast<int>(src->buffs[0]); }
     if (src->buffs.size() >= 2) { dst.buff1 = static_cast<int>(src->buffs[1]); }
 

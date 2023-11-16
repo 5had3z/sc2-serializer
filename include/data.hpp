@@ -194,7 +194,7 @@ template<typename T> auto enumToOneHot(AddOn e) noexcept -> std::vector<T>
 
 struct UnitOrder
 {
-    // AbilityID ability_id;
+    int ability_id;
     //! Target unit of the order, if there is one.
     UID tgtId{ 0 };
     //! Target position of the order, if there is one.
