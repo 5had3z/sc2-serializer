@@ -168,6 +168,8 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readwrite("order1", &cvt::Unit::order1)
         .def_readwrite("order2", &cvt::Unit::order2)
         .def_readwrite("order3", &cvt::Unit::order3)
+        .def_readwrite("buff0", &cvt::Unit::buff0)
+        .def_readwrite("buff1", &cvt::Unit::buff1)
         .def_readwrite("add_on_tag", &cvt::Unit::add_on_tag)
         .def(
             "as_array",

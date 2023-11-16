@@ -189,6 +189,9 @@ void BaseConverter::copyHeightMapData() noexcept
     if (src->orders.size() >= 3) { dst.order2 = convertSC2UnitOrder(&src->orders[2]); }
     if (src->orders.size() >= 4) { dst.order3 = convertSC2UnitOrder(&src->orders[3]); }
 
+    if (src->buffs.size() >= 1) { dst.buff0 = static_cast<int>(src->buffs[0]); }
+    if (src->buffs.size() >= 2) { dst.buff1 = static_cast<int>(src->buffs[1]); }
+
     dst.add_on_tag = find_tagged_unit(src->add_on_tag, units);
 
 

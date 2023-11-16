@@ -240,7 +240,8 @@ struct Unit
     UnitOrder order1;
     UnitOrder order2;
     UnitOrder order3;
-
+    int buff0;
+    int buff1;
     AddOn add_on_tag{ AddOn::None };
 
 
@@ -281,6 +282,8 @@ struct UnitSoA
     std::vector<UnitOrder> order2{};
     std::vector<UnitOrder> order3{};
 
+    std::vector<int> buff0{};
+    std::vector<int> buff1{};
 
     std::vector<float> heading{};
     std::vector<float> radius{};
@@ -333,6 +336,8 @@ struct UnitSoA
         soa.order1.push_back(unit.order1);
         soa.order2.push_back(unit.order2);
         soa.order3.push_back(unit.order3);
+        soa.buff0.push_back(unit.buff0);
+        soa.buff1.push_back(unit.buff1);
         soa.add_on_tag.push_back(unit.add_on_tag);
     }
     return soa;
@@ -381,6 +386,8 @@ struct UnitSoA
         unit.order1 = soa.order1[idx];
         unit.order2 = soa.order2[idx];
         unit.order3 = soa.order3[idx];
+        unit.buff0 = soa.buff0[idx];
+        unit.buff1 = soa.buff1[idx];
         unit.add_on_tag = soa.add_on_tag[idx];
     }
     return aos;

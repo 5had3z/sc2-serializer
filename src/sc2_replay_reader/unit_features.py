@@ -48,6 +48,8 @@ class Unit(IntEnum):
     order1 = auto()
     order2 = auto()
     order3 = auto()
+    buff0 = auto()
+    buff1 = auto()
     add_on_tag = auto()
 
 
@@ -100,6 +102,8 @@ class UnitOH(IntEnum):
     order1 = auto()
     order2 = auto()
     order3 = auto()
+    buff0 = auto()
+    buff1 = auto()
     add_on_tag = auto()
 
 
