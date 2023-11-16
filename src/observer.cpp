@@ -113,7 +113,7 @@ void BaseConverter::copyHeightMapData() noexcept
 [[nodiscard]] auto find_tagged_unit(const sc2::Tag add_on_tag, const sc2::Units &units) noexcept -> AddOn
 {
     auto same_tag = [add_on_tag](const sc2::Unit *other) { return other->tag == add_on_tag; };
-    auto it = std::find_if(units.begin(), units.end(), same_tag);
+    auto it = std::ranges::find_if(units.begin(), units.end(), same_tag);
     if (it == std::end(units)) {
         throw std::out_of_range(fmt::format("Tagged unit was not found!", static_cast<int>(add_on_tag)));
     } else {
@@ -151,7 +151,8 @@ void BaseConverter::copyHeightMapData() noexcept
 }
 
 // Convert StarCraft2 API Unit to Serializer Unit
-[[nodiscard]] auto convertSC2Unit(const sc2::Unit *src, const sc2::Units &units) noexcept -> Unit
+[[nodiscard]] auto convertSC2Unit(const sc2::Unit *src, const sc2::Units &units, const bool isPassenger) noexcept
+    -> Unit
 {
     Unit dst;
     dst.id = src->tag;
@@ -175,6 +176,7 @@ void BaseConverter::copyHeightMapData() noexcept
     dst.is_flying = src->is_flying;
     dst.is_burrowed = src->is_burrowed;
     dst.is_powered = src->is_powered;
+    dst.in_cargo = isPassenger;
     dst.pos.x = src->pos.x;
     dst.pos.y = src->pos.y;
     dst.pos.z = src->pos.z;
@@ -221,11 +223,20 @@ void BaseConverter::copyUnitData() noexcept
     auto &neutralUnits = currentReplay_.stepData.back().neutralUnits;
     neutralUnits.clear();
     neutralUnits.reserve(unitData.size());
+
+    // Find all passengers across all units
+    auto r = unitData | std::views::transform([](const sc2::Unit *unit) { return unit->passengers; }) | std::views::join
+             | std::views::transform([](const sc2::PassengerUnit &p) { return p.tag; }) | std::views::common;
+
+    std::unordered_set<sc2::Tag> p_tags(std::begin(r), std::end(r));
+
     std::ranges::for_each(unitData, [&](const sc2::Unit *src) {
+        const bool isPassenger = p_tags.contains(src->tag);
         if (neutralUnitTypes.contains(src->unit_type)) {
+            assert(!isPassenger);
             neutralUnits.emplace_back(convertSC2NeutralUnit(src));
         } else {
-            units.emplace_back(convertSC2Unit(src, unitData));
+            units.emplace_back(convertSC2Unit(src, unitData, isPassenger));
         }
     });
     if (resourceObs_.empty()) { this->initResourceObs(); }

@@ -234,14 +234,14 @@ struct Unit
     bool is_flying{ false };// flying ship
     bool is_burrowed{ false };// zerg
     bool is_powered{ false };// pylon
-    bool in_cargo{ false };// todo
+    bool in_cargo{ false };
 
-    UnitOrder order0;// todo
-    UnitOrder order1;// todo
-    UnitOrder order2;// todo
-    UnitOrder order3;// todo
+    UnitOrder order0;
+    UnitOrder order1;
+    UnitOrder order2;
+    UnitOrder order3;
 
-    AddOn add_on_tag{ AddOn::None };// todo
+    AddOn add_on_tag{ AddOn::None };
 
 
     [[nodiscard]] auto operator==(const Unit &other) const noexcept -> bool = default;
@@ -323,6 +323,7 @@ struct UnitSoA
         soa.is_flying.push_back(unit.is_flying);
         soa.is_burrowed.push_back(unit.is_burrowed);
         soa.is_powered.push_back(unit.is_powered);
+        soa.in_cargo.push_back(unit.in_cargo);
         soa.pos.push_back(unit.pos);
         soa.heading.push_back(unit.heading);
         soa.radius.push_back(unit.radius);
@@ -371,6 +372,7 @@ struct UnitSoA
         unit.is_flying = soa.is_flying[idx];
         unit.is_burrowed = soa.is_burrowed[idx];
         unit.is_powered = soa.is_powered[idx];
+        unit.in_cargo = soa.in_cargo[idx];
         unit.pos = soa.pos[idx];
         unit.heading = soa.heading[idx];
         unit.radius = soa.radius[idx];
