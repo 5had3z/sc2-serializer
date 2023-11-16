@@ -22,6 +22,7 @@ class CMakeBuild(build_ext):
     def build_extension(self, ext: CMakeExtension) -> None:
         ext_fullpath = Path.cwd() / self.get_ext_fullpath(ext.name)
         extdir = ext_fullpath.parent.resolve()
+        self.debug = True
 
         cmake_args = [
             f"-DCMAKE_BUILD_TYPE={'Debug' if self.debug else 'Release'}",
