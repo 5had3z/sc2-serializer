@@ -151,6 +151,41 @@ void BaseConverter::copyHeightMapData() noexcept
     return dst;
 }
 
+[[nodiscard]] auto convertScore(const sc2::Score *src) noexcept -> Score
+{
+    assert(src->score_type == sc2::ScoreType::Melee);
+    Score dst;
+
+    dst.score_float = src->score;
+    dst.idle_production_time = src->score_details.idle_production_time;
+    dst.idle_worker_time = src->score_details.idle_worker_time;
+    dst.total_value_units = src->score_details.total_value_units;
+    dst.total_value_structures = src->score_details.total_value_structures;
+    dst.killed_value_units = src->score_details.killed_value_units;
+    dst.killed_value_structures = src->score_details.killed_value_structures;
+    dst.collected_minerals = src->score_details.collected_minerals;
+    dst.collected_vespene = src->score_details.collected_vespene;
+    dst.collection_rate_minerals = src->score_details.collection_rate_minerals;
+    dst.collection_rate_vespene = src->score_details.collection_rate_vespene;
+    dst.spent_minerals = src->score_details.spent_minerals;
+    dst.spent_vespene = src->score_details.spent_vespene;
+
+    dst.total_damage_dealt_life = src->score_details.total_damage_dealt.life;
+    dst.total_damage_dealt_shields = src->score_details.total_damage_dealt.shields;
+    dst.total_damage_dealt_energy = src->score_details.total_damage_dealt.energy;
+
+    dst.total_damage_taken_life = src->score_details.total_damage_taken.life;
+    dst.total_damage_taken_shields = src->score_details.total_damage_taken.shields;
+    dst.total_damage_taken_energy = src->score_details.total_damage_taken.energy;
+
+    dst.total_healed_life = src->score_details.total_healed.life;
+    dst.total_healed_shields = src->score_details.total_healed.shields;
+    dst.total_healed_energy = src->score_details.total_healed.energy;
+
+    return dst;
+}
+
+
 // Convert StarCraft2 API Unit to Serializer Unit
 [[nodiscard]] auto convertSC2Unit(const sc2::Unit *src, const sc2::Units &units, const bool isPassenger) noexcept
     -> Unit
@@ -354,6 +389,9 @@ void BaseConverter::copyCommonData() noexcept
     currentReplay_.stepData.back().popMax = this->Observation()->GetFoodCap();
     currentReplay_.stepData.back().popArmy = this->Observation()->GetFoodArmy();
     currentReplay_.stepData.back().popWorkers = this->Observation()->GetFoodWorkers();
+
+    const sc2::Score &score = this->Observation()->GetScore();
+    currentReplay_.stepData.back().score = convertScore(&score);
 }
 
 void FullConverter::OnStep()
