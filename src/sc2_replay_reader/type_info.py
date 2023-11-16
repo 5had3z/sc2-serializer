@@ -31,6 +31,9 @@ class Unit(IntEnum):
     energy_max = auto()
     cargo = auto()
     cargo_max = auto()
+    assigned_harvesters = auto()
+    ideal_harvesters = auto()
+    weapon_cooldown = auto()
     x = auto()
     y = auto()
     z = auto()
@@ -40,6 +43,11 @@ class Unit(IntEnum):
     is_blip = auto()
     is_burrowed = auto()
     is_powered = auto()
+    order0 = auto()
+    order1 = auto()
+    order2 = auto()
+    order3 = auto()
+    add_on_tag = auto()
 
 
 class UnitOH(IntEnum):
@@ -74,6 +82,9 @@ class UnitOH(IntEnum):
     energy_max = auto()
     cargo = auto()
     cargo_max = auto()
+    assigned_harvesters = auto()
+    ideal_harvesters = auto()
+    weapon_cooldown = auto()
     x = auto()
     y = auto()
     z = auto()
@@ -83,6 +94,11 @@ class UnitOH(IntEnum):
     is_blip = auto()
     is_burrowed = auto()
     is_powered = auto()
+    order0 = auto()
+    order1 = auto()
+    order2 = auto()
+    order3 = auto()
+    add_on_tag = auto()
 
 
 class NeutralUnit(IntEnum):

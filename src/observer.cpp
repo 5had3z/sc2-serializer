@@ -1,6 +1,7 @@
 #include "observer.hpp"
 #include "generated_info.hpp"
 #include "serialize.hpp"
+#include <unordered_set>
 
 // #include <boost/iostreams/device/file.hpp>
 // #include <boost/iostreams/filter/zlib.hpp>
@@ -108,8 +109,48 @@ void BaseConverter::copyHeightMapData() noexcept
     copyMapData(currentReplay_.heightMap, minimapFeats.height_map());
 }
 
+[[nodiscard]] auto find_tagged_unit(const sc2::Tag add_on_tag, const sc2::Units &units) noexcept -> AddOn
+{
+    auto same_tag = [add_on_tag](const sc2::Unit *other) { return other->tag == add_on_tag; };
+    auto it = std::find_if(units.begin(), units.end(), same_tag);
+    if (it == std::end(units)) {
+        throw std::out_of_range(fmt::format("Tagged unit was not found!", static_cast<int>(add_on_tag)));
+    } else {
+
+        const sc2::UNIT_TYPEID type = (*it)->unit_type.ToType();
+
+        const std::unordered_set<sc2::UNIT_TYPEID> techlabs = { sc2::UNIT_TYPEID::TERRAN_BARRACKSTECHLAB,
+            sc2::UNIT_TYPEID::TERRAN_FACTORYTECHLAB,
+            sc2::UNIT_TYPEID::TERRAN_STARPORTTECHLAB,
+            sc2::UNIT_TYPEID::TERRAN_TECHLAB };
+
+        if (techlabs.contains(type)) { return AddOn::TechLab; }
+
+        const std::unordered_set<sc2::UNIT_TYPEID> reactors = { sc2::UNIT_TYPEID::TERRAN_BARRACKSREACTOR,
+            sc2::UNIT_TYPEID::TERRAN_FACTORYREACTOR,
+            sc2::UNIT_TYPEID::TERRAN_STARPORTREACTOR,
+            sc2::UNIT_TYPEID::TERRAN_REACTOR };
+
+        if (reactors.contains(type)) { return AddOn::Reactor; }
+
+        throw std::out_of_range(fmt::format("Invalid Add On Type, type was {}!", static_cast<int>(type)));
+    }
+}
+
+
+[[nodiscard]] auto convertSC2UnitOrder(const sc2::UnitOrder *src) noexcept -> UnitOrder
+{
+    // todo abilities
+    UnitOrder dst;
+    dst.tgtId = src->target_unit_tag;
+    dst.target_pos.x = src->target_pos.x;
+    dst.target_pos.y = src->target_pos.y;
+    dst.progress = src->progress;
+    return dst;
+}
+
 // Convert StarCraft2 API Unit to Serializer Unit
-[[nodiscard]] auto convertSC2Unit(const sc2::Unit *src) noexcept -> Unit
+[[nodiscard]] auto convertSC2Unit(const sc2::Unit *src, const sc2::Units &units) noexcept -> Unit
 {
     Unit dst;
     dst.id = src->tag;
@@ -124,6 +165,9 @@ void BaseConverter::copyHeightMapData() noexcept
     dst.energy_max = src->energy_max;
     dst.cargo = src->cargo_space_taken;
     dst.cargo_max = src->cargo_space_max;
+    dst.assigned_harvesters = src->assigned_harvesters;
+    dst.ideal_harvesters = src->ideal_harvesters;
+    dst.weapon_cooldown = src->weapon_cooldown;
     dst.tgtId = src->engaged_target_tag;
     dst.cloak_state = static_cast<CloakState>(src->cloak);// These should match
     dst.is_blip = src->is_blip;
@@ -136,8 +180,18 @@ void BaseConverter::copyHeightMapData() noexcept
     dst.heading = src->facing;
     dst.radius = src->radius;
     dst.build_progress = src->build_progress;
+
+    if (src->orders.size() >= 1) { dst.order0 = convertSC2UnitOrder(&src->orders[0]); }
+    if (src->orders.size() >= 2) { dst.order1 = convertSC2UnitOrder(&src->orders[1]); }
+    if (src->orders.size() >= 3) { dst.order2 = convertSC2UnitOrder(&src->orders[2]); }
+    if (src->orders.size() >= 4) { dst.order3 = convertSC2UnitOrder(&src->orders[3]); }
+
+    dst.add_on_tag = find_tagged_unit(src->add_on_tag, units);
+
+
     return dst;
 }
+
 
 [[nodiscard]] auto convertSC2NeutralUnit(const sc2::Unit *src) noexcept -> NeutralUnit
 {
@@ -170,7 +224,7 @@ void BaseConverter::copyUnitData() noexcept
         if (neutralUnitTypes.contains(src->unit_type)) {
             neutralUnits.emplace_back(convertSC2NeutralUnit(src));
         } else {
-            units.emplace_back(convertSC2Unit(src));
+            units.emplace_back(convertSC2Unit(src, unitData));
         }
     });
     if (resourceObs_.empty()) { this->initResourceObs(); }
