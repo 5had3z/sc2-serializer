@@ -394,8 +394,6 @@ void BaseConverter::copyCommonData() noexcept
 
     const sc2::Score &score = this->Observation()->GetScore();
     currentReplay_.stepData.back().score = convertScore(&score);
-
-    // auto x = currentReplay_.stepData.back();
 }
 
 void FullConverter::OnStep()
