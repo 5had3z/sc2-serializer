@@ -1,22 +1,36 @@
 """Maps from ability id to name grouped by race"""
-
+from dataclasses import dataclass
+from pathlib import Path
 from itertools import product
 
 from pysc2.lib.actions import FUNCTIONS
+import yaml
+
+
+_game_info_file = Path(__file__).parent / "unit_infos.yaml"
+
+with open(_game_info_file, "r", encoding="utf-8") as f:
+    _game_data = yaml.safe_load(f)
+_version_mapping: dict[str, dict[str, int]] = {}
+for _game_version in _game_data:
+    _version_mapping[_game_version["version"]] = {
+        u["name"]: u["ability_id"] for u in _game_version["upgrades"]
+    }
 
 _levels = ["1", "2", "3"]
 
 
 def _str_tf(x):
     """Add prefix and posfix for research action"""
-    return f"Research_{x}_quick"
+    # return f"Research_{x}_quick"
+    return x
 
 
 # --- Protoss ---
 def _gen_protoss():
     entries = [
         "Charge",
-        "GraviticBooster",
+        "ObserverGraviticBooster",
         "GraviticDrive",
         # "FluxVanes", # On wiki but not sc2api
         "AdeptResonatingGlaives",
@@ -53,7 +67,7 @@ def _protoss_remap():
 
 
 # Protoss Research ID and Name mapping
-PROTOSS: dict[int, str] = {FUNCTIONS[p].ability_id: p for p in _gen_protoss()}
+PROTOSS: dict[int, str] = {_version_mapping[_key][p]: p for p in _gen_protoss()}
 # Protoss Research ID to State Feature Index Mapping
 PROTOSS_IDX: dict[int, int] = {
     _id: idx for idx, _id in enumerate(sorted(PROTOSS.keys()))
@@ -85,7 +99,7 @@ def _gen_terran():
         "BattlecruiserWeaponRefit",
         "DrillingClaws",
         "RavenCorvidReactor",
-        # "CaduceusReactor",
+        # "MedivacCaduceusReactor",
         # "MoebiusReactor",
         # "TransformationServos",
         # "BehemothReactor",
@@ -188,3 +202,25 @@ ZERG: dict[int, str] = {FUNCTIONS[p].ability_id: p for p in _gen_zerg()}
 ZERG_IDX: dict[int, int] = {_id: idx for idx, _id in enumerate(sorted(ZERG.keys()))}
 # Zerg remap non-leveled action to leveled
 ZERG_REMAP: dict[int, list[int]] = _zerg_remap()
+
+
+@dataclass
+class GameUpgradeInfo:
+    protoss: dict[int, str]
+    terran: dict[int, str]
+    zerg: dict[int, str]
+
+    @classmethod
+    def from_upgrades(cls, upgrades: dict[str, int]):
+        """"""
+        _zerg = {upgrades[p]: p for p in _gen_zerg()}
+        _terran = {upgrades[p]: p for p in _gen_terran()}
+        _protoss = {upgrades[p]: p for p in _gen_protoss()}
+        return cls(_protoss, _terran, _zerg)
+
+
+# Mapping from game version to upgrade info
+UPGRADE_INFO: dict[str, GameUpgradeInfo] = {}
+
+for _version, _upgrades in _version_mapping.items():
+    UPGRADE_INFO[_version] = GameUpgradeInfo.from_upgrades(_upgrades)

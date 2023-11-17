@@ -39,6 +39,8 @@ class UpgradeTiming
   private:
     [[nodiscard]] auto getValidIds() const -> const std::set<int> &;
 
+    [[nodiscard]] auto getValidRemap() const -> const std::unordered_map<int, std::array<int, 3>> &;
+
     void loadInfo();
 
     std::unordered_map<int, int> id2delay_{};

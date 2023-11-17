@@ -68,6 +68,19 @@ auto UpgradeTiming::getValidIds() const -> const std::set<int> &
     throw std::out_of_range(fmt::format("Invalid enum type {}", static_cast<int>(currentRace_)));
 }
 
+auto UpgradeTiming::getValidRemap() const -> const std::unordered_map<int, std::array<int, 3>> &
+{
+    switch (currentRace_) {
+    case Race::Protoss:
+        return protossResearchRemap;
+    case Race::Zerg:
+        return zergResearchRemap;
+    case Race::Terran:
+        return terranResearchRemap;
+    }
+    throw std::out_of_range(fmt::format("Invalid enum type {}", static_cast<int>(currentRace_)));
+}
+
 
 // Returns a vector containing the time point when the index of an upgrade is researched
 void UpgradeTiming::setActions(const std::vector<std::vector<Action>> &actionsReplay,
@@ -81,6 +94,7 @@ void UpgradeTiming::setActions(const std::vector<std::vector<Action>> &actionsRe
     }
 
     const auto &raceUpgradeIds = this->getValidIds();
+    const auto &raceUpgradeRemap = this->getValidRemap();
     upgradeTimes_.resize(raceUpgradeIds.size());
     constexpr auto maxTime = std::numeric_limits<std::ranges::range_value_t<decltype(upgradeTimes_)>>::max();
     std::ranges::fill(upgradeTimes_, maxTime);
@@ -88,10 +102,23 @@ void UpgradeTiming::setActions(const std::vector<std::vector<Action>> &actionsRe
     for (std::size_t idx = 0; idx < actionsReplay.size(); ++idx) {
         const auto &actionsStep = actionsReplay[idx];
         for (auto &&action : actionsStep) {
-            const auto upgrade = raceUpgradeIds.find(action.ability_id);
-            if (upgrade != raceUpgradeIds.end()) {
-                std::size_t upgradeIdx = std::distance(raceUpgradeIds.begin(), upgrade);
-                upgradeTimes_[upgradeIdx] = timeIdxs[idx] + id2delay_.at(*upgrade);
+            const auto abilityPtr = raceUpgradeIds.find(action.ability_id);
+            if (abilityPtr != raceUpgradeIds.end()) {
+                std::size_t upgradeIdx = std::distance(raceUpgradeIds.begin(), abilityPtr);
+                upgradeTimes_[upgradeIdx] = timeIdxs[idx] + id2delay_.at(action.ability_id);
+                continue;
+            }
+            const auto remapPtr = raceUpgradeRemap.find(action.ability_id);
+            if (remapPtr != raceUpgradeRemap.end()) {
+                SPDLOG_INFO("GOT NON-LEVELED UPGRADE: {}", action.ability_id);
+                // The first ability_id in the remapping that is maxTime is the lowest level unresearched
+                for (auto &&remapAbilityId : remapPtr->second) {
+                    std::size_t upgradeIdx = std::distance(raceUpgradeIds.begin(), raceUpgradeIds.find(remapAbilityId));
+                    if (upgradeTimes_[upgradeIdx] == maxTime) {
+                        upgradeTimes_[upgradeIdx] = timeIdxs[idx] + id2delay_.at(remapAbilityId);
+                        break;
+                    }
+                }
             }
         }
     }
