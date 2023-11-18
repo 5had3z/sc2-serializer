@@ -33,7 +33,7 @@ def make_video(image_sequence: Sequence, fname: Path):
 
 def test_parse(db, idx):
     replay_data = db.getEntry(idx)
-    parser = sc2_replay_reader.ReplayParser(sc2_replay_reader.UNIT_INFOS_FILE)
+    parser = sc2_replay_reader.ReplayParser(sc2_replay_reader.GAME_INFO_FILE)
     parser.parse_replay(replay_data)
 
 
@@ -50,6 +50,7 @@ def main(
     db = sc2_replay_reader.ReplayDatabase(file)
     for i in range(db.size()):
         test_parse(db, i)
+    return
 
     replay_data = db.getEntry(idx)
 
@@ -60,7 +61,7 @@ def main(
     ]
     # fmt: on
 
-    parser = sc2_replay_reader.ReplayParser(sc2_replay_reader.UNIT_INFOS_FILE)
+    parser = sc2_replay_reader.ReplayParser(sc2_replay_reader.GAME_INFO_FILE)
     parser.parse_replay(replay_data)
 
     sample = parser.sample(10)
