@@ -57,28 +57,12 @@ void UpgradeTiming::setRace(Race race) noexcept { currentRace_ = race; }
 
 auto UpgradeTiming::getValidIds() const -> const std::set<int> &
 {
-    switch (currentRace_) {
-    case Race::Protoss:
-        return protossResearch;
-    case Race::Zerg:
-        return zergResearch;
-    case Race::Terran:
-        return terranResearch;
-    }
-    throw std::out_of_range(fmt::format("Invalid enum type {}", static_cast<int>(currentRace_)));
+    return raceResearch.at(gameVersion_).at(currentRace_);
 }
 
 auto UpgradeTiming::getValidRemap() const -> const std::unordered_map<int, std::array<int, 3>> &
 {
-    switch (currentRace_) {
-    case Race::Protoss:
-        return protossResearchRemap;
-    case Race::Zerg:
-        return zergResearchRemap;
-    case Race::Terran:
-        return terranResearchRemap;
-    }
-    throw std::out_of_range(fmt::format("Invalid enum type {}", static_cast<int>(currentRace_)));
+    return raceResearchReID.at(gameVersion_).at(currentRace_);
 }
 
 

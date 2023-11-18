@@ -168,6 +168,7 @@ if(SC2_CONVERTER AND OpenCV_FOUND)
     sc2utils
     cxxopts
     spdlog::spdlog
+    boost_pfr
     opencv_core
     opencv_imgcodecs)
   target_include_directories(game_exp PRIVATE include 3rdparty/s2client-api/include
