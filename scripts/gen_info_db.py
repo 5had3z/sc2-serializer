@@ -5,14 +5,17 @@ information about different upgrades.
 import os
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
+from typing import Iterable, Mapping
 
 from absl import flags
 from absl import app
 import yaml
 from pysc2 import maps
 from pysc2.env import sc2_env
+from pysc2.lib.actions import FUNCTIONS
 from pysc2.run_configs.platforms import Linux as SC2Linux
 from s2clientprotocol import sc2api_pb2 as sc_pb
+from s2clientprotocol.data_pb2 import UpgradeData, AbilityData
 
 
 @dataclass
@@ -33,6 +36,9 @@ class Upgrade:
     mineral: int
     vespere: int
     time: int
+    button_name: str
+    friendly_name: str
+    pysc2_name: str
 
 
 @dataclass
@@ -61,10 +67,21 @@ def make_interface_opts():
     return sc_pb.InterfaceOptions()
 
 
-def parse_upgrades(upgrades):
+FUNCTIONS_BY_ID = {
+    f.ability_id: f.name[len("Research_") : -len("_quick")] for f in list(FUNCTIONS)
+}
+
+
+def parse_upgrades(upgrades, abilities):
     """"""
     res: list[Upgrade] = []
+
     for upgrade in upgrades:
+        ability = abilities[upgrade.ability_id]
+        try:
+            pysc2_name = FUNCTIONS_BY_ID[upgrade.ability_id]
+        except KeyError:
+            pysc2_name = ""
         res.append(
             Upgrade(
                 upgrade.upgrade_id,
@@ -73,6 +90,46 @@ def parse_upgrades(upgrades):
                 upgrade.mineral_cost,
                 upgrade.vespene_cost,
                 upgrade.research_time,
+                ability.button_name,
+                ability.friendly_name.replace("Research", "")
+                .replace("Evolve", "")
+                .strip(),
+                pysc2_name,
+            )
+        )
+    return res
+
+
+def parse_upgrades2(
+    abilities: Iterable[AbilityData], upgrades: Mapping[int, UpgradeData]
+):
+    """Run based off actions to handle non-leveled actions which aren't in the upgrades list"""
+    res: list[Upgrade] = []
+
+    _upgrade_map: dict[int, UpgradeData] = {u.ability_id: u for u in upgrades.values()}
+
+    for ability in abilities:
+        try:
+            pysc2_name = FUNCTIONS_BY_ID[ability.ability_id]
+        except KeyError:
+            pysc2_name = ""
+        try:
+            _upgrade = _upgrade_map[ability.ability_id]
+        except KeyError:
+            _upgrade = UpgradeData()
+        res.append(
+            Upgrade(
+                _upgrade.upgrade_id,
+                ability.ability_id,
+                _upgrade.name,
+                _upgrade.mineral_cost,
+                _upgrade.vespene_cost,
+                _upgrade.research_time,
+                ability.button_name,
+                ability.friendly_name.replace("Research", "")
+                .replace("Evolve", "")
+                .strip(),
+                pysc2_name,
             )
         )
     return res
@@ -117,8 +174,17 @@ def get_game_info(version: str) -> GameInfo:
                 if u.name != "" and 0 < u.race < 4 and u.available and u.build_time > 0
             )
         )
-        game_info.upgrades = parse_upgrades(
-            (u for u in game_data.upgrades.values() if u.ability_id != 0)
+
+        # game_info.upgrades = parse_upgrades(
+        #     (u for u in game_data.upgrades.values() if u.ability_id != 0),
+        #     game_data.abilities,
+        # )
+        def name_filter(a: AbilityData):
+            return any(a.friendly_name.startswith(s) for s in ["Research", "Evolve"])
+
+        game_info.upgrades = parse_upgrades2(
+            (a for a in game_data.abilities.values() if name_filter(a)),
+            game_data.upgrades,
         )
         controller.quit()
 
