@@ -670,6 +670,8 @@ struct ReplayDataSoA
         .playerResult = aos.playerResult,
         .playerMMR = aos.playerMMR,
         .playerAPM = aos.playerAPM,
+        .mapWidth = aos.mapWidth,
+        .mapHeight = aos.mapHeight,
         .heightMap = aos.heightMap,
     };
 
@@ -704,6 +706,8 @@ struct ReplayDataSoA
         .playerResult = soa.playerResult,
         .playerMMR = soa.playerMMR,
         .playerAPM = soa.playerAPM,
+        .mapWidth = soa.mapWidth,
+        .mapHeight = soa.mapHeight,
         .heightMap = soa.heightMap,
     };
 
