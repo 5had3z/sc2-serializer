@@ -30,8 +30,7 @@ class UpgradeTiming
     [[nodiscard]] auto getState(std::size_t timeIdx) const -> std::vector<T>
     {
         std::vector<T> state(upgradeTimes_.size());
-        std::ranges::transform(
-            upgradeTimes_, state.begin(), [=](int32_t time) { return time > 0 && timeIdx > time ? 1 : 0; });
+        std::ranges::transform(upgradeTimes_, state.begin(), [=](int32_t time) { return timeIdx > time ? 1 : 0; });
         return state;
     }
 
@@ -43,10 +42,10 @@ class UpgradeTiming
 
     void loadInfo();
 
+    std::filesystem::path dataFile_;
     std::unordered_map<int, int> id2delay_{};
     Race currentRace_{ Race::Random };
-    std::vector<int32_t> upgradeTimes_;
-    std::filesystem::path dataFile_;
+    std::vector<int32_t> upgradeTimes_{};
     std::string gameVersion_{};
 };
 

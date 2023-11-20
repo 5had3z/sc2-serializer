@@ -69,6 +69,8 @@ namespace detail {
 
 }// namespace detail
 
+// TODO: Add helper fn to check the vectorization size and another "vectorize" variant that pushes into preallocated
+// vector
 template<typename T, typename S>
     requires std::is_aggregate_v<S>
 auto vectorize(S s, bool onehotEnum = false) -> std::vector<T>

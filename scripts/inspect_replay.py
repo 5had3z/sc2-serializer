@@ -48,9 +48,8 @@ def main(
 ):
     """"""
     db = sc2_replay_reader.ReplayDatabase(file)
-    for i in range(db.size()):
-        test_parse(db, i)
-    return
+    # for i in range(db.size()):
+    #     test_parse(db, i)
 
     replay_data = db.getEntry(idx)
 
@@ -69,6 +68,8 @@ def main(
     # for attr in img_attrs:
     #     image_sequence = getattr(replay_data, attr)
     #     make_video(image_sequence, outfolder / f"{attr}.webm")
+
+    print("Done")
 
 
 if __name__ == "__main__":
