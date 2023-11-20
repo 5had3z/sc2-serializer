@@ -57,4 +57,10 @@ auto ReplayParser::sample(std::size_t timeIdx) const noexcept -> py::dict
     return result;
 }
 
+auto ReplayParser::size() const noexcept -> std::size_t { return replayData_.gameStep.size(); }
+
+auto ReplayParser::empty() const noexcept -> bool { return replayData_.gameStep.empty(); }
+
+auto ReplayParser::data() const noexcept -> const ReplayDataSoA & { return replayData_; }
+
 }// namespace cvt

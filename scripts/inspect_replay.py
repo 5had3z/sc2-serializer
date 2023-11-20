@@ -17,7 +17,7 @@ from sc2_replay_reader.unit_features import Unit, UnitOH, NeutralUnit, NeutralUn
 app = typer.Typer()
 
 
-def make_video(image_sequence: Sequence, fname: Path):
+def make_minimap_video(image_sequence: Sequence, fname: Path):
     """Make video from image sequence"""
     image = image_sequence[0]
     writer = cv2.VideoWriter(
@@ -28,6 +28,16 @@ def make_video(image_sequence: Sequence, fname: Path):
         writer.write(
             cv2.normalize(image.data, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
         )
+    writer.release()
+
+
+def make_units_video(parser: sc2_replay_reader.ReplayParser, fname: Path):
+    writer = cv2.VideoWriter(
+        str(fname), cv2.VideoWriter_fourcc(*"VP90"), 10, (800, 800), isColor=False
+    )
+    for tidx in range(parser.size()):
+        sample = parser.sample(tidx)
+
     writer.release()
 
 
@@ -51,7 +61,9 @@ def main(
     # for i in range(db.size()):
     #     test_parse(db, i)
 
-    replay_data = db.getEntry(idx)
+    parser = sc2_replay_reader.ReplayParser(sc2_replay_reader.GAME_INFO_FILE)
+    parser.parse_replay(db.getEntry(idx))
+    make_units_video(parser, outfolder / "raw_units.webm")
 
     # fmt: off
     img_attrs = [
@@ -59,12 +71,6 @@ def main(
         "visibility", "player_relative",
     ]
     # fmt: on
-
-    parser = sc2_replay_reader.ReplayParser(sc2_replay_reader.GAME_INFO_FILE)
-    parser.parse_replay(replay_data)
-
-    sample = parser.sample(10)
-
     # for attr in img_attrs:
     #     image_sequence = getattr(replay_data, attr)
     #     make_video(image_sequence, outfolder / f"{attr}.webm")

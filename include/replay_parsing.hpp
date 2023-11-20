@@ -61,6 +61,15 @@ class ReplayParser
     // Returns a python dictionary containing features from that timestep
     [[nodiscard]] auto sample(std::size_t timeIdx) const noexcept -> py::dict;
 
+    // Return the number of timesteps in the replay
+    [[nodiscard]] auto size() const noexcept -> std::size_t;
+
+    // Check if parser is empty
+    [[nodiscard]] auto empty() const noexcept -> bool;
+
+    // Return read-only reference to currently loaded replay data
+    [[nodiscard]] auto data() const noexcept -> const ReplayDataSoA &;
+
   private:
     UpgradeTiming upgrade_;
     ReplayDataSoA replayData_{};

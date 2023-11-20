@@ -231,7 +231,10 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
     py::class_<cvt::ReplayParser>(m, "ReplayParser")
         .def(py::init<const std::filesystem::path &>())
         .def("sample", &cvt::ReplayParser::sample)
-        .def("parse_replay", &cvt::ReplayParser::parseReplay);
+        .def("parse_replay", &cvt::ReplayParser::parseReplay)
+        .def("size", &cvt::ReplayParser::size)
+        .def("empty", &cvt::ReplayParser::empty)
+        .def_property_readonly("data", &cvt::ReplayParser::data, py::return_value_policy::reference_internal);
 
     m.attr("__version__") = "0.0.1";
 }
