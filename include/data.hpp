@@ -622,13 +622,6 @@ struct ReplayData
     std::vector<StepData> stepData{};
 
     [[nodiscard]] auto operator==(const ReplayData &other) const noexcept -> bool = default;
-
-    void clear() noexcept
-    {
-        heightMap.clear();
-        stepData.clear();
-        replayHash.clear();
-    }
 };
 
 struct ReplayDataSoA

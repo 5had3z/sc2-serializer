@@ -94,7 +94,6 @@ void UpgradeTiming::setActions(const std::vector<std::vector<Action>> &actionsRe
             }
             const auto remapPtr = raceUpgradeRemap.find(action.ability_id);
             if (remapPtr != raceUpgradeRemap.end()) {
-                SPDLOG_INFO("GOT NON-LEVELED UPGRADE: {}", action.ability_id);
                 // The first ability_id in the remapping that is maxTime is the lowest level unresearched
                 for (auto &&remapAbilityId : remapPtr->second) {
                     std::size_t upgradeIdx = std::distance(raceUpgradeIds.begin(), raceUpgradeIds.find(remapAbilityId));

@@ -92,11 +92,14 @@ def _gen_terran():
     ]
 
     # Weapons
-    for a, c in product(["Infantry", "Vehicle", "Ship"], _levels):
-        entries.append(f"Terran{a}WeaponsLevel{c}")
+    for a, l in product(["Infantry", "Vehicle", "Ship"], _levels):
+        entries.append(f"Terran{a}WeaponsLevel{l}")
+    entries.extend([f"TerranVehicleAndShipWeaponsLevel{l}" for l in _levels])
     # Plating
     entries.extend([f"TerranInfantryArmorLevel{l}" for l in _levels])
     entries.extend([f"TerranVehicleAndShipPlatingLevel{l}" for l in _levels])
+    for a, l in product(["Vehicle", "Ship"], _levels):
+        entries.append(f"Terran{a}PlatingLevel{l}")
     return entries
 
 
@@ -187,9 +190,11 @@ for _version, _upgrades in _version_mapping.items():
 
         for a in ["Infantry", "Vehicle", "Ship"]:
             remap_str(f"Terran{a}Weapons")
+        # remap_str("TerranVehicleAndShipWeapons")
         remap_str("TerranInfantryArmor")
         remap_str("TerranVehicleAndShipPlating")
-
+        # for a in ["Vehilce", "Ship"]:
+        #     remap_str(f"Terran{a}Plating")
         return remap
 
     UPGRADE_INFO[_version].terran_lvl_remap.update(_terran_remap())

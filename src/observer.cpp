@@ -27,15 +27,20 @@ template<typename T> void copyMapData(Image<T> &dest, const SC2APIProtocol::Imag
     std::memcpy(dest.data(), mapData.data().data(), dest.size());
 }
 
-static_assert(sizeof(UID) == sizeof(sc2::Tag) && "Mismatch between unique id tags in SC2 and this Lib");
+static_assert(std::is_same_v<UID, sc2::Tag> && "Mismatch between unique id tags in SC2 and this Lib");
 
 auto BaseConverter::loadDB(const std::filesystem::path &path) noexcept -> bool { return database_.open(path); }
 
 void BaseConverter::OnGameStart()
 {
-    auto replayInfo = this->ReplayControl()->GetReplayInfo();
-    // Preallocate Vector with expected duration
-    currentReplay_.stepData.reserve(replayInfo.duration_gameloops);
+    // Clear data collection structures, sc2api calls OnStep before OnGameStart
+    // but some of the units are scuffed (particularly the resources), so we want
+    // to clear it all out and only collect data from normal steps.
+    currentReplay_.stepData.clear();
+    currentReplay_.heightMap.clear();
+    resourceObs_.clear();
+
+    const auto replayInfo = this->ReplayControl()->GetReplayInfo();
     assert(replayInfo.num_players >= currentReplay_.playerId && "Player ID should be at most be num_players");
     const auto &playerInfo = replayInfo.players[currentReplay_.playerId - 1];
     currentReplay_.playerRace = static_cast<Race>(playerInfo.race);
@@ -44,13 +49,14 @@ void BaseConverter::OnGameStart()
     currentReplay_.playerAPM = playerInfo.apm;
     currentReplay_.gameVersion = replayInfo.version;
 
-    auto gameInfo = this->Observation()->GetGameInfo();
+    const auto gameInfo = this->Observation()->GetGameInfo();
     assert(gameInfo.height > 0 && gameInfo.width > 0 && "Missing map size data");
     currentReplay_.mapHeight = gameInfo.height;
     currentReplay_.mapWidth = gameInfo.width;
 
-    currentReplay_.clear();
-    resourceObs_.clear();
+    // Preallocate Step Data with Maximum Game Loops
+    currentReplay_.stepData.reserve(replayInfo.duration_gameloops);
+
     mapDynHasLogged_ = false;
     mapHeightHasLogged_ = false;
 }
@@ -117,7 +123,6 @@ void BaseConverter::copyHeightMapData() noexcept
     if (it == std::end(units)) {
         throw std::out_of_range(fmt::format("Tagged unit was not found!", static_cast<int>(add_on_tag)));
     } else {
-
         const sc2::UNIT_TYPEID type = (*it)->unit_type.ToType();
 
         const std::unordered_set<sc2::UNIT_TYPEID> techlabs = { sc2::UNIT_TYPEID::TERRAN_BARRACKSTECHLAB,

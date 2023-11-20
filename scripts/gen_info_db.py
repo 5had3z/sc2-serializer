@@ -158,7 +158,7 @@ def get_game_info(version: str) -> GameInfo:
     create = make_creation_msg(game)
     interface = make_interface_opts()
     join = sc_pb.RequestJoinGame(
-        options=interface, race=sc2_env.Race["random"], player_name="Mike Hunt"
+        options=interface, race=sc2_env.Race["protoss"], player_name="Mike Hunt"
     )
 
     vinfo = game.version

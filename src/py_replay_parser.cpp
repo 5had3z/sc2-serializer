@@ -1,6 +1,7 @@
 #include "replay_parsing.hpp"
 
 #include <pybind11/numpy.h>
+#include <spdlog/spdlog.h>
 
 #include <type_traits>
 
@@ -11,6 +12,11 @@ ReplayParser::ReplayParser(const std::filesystem::path &dataFile) noexcept : upg
 void ReplayParser::parseReplay(ReplayDataSoA replayData)
 {
     replayData_ = std::move(replayData);
+    // SPDLOG_INFO("Replay: {}, Player: {}, Race: {}, Last Step: {}",
+    //     replayData_.replayHash,
+    //     replayData_.playerId,
+    //     static_cast<int>(replayData_.playerRace),
+    //     replayData_.gameStep.back());
     upgrade_.setRace(replayData_.playerRace);
     upgrade_.setVersion(replayData_.gameVersion);
     upgrade_.setActions(replayData_.actions, replayData_.gameStep);
