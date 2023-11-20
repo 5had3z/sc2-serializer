@@ -13,13 +13,21 @@ template<typename T>
     requires std::is_floating_point_v<T> || std::is_integral_v<T>
 auto transformUnits(const std::vector<Unit> &units) noexcept -> py::array_t<T>
 {
+    // Return empty array if no units
     if (units.empty()) { return py::array_t<T>(); }
-
+    // Lambda wrapper around vectorize to set onehot to true
     auto vecFn = [](const Unit &unit) { return vectorize<T>(unit, true); };
-    auto unitFeats = vecFn(units.front());
-    py::array_t<T> featureArray({ units.size(), unitFeats.size() });
-    auto rawData = std::span<T>(featureArray.mutable_data(), units.size() * unitFeats.size());
+
+    // Create numpy array based on unit feature size
+    const auto firstUnitFeats = vecFn(units.front());
+    py::array_t<T> featureArray({ units.size(), firstUnitFeats.size() });
+
+    // Interpret numpy array as contiguous span to copy transformed data
+    std::span<T> rawData(featureArray.mutable_data(), units.size() * firstUnitFeats.size());
     auto rawDataIt = rawData.begin();
+
+    // Start off by copying the already transformed data, then loop over the rest
+    rawDataIt = std::copy(firstUnitFeats.begin(), firstUnitFeats.end(), rawDataIt);
     for (const auto &unitFeats : units | std::views::drop(1) | std::views::transform(vecFn)) {
         rawDataIt = std::copy(unitFeats.begin(), unitFeats.end(), rawDataIt);
     }
