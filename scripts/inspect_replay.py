@@ -11,6 +11,7 @@ import sc2_replay_reader
 import typer
 from typing_extensions import Annotated
 from matplotlib import pyplot as plt
+from matplotlib.backends.backend_agg import FigureCanvasAgg
 
 from sc2_replay_reader.unit_features import Unit, UnitOH, NeutralUnit, NeutralUnitOH
 
@@ -32,11 +33,35 @@ def make_minimap_video(image_sequence: Sequence, fname: Path):
 
 
 def make_units_video(parser: sc2_replay_reader.ReplayParser, fname: Path):
+    img_w = 1920
+    img_h = 1080
     writer = cv2.VideoWriter(
-        str(fname), cv2.VideoWriter_fourcc(*"VP90"), 10, (800, 800), isColor=False
+        str(fname), cv2.VideoWriter_fourcc(*"VP90"), 10, (img_w, img_h)
     )
+    dpi = 200
+    fig_w = img_w / dpi
+    fig_h = img_h / dpi
+    fig, ax = plt.subplots(figsize=(fig_w, fig_h), dpi=dpi)
+
     for tidx in range(parser.size()):
         sample = parser.sample(tidx)
+        ax.clear()
+        ax.set_xlim(0, parser.data.mapWidth)
+        ax.set_ylim(0, parser.data.mapHeight)
+        unit_xy = sample["units"][:, [UnitOH.x, UnitOH.y]]
+        for a, c in zip([UnitOH.alliance_self, UnitOH.alliance_enemy], ["blue", "red"]):
+            unit_filt = unit_xy[sample["units"][:, a] == 1]
+            ax.scatter(unit_filt[:, 0], unit_filt[:, 1], c=c)
+        canvas = FigureCanvasAgg(fig)
+        canvas.draw()
+        rgb = np.frombuffer(canvas.tostring_rgb(), dtype=np.uint8).reshape(
+            canvas.get_width_height()[::-1] + (3,)
+        )
+        writer.write(cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR))
+        if not writer.isOpened():
+            raise RuntimeError()
+        print(f"Done {tidx}/{parser.size()}", end="\r")
+    print("")
 
     writer.release()
 
