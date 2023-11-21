@@ -107,7 +107,13 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readwrite("unit_ids", &cvt::Action::unit_ids)
         .def_readwrite("ability_id", &cvt::Action::ability_id)
         .def_readwrite("target_type", &cvt::Action::target_type)
-        .def_readwrite("target", &cvt::Action::target);
+        .def_property_readonly("target_point",
+            [](const cvt::Action &action) {
+                return action.target_type == cvt::Action::Target_Type::Position ? action.target.point : py::none();
+            })
+        .def_property_readonly("target_other", [](const cvt::Action &action) {
+            return action.target_type == cvt::Action::Target_Type::OtherUnit ? action.target.other : py::none();
+        });
 
     py::class_<cvt::Point3f>(m, "Point3f", py::buffer_protocol())
         .def(py::init<>())

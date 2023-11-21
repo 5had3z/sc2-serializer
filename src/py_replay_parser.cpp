@@ -54,6 +54,7 @@ auto ReplayParser::sample(std::size_t timeIdx) const noexcept -> py::dict
     py::dict result;
     result["upgrades"] = upgrade_.getState<float>(timeIdx);
     result["units"] = transformUnits<float>(replayData_.units[timeIdx]);
+    result["actions"] = replayData_.actions;
     return result;
 }
 
