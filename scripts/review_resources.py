@@ -55,12 +55,36 @@ def from_database(file: Path, idx: int):
                 temp[unit.id].append(unit.contents)
 
     resources: list[Resource] = []
-    for unit in replay_data.neutralUnits[0]:
+    for unit in replay_data.neutralUnits[-1]:
         if unit.contents > 0:
             pos = np.array([unit.pos.x, unit.pos.y, unit.pos.z])
             resources.append(Resource(unit.id, pos, np.array(temp[unit.id])))
 
     return resources
+
+
+def find_later_additions(file: Path, idx: int):
+    db = sc2_replay_reader.ReplayDatabase(file)
+    replay_data = db.getEntry(idx)
+
+    starter_resources: dict[int, Resource] = {
+        u.id: Resource(u.id, u.pos, 0) for u in replay_data.neutralUnits[0]
+    }
+    new_resources: list[Resource] = []
+
+    for timestep in replay_data.neutralUnits:
+        for unit in timestep:
+            if unit.id not in starter_resources:
+                print(unit.id)
+                new_resources.append(Resource(unit.id, unit.pos, 0))
+                starters = np.stack([u.pos for u in starter_resources.values()])
+                dist = np.linalg.norm(starters - unit.pos, axis=-1, ord=2)
+                starter_resources[unit.id] = new_resources[-1]
+    pos = np.stack([u.pos for u in starter_resources.values()])
+    plt.scatter(pos[..., 0], pos[..., 1], c="blue", alpha=0.5)
+    pos = np.stack([u.pos for u in new_resources])
+    plt.scatter(pos[..., 0], pos[..., 1], c="red", alpha=0.5)
+    plt.show()
 
 
 @app.command()
@@ -72,6 +96,9 @@ def main(
     if not file.exists():
         raise FileNotFoundError(file)
 
+    find_later_additions(file, idx)
+    # return
+
     match file.suffix:
         case ".txt":
             resources = from_experiment(file)
@@ -82,7 +109,7 @@ def main(
 
     assert sum([1 for r in resources if r.qty.sum() == 0]) == 0, "Uninitialized found"
 
-    pos = np.array([r.pos for r in resources])
+    pos = np.array([r.pos[..., :2] for r in resources])
     dist = np.linalg.norm(pos[None] - pos[:, None], axis=-1, ord=2)
     plt.scatter(pos[..., 0], pos[..., 1])
     plt.show()

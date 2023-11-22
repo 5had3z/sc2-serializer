@@ -50,7 +50,7 @@ class BaseConverter : public sc2::ReplayObserver
 
     // Resource UID changes when going in and out of view
     // this is chat and we want to make UID consistent
-    void reassignResourceId(const NeutralUnit &unit) noexcept;
+    auto reassignResourceId(const NeutralUnit &unit) noexcept -> bool;
 
     // Get the initial UID for each natural resource and
     // initialize with the default value

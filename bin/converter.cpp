@@ -10,6 +10,8 @@
 
 #include "observer.hpp"
 
+namespace fs = std::filesystem;
+
 /**
  * @brief Get Replay hashes from a file
  * @param partitionFile File that contains newline separated hashes
@@ -39,13 +41,13 @@ auto getReplaysFolder(const std::string_view folder) noexcept -> std::vector<std
 {
     SPDLOG_INFO("Searching replays in {}", folder);
     std::vector<std::string> replays;
-    std::ranges::transform(std::filesystem::directory_iterator{ folder }, std::back_inserter(replays), [](auto &&e) {
+    std::ranges::transform(fs::directory_iterator{ folder }, std::back_inserter(replays), [](auto &&e) {
         return e.path().stem().string();
     });
     return replays;
 }
 
-void loopReplayFiles(const std::filesystem::path &replayFolder,
+void loopReplayFiles(const fs::path &replayFolder,
     const std::vector<std::string> &replayHashes,
     sc2::Coordinator &coordinator,
     cvt::BaseConverter *converter)
@@ -53,7 +55,7 @@ void loopReplayFiles(const std::filesystem::path &replayFolder,
     std::size_t nComplete = 0;
     for (auto &&replayHash : replayHashes) {
         const auto replayPath = (replayFolder / replayHash).replace_extension(".SC2Replay");
-        if (!std::filesystem::exists(replayPath)) {
+        if (!fs::exists(replayPath)) {
             SPDLOG_ERROR("Replay file doesn't exist {}", replayPath.string());
             continue;
         }
@@ -120,20 +122,21 @@ auto main(int argc, char *argv[]) -> int
     }
 
     const auto dbPath = [&]() {
-        auto ret = cliOpts["output"].as<std::string>();
-        if (podIndex.has_value()) { ret += "_" + podIndex.value(); }
-        return ret + ".SC2Replays";
+        auto ret = fs::path(cliOpts["output"].as<std::string>());
+        if (podIndex.has_value()) { ret.replace_filename(ret.stem().string() + "_" + podIndex.value()); }
+        ret.replace_extension(".SC2Replays");
+
+
+        return ret;
     }();
-    const auto dbPathParent = std::filesystem::path(dbPath).parent_path();
-    if (!std::filesystem::exists(dbPathParent)) {
+    const auto dbPathParent = dbPath.parent_path();
+    if (!fs::exists(dbPathParent)) {
         SPDLOG_INFO("Creating Output Directory: {}", dbPathParent.string());
         if (!std::filesystem::create_directories(dbPathParent)) {
             SPDLOG_ERROR("Unable to Create Output Directory");
             return -1;
         }
     }
-    SPDLOG_INFO("Found output dir: {}", dbPathParent.string());
-    SPDLOG_INFO("Writing to dbPath: {}", dbPath);
 
     auto converter = [&](const std::string &cvtType) -> std::unique_ptr<cvt::BaseConverter> {
         SPDLOG_INFO("Using converter: {}", cvtType);
@@ -152,13 +155,12 @@ auto main(int argc, char *argv[]) -> int
         return nullptr;
     }(cliOpts["converter"].as<std::string>());
 
-
     if (converter.get() == nullptr) { return -1; }
     if (!converter->loadDB(dbPath)) {
-        SPDLOG_ERROR("Unable to load/create replay db: {}", dbPath);
+        SPDLOG_ERROR("Unable to load/create replay db: {}", dbPath.string());
         return -1;
     }
-    SPDLOG_INFO("Loaded db!: {}", dbPath);
+    SPDLOG_INFO("Loaded db!: {}", dbPath.string());
 
     const auto replayFiles = [&]() -> std::vector<std::string> {
         if (cliOpts["partition"].count()) {

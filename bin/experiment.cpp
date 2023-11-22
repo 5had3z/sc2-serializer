@@ -93,12 +93,16 @@ class Observer : public sc2::ReplayObserver
                 if (unit->display_type == sc2::Unit::Visible) {
                     auto qty = std::max(unit->vespene_contents, unit->mineral_contents);
                     init.qty[replayStep] = qty;
-                    assert(qty == cvt::defaultResources.at(unit->unit_type) && "First visible match != default?");
+                    if (qty != cvt::defaultResources.at(unit->unit_type)) {
+                        throw std::logic_error("First visible match != expected default?");
+                    }
                 } else {
                     init.qty[replayStep] = cvt::defaultResources.at(unit->unit_type);
                 }
                 resourceQty_.emplace(unit->tag, std::move(init));
-                assert(unit->display_type != sc2::Unit::Hidden);
+                if (unit->display_type == sc2::Unit::Hidden) {
+                    throw std::runtime_error("Display of resource should only be visible or snapshot");
+                }
             }
         }
         hasResourceInit = true;

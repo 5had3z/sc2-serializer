@@ -23,7 +23,9 @@ namespace cvt {
 template<typename T> void copyMapData(Image<T> &dest, const SC2APIProtocol::ImageData &mapData)
 {
     dest.resize(mapData.size().y(), mapData.size().x());
-    assert(dest.size() == mapData.data().size() && "Expected mapData size doesn't match actual size");
+    if (dest.size() != mapData.data().size()) {
+        throw std::runtime_error("Expected mapData size doesn't match actual size");
+    }
     std::memcpy(dest.data(), mapData.data().data(), dest.size());
 }
 
@@ -55,7 +57,7 @@ void BaseConverter::OnGameStart()
     currentReplay_.gameVersion = replayInfo.version;
 
     const auto gameInfo = this->Observation()->GetGameInfo();
-    assert(gameInfo.height > 0 && gameInfo.width > 0 && "Missing map size data");
+    if (!(gameInfo.height > 0 && gameInfo.width > 0)) { throw std::runtime_error("Missing map size data"); }
     currentReplay_.mapHeight = gameInfo.height;
     currentReplay_.mapWidth = gameInfo.width;
 
@@ -163,7 +165,9 @@ void BaseConverter::copyHeightMapData() noexcept
 
 [[nodiscard]] auto convertScore(const sc2::Score *src) noexcept -> Score
 {
-    assert(src->score_type == sc2::ScoreType::Melee);
+    if (src->score_type != sc2::ScoreType::Melee) {
+        throw std::runtime_error(fmt::format("Score type is not melee, got {}", static_cast<int>(src->score_type)));
+    };
     Score dst;
 
     dst.score_float = src->score;
@@ -281,7 +285,7 @@ void BaseConverter::copyUnitData() noexcept
     std::ranges::for_each(unitData, [&](const sc2::Unit *src) {
         const bool isPassenger = p_tags.contains(src->tag);
         if (neutralUnitTypes.contains(src->unit_type)) {
-            assert(!isPassenger);
+            if (isPassenger) { throw std::runtime_error("Neutral resource is somehow a passenger?"); };
             neutralUnits.emplace_back(convertSC2NeutralUnit(src));
         } else {
             units.emplace_back(convertSC2Unit(src, unitData, isPassenger));
@@ -297,7 +301,24 @@ void BaseConverter::initResourceObs() noexcept
     for (auto &unit : neutralUnits) {
         // Skip Not a mineral/gas resource
         if (!defaultResources.contains(unit.unitType)) { continue; }
-        resourceObs_[unit.id] = ResourceObs(unit.id, unit.pos, defaultResources.at(unit.unitType));
+        resourceObs_.emplace(unit.id, ResourceObs{ unit.id, unit.pos, defaultResources.at(unit.unitType) });
+    }
+}
+
+auto BaseConverter::reassignResourceId(const NeutralUnit &unit) noexcept -> bool
+{
+    auto oldKV = std::ranges::find_if(resourceObs_, [=](auto &&keyValue) {
+        auto &value = keyValue.second;
+        return value.pos == unit.pos;
+    });
+    if (oldKV == resourceObs_.end()) {
+        SPDLOG_WARN(fmt::format(
+            "No matching position for unit {} (id: {}) adding new", sc2::UnitTypeToName(unit.unitType), unit.id));
+        return false;
+    } else {
+        resourceObs_.emplace(unit.id, std::move(oldKV->second));
+        resourceObs_.erase(oldKV->first);
+        return true;
     }
 }
 
@@ -307,9 +328,13 @@ void BaseConverter::updateResourceObs() noexcept
     for (auto &unit : neutralUnits) {
         // Skip Not a mineral/gas resource
         if (!defaultResources.contains(unit.unitType)) { continue; }
-
-        // Reassign map id if it has changed
-        if (!resourceObs_.contains(unit.id)) { this->reassignResourceId(unit); }
+        // Reassign map id if identical position found, otherwise add to set
+        if (!resourceObs_.contains(unit.id)) {
+            bool hasReassigned = this->reassignResourceId(unit);
+            if (!hasReassigned) {
+                resourceObs_.emplace(unit.id, ResourceObs{ unit.id, unit.pos, defaultResources.at(unit.unitType) });
+            }
+        }
 
         auto &prev = resourceObs_.at(unit.id);
         // Update resourceObs_ if visible
@@ -319,17 +344,6 @@ void BaseConverter::updateResourceObs() noexcept
         unit.contents = prev.qty;
         unit.id = prev.id;
     }
-}
-
-void BaseConverter::reassignResourceId(const NeutralUnit &unit) noexcept
-{
-    auto oldKV = std::ranges::find_if(resourceObs_, [=](auto &&keyValue) {
-        auto &value = keyValue.second;
-        return value.pos == unit.pos;
-    });
-    assert(oldKV != resourceObs_.end() && "No position match found???");
-    resourceObs_.emplace(unit.id, std::move(oldKV->second));
-    resourceObs_.erase(oldKV->first);
 }
 
 void BaseConverter::copyActionData() noexcept
