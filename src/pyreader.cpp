@@ -250,7 +250,7 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
 
     py::class_<cvt::ReplayParser>(m, "ReplayParser")
         .def(py::init<const std::filesystem::path &>())
-        .def("sample", &cvt::ReplayParser::sample)
+        .def("sample", &cvt::ReplayParser::sample, py::arg("timeIdx"), py::arg("unit_alliance") = false)
         .def("parse_replay", &cvt::ReplayParser::parseReplay)
         .def("size", &cvt::ReplayParser::size)
         .def("empty", &cvt::ReplayParser::empty)

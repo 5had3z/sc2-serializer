@@ -87,7 +87,7 @@ def main(
     #     test_parse(db, i, parser)
 
     parser.parse_replay(db.getEntry(idx))
-    make_units_video(parser, outfolder / "raw_units.webm")
+    make_units_video(parser, outfolder / "raw_units1.webm")
 
     # fmt: off
     img_attrs = [

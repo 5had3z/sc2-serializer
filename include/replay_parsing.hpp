@@ -59,7 +59,7 @@ class ReplayParser
     void parseReplay(ReplayDataSoA replayData);
 
     // Returns a python dictionary containing features from that timestep
-    [[nodiscard]] auto sample(std::size_t timeIdx) const noexcept -> py::dict;
+    [[nodiscard]] auto sample(std::size_t timeIdx, bool unit_alliance = false) const noexcept -> py::dict;
 
     // Return the number of timesteps in the replay
     [[nodiscard]] auto size() const noexcept -> std::size_t;

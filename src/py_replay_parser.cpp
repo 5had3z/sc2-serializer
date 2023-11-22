@@ -34,6 +34,50 @@ auto transformUnits(const std::vector<Unit> &units) noexcept -> py::array_t<T>
     return featureArray;
 }
 
+// Do unit transformation but group them by alliance (self, ally, enemy, neutral)
+template<typename T>
+    requires std::is_floating_point_v<T> || std::is_integral_v<T>
+auto transformUnitsByAlliance(const std::vector<Unit> &units) noexcept -> py::dict
+{
+    const static std::unordered_map<cvt::Alliance, std::string> enum2str = {
+        { cvt::Alliance::Ally, "ally" },
+        { cvt::Alliance::Neutral, "neutral" },
+        { cvt::Alliance::Self, "self" },
+        { cvt::Alliance::Enemy, "enemy" },
+    };
+
+    // Return dict of empty arrays if no units
+    if (units.empty()) {
+        py::dict pyDict;
+        for (auto &&[ignore, name] : enum2str) { pyDict[py::cast(name)] = py::array_t<T>(); }
+        return pyDict;
+    }
+
+    // Lambda wrapper around vectorize to set onehot to true
+    auto vecFn = [](const Unit &unit) { return vectorize<T>(unit, true); };
+
+    std::unordered_map<cvt::Alliance, std::vector<T>> groupedUnitFeatures = { { cvt::Alliance::Self, {} },
+        { cvt::Alliance::Ally, {} },
+        { cvt::Alliance::Enemy, {} },
+        { cvt::Alliance::Neutral, {} } };
+
+    for (auto &&unit : units) {
+        auto &group = groupedUnitFeatures.at(unit.alliance);
+        const auto unitFeat = vecFn(unit);
+        std::ranges::copy(unitFeat, std::back_inserter(group));
+    }
+
+    const std::size_t featureSize = vecFn(units.front()).size();
+    py::dict pyReturn;
+    for (auto &&[group, features] : groupedUnitFeatures) {
+        const std::size_t nUnits = features.size() / featureSize;
+        py::array_t<T> pyArray({ nUnits, featureSize });
+        std::ranges::copy(features, pyArray.mutable_data());
+        pyReturn[py::cast(enum2str.at(group))] = pyArray;
+    }
+    return pyReturn;
+}
+
 ReplayParser::ReplayParser(const std::filesystem::path &dataFile) noexcept : upgrade_(dataFile) {}
 
 void ReplayParser::parseReplay(ReplayDataSoA replayData)
@@ -49,12 +93,16 @@ void ReplayParser::parseReplay(ReplayDataSoA replayData)
     upgrade_.setActions(replayData_.actions, replayData_.gameStep);
 }
 
-auto ReplayParser::sample(std::size_t timeIdx) const noexcept -> py::dict
+auto ReplayParser::sample(std::size_t timeIdx, bool unit_alliance) const noexcept -> py::dict
 {
     py::dict result;
     result["upgrades"] = upgrade_.getState<float>(timeIdx);
-    result["units"] = transformUnits<float>(replayData_.units[timeIdx]);
-    result["actions"] = replayData_.actions;
+    if (unit_alliance) {
+        result["units"] = transformUnitsByAlliance<float>(replayData_.units[timeIdx]);
+    } else {
+        result["units"] = transformUnits<float>(replayData_.units[timeIdx]);
+    }
+    // result["actions"] = replayData_.actions;
     return result;
 }
 
