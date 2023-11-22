@@ -66,9 +66,8 @@ def make_units_video(parser: sc2_replay_reader.ReplayParser, fname: Path):
     writer.release()
 
 
-def test_parse(db, idx):
+def test_parse(db, idx, parser):
     replay_data = db.getEntry(idx)
-    parser = sc2_replay_reader.ReplayParser(sc2_replay_reader.GAME_INFO_FILE)
     parser.parse_replay(replay_data)
 
 
@@ -83,10 +82,10 @@ def main(
 ):
     """"""
     db = sc2_replay_reader.ReplayDatabase(file)
-    # for i in range(db.size()):
-    #     test_parse(db, i)
-
     parser = sc2_replay_reader.ReplayParser(sc2_replay_reader.GAME_INFO_FILE)
+    # for i in range(db.size()):
+    #     test_parse(db, i, parser)
+
     parser.parse_replay(db.getEntry(idx))
     make_units_video(parser, outfolder / "raw_units.webm")
 

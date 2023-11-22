@@ -8,6 +8,7 @@
 #include <pybind11/stl/filesystem.h>
 
 #include <bitset>
+#include <optional>
 
 namespace py = pybind11;
 
@@ -108,11 +109,13 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readwrite("ability_id", &cvt::Action::ability_id)
         .def_readwrite("target_type", &cvt::Action::target_type)
         .def_property_readonly("target_point",
-            [](const cvt::Action &action) {
-                return action.target_type == cvt::Action::Target_Type::Position ? action.target.point : py::none();
+            [](const cvt::Action &action) -> std::optional<cvt::Point2d> {
+                return action.target_type == cvt::Action::Target_Type::Position ? std::optional{ action.target.point }
+                                                                                : std::nullopt;
             })
-        .def_property_readonly("target_other", [](const cvt::Action &action) {
-            return action.target_type == cvt::Action::Target_Type::OtherUnit ? action.target.other : py::none();
+        .def_property_readonly("target_other", [](const cvt::Action &action) -> std::optional<cvt::UID> {
+            return action.target_type == cvt::Action::Target_Type::OtherUnit ? std::optional{ action.target.other }
+                                                                             : std::nullopt;
         });
 
     py::class_<cvt::Point3f>(m, "Point3f", py::buffer_protocol())
