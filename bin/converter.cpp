@@ -108,19 +108,22 @@ auto main(int argc, char *argv[]) -> int
     }
     SPDLOG_INFO("Found game path: {}", gamePath);
 
-    char const *tmp = getenv("POD_NAME");
-    std::string lastValue = "";
-    if (tmp == NULL) {
-        SPDLOG_WARN("No partition file chosen, assuming no index");
+    const auto *tmp = std::getenv("POD_NAME");
+    std::optional<std::string> podIndex;
+    if (tmp == nullptr) {
+        SPDLOG_INFO("POD_NAME not in ENV, not appending index suffix");
     } else {
-        std::string s(tmp);
-        size_t lastDelimiterPos = s.find_last_of('-');
-
+        std::string_view s(tmp);
         // Extract the substring from the last delimiter to the end
-        lastValue = s.substr(lastDelimiterPos + 1);
+        podIndex = s.substr(s.find_last_of('-') + 1);
+        SPDLOG_INFO("POD_NAME found, using index suffix: {}", podIndex.value());
     }
 
-    const auto dbPath = cliOpts["output"].as<std::string>() + "_" + lastValue + ".SC2Replays";
+    const auto dbPath = [&]() {
+        auto ret = cliOpts["output"].as<std::string>();
+        if (podIndex.has_value()) { ret += "_" + podIndex.value(); }
+        return ret + ".SC2Replays";
+    }();
     const auto dbPathParent = std::filesystem::path(dbPath).parent_path();
     if (!std::filesystem::exists(dbPathParent)) {
         SPDLOG_INFO("Creating Output Directory: {}", dbPathParent.string());
@@ -159,18 +162,15 @@ auto main(int argc, char *argv[]) -> int
 
     const auto replayFiles = [&]() -> std::vector<std::string> {
         if (cliOpts["partition"].count()) {
-            const auto partitionFile = cliOpts["partition"].as<std::string>();
+            auto partitionFile = cliOpts["partition"].as<std::string>();
+            if (podIndex.has_value()) { partitionFile += "_" + podIndex.value(); }
 
-            std::string partitionFileIndex = partitionFile;
-            partitionFileIndex = partitionFile + "_" + lastValue;
-
-            if (!std::filesystem::exists(partitionFileIndex)) {
-                SPDLOG_ERROR("Partition file doesn't exist: {}", partitionFileIndex);
+            if (!std::filesystem::exists(partitionFile)) {
+                SPDLOG_ERROR("Partition file doesn't exist: {}", partitionFile);
                 return {};
             }
-            SPDLOG_INFO("Found partition file: {}", partitionFileIndex);
-
-            return getReplaysFile(partitionFileIndex);
+            SPDLOG_INFO("Found partition file: {}", partitionFile);
+            return getReplaysFile(partitionFile);
         } else {
             return getReplaysFolder(replayFolder);
         }
