@@ -13,21 +13,25 @@
 namespace fs = std::filesystem;
 
 /**
- * @brief Get Replay hashes from a file
- * @param partitionFile File that contains newline separated hashes
+ * @brief Get Replay hashes from a partition file
+ * @param partitionFile File that contains newline separated replay hashes or filenames
  * @return Vector of Hash Strings
  */
-auto getReplaysFile(const std::string &partitionFile) noexcept -> std::vector<std::string>
+auto getReplaysFromFile(const std::string &partitionFile) noexcept -> std::vector<std::string>
 {
-    using namespace std::string_literals;
-    constexpr std::size_t exten_length = ".SC2Replay"s.length();
-
     SPDLOG_INFO("Loading replays from {}", partitionFile);
     std::vector<std::string> replays;
     std::ifstream partStream(partitionFile);
     std::istream_iterator<std::string> fileIt(partStream);
     std::copy(fileIt, {}, std::back_inserter(replays));
-    std::ranges::for_each(replays, [](auto &r) { r.resize(r.length() - exten_length); });
+
+    // If the file suffix is on the replay hashes then trim them off
+    // We assume if the first entry has the suffix, all should have a suffix
+    using namespace std::string_literals;
+    constexpr std::string_view fileExt(".SC2Replay");
+    if (!replays.empty() && replays.front().ends_with(fileExt)) {
+        std::ranges::for_each(replays, [extLen = fileExt.length()](std::string &r) { r.erase(r.length() - extLen); });
+    }
     return replays;
 }
 
@@ -37,7 +41,7 @@ auto getReplaysFile(const std::string &partitionFile) noexcept -> std::vector<st
  * @param folder Folder that contains replays
  * @return Vector of Hash Strings
  */
-auto getReplaysFolder(const std::string_view folder) noexcept -> std::vector<std::string>
+auto getReplaysFromFolder(const std::string_view folder) noexcept -> std::vector<std::string>
 {
     SPDLOG_INFO("Searching replays in {}", folder);
     std::vector<std::string> replays;
@@ -61,14 +65,15 @@ void loopReplayFiles(const fs::path &replayFolder,
         }
 
         for (uint32_t playerId = 1; playerId < 3; ++playerId) {
-            if (converter->knownHashes.contains(replayHash + std::to_string(playerId))) { continue; }
+            const std::string replayHashPlayer = replayHash + std::to_string(playerId);
+            if (converter->knownHashes.contains(replayHashPlayer)) { continue; }
             // Setup Replay with Player
             converter->setReplayInfo(replayHash, playerId);
             coordinator.SetReplayPath(replayPath.string());
             coordinator.SetReplayPerspective(playerId);
             // Run Replay
             while (coordinator.Update()) {}
-            converter->knownHashes.emplace(replayHash + std::to_string(playerId));
+            converter->knownHashes.emplace(replayHashPlayer);
         }
 
         SPDLOG_INFO("Completed {} of {} replays", ++nComplete, replayHashes.size());
@@ -125,8 +130,6 @@ auto main(int argc, char *argv[]) -> int
         auto ret = fs::path(cliOpts["output"].as<std::string>());
         if (podIndex.has_value()) { ret.replace_filename(ret.stem().string() + "_" + podIndex.value()); }
         ret.replace_extension(".SC2Replays");
-
-
         return ret;
     }();
     const auto dbPathParent = dbPath.parent_path();
@@ -139,7 +142,6 @@ auto main(int argc, char *argv[]) -> int
     }
 
     auto converter = [&](const std::string &cvtType) -> std::unique_ptr<cvt::BaseConverter> {
-        SPDLOG_INFO("Using converter: {}", cvtType);
         if (cvtType == "full") { return std::make_unique<cvt::FullConverter>(); }
         if (cvtType == "action") { return std::make_unique<cvt::ActionConverter>(); }
         if (cvtType == "strided") {
@@ -160,21 +162,19 @@ auto main(int argc, char *argv[]) -> int
         SPDLOG_ERROR("Unable to load/create replay db: {}", dbPath.string());
         return -1;
     }
-    SPDLOG_INFO("Loaded db!: {}", dbPath.string());
 
     const auto replayFiles = [&]() -> std::vector<std::string> {
         if (cliOpts["partition"].count()) {
             auto partitionFile = cliOpts["partition"].as<std::string>();
             if (podIndex.has_value()) { partitionFile += "_" + podIndex.value(); }
-
             if (!std::filesystem::exists(partitionFile)) {
                 SPDLOG_ERROR("Partition file doesn't exist: {}", partitionFile);
                 return {};
             }
-            SPDLOG_INFO("Found partition file: {}", partitionFile);
-            return getReplaysFile(partitionFile);
+            SPDLOG_INFO("Using partition file: {}", partitionFile);
+            return getReplaysFromFile(partitionFile);
         } else {
-            return getReplaysFolder(replayFolder);
+            return getReplaysFromFolder(replayFolder);
         }
     }();
 
