@@ -29,6 +29,7 @@ class BaseConverter : public sc2::ReplayObserver
     void OnGameStart() override;
 
     void OnGameEnd() override;
+    std::unordered_set<std::string> knownHashes{};
 
   protected:
     void copyHeightMapData() noexcept;

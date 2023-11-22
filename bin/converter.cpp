@@ -55,12 +55,14 @@ void loopReplayFiles(const std::filesystem::path &replayFolder,
         }
 
         for (uint32_t playerId = 1; playerId < 3; ++playerId) {
+            if (converter->knownHashes.contains(replayHash + std::to_string(playerId))) { continue; }
             // Setup Replay with Player
             converter->setReplayInfo(replayHash, playerId);
             coordinator.SetReplayPath(replayPath.string());
             coordinator.SetReplayPerspective(playerId);
             // Run Replay
             while (coordinator.Update()) {}
+            converter->knownHashes.emplace(replayHash + std::to_string(playerId));
         }
 
         SPDLOG_INFO("Completed {} of {} replays", ++nComplete, replayHashes.size());
@@ -93,14 +95,28 @@ auto main(int argc, char *argv[]) -> int
         SPDLOG_ERROR("Replay folder doesn't exist: {}", replayFolder);
         return -1;
     }
+    SPDLOG_INFO("Found replay folder: {}", replayFolder);
 
     const auto gamePath = cliOpts["game"].as<std::string>();
     if (!std::filesystem::exists(gamePath)) {
         SPDLOG_ERROR("Game path doesn't exist: {}", gamePath);
         return -1;
     }
+    SPDLOG_INFO("Found game path: {}", gamePath);
 
-    const auto dbPath = cliOpts["output"].as<std::string>();
+    char const *tmp = getenv("POD_NAME");
+    std::string lastValue = "";
+    if (tmp == NULL) {
+        SPDLOG_WARN("No partition file chosen, assuming no index");
+    } else {
+        std::string s(tmp);
+        size_t lastDelimiterPos = s.find_last_of('-');
+
+        // Extract the substring from the last delimiter to the end
+        lastValue = s.substr(lastDelimiterPos + 1);
+    }
+
+    const auto dbPath = cliOpts["output"].as<std::string>() + "_" + lastValue + ".SC2Replays";
     const auto dbPathParent = std::filesystem::path(dbPath).parent_path();
     if (!std::filesystem::exists(dbPathParent)) {
         SPDLOG_INFO("Creating Output Directory: {}", dbPathParent.string());
@@ -109,8 +125,11 @@ auto main(int argc, char *argv[]) -> int
             return -1;
         }
     }
+    SPDLOG_INFO("Found output dir: {}", dbPathParent.string());
+    SPDLOG_INFO("Writing to dbPath: {}", dbPath);
 
     auto converter = [&](const std::string &cvtType) -> std::unique_ptr<cvt::BaseConverter> {
+        SPDLOG_INFO("Using converter: {}", cvtType);
         if (cvtType == "full") { return std::make_unique<cvt::FullConverter>(); }
         if (cvtType == "action") { return std::make_unique<cvt::ActionConverter>(); }
         if (cvtType == "strided") {
@@ -126,33 +145,28 @@ auto main(int argc, char *argv[]) -> int
         return nullptr;
     }(cliOpts["converter"].as<std::string>());
 
+
     if (converter.get() == nullptr) { return -1; }
     if (!converter->loadDB(dbPath)) {
         SPDLOG_ERROR("Unable to load/create replay db: {}", dbPath);
         return -1;
     }
+    SPDLOG_INFO("Loaded db!: {}", dbPath);
 
     const auto replayFiles = [&]() -> std::vector<std::string> {
         if (cliOpts["partition"].count()) {
             const auto partitionFile = cliOpts["partition"].as<std::string>();
 
             std::string partitionFileIndex = partitionFile;
-            char const *tmp = getenv("POD_NAME");
-            if (tmp == NULL) {
-                SPDLOG_WARN("No partition file chosen, assuming no index");
-            } else {
-                std::string s(tmp);
-                size_t lastDelimiterPos = s.find_last_of('-');
+            partitionFileIndex = partitionFile + "_" + lastValue;
 
-                // Extract the substring from the last delimiter to the end
-                std::string lastValue = s.substr(lastDelimiterPos + 1);
-                partitionFileIndex = partitionFile + "_" + lastValue;
-            }
             if (!std::filesystem::exists(partitionFileIndex)) {
-                SPDLOG_ERROR("Partition file doesn't exist: {}", partitionFile);
+                SPDLOG_ERROR("Partition file doesn't exist: {}", partitionFileIndex);
                 return {};
             }
-            return getReplaysFile(partitionFile);
+            SPDLOG_INFO("Found partition file: {}", partitionFileIndex);
+
+            return getReplaysFile(partitionFileIndex);
         } else {
             return getReplaysFolder(replayFolder);
         }

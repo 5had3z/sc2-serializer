@@ -6,7 +6,7 @@ for running conversions in parallel.
 from pathlib import Path
 from dataclasses import dataclass, field
 from typing_extensions import Annotated
-
+from typing import List
 import typer
 
 app = typer.Typer()
@@ -20,7 +20,7 @@ class ReplayFile:
 
 @dataclass
 class Partition:
-    files: list[ReplayFile] = field(default_factory=list)
+    files: List[ReplayFile] = field(default_factory=list)
     size: int = 0
 
     def append(self, file: ReplayFile):

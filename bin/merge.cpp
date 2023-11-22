@@ -42,7 +42,7 @@ enum class Stratergy { Replace, Append, Merge };
                          | std::views::filter([](auto &&e) { return e.path().extension() == ".SC2Replays"; })
                          | std::views::transform([](auto &&file) { return file.path(); });
     std::vector<fs::path> outFiles;
-    std::ranges::copy(filteredFiles, std::back_inserter(outFiles));// change to std::tranges::to when available
+    std::ranges::copy(filteredFiles, std::back_inserter(outFiles));// change to std::ranges::to when available
     return outFiles;
 }
 
@@ -52,8 +52,10 @@ auto mergeDb(cvt::ReplayDatabase &target,
 {
     const std::size_t nItems = source.size();
     for (std::size_t idx = 0; idx < nItems; ++idx) {
+        // Deserialize first two entries only!
+        auto [hash, id] = source.getHashId(idx);
+        if (knownHashes.contains(hash + std::to_string(id))) { continue; }
         auto replayData = source.getEntry(idx);
-        if (knownHashes.contains(replayData.replayHash)) { continue; }
         bool ok = target.addEntry(replayData);
         if (!ok && target.isFull()) { return false; }
     }

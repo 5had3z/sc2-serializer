@@ -29,7 +29,12 @@ template<typename T> void copyMapData(Image<T> &dest, const SC2APIProtocol::Imag
 
 static_assert(std::is_same_v<UID, sc2::Tag> && "Mismatch between unique id tags in SC2 and this Lib");
 
-auto BaseConverter::loadDB(const std::filesystem::path &path) noexcept -> bool { return database_.open(path); }
+auto BaseConverter::loadDB(const std::filesystem::path &path) noexcept -> bool
+{
+    auto result = database_.open(path);
+    if (result) { knownHashes = database_.getHashes(); }
+    return result;
+}
 
 void BaseConverter::OnGameStart()
 {
