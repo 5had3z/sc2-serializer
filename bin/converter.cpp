@@ -17,11 +17,15 @@
  */
 auto getReplaysFile(const std::string &partitionFile) noexcept -> std::vector<std::string>
 {
+    using namespace std::string_literals;
+    constexpr std::size_t exten_length = ".SC2Replay"s.length();
+
     SPDLOG_INFO("Loading replays from {}", partitionFile);
     std::vector<std::string> replays;
     std::ifstream partStream(partitionFile);
     std::istream_iterator<std::string> fileIt(partStream);
     std::copy(fileIt, {}, std::back_inserter(replays));
+    std::ranges::for_each(replays, [](auto &r) { r.resize(r.length() - exten_length); });
     return replays;
 }
 
