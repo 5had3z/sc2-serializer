@@ -92,7 +92,7 @@ bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
         return false;
     }
     if (this->isFull()) {
-        SPDLOG_ERROR("Database {} is full", dbPath_.string());
+        SPDLOG_ERROR("Database \"{}\" is full", dbPath_.string());
         return false;
     }
 
@@ -125,6 +125,8 @@ bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
         SPDLOG_ERROR("Error Writing Db Offset Entry");
         return false;
     }
+
+    SPDLOG_INFO("Saved Replay: {}, PlayerID: {}", data.replayHash, data.playerId);
 
     return true;
 }
