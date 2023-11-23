@@ -95,7 +95,7 @@ void loopReplayFiles(const fs::path &replayFolder,
             while (coordinator.Update()) {}
             // If update has exited and games haven't ended, there must've been an error
             if (!converter->hasWritten()) {
-                SPDLOG_ERROR("Game Without Writing, Must Contain An Error, Skipping");
+                SPDLOG_ERROR("Finished Game Without Writing, Must Contain An Error, Skipping");
                 if (badFile.has_value()) {
                     SPDLOG_INFO("Adding bad replay to file: {}", replayHash);
                     std::ofstream badFileStream(*badFile, std::ios::app);
@@ -248,7 +248,7 @@ auto main(int argc, char *argv[]) -> int
     }
     coordinator.AddReplayObserver(converter.get());
     coordinator.SetProcessPath(gamePath);
-    coordinator.SetTimeoutMS(10'000);
+    coordinator.SetTimeoutMS(60'000);
 
     loopReplayFiles(replayFolder, replayFiles, coordinator, converter.get(), badFile);
 
