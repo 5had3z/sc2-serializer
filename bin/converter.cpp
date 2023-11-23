@@ -73,6 +73,11 @@ void loopReplayFiles(const fs::path &replayFolder,
             coordinator.SetReplayPerspective(playerId);
             // Run Replay
             while (coordinator.Update()) {}
+            // If update has exited and games haven't ended, there must've been an error
+            if (!coordinator.AllGamesEnded()) {
+                SPDLOG_ERROR("Game did not reach end state, skipping replay");
+                break;
+            }
             converter->knownHashes.emplace(replayHashPlayer);
         }
 
@@ -193,6 +198,7 @@ auto main(int argc, char *argv[]) -> int
     }
     coordinator.AddReplayObserver(converter.get());
     coordinator.SetProcessPath(gamePath);
+    coordinator.SetTimeoutMS(10'000);
 
     loopReplayFiles(replayFolder, replayFiles, coordinator, converter.get());
 

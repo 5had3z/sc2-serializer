@@ -84,6 +84,12 @@ void BaseConverter::OnGameStart()
 
 void BaseConverter::OnGameEnd()
 {
+    // Don't save replay if its cooked
+    if (this->Control()->GetAppState() != sc2::AppState::normal) {
+        SPDLOG_INFO("Not writing replay with bad SC2 AppState: {}", static_cast<int>(this->Control()->GetAppState()));
+        return;
+    }
+
     // Save entry to DB
     const auto SoA = ReplayAoStoSoA(currentReplay_);
 
