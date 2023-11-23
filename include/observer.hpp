@@ -29,7 +29,12 @@ class BaseConverter : public sc2::ReplayObserver
     void OnGameStart() override;
 
     void OnGameEnd() override;
-    std::unordered_set<std::string> knownHashes{};
+
+    [[nodiscard]] auto hasWritten() const noexcept -> bool;
+
+    [[nodiscard]] auto isKnownHash(const std::string &hash) const noexcept -> bool;
+
+    void addKnownHash(std::string hash) noexcept;
 
   protected:
     void copyHeightMapData() noexcept;
@@ -59,8 +64,10 @@ class BaseConverter : public sc2::ReplayObserver
     ReplayDatabase database_;
     ReplayData currentReplay_;
     std::unordered_map<UID, ResourceObs> resourceObs_;
+    std::unordered_set<std::string> knownHashes_{};
     bool mapDynHasLogged_{ false };
     bool mapHeightHasLogged_{ false };
+    bool writeSuccess_{ false };
 };
 
 /**

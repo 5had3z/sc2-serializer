@@ -12,6 +12,22 @@
 
 namespace fs = std::filesystem;
 
+
+/**
+ * @brief Add known bad replays from file to converter's knownHashes
+ * @param badFile Path to file containing known bad replays
+ * @param converter Converter engine to add replayHash to
+ */
+void registerKnownBadReplays(const fs::path &badFile, cvt::BaseConverter *converter)
+{
+    std::ifstream badFileStream(badFile);
+    std::string badHash;
+    while (std::getline(badFileStream, badHash)) {
+        for (auto &&playerId : std::array{ 1, 2 }) { converter->addKnownHash(badHash + std::to_string(playerId)); }
+    }
+}
+
+
 /**
  * @brief Get Replay hashes from a partition file
  * @param partitionFile File that contains newline separated replay hashes or filenames
@@ -54,7 +70,8 @@ auto getReplaysFromFolder(const std::string_view folder) noexcept -> std::vector
 void loopReplayFiles(const fs::path &replayFolder,
     const std::vector<std::string> &replayHashes,
     sc2::Coordinator &coordinator,
-    cvt::BaseConverter *converter)
+    cvt::BaseConverter *converter,
+    std::optional<fs::path> badFile)
 {
     std::size_t nComplete = 0;
     for (auto &&replayHash : replayHashes) {
@@ -66,7 +83,10 @@ void loopReplayFiles(const fs::path &replayFolder,
 
         for (uint32_t playerId = 1; playerId < 3; ++playerId) {
             const std::string replayHashPlayer = replayHash + std::to_string(playerId);
-            if (converter->knownHashes.contains(replayHashPlayer)) { continue; }
+            if (converter->isKnownHash(replayHashPlayer)) {
+                SPDLOG_INFO("Skipping known Replay {}, PlayerID: {}", replayHash, playerId);
+                continue;
+            }
             // Setup Replay with Player
             converter->setReplayInfo(replayHash, playerId);
             coordinator.SetReplayPath(replayPath.string());
@@ -74,11 +94,16 @@ void loopReplayFiles(const fs::path &replayFolder,
             // Run Replay
             while (coordinator.Update()) {}
             // If update has exited and games haven't ended, there must've been an error
-            if (!coordinator.AllGamesEnded()) {
-                SPDLOG_ERROR("Game did not reach end state, skipping replay");
+            if (!converter->hasWritten()) {
+                SPDLOG_ERROR("Game Without Writing, Must Contain An Error, Skipping");
+                if (badFile.has_value()) {
+                    SPDLOG_INFO("Adding bad replay to file: {}", replayHash);
+                    std::ofstream badFileStream(*badFile, std::ios::app);
+                    badFileStream << replayHash << "\n";
+                }
                 break;
             }
-            converter->knownHashes.emplace(replayHashPlayer);
+            converter->addKnownHash(replayHashPlayer);
         }
 
         SPDLOG_INFO("Completed {} of {} replays", ++nComplete, replayHashes.size());
@@ -88,15 +113,17 @@ void loopReplayFiles(const fs::path &replayFolder,
 
 auto main(int argc, char *argv[]) -> int
 {
-    cxxopts::Options cliParser("SC2 Replay", "Run a folder of replays and see if it works");
+    cxxopts::Options cliParser(
+        "SC2 Replay Converter", "Convert SC2 Replays into a database which can be sampled for machine learning");
     // clang-format off
     cliParser.add_options()
       ("r,replays", "path to folder of replays", cxxopts::value<std::string>())
-      ("p,partition", "partition file to select replays", cxxopts::value<std::string>())
-      ("o,output", "output directory for replays", cxxopts::value<std::string>())
+      ("p,partition", "partition file to select a subset of replays from the folder", cxxopts::value<std::string>())
+      ("o,output", "output filename for replay database", cxxopts::value<std::string>())
       ("c,converter", "type of converter to use [action|full|strided]", cxxopts::value<std::string>())
       ("s,stride", "stride for the strided converter", cxxopts::value<std::size_t>())
       ("g,game", "path to game executable", cxxopts::value<std::string>())
+      ("b,badfile", "file that contains a known set of bad replays", cxxopts::value<std::string>())
       ("h,help", "This help");
     // clang-format on
     const auto cliOpts = cliParser.parse(argc, argv);
@@ -168,6 +195,29 @@ auto main(int argc, char *argv[]) -> int
         return -1;
     }
 
+    std::optional<fs::path> badFile;
+    if (cliOpts["badfile"].count()) {
+        badFile = fs::path(cliOpts["badfile"].as<std::string>());
+        if (podIndex.has_value()) {// Append pod index
+            badFile->replace_filename(
+                badFile->stem().string() + "_" + podIndex.value() + badFile->extension().string());
+        }
+        if (!fs::exists(*badFile)) {
+            SPDLOG_INFO("Creating new bad replay registry file: {}", badFile->string());
+            if (!fs::exists(badFile->parent_path())) {
+                const auto folder = badFile->parent_path();
+                SPDLOG_INFO("Creating folder for bad replay file registry: {}", folder.string());
+                if (!fs::create_directories(folder)) {
+                    SPDLOG_ERROR("Error creating directory");
+                    return -1;
+                }
+            }
+            std::ofstream temp(*badFile);
+        } else {
+            registerKnownBadReplays(*badFile, converter.get());
+        }
+    }
+
     const auto replayFiles = [&]() -> std::vector<std::string> {
         if (cliOpts["partition"].count()) {
             auto partitionFile = cliOpts["partition"].as<std::string>();
@@ -200,7 +250,7 @@ auto main(int argc, char *argv[]) -> int
     coordinator.SetProcessPath(gamePath);
     coordinator.SetTimeoutMS(10'000);
 
-    loopReplayFiles(replayFolder, replayFiles, coordinator, converter.get());
+    loopReplayFiles(replayFolder, replayFiles, coordinator, converter.get(), badFile);
 
     return 0;
 }

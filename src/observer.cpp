@@ -34,9 +34,15 @@ static_assert(std::is_same_v<UID, sc2::Tag> && "Mismatch between unique id tags 
 auto BaseConverter::loadDB(const std::filesystem::path &path) noexcept -> bool
 {
     auto result = database_.open(path);
-    if (result) { knownHashes = database_.getHashes(); }
+    if (result) { knownHashes_ = database_.getHashes(); }
     return result;
 }
+
+auto BaseConverter::hasWritten() const noexcept -> bool { return writeSuccess_; }
+
+auto BaseConverter::isKnownHash(const std::string &hash) const noexcept -> bool { return knownHashes_.contains(hash); }
+
+void BaseConverter::addKnownHash(std::string hash) noexcept { knownHashes_.emplace(std::move(hash)); }
 
 void BaseConverter::OnGameStart()
 {
@@ -66,6 +72,7 @@ void BaseConverter::OnGameStart()
 
     mapDynHasLogged_ = false;
     mapHeightHasLogged_ = false;
+    writeSuccess_ = false;
 }
 
 
@@ -86,7 +93,7 @@ void BaseConverter::OnGameEnd()
 {
     // Don't save replay if its cooked
     if (this->Control()->GetAppState() != sc2::AppState::normal) {
-        SPDLOG_INFO("Not writing replay with bad SC2 AppState: {}", static_cast<int>(this->Control()->GetAppState()));
+        SPDLOG_ERROR("Not writing replay with bad SC2 AppState: {}", static_cast<int>(this->Control()->GetAppState()));
         return;
     }
 
@@ -107,7 +114,7 @@ void BaseConverter::OnGameEnd()
     // write_data(SoA.units, basePath.replace_extension("units"));
     // write_data(SoA, basePath.replace_extension("all"));
 
-    database_.addEntry(SoA);
+    writeSuccess_ = database_.addEntry(SoA);
 }
 
 
@@ -473,8 +480,8 @@ void StridedConverter::OnStep()
 
 void StridedConverter::SetStride(std::size_t stride) noexcept
 {
-    if (stride == 0 || stride > 10000) {
-        throw std::logic_error(fmt::format("SetStride got a bad stride: {}", stride));
+    if (stride == 0 || stride > 10'000) {
+        throw std::logic_error(fmt::format("SetStride doesn't satisfy 0 < {} < 10'000", stride));
     }
     stride_ = stride;
 }
