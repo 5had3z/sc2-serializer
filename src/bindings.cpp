@@ -143,7 +143,30 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
                 { sizeof(int) });
         });
 
-    py::class_<cvt::Score>(m, "Score").def(py::init<>()).def_readonly("total", &cvt::Score::score_float);
+    py::class_<cvt::Score>(m, "Score")
+        .def(py::init<>())
+        .def_readonly("score_float", &cvt::Score::score_float)
+        .def_readonly("idle_production_time", &cvt::Score::idle_production_time)
+        .def_readonly("idle_worker_time", &cvt::Score::idle_worker_time)
+        .def_readonly("total_value_units", &cvt::Score::total_value_units)
+        .def_readonly("total_value_structures", &cvt::Score::total_value_structures)
+        .def_readonly("killed_value_units", &cvt::Score::killed_value_units)
+        .def_readonly("killed_value_structures", &cvt::Score::killed_value_structures)
+        .def_readonly("collected_minerals", &cvt::Score::collected_minerals)
+        .def_readonly("collected_vespene", &cvt::Score::collected_vespene)
+        .def_readonly("collection_rate_minerals", &cvt::Score::collection_rate_minerals)
+        .def_readonly("collection_rate_vespene", &cvt::Score::collection_rate_vespene)
+        .def_readonly("spent_minerals", &cvt::Score::spent_minerals)
+        .def_readonly("spent_vespene", &cvt::Score::spent_vespene)
+        .def_readonly("total_damage_dealt_life", &cvt::Score::total_damage_dealt_life)
+        .def_readonly("total_damage_dealt_shields", &cvt::Score::total_damage_dealt_shields)
+        .def_readonly("total_damage_dealt_energy", &cvt::Score::total_damage_dealt_energy)
+        .def_readonly("total_damage_taken_life", &cvt::Score::total_damage_taken_life)
+        .def_readonly("total_damage_taken_shields", &cvt::Score::total_damage_taken_shields)
+        .def_readonly("total_damage_taken_energy", &cvt::Score::total_damage_taken_energy)
+        .def_readonly("total_healed_life", &cvt::Score::total_healed_life)
+        .def_readonly("total_healed_shields", &cvt::Score::total_healed_shields)
+        .def_readonly("total_healed_energy", &cvt::Score::total_healed_energy);
 
     py::class_<cvt::Unit>(m, "Unit")
         .def(py::init<>())

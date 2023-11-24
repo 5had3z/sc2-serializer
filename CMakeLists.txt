@@ -103,7 +103,7 @@ if(SC2_PY_READER)
   pybind11_add_module(
     _sc2_replay_reader
     src/database.cpp
-    src/pyreader.cpp
+    src/bindings.cpp
     src/py_tech_state.cpp
     src/py_replay_parser.cpp)
   target_compile_features(_sc2_replay_reader PUBLIC cxx_std_23)
