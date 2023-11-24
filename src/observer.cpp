@@ -488,7 +488,7 @@ void BaseConverter::copyDynamicMapData() noexcept
 void BaseConverter::copyCommonData() noexcept
 {
     // Logging performance
-    static FrequencyTimer timer("Converter", std::chrono::minutes(5));
+    static FrequencyTimer timer("Converter", std::chrono::seconds(30));
     timer.step(fmt::format("Step {} of {}", this->Observation()->GetGameLoop(), currentReplay_.stepData.capacity()));
 
     // Copy static height map if not already done

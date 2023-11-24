@@ -14,7 +14,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
 WORKDIR /app
 COPY . .
 RUN CC=/usr/bin/gcc-13 CXX=/usr/bin/g++-13 \
-    cmake -B build -G Ninja -DSC2_PY_READER=OFF -DSC2_TESTS=OFF && \
+    cmake -B build -G Ninja -DSC2_PY_READER=OFF -DSC2_TESTS=OFF -DCMAKE_BUILD_TYPE=Release && \
     cmake --build build --parallel --config Release
 
 # Runner Stage
