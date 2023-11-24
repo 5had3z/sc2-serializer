@@ -10,7 +10,7 @@ namespace cvt {
 
 // Converts vector of units to a {n_unit, feature} array
 template<typename T>
-    requires std::is_floating_point_v<T> || std::is_integral_v<T>
+    requires std::is_arithmetic_v<T>
 auto transformUnits(const std::vector<Unit> &units) noexcept -> py::array_t<T>
 {
     // Return empty array if no units
@@ -36,7 +36,7 @@ auto transformUnits(const std::vector<Unit> &units) noexcept -> py::array_t<T>
 
 // Do unit transformation but group them by alliance (self, ally, enemy, neutral)
 template<typename T>
-    requires std::is_floating_point_v<T> || std::is_integral_v<T>
+    requires std::is_arithmetic_v<T>
 auto transformUnitsByAlliance(const std::vector<Unit> &units) noexcept -> py::dict
 {
     const static std::unordered_map<cvt::Alliance, std::string> enum2str = {
@@ -102,7 +102,9 @@ auto ReplayParser::sample(std::size_t timeIdx, bool unit_alliance) const noexcep
     } else {
         result["units"] = transformUnits<float>(replayData_.units[timeIdx]);
     }
-    // result["actions"] = replayData_.actions;
+    py::list actions;
+    std::ranges::for_each(replayData_.actions[timeIdx], [&](const Action &a) { actions.append(a); });
+    result["actions"] = actions;
     return result;
 }
 

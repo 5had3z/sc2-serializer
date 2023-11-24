@@ -14,13 +14,15 @@ namespace py = pybind11;
 
 template<typename T> void bindImage(py::module &m, const std::string &name)
 {
-    py::class_<cvt::Image<T>>(m, name.c_str())
+    py::class_<cvt::Image<T>>(m, name.c_str(), py::buffer_protocol())
         .def(py::init<int, int>())
-        .def_property_readonly("data", [](const cvt::Image<T> &img) {
-            py::dtype dtype = py::dtype::of<T>();
-            const T *data_ptr = reinterpret_cast<const T *>(img._data.data());
-            py::array_t<T> array({ img._h, img._w }, data_ptr);
-            return array;
+        .def_buffer([](cvt::Image<T> &img) -> py::buffer_info {
+            return py::buffer_info(img.data(),
+                sizeof(T),
+                py::format_descriptor<T>::format(),
+                2,
+                { img._h, img._w },
+                { sizeof(T) * img._h, sizeof(T) });
         });
 }
 
@@ -30,16 +32,12 @@ void bindBoolImage(py::module &m, const std::string &name)
         .def(py::init<int, int>())
         .def_property_readonly("data", [](const cvt::Image<bool> &img) {
             std::vector<uint8_t> unpacked_data(img._h * img._w, 0);
-
             for (std::size_t i = 0; i < img._h * img._w / 8; ++i) {
-                auto b = img._data[i];
-                std::bitset<8> bitset = std::bitset<8>(std::to_integer<int>(b));
+                const auto bitset = std::bitset<8>(std::to_integer<uint8_t>(img._data[i]));
 #pragma unroll
                 for (std::size_t j = 0; j < 8; ++j) { unpacked_data[j + i * 8] = bitset[j]; }
             }
-            py::dtype dtype = py::dtype::of<bool>();// NumPy boolean dtype
-            py::array_t<uint8_t> array = py::array_t<uint8_t>({ img._h, img._w }, unpacked_data.data());
-            return array;
+            return py::array_t<uint8_t>({ img._h, img._w }, unpacked_data.data());
         });
 }
 
