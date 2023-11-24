@@ -14,6 +14,75 @@
 
 namespace cvt {
 
+// Simple circular buffer to hold number-like things and use to perform reductions over
+template<typename T, std::size_t N> class CircularBuffer
+{
+  public:
+    void append(T value)
+    {
+        buffer[endIdx++] = value;
+        if (endIdx == N) {
+            isFull = true;// Latch on
+            endIdx = 0;
+        }
+    }
+
+    template<std::invocable<T, T> F> [[nodiscard]] auto reduce(T init, F binaryOp) const noexcept -> T
+    {
+        if (isFull) { return std::reduce(buffer.begin(), buffer.end(), init, binaryOp); }
+        return std::reduce(buffer.begin(), std::next(buffer.begin(), endIdx), init, binaryOp);
+    }
+
+    [[nodiscard]] auto size() const noexcept -> std::size_t
+    {
+        if (isFull) { return N; }
+        return endIdx;
+    }
+
+    [[nodiscard]] auto full() const noexcept -> bool { return isFull; }
+
+  private:
+    bool isFull{ false };
+    std::size_t endIdx{ 0 };
+    std::array<T, N> buffer;
+};
+
+class FrequencyTimer
+{
+  public:
+    std::chrono::seconds displayPeriod;
+
+    FrequencyTimer(std::string name, std::chrono::seconds displayPeriod_ = std::chrono::minutes(1))
+        : timerName(std::move(name)), displayPeriod(displayPeriod_)
+    {}
+
+    void step(std::optional<std::string_view> printExtra) noexcept
+    {
+        const auto currentTime = std::chrono::steady_clock::now();
+        // If very first step just set current time and return
+        if (lastStep == std::chrono::steady_clock::time_point{}) {
+            lastStep = currentTime;
+            return;
+        }
+
+        period.append(currentTime - lastStep);
+        lastStep = currentTime;
+
+        if (currentTime - lastPrint > displayPeriod && period.full()) {
+            const auto meanStep = period.reduce(std::chrono::seconds(0), std::plus<>()) / period.size();
+            const auto frequency = std::chrono::seconds(1) / meanStep;
+            SPDLOG_INFO("{} Frequency: {:.1f}Hz - {}", timerName, frequency, printExtra.value_or("No Extra Info"));
+            lastPrint = currentTime;
+        }
+    }
+
+  private:
+    CircularBuffer<std::chrono::duration<float>, 100> period{};
+    std::string timerName;
+    std::chrono::steady_clock::time_point lastStep{};
+    std::chrono::steady_clock::time_point lastPrint{};
+};
+
 /**
  * @brief Copy map data from protobuf return to Image struct.
  * @tparam T underlying type of image
@@ -418,6 +487,10 @@ void BaseConverter::copyDynamicMapData() noexcept
 
 void BaseConverter::copyCommonData() noexcept
 {
+    // Logging performance
+    static FrequencyTimer timer("Converter", std::chrono::minutes(5));
+    timer.step(fmt::format("Step {} of {}", this->Observation()->GetGameLoop(), currentReplay_.stepData.capacity()));
+
     // Copy static height map if not already done
     if (currentReplay_.heightMap.empty()) { this->copyHeightMapData(); }
 
