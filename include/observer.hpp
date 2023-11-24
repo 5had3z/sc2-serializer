@@ -30,6 +30,12 @@ class BaseConverter : public sc2::ReplayObserver
 
     void OnGameEnd() override;
 
+    [[nodiscard]] auto hasWritten() const noexcept -> bool;
+
+    [[nodiscard]] auto isKnownHash(const std::string &hash) const noexcept -> bool;
+
+    void addKnownHash(std::string hash) noexcept;
+
   protected:
     void copyHeightMapData() noexcept;
 
@@ -49,7 +55,7 @@ class BaseConverter : public sc2::ReplayObserver
 
     // Resource UID changes when going in and out of view
     // this is chat and we want to make UID consistent
-    void reassignResourceId(const NeutralUnit &unit) noexcept;
+    auto reassignResourceId(const NeutralUnit &unit) noexcept -> bool;
 
     // Get the initial UID for each natural resource and
     // initialize with the default value
@@ -58,8 +64,10 @@ class BaseConverter : public sc2::ReplayObserver
     ReplayDatabase database_;
     ReplayData currentReplay_;
     std::unordered_map<UID, ResourceObs> resourceObs_;
+    std::unordered_set<std::string> knownHashes_{};
     bool mapDynHasLogged_{ false };
     bool mapHeightHasLogged_{ false };
+    bool writeSuccess_{ false };
 };
 
 /**

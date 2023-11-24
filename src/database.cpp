@@ -74,16 +74,11 @@ auto ReplayDatabase::getHashes() const noexcept -> std::unordered_set<std::strin
     std::unordered_set<std::string> replayHashes{};
 
     std::ifstream dbStream(dbPath_, std::ios::binary);
+
     for (auto &&entry : entryPtr_) {
-        dbStream.seekg(entry);
-        // Maybe see if I can reuse the filter and seek
-        bio::filtering_istream filterStream{};
-        filterStream.push(bio::zlib_decompressor());
-        filterStream.push(dbStream);
-        std::string replayHash{};
-        deserialize(replayHash, filterStream);
-        filterStream.reset();
-        replayHashes.insert(replayHash);
+
+        auto [hash, id] = getHashIdEntry(dbStream, entry);
+        replayHashes.insert(hash + std::to_string(id));
     }
 
     return replayHashes;
@@ -97,7 +92,7 @@ bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
         return false;
     }
     if (this->isFull()) {
-        SPDLOG_ERROR("Database {} is full", dbPath_.string());
+        SPDLOG_ERROR("Database \"{}\" is full", dbPath_.string());
         return false;
     }
 
@@ -131,8 +126,41 @@ bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
         return false;
     }
 
+    SPDLOG_INFO("Saved Replay: {}, PlayerID: {}", data.replayHash, data.playerId);
+
     return true;
 }
+
+
+auto ReplayDatabase::getHashIdEntry(std::ifstream &dbStream, std::streampos entry) const
+    -> std::pair<std::string, std::uint32_t>
+{
+    dbStream.seekg(entry);
+    // Maybe see if I can reuse the filter and seek
+    bio::filtering_istream filterStream{};
+    filterStream.push(bio::zlib_decompressor());
+    filterStream.push(dbStream);
+    std::string replayHash{};
+    std::string gameVersion{};
+    std::uint32_t playerId{};
+    deserialize(replayHash, filterStream);
+    deserialize(gameVersion, filterStream);
+    deserialize(playerId, filterStream);
+    filterStream.reset();
+    return std::make_pair(replayHash, playerId);
+}
+
+auto ReplayDatabase::getHashId(std::size_t index) const -> std::pair<std::string, std::uint32_t>
+{
+    // Check if valid index
+    if (index >= entryPtr_.size()) {
+        throw std::out_of_range(fmt::format("Index {} exceeds database size {}", index, entryPtr_.size()));
+    }
+
+    std::ifstream dbStream(dbPath_, std::ios::binary);
+    return getHashIdEntry(dbStream, entryPtr_[index]);
+}
+
 
 auto ReplayDatabase::getEntry(std::size_t index) const -> ReplayDataSoA
 {

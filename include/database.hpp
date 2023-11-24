@@ -21,7 +21,9 @@ class ReplayDatabase
     // Get ReplayData from the database
     [[nodiscard]] auto getEntry(std::size_t index) const -> ReplayDataSoA;
 
-    // Check if db is full
+    [[nodiscard]] auto getHashId(std::size_t index) const -> std::pair<std::string, std::uint32_t>;
+    [[nodiscard]] auto getHashIdEntry(std::ifstream &dbStream, std::streampos entry) const
+        -> std::pair<std::string, std::uint32_t>;// Check if db is full
     [[nodiscard]] auto isFull() const noexcept -> bool;
 
     // Load existing or create new based on existence

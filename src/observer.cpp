@@ -14,6 +14,75 @@
 
 namespace cvt {
 
+// Simple circular buffer to hold number-like things and use to perform reductions over
+template<typename T, std::size_t N> class CircularBuffer
+{
+  public:
+    void append(T value)
+    {
+        buffer[endIdx++] = value;
+        if (endIdx == N) {
+            isFull = true;// Latch on
+            endIdx = 0;
+        }
+    }
+
+    template<std::invocable<T, T> F> [[nodiscard]] auto reduce(T init, F binaryOp) const noexcept -> T
+    {
+        if (isFull) { return std::reduce(buffer.begin(), buffer.end(), init, binaryOp); }
+        return std::reduce(buffer.begin(), std::next(buffer.begin(), endIdx), init, binaryOp);
+    }
+
+    [[nodiscard]] auto size() const noexcept -> std::size_t
+    {
+        if (isFull) { return N; }
+        return endIdx;
+    }
+
+    [[nodiscard]] auto full() const noexcept -> bool { return isFull; }
+
+  private:
+    bool isFull{ false };
+    std::size_t endIdx{ 0 };
+    std::array<T, N> buffer;
+};
+
+class FrequencyTimer
+{
+  public:
+    std::chrono::seconds displayPeriod;
+
+    FrequencyTimer(std::string name, std::chrono::seconds displayPeriod_ = std::chrono::minutes(1))
+        : timerName(std::move(name)), displayPeriod(displayPeriod_)
+    {}
+
+    void step(std::optional<std::string_view> printExtra) noexcept
+    {
+        const auto currentTime = std::chrono::steady_clock::now();
+        // If very first step just set current time and return
+        if (lastStep == std::chrono::steady_clock::time_point{}) {
+            lastStep = currentTime;
+            return;
+        }
+
+        period.append(currentTime - lastStep);
+        lastStep = currentTime;
+
+        if (currentTime - lastPrint > displayPeriod && period.full()) {
+            const auto meanStep = period.reduce(std::chrono::seconds(0), std::plus<>()) / period.size();
+            const auto frequency = std::chrono::seconds(1) / meanStep;
+            SPDLOG_INFO("{} Frequency: {:.1f}Hz - {}", timerName, frequency, printExtra.value_or("No Extra Info"));
+            lastPrint = currentTime;
+        }
+    }
+
+  private:
+    CircularBuffer<std::chrono::duration<float>, 100> period{};
+    std::string timerName;
+    std::chrono::steady_clock::time_point lastStep{};
+    std::chrono::steady_clock::time_point lastPrint{};
+};
+
 /**
  * @brief Copy map data from protobuf return to Image struct.
  * @tparam T underlying type of image
@@ -23,13 +92,26 @@ namespace cvt {
 template<typename T> void copyMapData(Image<T> &dest, const SC2APIProtocol::ImageData &mapData)
 {
     dest.resize(mapData.size().y(), mapData.size().x());
-    assert(dest.size() == mapData.data().size() && "Expected mapData size doesn't match actual size");
+    if (dest.size() != mapData.data().size()) {
+        throw std::runtime_error("Expected mapData size doesn't match actual size");
+    }
     std::memcpy(dest.data(), mapData.data().data(), dest.size());
 }
 
 static_assert(std::is_same_v<UID, sc2::Tag> && "Mismatch between unique id tags in SC2 and this Lib");
 
-auto BaseConverter::loadDB(const std::filesystem::path &path) noexcept -> bool { return database_.open(path); }
+auto BaseConverter::loadDB(const std::filesystem::path &path) noexcept -> bool
+{
+    auto result = database_.open(path);
+    if (result) { knownHashes_ = database_.getHashes(); }
+    return result;
+}
+
+auto BaseConverter::hasWritten() const noexcept -> bool { return writeSuccess_; }
+
+auto BaseConverter::isKnownHash(const std::string &hash) const noexcept -> bool { return knownHashes_.contains(hash); }
+
+void BaseConverter::addKnownHash(std::string hash) noexcept { knownHashes_.emplace(std::move(hash)); }
 
 void BaseConverter::OnGameStart()
 {
@@ -50,7 +132,7 @@ void BaseConverter::OnGameStart()
     currentReplay_.gameVersion = replayInfo.version;
 
     const auto gameInfo = this->Observation()->GetGameInfo();
-    assert(gameInfo.height > 0 && gameInfo.width > 0 && "Missing map size data");
+    if (!(gameInfo.height > 0 && gameInfo.width > 0)) { throw std::runtime_error("Missing map size data"); }
     currentReplay_.mapHeight = gameInfo.height;
     currentReplay_.mapWidth = gameInfo.width;
 
@@ -59,6 +141,7 @@ void BaseConverter::OnGameStart()
 
     mapDynHasLogged_ = false;
     mapHeightHasLogged_ = false;
+    writeSuccess_ = false;
 }
 
 
@@ -77,6 +160,12 @@ void BaseConverter::OnGameStart()
 
 void BaseConverter::OnGameEnd()
 {
+    // Don't save replay if its cooked
+    if (this->Control()->GetAppState() != sc2::AppState::normal) {
+        SPDLOG_ERROR("Not writing replay with bad SC2 AppState: {}", static_cast<int>(this->Control()->GetAppState()));
+        return;
+    }
+
     // Save entry to DB
     const auto SoA = ReplayAoStoSoA(currentReplay_);
 
@@ -94,7 +183,7 @@ void BaseConverter::OnGameEnd()
     // write_data(SoA.units, basePath.replace_extension("units"));
     // write_data(SoA, basePath.replace_extension("all"));
 
-    database_.addEntry(SoA);
+    writeSuccess_ = database_.addEntry(SoA);
 }
 
 
@@ -158,7 +247,9 @@ void BaseConverter::copyHeightMapData() noexcept
 
 [[nodiscard]] auto convertScore(const sc2::Score *src) noexcept -> Score
 {
-    assert(src->score_type == sc2::ScoreType::Melee);
+    if (src->score_type != sc2::ScoreType::Melee) {
+        throw std::runtime_error(fmt::format("Score type is not melee, got {}", static_cast<int>(src->score_type)));
+    };
     Score dst;
 
     dst.score_float = src->score;
@@ -276,7 +367,7 @@ void BaseConverter::copyUnitData() noexcept
     std::ranges::for_each(unitData, [&](const sc2::Unit *src) {
         const bool isPassenger = p_tags.contains(src->tag);
         if (neutralUnitTypes.contains(src->unit_type)) {
-            assert(!isPassenger);
+            if (isPassenger) { throw std::runtime_error("Neutral resource is somehow a passenger?"); };
             neutralUnits.emplace_back(convertSC2NeutralUnit(src));
         } else {
             units.emplace_back(convertSC2Unit(src, unitData, isPassenger));
@@ -292,7 +383,26 @@ void BaseConverter::initResourceObs() noexcept
     for (auto &unit : neutralUnits) {
         // Skip Not a mineral/gas resource
         if (!defaultResources.contains(unit.unitType)) { continue; }
-        resourceObs_[unit.id] = ResourceObs(unit.id, unit.pos, defaultResources.at(unit.unitType));
+        resourceObs_.emplace(unit.id, ResourceObs{ unit.id, unit.pos, defaultResources.at(unit.unitType) });
+    }
+}
+
+auto BaseConverter::reassignResourceId(const NeutralUnit &unit) noexcept -> bool
+{
+    // Check if theres an existing unit with the same x,y coordinate
+    // (may move a little bit in z, but its fundamentally the same unit)
+    auto oldKV = std::ranges::find_if(resourceObs_, [=](auto &&keyValue) {
+        auto &value = keyValue.second;
+        return value.pos.x == unit.pos.x && value.pos.y == unit.pos.y;
+    });
+    if (oldKV == resourceObs_.end()) {
+        SPDLOG_WARN(fmt::format(
+            "No matching position for unit {} (id: {}) adding new", sc2::UnitTypeToName(unit.unitType), unit.id));
+        return false;
+    } else {
+        resourceObs_.emplace(unit.id, std::move(oldKV->second));
+        resourceObs_.erase(oldKV->first);
+        return true;
     }
 }
 
@@ -302,9 +412,13 @@ void BaseConverter::updateResourceObs() noexcept
     for (auto &unit : neutralUnits) {
         // Skip Not a mineral/gas resource
         if (!defaultResources.contains(unit.unitType)) { continue; }
-
-        // Reassign map id if it has changed
-        if (!resourceObs_.contains(unit.id)) { this->reassignResourceId(unit); }
+        // Reassign map id if identical position found, otherwise add to set
+        if (!resourceObs_.contains(unit.id)) {
+            bool hasReassigned = this->reassignResourceId(unit);
+            if (!hasReassigned) {
+                resourceObs_.emplace(unit.id, ResourceObs{ unit.id, unit.pos, defaultResources.at(unit.unitType) });
+            }
+        }
 
         auto &prev = resourceObs_.at(unit.id);
         // Update resourceObs_ if visible
@@ -314,17 +428,6 @@ void BaseConverter::updateResourceObs() noexcept
         unit.contents = prev.qty;
         unit.id = prev.id;
     }
-}
-
-void BaseConverter::reassignResourceId(const NeutralUnit &unit) noexcept
-{
-    auto oldKV = std::ranges::find_if(resourceObs_, [=](auto &&keyValue) {
-        auto &value = keyValue.second;
-        return value.pos == unit.pos;
-    });
-    assert(oldKV != resourceObs_.end() && "No position match found???");
-    resourceObs_.emplace(unit.id, std::move(oldKV->second));
-    resourceObs_.erase(oldKV->first);
 }
 
 void BaseConverter::copyActionData() noexcept
@@ -384,6 +487,10 @@ void BaseConverter::copyDynamicMapData() noexcept
 
 void BaseConverter::copyCommonData() noexcept
 {
+    // Logging performance
+    static FrequencyTimer timer("Converter", std::chrono::seconds(30));
+    timer.step(fmt::format("Step {} of {}", this->Observation()->GetGameLoop(), currentReplay_.stepData.capacity()));
+
     // Copy static height map if not already done
     if (currentReplay_.heightMap.empty()) { this->copyHeightMapData(); }
 
@@ -446,8 +553,8 @@ void StridedConverter::OnStep()
 
 void StridedConverter::SetStride(std::size_t stride) noexcept
 {
-    if (stride == 0 || stride > 10000) {
-        throw std::logic_error(fmt::format("SetStride got a bad stride: {}", stride));
+    if (stride == 0 || stride > 10'000) {
+        throw std::logic_error(fmt::format("SetStride doesn't satisfy 0 < {} < 10'000", stride));
     }
     stride_ = stride;
 }
