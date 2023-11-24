@@ -1,0 +1,34 @@
+name: Run Tests
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        cmake-version: [3.22]  # Specify your desired CMake version
+        gcc-version: [13]       # Specify your desired GCC version
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up CMake, GCC, and G++
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y software-properties-common
+          sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+          sudo apt-get update
+          sudo apt-get install -y g++-${{ matrix.gcc-version }} gcc-${{ matrix.gcc-version }}
+          sudo apt-get install -y cmake ninja-build git libboost-iostreams1.74-dev
+          sudo apt-get install -y libopencv-dev
+          export CC="/usr/bin/gcc-${{ matrix.gcc-version }}"
+          export CXX="/usr/bin/g++-${{ matrix.gcc-version }}"
+
+      - name: Configure CMake
+        run: cmake -B build -G Ninja -DSC2_PY_READER=OFF -DSC2_TESTS=ON
+
+      - name: Build and run tests
+        run: cmake --build build --parallel --config Release && ./build/test_database && ./build/test_readwrite
