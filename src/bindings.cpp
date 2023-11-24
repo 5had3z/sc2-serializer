@@ -7,7 +7,6 @@
 #include <pybind11/stl.h>
 #include <pybind11/stl/filesystem.h>
 
-#include <bitset>
 #include <optional>
 
 namespace py = pybind11;
@@ -31,13 +30,9 @@ void bindBoolImage(py::module &m, const std::string &name)
     py::class_<cvt::Image<bool>>(m, name.c_str())
         .def(py::init<int, int>())
         .def_property_readonly("data", [](const cvt::Image<bool> &img) {
-            std::vector<uint8_t> unpacked_data(img._h * img._w, 0);
-            for (std::size_t i = 0; i < img._h * img._w / 8; ++i) {
-                const auto bitset = std::bitset<8>(std::to_integer<uint8_t>(img._data[i]));
-#pragma unroll
-                for (std::size_t j = 0; j < 8; ++j) { unpacked_data[j + i * 8] = bitset[j]; }
-            }
-            return py::array_t<uint8_t>({ img._h, img._w }, unpacked_data.data());
+            py::array_t<std::uint8_t> out({ img._h, img._w });
+            unpackBoolImage<std::uint8_t>(img, out.mutable_data());
+            return out;
         });
 }
 

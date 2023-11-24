@@ -33,7 +33,7 @@ namespace detail {
         requires std::is_arithmetic_v<std::ranges::range_value_t<T>>
     void vectorize_helper(const T &d, It &it, bool onehotEnum)
     {
-        it = std::copy(d.cbegin(), d.cend(), it);
+        it = std::copy(d.begin(), d.end(), it);
     }
 
     template<typename T, typename It>
@@ -43,7 +43,7 @@ namespace detail {
         using value_type = It::container_type::value_type;
         if (onehotEnum) {
             const auto onehot = enumToOneHot<value_type>(d);
-            it = std::copy(onehot.cbegin(), onehot.cend(), it);
+            it = std::copy(onehot.begin(), onehot.end(), it);
         } else {
             *it++ = static_cast<value_type>(d);
         }
@@ -92,8 +92,8 @@ struct Point2d
     [[nodiscard]] auto begin() noexcept -> int * { return &x; }
     [[nodiscard]] auto end() noexcept -> int * { return &y + 1; }
 
-    [[nodiscard]] auto cbegin() const noexcept -> const int * { return &x; }
-    [[nodiscard]] auto cend() const noexcept -> const int * { return &y + 1; }
+    [[nodiscard]] auto begin() const noexcept -> const int * { return &x; }
+    [[nodiscard]] auto end() const noexcept -> const int * { return &y + 1; }
 };
 
 struct Point3f
@@ -106,14 +106,17 @@ struct Point3f
     [[nodiscard]] auto begin() noexcept -> float * { return &x; }
     [[nodiscard]] auto end() noexcept -> float * { return &z + 1; }
 
-    [[nodiscard]] auto cbegin() const noexcept -> const float * { return &x; }
-    [[nodiscard]] auto cend() const noexcept -> const float * { return &z + 1; }
+    [[nodiscard]] auto begin() const noexcept -> const float * { return &x; }
+    [[nodiscard]] auto end() const noexcept -> const float * { return &z + 1; }
 };
 
-template<typename T> struct Image
+template<typename T>
+    requires std::is_arithmetic_v<T>
+struct Image
 {
     using value_type = T;
     using ptr_type = T *;
+    using const_ptr_type = const T *;
 
     int _h = 0;
     int _w = 0;
@@ -153,6 +156,10 @@ template<typename T> struct Image
 
     // Raw pointer to the data with the correct type
     [[nodiscard]] auto data() noexcept -> ptr_type { return reinterpret_cast<ptr_type>(_data.data()); }
+    [[nodiscard]] auto data() const noexcept -> const_ptr_type
+    {
+        return reinterpret_cast<const_ptr_type>(_data.data());
+    }
 };
 
 enum class Alliance { Self = 1, Ally = 2, Neutral = 3, Enemy = 4 };

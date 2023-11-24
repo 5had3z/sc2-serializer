@@ -4,6 +4,7 @@
 #include <pybind11/pybind11.h>
 #include <spdlog/fmt/fmt.h>
 
+#include <bitset>
 #include <filesystem>
 #include <set>
 
@@ -74,5 +75,41 @@ class ReplayParser
     UpgradeTiming upgrade_;
     ReplayDataSoA replayData_{};
 };
+
+
+/**
+ * @brief Unpack bool image to output iterator
+ * @tparam T value type to unpack to
+ * @param image input image
+ * @param out span to write unpacked data into
+ * @return vector of value type of bool image
+ */
+template<typename T, std::output_iterator<T> I>
+    requires std::is_arithmetic_v<T>
+[[maybe_unused]] auto unpackBoolImage(const Image<bool> &img, I out) -> I
+{
+    for (std::size_t i = 0; i < img._h * img._w / 8; ++i) {
+        const auto bitset = std::bitset<8>(std::to_integer<uint8_t>(img._data[i]));
+#pragma unroll
+        for (std::size_t j = 0; j < 8; ++j) { *out++ = static_cast<T>(bitset[j]); }
+    }
+    return out;
+}
+
+/**
+ * @brief Unpack bool image to flattened std::vector
+ * @tparam T value type to unpack to
+ * @param image input image
+ * @return vector of value type of bool image
+ */
+template<typename T>
+    requires std::is_arithmetic_v<T>
+auto unpackBoolImage(const Image<bool> &img) noexcept -> std::vector<T>
+{
+    std::vector<T> unpacked_data(img._h * img._w, 0);
+    unpackBoolImage(img, unpacked_data.begin());
+    return unpacked_data;
+}
+
 
 }// namespace cvt

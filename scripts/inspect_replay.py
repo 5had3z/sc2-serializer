@@ -66,7 +66,8 @@ def make_units_video(parser: sc2_replay_reader.ReplayParser, fname: Path):
     writer.release()
 
 
-def test_parse(db, idx, parser):
+def test_parseable(db, idx, parser):
+    """Try parse db at index with parser"""
     replay_data = db.getEntry(idx)
     parser.parse_replay(replay_data)
 

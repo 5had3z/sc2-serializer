@@ -9,14 +9,14 @@
 namespace cvt {
 
 // Converts vector of units to a {n_unit, feature} array
-template<typename T>
+template<typename T, typename UnitT>
     requires std::is_arithmetic_v<T>
-auto transformUnits(const std::vector<Unit> &units) noexcept -> py::array_t<T>
+auto transformUnits(const std::vector<UnitT> &units) noexcept -> py::array_t<T>
 {
     // Return empty array if no units
     if (units.empty()) { return py::array_t<T>(); }
     // Lambda wrapper around vectorize to set onehot to true
-    auto vecFn = [](const Unit &unit) { return vectorize<T>(unit, true); };
+    auto vecFn = [](const UnitT &unit) { return vectorize<T>(unit, true); };
 
     // Create numpy array based on unit feature size
     const auto firstUnitFeats = vecFn(units.front());
@@ -78,6 +78,43 @@ auto transformUnitsByAlliance(const std::vector<Unit> &units) noexcept -> py::di
     return pyReturn;
 }
 
+
+template<typename B>
+    requires std::is_arithmetic_v<B>
+struct Caster
+{
+    [[nodiscard]] auto operator()(auto a) const noexcept -> B { return static_cast<B>(a); }
+};
+
+/**
+ * @brief Create Stacked Features Image from Minimap Data (C, H, W) in the order
+ *        HeightMap, Visibility, Creep, Alerts, Buildable, Pathable, PlayerRelative
+ * @tparam T Underlying type of returned image
+ * @param data Replay data
+ * @param timeIdx Time index to sample from
+ * @param expandPlayerRel Expand the Player Relative to 1hot channels (Self1, Ally2, Neutral3,
+ * Enemy4)
+ * @return Returns (C,H,W) Image of Type T
+ */
+template<typename T>
+    requires std::is_arithmetic_v<T>
+auto createMinimapFeatures(const ReplayDataSoA &data, std::size_t timeIdx, bool expandPlayerRel = true)
+    -> py::array_t<T>
+{
+    const std::size_t nChannels = expandPlayerRel ? 10 : 7;
+    py::array_t<T> featureMap(
+        { nChannels, static_cast<std::size_t>(data.heightMap._h), static_cast<std::size_t>(data.heightMap._w) });
+    std::span<T> outData(featureMap.mutable_data(), featureMap.size());
+    auto dataPtr = outData.begin();
+    dataPtr =
+        std::transform(data.heightMap.data(), data.heightMap.data() + data.heightMap.nelem(), dataPtr, Caster<T>());
+    const auto &visibility = data.visibility[timeIdx];
+    dataPtr = std::transform(visibility.data(), visibility.data() + visibility.nelem(), dataPtr, Caster<T>());
+    dataPtr = unpackBoolImage<T>(data.creep[timeIdx], dataPtr);
+
+    return featureMap;
+}// namespace cvt
+
 ReplayParser::ReplayParser(const std::filesystem::path &dataFile) noexcept : upgrade_(dataFile) {}
 
 void ReplayParser::parseReplay(ReplayDataSoA replayData)
@@ -95,16 +132,22 @@ void ReplayParser::parseReplay(ReplayDataSoA replayData)
 
 auto ReplayParser::sample(std::size_t timeIdx, bool unit_alliance) const noexcept -> py::dict
 {
+    using feature_t = float;
     py::dict result;
-    result["upgrades"] = upgrade_.getState<float>(timeIdx);
+    result["upgrades"] = upgrade_.getState<feature_t>(timeIdx);
     if (unit_alliance) {
-        result["units"] = transformUnitsByAlliance<float>(replayData_.units[timeIdx]);
+        result["units"] = transformUnitsByAlliance<feature_t>(replayData_.units[timeIdx]);
     } else {
-        result["units"] = transformUnits<float>(replayData_.units[timeIdx]);
+        result["units"] = transformUnits<feature_t>(replayData_.units[timeIdx]);
     }
+    result["neutral_units"] = transformUnits<feature_t>(replayData_.neutralUnits[timeIdx]);
+
     py::list actions;
     std::ranges::for_each(replayData_.actions[timeIdx], [&](const Action &a) { actions.append(a); });
     result["actions"] = actions;
+
+    result["score"] = replayData_.score[timeIdx];
+    result["minimap_features"] = createMinimapFeatures<feature_t>(replayData_, timeIdx);
     return result;
 }
 
