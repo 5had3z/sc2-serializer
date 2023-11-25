@@ -389,7 +389,7 @@ void BaseConverter::initResourceObs() noexcept
 
 auto BaseConverter::reassignResourceId(const NeutralUnit &unit) noexcept -> bool
 {
-    // Check if theres an existing unit with the same x,y coordinate
+    // Check if there's an existing unit with the same x,y coordinate
     // (may move a little bit in z, but its fundamentally the same unit)
     auto oldKV = std::ranges::find_if(resourceObs_, [=](auto &&keyValue) {
         auto &value = keyValue.second;

@@ -7,38 +7,43 @@
 #include <pybind11/stl.h>
 #include <pybind11/stl/filesystem.h>
 
-#include <bitset>
+#include <optional>
 
 namespace py = pybind11;
 
 template<typename T> void bindImage(py::module &m, const std::string &name)
 {
-    py::class_<cvt::Image<T>>(m, name.c_str())
+    py::class_<cvt::Image<T>>(m, name.c_str(), py::buffer_protocol())
         .def(py::init<int, int>())
-        .def_property_readonly("data", [](const cvt::Image<T> &img) {
-            py::dtype dtype = py::dtype::of<T>();
-            const T *data_ptr = reinterpret_cast<const T *>(img._data.data());
-            py::array_t<T> array({ img._h, img._w }, data_ptr);
-            return array;
+        .def_property_readonly("shape", [](const cvt::Image<T> &img) { return py::make_tuple(img._h, img._w); })
+        .def_property_readonly("data",
+            [](const cvt::Image<T> &img) {
+                py::array_t<T> out({ img._h, img._w });
+                std::ranges::copy(img.as_span(), out.mutable_data());
+                return out;
+            })
+        .def_buffer([](cvt::Image<T> &img) -> py::buffer_info {
+            return py::buffer_info(img.data(),
+                sizeof(T),
+                py::format_descriptor<T>::format(),
+                2,
+                { img._h, img._w },
+                { sizeof(T) * img._h, sizeof(T) });
         });
 }
 
-void bindBoolImage(py::module &m, const std::string &name)
+// Specialization for bool image which doesn't have native buffer support
+template<typename T>
+    requires std::is_same_v<T, bool>
+void bindImage(py::module &m, const std::string &name)
 {
     py::class_<cvt::Image<bool>>(m, name.c_str())
         .def(py::init<int, int>())
+        .def_property_readonly("shape", [](const cvt::Image<T> &img) { return py::make_tuple(img._h, img._w); })
         .def_property_readonly("data", [](const cvt::Image<bool> &img) {
-            std::vector<uint8_t> unpacked_data(img._h * img._w, 0);
-
-            for (std::size_t i = 0; i < img._h * img._w / 8; ++i) {
-                auto b = img._data[i];
-                std::bitset<8> bitset = std::bitset<8>(std::to_integer<int>(b));
-#pragma unroll
-                for (std::size_t j = 0; j < 8; ++j) { unpacked_data[j + i * 8] = bitset[j]; }
-            }
-            py::dtype dtype = py::dtype::of<bool>();// NumPy boolean dtype
-            py::array_t<uint8_t> array = py::array_t<uint8_t>({ img._h, img._w }, unpacked_data.data());
-            return array;
+            py::array_t<std::uint8_t> out({ img._h, img._w });
+            unpackBoolImage<std::uint8_t>(img, out.mutable_data());
+            return out;
         });
 }
 
@@ -95,7 +100,7 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
     bindEnums(m);
 
     bindImage<std::uint8_t>(m, "Image_uint8");
-    bindBoolImage(m, "Image_bool");
+    bindImage<bool>(m, "Image_bool");
 
     py::class_<cvt::Action::Target>(m, "ActionTarget")
         .def(py::init<>())
@@ -107,7 +112,15 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readwrite("unit_ids", &cvt::Action::unit_ids)
         .def_readwrite("ability_id", &cvt::Action::ability_id)
         .def_readwrite("target_type", &cvt::Action::target_type)
-        .def_readwrite("target", &cvt::Action::target);
+        .def_property_readonly("target_point",
+            [](const cvt::Action &action) -> std::optional<cvt::Point2d> {
+                return action.target_type == cvt::Action::Target_Type::Position ? std::optional{ action.target.point }
+                                                                                : std::nullopt;
+            })
+        .def_property_readonly("target_other", [](const cvt::Action &action) -> std::optional<cvt::UID> {
+            return action.target_type == cvt::Action::Target_Type::OtherUnit ? std::optional{ action.target.other }
+                                                                             : std::nullopt;
+        });
 
     py::class_<cvt::Point3f>(m, "Point3f", py::buffer_protocol())
         .def(py::init<>())
@@ -136,7 +149,30 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
                 { sizeof(int) });
         });
 
-    py::class_<cvt::Score>(m, "Score").def(py::init<>()).def_readonly("total", &cvt::Score::score_float);
+    py::class_<cvt::Score>(m, "Score")
+        .def(py::init<>())
+        .def_readonly("score_float", &cvt::Score::score_float)
+        .def_readonly("idle_production_time", &cvt::Score::idle_production_time)
+        .def_readonly("idle_worker_time", &cvt::Score::idle_worker_time)
+        .def_readonly("total_value_units", &cvt::Score::total_value_units)
+        .def_readonly("total_value_structures", &cvt::Score::total_value_structures)
+        .def_readonly("killed_value_units", &cvt::Score::killed_value_units)
+        .def_readonly("killed_value_structures", &cvt::Score::killed_value_structures)
+        .def_readonly("collected_minerals", &cvt::Score::collected_minerals)
+        .def_readonly("collected_vespene", &cvt::Score::collected_vespene)
+        .def_readonly("collection_rate_minerals", &cvt::Score::collection_rate_minerals)
+        .def_readonly("collection_rate_vespene", &cvt::Score::collection_rate_vespene)
+        .def_readonly("spent_minerals", &cvt::Score::spent_minerals)
+        .def_readonly("spent_vespene", &cvt::Score::spent_vespene)
+        .def_readonly("total_damage_dealt_life", &cvt::Score::total_damage_dealt_life)
+        .def_readonly("total_damage_dealt_shields", &cvt::Score::total_damage_dealt_shields)
+        .def_readonly("total_damage_dealt_energy", &cvt::Score::total_damage_dealt_energy)
+        .def_readonly("total_damage_taken_life", &cvt::Score::total_damage_taken_life)
+        .def_readonly("total_damage_taken_shields", &cvt::Score::total_damage_taken_shields)
+        .def_readonly("total_damage_taken_energy", &cvt::Score::total_damage_taken_energy)
+        .def_readonly("total_healed_life", &cvt::Score::total_healed_life)
+        .def_readonly("total_healed_shields", &cvt::Score::total_healed_shields)
+        .def_readonly("total_healed_energy", &cvt::Score::total_healed_energy);
 
     py::class_<cvt::Unit>(m, "Unit")
         .def(py::init<>())
@@ -204,6 +240,7 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
     // Expose ReplayDatabase class
     py::class_<cvt::ReplayDatabase>(m, "ReplayDatabase")
         .def(py::init<const std::filesystem::path &>())
+        .def(py::init<>())
         .def("open", &cvt::ReplayDatabase::open)
         .def("isFull", &cvt::ReplayDatabase::isFull)
         .def("size", &cvt::ReplayDatabase::size)
@@ -241,7 +278,7 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
 
     py::class_<cvt::ReplayParser>(m, "ReplayParser")
         .def(py::init<const std::filesystem::path &>())
-        .def("sample", &cvt::ReplayParser::sample)
+        .def("sample", &cvt::ReplayParser::sample, py::arg("timeIdx"), py::arg("unit_alliance") = false)
         .def("parse_replay", &cvt::ReplayParser::parseReplay)
         .def("size", &cvt::ReplayParser::size)
         .def("empty", &cvt::ReplayParser::empty)

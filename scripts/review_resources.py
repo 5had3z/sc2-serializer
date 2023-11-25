@@ -77,8 +77,8 @@ def find_later_additions(file: Path, idx: int):
             if unit.id not in starter_resources:
                 print(unit.id)
                 new_resources.append(Resource(unit.id, unit.pos, 0))
-                starters = np.stack([u.pos for u in starter_resources.values()])
-                dist = np.linalg.norm(starters - unit.pos, axis=-1, ord=2)
+                # starters = np.stack([u.pos for u in starter_resources.values()])
+                # dist = np.linalg.norm(starters - unit.pos, axis=-1, ord=2)
                 starter_resources[unit.id] = new_resources[-1]
     pos = np.stack([u.pos for u in starter_resources.values()])
     plt.scatter(pos[..., 0], pos[..., 1], c="blue", alpha=0.5)

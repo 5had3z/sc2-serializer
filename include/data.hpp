@@ -1,6 +1,8 @@
 #pragma once
 
 #include <boost/pfr.hpp>
+
+#include <algorithm>
 #include <cassert>
 #include <cstdint>
 #include <cstring>
@@ -24,37 +26,39 @@ namespace detail {
 
     template<typename T, typename It>
         requires std::is_arithmetic_v<T>
-    void vectorize_helper(T d, It &it, bool onehotEnum)
+    auto vectorize_helper(T d, It it, bool onehotEnum) -> It
     {
-        *it++ = d;
+        *it++ = static_cast<It::container_type::value_type>(d);
+        return it;
     }
 
     template<std::ranges::range T, typename It>
         requires std::is_arithmetic_v<std::ranges::range_value_t<T>>
-    void vectorize_helper(const T &d, It &it, bool onehotEnum)
+    auto vectorize_helper(const T &d, It it, bool onehotEnum) -> It
     {
-        it = std::copy(d.cbegin(), d.cend(), it);
+        return std::ranges::transform(d, it, [](auto e) { return static_cast<It::container_type::value_type>(e); }).out;
     }
 
     template<typename T, typename It>
         requires std::is_enum_v<T>
-    void vectorize_helper(T d, It &it, bool onehotEnum)
+    auto vectorize_helper(T d, It it, bool onehotEnum) -> It
     {
         using value_type = It::container_type::value_type;
         if (onehotEnum) {
-            const auto onehot = enumToOneHot<value_type>(d);
-            it = std::copy(onehot.cbegin(), onehot.cend(), it);
+            it = std::ranges::copy(enumToOneHot<value_type>(d), it).out;
         } else {
             *it++ = static_cast<value_type>(d);
         }
+        return it;
     }
 
     template<typename T, typename It>
         requires std::is_aggregate_v<T> && (!std::ranges::range<T>)
-    void vectorize_helper(T d, It &it, bool onehotEnum)
+    auto vectorize_helper(T d, It it, bool onehotEnum) -> It
     {
         boost::pfr::for_each_field(
-            d, [&it, onehotEnum](const auto &field) { detail::vectorize_helper(field, it, onehotEnum); });
+            d, [&it, onehotEnum](const auto &field) { it = detail::vectorize_helper(field, it, onehotEnum); });
+        return it;
     }
 
 
@@ -72,13 +76,13 @@ namespace detail {
 // TODO: Add helper fn to check the vectorization size and another "vectorize" variant that pushes into preallocated
 // vector
 template<typename T, typename S>
-    requires std::is_aggregate_v<S>
+    requires std::is_aggregate_v<S> && std::is_arithmetic_v<T>
 auto vectorize(S s, bool onehotEnum = false) -> std::vector<T>
 {
     std::vector<T> out;
     auto it = std::back_inserter(out);
     boost::pfr::for_each_field(
-        s, [&it, onehotEnum](const auto &field) { detail::vectorize_helper(field, it, onehotEnum); });
+        s, [&it, onehotEnum](const auto &field) { it = detail::vectorize_helper(field, it, onehotEnum); });
     return out;
 }
 
@@ -92,8 +96,8 @@ struct Point2d
     [[nodiscard]] auto begin() noexcept -> int * { return &x; }
     [[nodiscard]] auto end() noexcept -> int * { return &y + 1; }
 
-    [[nodiscard]] auto cbegin() const noexcept -> const int * { return &x; }
-    [[nodiscard]] auto cend() const noexcept -> const int * { return &y + 1; }
+    [[nodiscard]] auto begin() const noexcept -> const int * { return &x; }
+    [[nodiscard]] auto end() const noexcept -> const int * { return &y + 1; }
 };
 
 struct Point3f
@@ -106,14 +110,21 @@ struct Point3f
     [[nodiscard]] auto begin() noexcept -> float * { return &x; }
     [[nodiscard]] auto end() noexcept -> float * { return &z + 1; }
 
-    [[nodiscard]] auto cbegin() const noexcept -> const float * { return &x; }
-    [[nodiscard]] auto cend() const noexcept -> const float * { return &z + 1; }
+    [[nodiscard]] auto begin() const noexcept -> const float * { return &x; }
+    [[nodiscard]] auto end() const noexcept -> const float * { return &z + 1; }
 };
 
-template<typename T> struct Image
+/**
+ * @brief
+ * @tparam T
+ */
+template<typename T>
+    requires std::is_arithmetic_v<T>
+struct Image
 {
     using value_type = T;
     using ptr_type = T *;
+    using const_ptr_type = const T *;
 
     int _h = 0;
     int _w = 0;
@@ -151,8 +162,32 @@ template<typename T> struct Image
     // Uninitialized/empty buffer
     [[nodiscard]] auto empty() const noexcept -> bool { return _data.empty(); }
 
-    // Raw pointer to the data with the correct type
+    // Typed pointer to the data
     [[nodiscard]] auto data() noexcept -> ptr_type { return reinterpret_cast<ptr_type>(_data.data()); }
+
+    // Const Typed pointer to the data
+    [[nodiscard]] auto data() const noexcept -> const_ptr_type
+    {
+        return reinterpret_cast<const_ptr_type>(_data.data());
+    }
+
+    /**
+     * @brief Typed modifiable view of the data, unavailable if value_type is bool
+     */
+    [[nodiscard]] auto as_span() noexcept -> std::span<value_type>
+        requires(!std::same_as<value_type, bool>)
+    {
+        return std::span(this->data(), this->nelem());
+    }
+
+    /**
+     * @brief Typed const view of the data, unavailable if value_type is bool
+     */
+    [[nodiscard]] auto as_span() const noexcept -> const std::span<const value_type>
+        requires(!std::same_as<value_type, bool>)
+    {
+        return std::span(this->data(), this->nelem());
+    }
 };
 
 enum class Alliance { Self = 1, Ally = 2, Neutral = 3, Enemy = 4 };

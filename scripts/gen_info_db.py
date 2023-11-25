@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 Use PySC2 and run over each game version in a folder and write out
 information about different upgrades.

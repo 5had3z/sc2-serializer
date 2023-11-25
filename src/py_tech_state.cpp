@@ -24,6 +24,7 @@ UpgradeTiming::UpgradeTiming(std::filesystem::path dataFile) : dataFile_(std::mo
 
 void UpgradeTiming::setVersion(std::string_view version)
 {
+    assert(version != "" && "Got empty version in setVersion");
     if (version != gameVersion_) {
         gameVersion_ = version;
         this->loadInfo();
@@ -105,8 +106,8 @@ void UpgradeTiming::setActions(const std::vector<std::vector<Action>> &actionsRe
             }
         }
     }
-    auto count = std::ranges::count_if(upgradeTimes_, [](int32_t e) { return e != maxTime; });
-    SPDLOG_INFO("Number of upgrades applied {}", count);
+    // auto count = std::ranges::count_if(upgradeTimes_, [](int32_t e) { return e != maxTime; });
+    // SPDLOG_INFO("Number of upgrades applied {}", count);
 }
 
 }// namespace cvt
