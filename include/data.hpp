@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <cstring>
 #include <ranges>
+#include <span>
 #include <string>
 #include <vector>
 
