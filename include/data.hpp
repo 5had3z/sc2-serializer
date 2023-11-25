@@ -114,6 +114,10 @@ struct Point3f
     [[nodiscard]] auto end() const noexcept -> const float * { return &z + 1; }
 };
 
+/**
+ * @brief
+ * @tparam T
+ */
 template<typename T>
     requires std::is_arithmetic_v<T>
 struct Image
@@ -163,6 +167,24 @@ struct Image
     [[nodiscard]] auto data() const noexcept -> const_ptr_type
     {
         return reinterpret_cast<const_ptr_type>(_data.data());
+    }
+
+    /**
+     * @brief Typed modifyable view of the data
+     */
+    [[nodiscard]] auto as_span() noexcept -> std::span<value_type>
+        requires(!std::same_as<value_type, bool>)
+    {
+        return std::span(this->data(), this->nelem());
+    }
+
+    /**
+     * @brief Typed const view of the data
+     */
+    [[nodiscard]] auto as_span() const noexcept -> const std::span<const value_type>
+        requires(!std::same_as<value_type, bool>)
+    {
+        return std::span(this->data(), this->nelem());
     }
 };
 

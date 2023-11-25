@@ -3,6 +3,7 @@
 #include <pybind11/numpy.h>
 #include <spdlog/spdlog.h>
 
+#include <algorithm>
 #include <span>
 #include <type_traits>
 
@@ -79,6 +80,13 @@ auto transformUnitsByAlliance(const std::vector<Unit> &units) noexcept -> py::di
 }
 
 
+template<typename T, std::output_iterator<T> It>
+[[maybe_unused]] auto expandPlayerRelative(const Image<std::uint8_t> &img, It out) noexcept -> It
+{
+    //
+    return out;
+}
+
 template<typename B>
     requires std::is_arithmetic_v<B>
 struct Caster
@@ -104,16 +112,21 @@ auto createMinimapFeatures(const ReplayDataSoA &data, std::size_t timeIdx, bool 
     const std::size_t nChannels = expandPlayerRel ? 10 : 7;
     py::array_t<T> featureMap(
         { nChannels, static_cast<std::size_t>(data.heightMap._h), static_cast<std::size_t>(data.heightMap._w) });
-    std::span<T> outData(featureMap.mutable_data(), featureMap.size());
+    std::span outData(featureMap.mutable_data(), featureMap.size());
     auto dataPtr = outData.begin();
-    dataPtr =
-        std::transform(data.heightMap.data(), data.heightMap.data() + data.heightMap.nelem(), dataPtr, Caster<T>());
-    const auto &visibility = data.visibility[timeIdx];
-    dataPtr = std::transform(visibility.data(), visibility.data() + visibility.nelem(), dataPtr, Caster<T>());
+    dataPtr = std::ranges::transform(data.heightMap.as_span(), dataPtr, Caster<T>()).out;
+    dataPtr = std::ranges::transform(data.visibility[timeIdx].as_span(), dataPtr, Caster<T>()).out;
     dataPtr = unpackBoolImage<T>(data.creep[timeIdx], dataPtr);
-
+    dataPtr = std::ranges::transform(data.alerts[timeIdx].as_span(), dataPtr, Caster<T>()).out;
+    dataPtr = unpackBoolImage<T>(data.buildable[timeIdx], dataPtr);
+    dataPtr = unpackBoolImage<T>(data.pathable[timeIdx], dataPtr);
+    if (expandPlayerRel) {
+        dataPtr = expandPlayerRelative<T>(data.player_relative[timeIdx], dataPtr);
+    } else {
+        dataPtr = std::ranges::transform(data.player_relative[timeIdx].as_span(), dataPtr, Caster<T>()).out;
+    }
     return featureMap;
-}// namespace cvt
+}
 
 ReplayParser::ReplayParser(const std::filesystem::path &dataFile) noexcept : upgrade_(dataFile) {}
 

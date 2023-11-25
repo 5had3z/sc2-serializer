@@ -84,11 +84,11 @@ class ReplayParser
  * @param out span to write unpacked data into
  * @return vector of value type of bool image
  */
-template<typename T, std::output_iterator<T> I>
+template<typename T, std::output_iterator<T> It>
     requires std::is_arithmetic_v<T>
-[[maybe_unused]] auto unpackBoolImage(const Image<bool> &img, I out) -> I
+[[maybe_unused]] auto unpackBoolImage(const Image<bool> &img, It out) -> It
 {
-    for (std::size_t i = 0; i < img._h * img._w / 8; ++i) {
+    for (std::size_t i = 0; i < img.size(); ++i) {
         const auto bitset = std::bitset<8>(std::to_integer<uint8_t>(img._data[i]));
 #pragma unroll
         for (std::size_t j = 0; j < 8; ++j) { *out++ = static_cast<T>(bitset[j]); }
@@ -106,7 +106,7 @@ template<typename T>
     requires std::is_arithmetic_v<T>
 auto unpackBoolImage(const Image<bool> &img) noexcept -> std::vector<T>
 {
-    std::vector<T> unpacked_data(img._h * img._w, 0);
+    std::vector<T> unpacked_data(img.nelem(), 0);
     unpackBoolImage(img, unpacked_data.begin());
     return unpacked_data;
 }
