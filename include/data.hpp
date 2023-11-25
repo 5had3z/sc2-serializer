@@ -1,6 +1,8 @@
 #pragma once
 
 #include <boost/pfr.hpp>
+
+#include <algorithm>
 #include <cassert>
 #include <cstdint>
 #include <cstring>
@@ -24,37 +26,39 @@ namespace detail {
 
     template<typename T, typename It>
         requires std::is_arithmetic_v<T>
-    void vectorize_helper(T d, It &it, bool onehotEnum)
+    auto vectorize_helper(T d, It it, bool onehotEnum) -> It
     {
-        *it++ = d;
+        *it++ = static_cast<It::container_type::value_type>(d);
+        return it;
     }
 
     template<std::ranges::range T, typename It>
         requires std::is_arithmetic_v<std::ranges::range_value_t<T>>
-    void vectorize_helper(const T &d, It &it, bool onehotEnum)
+    auto vectorize_helper(const T &d, It it, bool onehotEnum) -> It
     {
-        it = std::copy(d.begin(), d.end(), it);
+        return std::ranges::transform(d, it, [](auto e) { return static_cast<It::container_type::value_type>(e); }).out;
     }
 
     template<typename T, typename It>
         requires std::is_enum_v<T>
-    void vectorize_helper(T d, It &it, bool onehotEnum)
+    auto vectorize_helper(T d, It it, bool onehotEnum) -> It
     {
         using value_type = It::container_type::value_type;
         if (onehotEnum) {
-            const auto onehot = enumToOneHot<value_type>(d);
-            it = std::copy(onehot.begin(), onehot.end(), it);
+            it = std::ranges::copy(enumToOneHot<value_type>(d), it).out;
         } else {
             *it++ = static_cast<value_type>(d);
         }
+        return it;
     }
 
     template<typename T, typename It>
         requires std::is_aggregate_v<T> && (!std::ranges::range<T>)
-    void vectorize_helper(T d, It &it, bool onehotEnum)
+    auto vectorize_helper(T d, It it, bool onehotEnum) -> It
     {
         boost::pfr::for_each_field(
-            d, [&it, onehotEnum](const auto &field) { detail::vectorize_helper(field, it, onehotEnum); });
+            d, [&it, onehotEnum](const auto &field) { it = detail::vectorize_helper(field, it, onehotEnum); });
+        return it;
     }
 
 
@@ -72,13 +76,13 @@ namespace detail {
 // TODO: Add helper fn to check the vectorization size and another "vectorize" variant that pushes into preallocated
 // vector
 template<typename T, typename S>
-    requires std::is_aggregate_v<S>
+    requires std::is_aggregate_v<S> && std::is_arithmetic_v<T>
 auto vectorize(S s, bool onehotEnum = false) -> std::vector<T>
 {
     std::vector<T> out;
     auto it = std::back_inserter(out);
     boost::pfr::for_each_field(
-        s, [&it, onehotEnum](const auto &field) { detail::vectorize_helper(field, it, onehotEnum); });
+        s, [&it, onehotEnum](const auto &field) { it = detail::vectorize_helper(field, it, onehotEnum); });
     return out;
 }
 
