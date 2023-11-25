@@ -12,7 +12,7 @@ namespace cvt {
 // Converts vector of units to a {n_unit, feature} array
 template<typename T, typename UnitT>
     requires std::is_arithmetic_v<T>
-auto transformUnits(const std::vector<UnitT> &units) noexcept -> py::array_t<T>
+[[nodiscard]] auto transformUnits(const std::vector<UnitT> &units) noexcept -> py::array_t<T>
 {
     // Return empty array if no units
     if (units.empty()) { return py::array_t<T>(); }
@@ -38,7 +38,7 @@ auto transformUnits(const std::vector<UnitT> &units) noexcept -> py::array_t<T>
 // Do unit transformation but group them by alliance (self, ally, enemy, neutral)
 template<typename T>
     requires std::is_arithmetic_v<T>
-auto transformUnitsByAlliance(const std::vector<Unit> &units) noexcept -> py::dict
+[[nodiscard]] auto transformUnitsByAlliance(const std::vector<Unit> &units) noexcept -> py::dict
 {
     const static std::unordered_map<cvt::Alliance, std::string> enum2str = {
         { cvt::Alliance::Ally, "ally" },
@@ -50,7 +50,7 @@ auto transformUnitsByAlliance(const std::vector<Unit> &units) noexcept -> py::di
     // Return dict of empty arrays if no units
     if (units.empty()) {
         py::dict pyDict;
-        for (auto &&[ignore, name] : enum2str) { pyDict[py::cast(name)] = py::array_t<T>(); }
+        for (auto &&name : enum2str | std::views::values) { pyDict[py::cast(name)] = py::array_t<T>(); }
         return pyDict;
     }
 
@@ -83,8 +83,19 @@ auto transformUnitsByAlliance(const std::vector<Unit> &units) noexcept -> py::di
 template<typename T, std::output_iterator<T> It>
 [[maybe_unused]] auto expandPlayerRelative(const Image<std::uint8_t> &img, It out) noexcept -> It
 {
-    //
-    return out;
+    // First zero out image data
+    constexpr std::size_t nAlliance = 4;
+    std::ranges::fill(std::ranges::subrange(out, out + img.nelem() * nAlliance), 0);
+    const auto imgData = img.as_span();
+    for (std::size_t idx = 0; idx < img.nelem(); ++idx) {
+        assert(imgData[idx] < nAlliance && "Got invalid player relative > 4");
+        if (imgData[idx] > 0) {
+            std::size_t chOffset = imgData[idx] - 1;
+            auto outPtr = std::next(out, idx + chOffset * img.nelem());
+            *outPtr = 1;
+        }
+    }
+    return std::next(out, img.nelem() * nAlliance);
 }
 
 template<typename B>
