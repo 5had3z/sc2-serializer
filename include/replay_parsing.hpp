@@ -28,10 +28,11 @@ class UpgradeTiming
     // Get the state of research at timeIdx, (0 false, 1 true)
     template<typename T>
         requires std::is_arithmetic_v<T>
-    [[nodiscard]] auto getState(std::size_t timeIdx) const -> std::vector<T>
+    [[nodiscard]] auto getState(std::size_t timeIdx) const -> py::array_t<T>
     {
-        std::vector<T> state(upgradeTimes_.size());
-        std::ranges::transform(upgradeTimes_, state.begin(), [=](int32_t time) { return timeIdx > time ? 1 : 0; });
+        py::array_t<T> state({ upgradeTimes_.size() });
+        std::ranges::transform(
+            upgradeTimes_, state.mutable_data(), [=](int32_t time) { return static_cast<T>(timeIdx > time ? 1 : 0); });
         return state;
     }
 

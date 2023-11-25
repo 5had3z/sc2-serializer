@@ -15,6 +15,13 @@ template<typename T> void bindImage(py::module &m, const std::string &name)
 {
     py::class_<cvt::Image<T>>(m, name.c_str(), py::buffer_protocol())
         .def(py::init<int, int>())
+        .def_property_readonly("shape", [](const cvt::Image<T> &img) { return py::make_tuple(img._h, img._w); })
+        .def_property_readonly("data",
+            [](const cvt::Image<T> &img) {
+                py::array_t<T> out({ img._h, img._w });
+                std::ranges::copy(img.as_span(), out.mutable_data());
+                return out;
+            })
         .def_buffer([](cvt::Image<T> &img) -> py::buffer_info {
             return py::buffer_info(img.data(),
                 sizeof(T),
@@ -25,10 +32,14 @@ template<typename T> void bindImage(py::module &m, const std::string &name)
         });
 }
 
-void bindBoolImage(py::module &m, const std::string &name)
+// Specialization for bool image which doesn't have native buffer support
+template<typename T>
+    requires std::is_same_v<T, bool>
+void bindImage(py::module &m, const std::string &name)
 {
     py::class_<cvt::Image<bool>>(m, name.c_str())
         .def(py::init<int, int>())
+        .def_property_readonly("shape", [](const cvt::Image<T> &img) { return py::make_tuple(img._h, img._w); })
         .def_property_readonly("data", [](const cvt::Image<bool> &img) {
             py::array_t<std::uint8_t> out({ img._h, img._w });
             unpackBoolImage<std::uint8_t>(img, out.mutable_data());
@@ -89,7 +100,7 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
     bindEnums(m);
 
     bindImage<std::uint8_t>(m, "Image_uint8");
-    bindBoolImage(m, "Image_bool");
+    bindImage<bool>(m, "Image_bool");
 
     py::class_<cvt::Action::Target>(m, "ActionTarget")
         .def(py::init<>())
@@ -229,6 +240,7 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
     // Expose ReplayDatabase class
     py::class_<cvt::ReplayDatabase>(m, "ReplayDatabase")
         .def(py::init<const std::filesystem::path &>())
+        .def(py::init<>())
         .def("open", &cvt::ReplayDatabase::open)
         .def("isFull", &cvt::ReplayDatabase::isFull)
         .def("size", &cvt::ReplayDatabase::size)
