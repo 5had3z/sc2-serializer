@@ -52,7 +52,10 @@ def add_resource_mapping(content: str):
 def add_research_grouping(content: str):
     """Add set to group research by race"""
     content += "\n// Research for Each Race by Game Version\n"
-    content += "const static std::unordered_map<std::string, std::unordered_map<Race, std::set<int>>> raceResearch = {\n"
+    content += (
+        "const static std::unordered_map<std::string, "
+        "std::unordered_map<Race, std::set<int>>> raceResearch = {\n"
+    )
     for version, data in upgrade_map.UPGRADE_INFO.items():
         content += f'    {{"{version}",\n        {{\n'
         for race in ["protoss", "terran", "zerg"]:
@@ -67,7 +70,10 @@ def add_research_grouping(content: str):
 def add_research_remapping(content: str):
     """Add reserarch action remapping from non-leveled to leveled action"""
     content += "\n// Remap non-leveled research action to leveled research action\n"
-    content += "const static std::unordered_map<std::string, std::unordered_map<Race, std::unordered_map<int, std::array<int, 3>>>> raceResearchReID = {\n"
+    content += (
+        "const static std::unordered_map<std::string, std::unordered_map<Race, "
+        "std::unordered_map<int, std::array<int, 3>>>> raceResearchReID = {\n"
+    )
     for version, data in upgrade_map.UPGRADE_INFO.items():
         content += f'    {{"{version}",\n        {{\n'
         for race in ["protoss", "terran", "zerg"]:

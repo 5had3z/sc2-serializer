@@ -172,7 +172,7 @@ struct Image
     }
 
     /**
-     * @brief Typed modifyable view of the data, unavailable if value_type is bool
+     * @brief Typed modifiable view of the data, unavailable if value_type is bool
      */
     [[nodiscard]] auto as_span() noexcept -> std::span<value_type>
         requires(!std::same_as<value_type, bool>)
