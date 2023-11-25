@@ -165,13 +165,18 @@ auto ReplayParser::sample(std::size_t timeIdx, bool unit_alliance) const noexcep
         result["units"] = transformUnits<feature_t>(replayData_.units[timeIdx]);
     }
     result["neutral_units"] = transformUnits<feature_t>(replayData_.neutralUnits[timeIdx]);
-
-    py::list actions;
+    py::list actions;// Need to copy to native python list
     std::ranges::for_each(replayData_.actions[timeIdx], [&](const Action &a) { actions.append(a); });
     result["actions"] = actions;
-
     result["score"] = replayData_.score[timeIdx];
     result["minimap_features"] = createMinimapFeatures<feature_t>(replayData_, timeIdx);
+    // Scalar data
+    result["minerals"] = replayData_.minearals[timeIdx];
+    result["vespere"] = replayData_.vespere[timeIdx];
+    result["popMax"] = replayData_.popMax[timeIdx];
+    result["popArmy"] = replayData_.popArmy[timeIdx];
+    result["popWorkers"] = replayData_.popWorkers[timeIdx];
+    result["gameStep"] = replayData_.gameStep[timeIdx];
     return result;
 }
 

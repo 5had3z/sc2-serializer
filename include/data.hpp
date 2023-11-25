@@ -162,15 +162,17 @@ struct Image
     // Uninitialized/empty buffer
     [[nodiscard]] auto empty() const noexcept -> bool { return _data.empty(); }
 
-    // Raw pointer to the data with the correct type
+    // Typed pointer to the data
     [[nodiscard]] auto data() noexcept -> ptr_type { return reinterpret_cast<ptr_type>(_data.data()); }
+
+    // Const Typed pointer to the data
     [[nodiscard]] auto data() const noexcept -> const_ptr_type
     {
         return reinterpret_cast<const_ptr_type>(_data.data());
     }
 
     /**
-     * @brief Typed modifyable view of the data
+     * @brief Typed modifyable view of the data, unavailable if value_type is bool
      */
     [[nodiscard]] auto as_span() noexcept -> std::span<value_type>
         requires(!std::same_as<value_type, bool>)
@@ -179,7 +181,7 @@ struct Image
     }
 
     /**
-     * @brief Typed const view of the data
+     * @brief Typed const view of the data, unavailable if value_type is bool
      */
     [[nodiscard]] auto as_span() const noexcept -> const std::span<const value_type>
         requires(!std::same_as<value_type, bool>)
