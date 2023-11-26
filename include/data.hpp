@@ -74,16 +74,22 @@ namespace detail {
 
 }// namespace detail
 
-// TODO: Add helper fn to check the vectorization size and another "vectorize" variant that pushes into preallocated
-// vector
+template<typename S, typename It>
+    requires std::is_aggregate_v<S> && std::is_arithmetic_v<typename It::container_type::value_type>
+[[maybe_unused]] auto vectorize(S s, It it, bool onehotEnum = false) -> It
+{
+    boost::pfr::for_each_field(
+        s, [&it, onehotEnum](const auto &field) { it = detail::vectorize_helper(field, it, onehotEnum); });
+    return it;
+}
+
+// TODO: Add helper fn to check the vectorization size
 template<typename T, typename S>
     requires std::is_aggregate_v<S> && std::is_arithmetic_v<T>
 auto vectorize(S s, bool onehotEnum = false) -> std::vector<T>
 {
     std::vector<T> out;
-    auto it = std::back_inserter(out);
-    boost::pfr::for_each_field(
-        s, [&it, onehotEnum](const auto &field) { it = detail::vectorize_helper(field, it, onehotEnum); });
+    vectorize(s, std::back_inserter(out), onehotEnum);
     return out;
 }
 

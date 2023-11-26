@@ -139,6 +139,32 @@ auto createMinimapFeatures(const ReplayDataSoA &data, std::size_t timeIdx, bool 
     return featureMap;
 }
 
+
+/**
+ * @brief Convert game state of scalars into a feature vector.
+ *        TODO Have a dictionary of lambda functions that can normalize each of these features.
+ *        This could also be a convenient way to turn features on and off (i.e. lambda returns zero)
+ * @tparam T feature vector arithmetic type
+ * @param data replay data
+ * @param timeIdx time index to sample from replay
+ * @return Feature vector of data
+ */
+template<typename T>
+    requires std::is_arithmetic_v<T>
+auto createScalarFeatures(const ReplayDataSoA &data, std::size_t timeIdx) -> py::array_t<T>
+{
+    auto feats = vectorize<T>(data.score[timeIdx]);
+    feats.emplace_back(data.minearals[timeIdx]);
+    feats.emplace_back(data.vespere[timeIdx]);
+    feats.emplace_back(data.popMax[timeIdx]);
+    feats.emplace_back(data.popArmy[timeIdx]);
+    feats.emplace_back(data.popWorkers[timeIdx]);
+    feats.emplace_back(data.gameStep[timeIdx]);
+    py::array_t<T> array({ static_cast<py::ssize_t>(feats.size()) });
+    std::ranges::copy(feats, array.mutable_data());
+    return array;
+}
+
 ReplayParser::ReplayParser(const std::filesystem::path &dataFile) noexcept : upgrade_(dataFile) {}
 
 void ReplayParser::parseReplay(ReplayDataSoA replayData)
@@ -158,25 +184,27 @@ auto ReplayParser::sample(std::size_t timeIdx, bool unit_alliance) const noexcep
 {
     using feature_t = float;
     py::dict result;
-    result["upgrades"] = upgrade_.getState<feature_t>(timeIdx);
+
+    // Get one-hot active upgrade/research state
+    result["upgrade_state"] = upgrade_.getState<feature_t>(timeIdx);
+
+    // Process Units into feature vectors, maybe in inner dictionary separated by alliance
     if (unit_alliance) {
         result["units"] = transformUnitsByAlliance<feature_t>(replayData_.units[timeIdx]);
     } else {
         result["units"] = transformUnits<feature_t>(replayData_.units[timeIdx]);
     }
     result["neutral_units"] = transformUnits<feature_t>(replayData_.neutralUnits[timeIdx]);
-    py::list actions;// Need to copy to native python list
+
+    // Create python list of actions, but keep in native struct rather than feature vector
+    py::list actions;
     std::ranges::for_each(replayData_.actions[timeIdx], [&](const Action &a) { actions.append(a); });
     result["actions"] = actions;
-    result["score"] = replayData_.score[timeIdx];
+
+    // Create feature image or minimap and feature vector of game state scalars (score, vespere, pop army etc.)
     result["minimap_features"] = createMinimapFeatures<feature_t>(replayData_, timeIdx);
-    // Scalar data
-    result["minerals"] = replayData_.minearals[timeIdx];
-    result["vespere"] = replayData_.vespere[timeIdx];
-    result["popMax"] = replayData_.popMax[timeIdx];
-    result["popArmy"] = replayData_.popArmy[timeIdx];
-    result["popWorkers"] = replayData_.popWorkers[timeIdx];
-    result["gameStep"] = replayData_.gameStep[timeIdx];
+    result["scalar_features"] = createScalarFeatures<feature_t>(replayData_, timeIdx);
+
     return result;
 }
 
