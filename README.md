@@ -7,6 +7,8 @@ Alternative to generating the "100's of TB" format from alphastar unplugged.
 
  - The SC2 API Zeros out the mineral and vesper resources if they are in the fog-of-war. Instead we default them to the correct value and keep track of their last observed value. We still include the visibility so it is trivial to revert back to zero'd out observations.
 
+ - Strongly recommended to use [zlib-ng](https://github.com/zlib-ng/zlib-ng) with their LD_PRELOAD instructions.
+
 ## Building C++ Observer and Tests
 
 This requires >=gcc-13 since some c++23 features are used.
