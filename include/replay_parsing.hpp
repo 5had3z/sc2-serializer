@@ -30,7 +30,7 @@ class UpgradeTiming
         requires std::is_arithmetic_v<T>
     [[nodiscard]] auto getState(std::size_t timeIdx) const -> py::array_t<T>
     {
-        py::array_t<T> state({ upgradeTimes_.size() });
+        py::array_t<T> state({ static_cast<py::ssize_t>(upgradeTimes_.size()) });
         std::ranges::transform(
             upgradeTimes_, state.mutable_data(), [=](int32_t time) { return static_cast<T>(timeIdx > time ? 1 : 0); });
         return state;

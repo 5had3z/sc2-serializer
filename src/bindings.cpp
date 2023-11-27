@@ -102,26 +102,6 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
     bindImage<std::uint8_t>(m, "Image_uint8");
     bindImage<bool>(m, "Image_bool");
 
-    py::class_<cvt::Action::Target>(m, "ActionTarget")
-        .def(py::init<>())
-        .def_readwrite("point", &cvt::Action::Target::point)
-        .def_readwrite("other", &cvt::Action::Target::other);
-
-    py::class_<cvt::Action>(m, "Action")
-        .def(py::init<>())
-        .def_readwrite("unit_ids", &cvt::Action::unit_ids)
-        .def_readwrite("ability_id", &cvt::Action::ability_id)
-        .def_readwrite("target_type", &cvt::Action::target_type)
-        .def_property_readonly("target_point",
-            [](const cvt::Action &action) -> std::optional<cvt::Point2d> {
-                return action.target_type == cvt::Action::Target_Type::Position ? std::optional{ action.target.point }
-                                                                                : std::nullopt;
-            })
-        .def_property_readonly("target_other", [](const cvt::Action &action) -> std::optional<cvt::UID> {
-            return action.target_type == cvt::Action::Target_Type::OtherUnit ? std::optional{ action.target.other }
-                                                                             : std::nullopt;
-        });
-
     py::class_<cvt::Point3f>(m, "Point3f", py::buffer_protocol())
         .def(py::init<>())
         .def_readwrite("x", &cvt::Point3f::x)
@@ -147,6 +127,21 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
                 1,
                 { 2 },
                 { sizeof(int) });
+        });
+
+    py::class_<cvt::Action>(m, "Action")
+        .def(py::init<>())
+        .def_readonly("unit_ids", &cvt::Action::unit_ids)
+        .def_readonly("ability_id", &cvt::Action::ability_id)
+        .def_readonly("target_type", &cvt::Action::target_type)
+        .def_property_readonly("target_point",
+            [](const cvt::Action &action) -> std::optional<cvt::Point2d> {
+                return action.target_type == cvt::Action::Target_Type::Position ? std::optional{ action.target.point }
+                                                                                : std::nullopt;
+            })
+        .def_property_readonly("target_other", [](const cvt::Action &action) -> std::optional<cvt::UID> {
+            return action.target_type == cvt::Action::Target_Type::OtherUnit ? std::optional{ action.target.other }
+                                                                             : std::nullopt;
         });
 
     py::class_<cvt::Score>(m, "Score")

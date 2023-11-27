@@ -1,5 +1,12 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel", "ninja", "cmake>=3.25"]
+requires = [
+    "setuptools>=61.0",
+    "wheel",
+    "ninja",
+    "cmake>=3.25",
+    "pybind11-stubgen @ git+https://github.com/5had3z/pybind11-stubgen.git",
+    "black",
+]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
