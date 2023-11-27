@@ -70,5 +70,4 @@ if __name__ == "__main__":
         ext_modules=[CMakeExtension("sc2_replay_reader._sc2_replay_reader")],
         cmdclass={"build_ext": CMakeBuild},
         zip_safe=False,
-        package_data={"_sc2_replay_reader": ["*.pyi"]},
     )
