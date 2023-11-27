@@ -164,6 +164,8 @@ auto ReplayDatabase::getHashId(std::size_t index) const -> std::pair<std::string
 
 auto ReplayDatabase::getEntry(std::size_t index) const -> ReplayDataSoA
 {
+    // using clock = std::chrono::high_resolution_clock;
+    // const auto start = clock::now();
     // Check if valid index
     if (index >= entryPtr_.size()) {
         throw std::out_of_range(fmt::format("Index {} exceeds database size {}", index, entryPtr_.size()));
@@ -181,6 +183,9 @@ auto ReplayDatabase::getEntry(std::size_t index) const -> ReplayDataSoA
     ReplayDataSoA data;
     deserialize(data, filterStream);
     filterStream.reset();
+    // fmt::print("Time Taken to Load: {}ms, Replay Size: {}\n",
+    //     std::chrono::duration_cast<std::chrono::milliseconds>(clock::now() - start).count(),
+    //     data.gameStep.size());
     return data;
 }
 
