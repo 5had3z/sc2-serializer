@@ -99,6 +99,12 @@ void bindEnums(py::module &m)
         .value("critical", spdlog::level::level_enum::critical)
         .value("off", spdlog::level::level_enum::off)
         .export_values();
+
+    py::enum_<cvt::AddOn>(m, "AddOn")
+        .value("NONE", cvt::AddOn::None)
+        .value("Reactor", cvt::AddOn::Reactor)
+        .value("TechLab", cvt::AddOn::TechLab)
+        .export_values();
 }
 
 PYBIND11_MODULE(_sc2_replay_reader, m)
@@ -151,6 +157,12 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
             return action.target_type == cvt::Action::Target_Type::OtherUnit ? std::optional{ action.target.other }
                                                                              : std::nullopt;
         });
+
+    py::class_<cvt::UnitOrder>(m, "UnitOrder")
+        .def_readwrite("ability_id", &cvt::UnitOrder::ability_id)
+        .def_readwrite("tgtId", &cvt::UnitOrder::tgtId)
+        .def_readwrite("target_pos", &cvt::UnitOrder::target_pos)
+        .def_readwrite("progress", &cvt::UnitOrder::progress);
 
     py::class_<cvt::Score>(m, "Score")
         .def(py::init<>())
@@ -240,16 +252,6 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
             py::kw_only(),
             py::arg("onehot_enum") = false);
 
-    // Expose ReplayDatabase class
-    py::class_<cvt::ReplayDatabase>(m, "ReplayDatabase")
-        .def(py::init<>())
-        .def(py::init<const std::filesystem::path &>(), py::arg("dbPath"))
-        .def("open", &cvt::ReplayDatabase::open, py::arg("dbPath"))
-        .def("isFull", &cvt::ReplayDatabase::isFull)
-        .def("size", &cvt::ReplayDatabase::size)
-        .def("getEntry", &cvt::ReplayDatabase::getEntry, py::arg("index"));
-
-
     // Expose ReplayDataSoA structure
     py::class_<cvt::ReplayDataSoA>(m, "ReplayDataSoA")
         .def_readwrite("heightMap", &cvt::ReplayDataSoA::heightMap)
@@ -278,6 +280,15 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readwrite("actions", &cvt::ReplayDataSoA::actions)
         .def_readwrite("units", &cvt::ReplayDataSoA::units)
         .def_readwrite("neutralUnits", &cvt::ReplayDataSoA::neutralUnits);
+
+    // Expose ReplayDatabase class
+    py::class_<cvt::ReplayDatabase>(m, "ReplayDatabase")
+        .def(py::init<>())
+        .def(py::init<const std::filesystem::path &>(), py::arg("dbPath"))
+        .def("open", &cvt::ReplayDatabase::open, py::arg("dbPath"))
+        .def("isFull", &cvt::ReplayDatabase::isFull)
+        .def("size", &cvt::ReplayDatabase::size)
+        .def("getEntry", &cvt::ReplayDatabase::getEntry, py::arg("index"));
 
     py::class_<cvt::ReplayParser>(m, "ReplayParser")
         .def(py::init<const std::filesystem::path &>(), py::arg("dataPath"))
