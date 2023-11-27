@@ -36,5 +36,8 @@ jobs:
       - name: Build and run tests
         run: cmake --build build --parallel --config Release && ./build/test_database && ./build/test_readwrite
 
+      - name: Ensure pybind11-stubgen installed
+        run: pip install git+https://github.com/5had3z/pybind11-stubgen.git
+
       - name: Run python building
         run: pip install .
