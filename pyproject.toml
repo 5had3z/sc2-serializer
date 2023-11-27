@@ -34,3 +34,7 @@ classifiers = [
 
 [project.urls]
 "Homepage" = "https://github.com/5had3z/sc2-serializer"
+
+[tool.ruff]
+ignore = ['E741']
+line-length = 100
