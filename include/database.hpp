@@ -1,10 +1,19 @@
 #pragma once
 
 #include "data.hpp"
+
+#include <spdlog/common.h>
+
 #include <filesystem>
 #include <unordered_set>
 
 namespace cvt {
+
+/**
+ * @brief Set the Logging Level of the Database Engine
+ * @param lvl Level to set
+ */
+void setReplayDBLoggingLevel(spdlog::level::level_enum lvl) noexcept;
 
 class ReplayDatabase
 {
@@ -29,6 +38,10 @@ class ReplayDatabase
     // Load existing or create new based on existence
     [[maybe_unused]] auto open(std::filesystem::path dbPath) noexcept -> bool;
 
+    /**
+     * @brief Get the number of entries in the database
+     * @return Number of entries in the database
+     */
     [[nodiscard]] auto size() const noexcept -> std::size_t;
 
     // Get hashes present in the db

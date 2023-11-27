@@ -14,7 +14,6 @@ namespace py = pybind11;
 template<typename T> void bindImage(py::module &m, const std::string &name)
 {
     py::class_<cvt::Image<T>>(m, name.c_str(), py::buffer_protocol())
-        .def(py::init<int, int>())
         .def_property_readonly("shape", [](const cvt::Image<T> &img) { return py::make_tuple(img._h, img._w); })
         .def_property_readonly("data",
             [](const cvt::Image<T> &img) {
@@ -38,7 +37,6 @@ template<typename T>
 void bindImage(py::module &m, const std::string &name)
 {
     py::class_<cvt::Image<bool>>(m, name.c_str())
-        .def(py::init<int, int>())
         .def_property_readonly("shape", [](const cvt::Image<T> &img) { return py::make_tuple(img._h, img._w); })
         .def_property_readonly("data", [](const cvt::Image<bool> &img) {
             py::array_t<std::uint8_t> out({ img._h, img._w });
@@ -90,6 +88,16 @@ void bindEnums(py::module &m)
         .value("Visible", cvt::Visibility::Visible)
         .value("Snapshot", cvt::Visibility::Snapshot)
         .value("Hidden", cvt::Visibility::Hidden)
+        .export_values();
+
+    py::enum_<spdlog::level::level_enum>(m, "spdlog_lvl")
+        .value("trace", spdlog::level::level_enum::trace)
+        .value("debug", spdlog::level::level_enum::debug)
+        .value("info", spdlog::level::level_enum::info)
+        .value("warn", spdlog::level::level_enum::warn)
+        .value("err", spdlog::level::level_enum::err)
+        .value("critical", spdlog::level::level_enum::critical)
+        .value("off", spdlog::level::level_enum::off)
         .export_values();
 }
 
@@ -234,12 +242,12 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
 
     // Expose ReplayDatabase class
     py::class_<cvt::ReplayDatabase>(m, "ReplayDatabase")
-        .def(py::init<const std::filesystem::path &>())
         .def(py::init<>())
-        .def("open", &cvt::ReplayDatabase::open)
+        .def(py::init<const std::filesystem::path &>(), py::arg("dbPath"))
+        .def("open", &cvt::ReplayDatabase::open, py::arg("dbPath"))
         .def("isFull", &cvt::ReplayDatabase::isFull)
         .def("size", &cvt::ReplayDatabase::size)
-        .def("getEntry", &cvt::ReplayDatabase::getEntry);
+        .def("getEntry", &cvt::ReplayDatabase::getEntry, py::arg("index"));
 
 
     // Expose ReplayDataSoA structure
@@ -272,12 +280,14 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readwrite("neutralUnits", &cvt::ReplayDataSoA::neutralUnits);
 
     py::class_<cvt::ReplayParser>(m, "ReplayParser")
-        .def(py::init<const std::filesystem::path &>())
+        .def(py::init<const std::filesystem::path &>(), py::arg("dataPath"))
         .def("sample", &cvt::ReplayParser::sample, py::arg("timeIdx"), py::arg("unit_alliance") = false)
-        .def("parse_replay", &cvt::ReplayParser::parseReplay)
+        .def("parse_replay", &cvt::ReplayParser::parseReplay, py::arg("replayData"))
         .def("size", &cvt::ReplayParser::size)
         .def("empty", &cvt::ReplayParser::empty)
         .def_property_readonly("data", &cvt::ReplayParser::data, py::return_value_policy::reference_internal);
+
+    m.def("setReplayDBLoggingLevel", &cvt::setReplayDBLoggingLevel, py::arg("lvl"));
 
     m.attr("__version__") = "0.0.1";
 }

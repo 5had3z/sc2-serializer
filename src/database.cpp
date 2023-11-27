@@ -10,6 +10,9 @@
 namespace fs = std::filesystem;
 namespace bio = boost::iostreams;
 
+static spdlog::logger gLogger("ReplayDatabase");
+
+
 namespace cvt {
 
 ReplayDatabase::ReplayDatabase(const std::filesystem::path &dbPath) noexcept { this->open(dbPath); }
@@ -17,7 +20,7 @@ ReplayDatabase::ReplayDatabase(const std::filesystem::path &dbPath) noexcept { t
 auto ReplayDatabase::open(std::filesystem::path dbPath) noexcept -> bool
 {
     if (dbPath.string().empty()) {
-        SPDLOG_ERROR("Path to database not set");
+        SPDLOG_LOGGER_ERROR(&gLogger, "Path to database not set");
         return false;
     }
 
@@ -26,16 +29,16 @@ auto ReplayDatabase::open(std::filesystem::path dbPath) noexcept -> bool
     if (fs::exists(dbPath_)) {
         ok = this->load();
         if (ok) {
-            SPDLOG_INFO("Loaded Existing Database {}", dbPath_.string());
+            SPDLOG_LOGGER_INFO(&gLogger, "Loaded Existing Database {}", dbPath_.string());
         } else {
-            SPDLOG_ERROR("Failed to Load Existing Database {}", dbPath_.string());
+            SPDLOG_LOGGER_ERROR(&gLogger, "Failed to Load Existing Database {}", dbPath_.string());
         }
     } else {
         ok = this->create();
         if (ok) {
-            SPDLOG_INFO("Created New Database: {}", dbPath_.string());
+            SPDLOG_LOGGER_INFO(&gLogger, "Created New Database: {}", dbPath_.string());
         } else {
-            SPDLOG_ERROR("Failed to Create New Database: {}", dbPath_.string());
+            SPDLOG_LOGGER_ERROR(&gLogger, "Failed to Create New Database: {}", dbPath_.string());
         }
     }
     return ok;
@@ -72,15 +75,11 @@ auto ReplayDatabase::size() const noexcept -> std::size_t { return entryPtr_.siz
 auto ReplayDatabase::getHashes() const noexcept -> std::unordered_set<std::string>
 {
     std::unordered_set<std::string> replayHashes{};
-
     std::ifstream dbStream(dbPath_, std::ios::binary);
-
     for (auto &&entry : entryPtr_) {
-
         auto [hash, id] = getHashIdEntry(dbStream, entry);
         replayHashes.insert(hash + std::to_string(id));
     }
-
     return replayHashes;
 }
 
@@ -88,11 +87,11 @@ bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
 {
     // First ensure that the db is not at the maximum 1M entries
     if (!fs::exists(dbPath_)) {
-        SPDLOG_ERROR("Database \"{}\" doesn't exist", dbPath_.string());
+        SPDLOG_LOGGER_ERROR(&gLogger, "Database \"{}\" doesn't exist", dbPath_.string());
         return false;
     }
     if (this->isFull()) {
-        SPDLOG_ERROR("Database \"{}\" is full", dbPath_.string());
+        SPDLOG_LOGGER_ERROR(&gLogger, "Database \"{}\" is full", dbPath_.string());
         return false;
     }
 
@@ -107,7 +106,7 @@ bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
         filterStream.push(dbStream);
         serialize(data, filterStream);
         if (filterStream.bad()) {
-            SPDLOG_ERROR("Error Serializing Replay Data");
+            SPDLOG_LOGGER_ERROR(&gLogger, "Error Serializing Replay Data");
             return false;
         }
         filterStream.flush();
@@ -122,11 +121,11 @@ bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
     dbStream.seekp((nEntries - 1) * sizeof(std::streampos) + sizeof(std::size_t), std::ios::beg);
     dbStream.write(reinterpret_cast<const char *>(&entryPtr_.back()), sizeof(std::streampos));
     if (dbStream.bad()) {
-        SPDLOG_ERROR("Error Writing Db Offset Entry");
+        SPDLOG_LOGGER_ERROR(&gLogger, "Error Writing Db Offset Entry");
         return false;
     }
 
-    SPDLOG_INFO("Saved Replay: {}, PlayerID: {}", data.replayHash, data.playerId);
+    SPDLOG_LOGGER_INFO(&gLogger, "Saved Replay: {}, PlayerID: {}", data.replayHash, data.playerId);
 
     return true;
 }
@@ -183,5 +182,7 @@ auto ReplayDatabase::getEntry(std::size_t index) const -> ReplayDataSoA
     filterStream.reset();
     return data;
 }
+
+void setReplayDBLoggingLevel(spdlog::level::level_enum lvl) noexcept { gLogger.set_level(lvl); }
 
 }// namespace cvt
