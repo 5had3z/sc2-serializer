@@ -37,7 +37,7 @@ jobs:
         run: cmake --build build --parallel --config Release && ./build/test_database && ./build/test_readwrite
 
       - name: Ensure pybind11-stubgen installed
-        run: pip install git+https://github.com/5had3z/pybind11-stubgen.git
+        run: pip install git+https://github.com/5had3z/pybind11-stubgen.git black
 
       - name: Run python building
         run: pip install .
