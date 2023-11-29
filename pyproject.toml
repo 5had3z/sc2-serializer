@@ -12,6 +12,9 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+sc2_replay_reader = ["*.yaml"]
+
 [project]
 name = "sc2_replay_reader"
 authors = [
