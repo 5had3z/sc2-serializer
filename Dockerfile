@@ -28,8 +28,7 @@ RUN apt-get update && \
 
 COPY --from=builder /app/build/sc2_converter /sc2_converter
 COPY --from=builder /app/build/sc2_merger /sc2_merger
-# COPY --from=builder /app/build/game_exp /game_exp
 
 
-ENTRYPOINT [ "/app" ]
+ENTRYPOINT [ "/app/sc2_converter" ]
 CMD [ "-h" ]

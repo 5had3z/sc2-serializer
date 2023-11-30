@@ -238,10 +238,10 @@ void BaseConverter::copyHeightMapData() noexcept
     UnitOrder dst;
     static_assert(std::is_same_v<std::underlying_type_t<sc2::ABILITY_ID>, int>);
     dst.ability_id = static_cast<int>(src->ability_id);
+    dst.progress = src->progress;
     dst.tgtId = src->target_unit_tag;
     dst.target_pos.x = src->target_pos.x;
     dst.target_pos.y = src->target_pos.y;
-    dst.progress = src->progress;
     return dst;
 }
 
@@ -250,7 +250,7 @@ void BaseConverter::copyHeightMapData() noexcept
     if (src->score_type != sc2::ScoreType::Melee) {
         throw std::runtime_error(fmt::format("Score type is not melee, got {}", static_cast<int>(src->score_type)));
     };
-    Score dst;
+    Score dst{};
 
     dst.score_float = src->score;
     dst.idle_production_time = src->score_details.idle_production_time;
@@ -286,7 +286,7 @@ void BaseConverter::copyHeightMapData() noexcept
 [[nodiscard]] auto convertSC2Unit(const sc2::Unit *src, const sc2::Units &units, const bool isPassenger) noexcept
     -> Unit
 {
-    Unit dst;
+    Unit dst{};
     dst.id = src->tag;
     dst.unitType = src->unit_type;
     dst.observation = static_cast<Visibility>(src->display_type);
@@ -332,7 +332,7 @@ void BaseConverter::copyHeightMapData() noexcept
 
 [[nodiscard]] auto convertSC2NeutralUnit(const sc2::Unit *src) noexcept -> NeutralUnit
 {
-    NeutralUnit dst;
+    NeutralUnit dst{};
     dst.id = src->tag;
     dst.unitType = src->unit_type;
     dst.observation = static_cast<Visibility>(src->display_type);
