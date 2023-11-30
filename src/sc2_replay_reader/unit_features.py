@@ -5,6 +5,7 @@ import sc2_replay_reader as sc2
 _VisSize = len(sc2.Visibility.__entries)
 _AliSize = len(sc2.Alliance.__entries)
 _ClkSize = len(sc2.CloakState.__entries)
+_AddonSize = len(sc2.AddOn.__entries)
 
 
 class Unit(IntEnum):
@@ -15,6 +16,7 @@ class Unit(IntEnum):
     observation = auto()
     alliance = auto()
     cloak_state = auto()
+    add_on_tag = auto()
     unitType = auto()
     health = auto()
     health_max = auto()
@@ -22,17 +24,19 @@ class Unit(IntEnum):
     shield_max = auto()
     energy = auto()
     energy_max = auto()
-    cargo = auto()
-    cargo_max = auto()
-    assigned_harvesters = auto()
-    ideal_harvesters = auto()
     weapon_cooldown = auto()
+    buff0 = auto()
+    buff1 = auto()
     x = auto()
     y = auto()
     z = auto()
     t = auto()
     r = auto()
     build_prog = auto()
+    cargo = auto()
+    cargo_max = auto()
+    assigned_harvesters = auto()
+    ideal_harvesters = auto()
     is_blip = auto()
     is_flying = auto()
     is_burrowed = auto()
@@ -42,9 +46,6 @@ class Unit(IntEnum):
     order1 = auto()
     order2 = auto()
     order3 = auto()
-    buff0 = auto()
-    buff1 = auto()
-    add_on_tag = auto()
 
 
 class UnitOH(IntEnum):
@@ -64,6 +65,9 @@ class UnitOH(IntEnum):
     cloak_detected = auto()
     cloak_uncloaked = auto()
     cloak_allied = auto()
+    addon_none = auto()
+    addon_reactor = auto()
+    addon_techlab = auto()
     unitType = auto()
     health = auto()
     health_max = auto()
@@ -71,17 +75,19 @@ class UnitOH(IntEnum):
     shield_max = auto()
     energy = auto()
     energy_max = auto()
-    cargo = auto()
-    cargo_max = auto()
-    assigned_harvesters = auto()
-    ideal_harvesters = auto()
     weapon_cooldown = auto()
+    buff0 = auto()
+    buff1 = auto()
     x = auto()
     y = auto()
     z = auto()
     t = auto()
     r = auto()
     build_prog = auto()
+    cargo = auto()
+    cargo_max = auto()
+    assigned_harvesters = auto()
+    ideal_harvesters = auto()
     is_blip = auto()
     is_flying = auto()
     is_burrowed = auto()
@@ -91,9 +97,6 @@ class UnitOH(IntEnum):
     order1 = auto()
     order2 = auto()
     order3 = auto()
-    buff0 = auto()
-    buff1 = auto()
-    add_on_tag = auto()
 
 
 class NeutralUnit(IntEnum):
@@ -101,7 +104,6 @@ class NeutralUnit(IntEnum):
 
     id = 0
     unitType = auto()
-    obs = auto()
     health = auto()
     health_max = auto()
     x = auto()
@@ -110,6 +112,7 @@ class NeutralUnit(IntEnum):
     t = auto()
     r = auto()
     content = auto()
+    obs = auto()
 
 
 class NeutralUnitOH(IntEnum):
@@ -117,9 +120,6 @@ class NeutralUnitOH(IntEnum):
 
     id = 0
     unitType = auto()
-    visible = auto()
-    snapshot = auto()
-    hidden = auto()
     health = auto()
     health_max = auto()
     x = auto()
@@ -128,9 +128,15 @@ class NeutralUnitOH(IntEnum):
     t = auto()
     r = auto()
     content = auto()
+    visible = auto()
+    snapshot = auto()
+    hidden = auto()
 
 
 if __name__ == "__main__":
     assert UnitOH.alliance_self == Unit.alliance + _VisSize - 1
-    assert UnitOH.unitType == Unit.unitType + _AliSize + _ClkSize + _VisSize - 3
-    assert NeutralUnitOH.x == NeutralUnit.x + _VisSize - 1
+    assert (
+        UnitOH.unitType
+        == Unit.unitType + _AliSize + _ClkSize + _VisSize + _AddonSize - 4
+    )
+    assert NeutralUnitOH.x == NeutralUnit.x
