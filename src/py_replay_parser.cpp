@@ -151,7 +151,8 @@ auto createMinimapFeatures(const ReplayDataSoA &data, std::size_t timeIdx, bool 
  */
 template<typename T>
     requires std::is_arithmetic_v<T>
-auto createScalarFeatures(const ReplayDataSoA &data, std::size_t timeIdx) -> py::array_t<T>
+auto createScalarFeatures(const ReplayDataSoA &data, std::size_t timeIdx, std::vector<std::vector<float>> normalizer_)
+    -> py::array_t<T>
 {
     auto feats = vectorize<T>(data.score[timeIdx]);
     feats.emplace_back(data.minearals[timeIdx]);
@@ -160,12 +161,36 @@ auto createScalarFeatures(const ReplayDataSoA &data, std::size_t timeIdx) -> py:
     feats.emplace_back(data.popArmy[timeIdx]);
     feats.emplace_back(data.popWorkers[timeIdx]);
     feats.emplace_back(data.gameStep[timeIdx]);
+
+    auto normalize = normalizer_[timeIdx];
+    std::transform(
+        feats.begin(), feats.end(), normalize.begin(), feats.begin(), [](T feat, float norm) { return feat / norm; });
+
     py::array_t<T> array({ static_cast<py::ssize_t>(feats.size()) });
+
     std::ranges::copy(feats, array.mutable_data());
     return array;
 }
 
-ReplayParser::ReplayParser(const std::filesystem::path &dataFile) noexcept : upgrade_(dataFile) {}
+ReplayParser::ReplayParser(const std::filesystem::path &dataFile, const py::array_t<float> normalizer) noexcept
+    : upgrade_(dataFile)
+{
+    auto buffer_info = normalizer.request();
+    float *ptr = static_cast<float *>(buffer_info.ptr);
+
+    // Get the dimensions of the NumPy array
+    auto shape = buffer_info.shape;
+    auto rows_ = shape[0];
+    auto cols_ = shape[1];
+
+    // Resize the normalizer vector to match the size of the NumPy array
+    normalizer_.resize(rows_ * cols_);
+
+    // Use std::copy to copy values from the NumPy array to the vector
+    for (std::size_t i = 0; i < rows_; ++i) {
+        std::copy(ptr + i * cols_, ptr + (i + 1) * cols_, normalizer_[i].begin());
+    }
+}
 
 void ReplayParser::parseReplay(ReplayDataSoA replayData)
 {
@@ -203,7 +228,7 @@ auto ReplayParser::sample(std::size_t timeIdx, bool unit_alliance) const noexcep
 
     // Create feature image or minimap and feature vector of game state scalars (score, vespere, pop army etc.)
     result["minimap_features"] = createMinimapFeatures<feature_t>(replayData_, timeIdx);
-    result["scalar_features"] = createScalarFeatures<feature_t>(replayData_, timeIdx);
+    result["scalar_features"] = createScalarFeatures<feature_t>(replayData_, timeIdx, normalizer_);
 
     return result;
 }

@@ -55,7 +55,7 @@ class UpgradeTiming
 class ReplayParser
 {
   public:
-    ReplayParser(const std::filesystem::path &dataPath) noexcept;
+    ReplayParser(const std::filesystem::path &dataPath, const py::array_t<float> normalizer) noexcept;
 
     // Parse replay data, ready to sample from
     void parseReplay(ReplayDataSoA replayData);
@@ -75,6 +75,8 @@ class ReplayParser
   private:
     UpgradeTiming upgrade_;
     ReplayDataSoA replayData_{};
+
+    std::vector<std::vector<float>> normalizer_;
 };
 
 

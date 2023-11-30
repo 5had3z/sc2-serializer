@@ -291,7 +291,9 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def("getEntry", &cvt::ReplayDatabase::getEntry, py::arg("index"));
 
     py::class_<cvt::ReplayParser>(m, "ReplayParser")
-        .def(py::init<const std::filesystem::path &>(), py::arg("dataPath"))
+        .def(py::init<const std::filesystem::path &, const py::array_t<float> &>(),
+            py::arg("dataPath"),
+            py::arg("normalizer"))
         .def("sample", &cvt::ReplayParser::sample, py::arg("timeIdx"), py::arg("unit_alliance") = false)
         .def("parse_replay", &cvt::ReplayParser::parseReplay, py::arg("replayData"))
         .def("size", &cvt::ReplayParser::size)
