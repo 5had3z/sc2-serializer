@@ -197,7 +197,7 @@ struct Image
     }
 };
 
-enum class Alliance { Self = 1, Ally = 2, Neutral = 3, Enemy = 4 };
+enum class Alliance : char { Self = 1, Ally = 2, Neutral = 3, Enemy = 4 };
 
 template<typename T> auto enumToOneHot(Alliance e) noexcept -> std::vector<T>
 {
@@ -206,7 +206,7 @@ template<typename T> auto enumToOneHot(Alliance e) noexcept -> std::vector<T>
     return detail::enumToOneHot_helper<T>(e, vals);
 }
 
-enum class CloakState { Unknown = 0, Cloaked = 1, Detected = 2, UnCloaked = 3, Allied = 4 };
+enum class CloakState : char { Unknown = 0, Cloaked = 1, Detected = 2, UnCloaked = 3, Allied = 4 };
 
 template<typename T> auto enumToOneHot(CloakState e) noexcept -> std::vector<T>
 {
@@ -217,7 +217,7 @@ template<typename T> auto enumToOneHot(CloakState e) noexcept -> std::vector<T>
     return detail::enumToOneHot_helper<T>(e, vals);
 }
 
-enum class Visibility { Visible = 1, Snapshot = 2, Hidden = 3 };
+enum class Visibility : char { Visible = 1, Snapshot = 2, Hidden = 3 };
 
 template<typename T> auto enumToOneHot(Visibility e) noexcept -> std::vector<T>
 {
@@ -226,7 +226,7 @@ template<typename T> auto enumToOneHot(Visibility e) noexcept -> std::vector<T>
     return detail::enumToOneHot_helper<T>(e, vals);
 }
 
-enum class AddOn { None = 0, Reactor = 1, TechLab = 2 };
+enum class AddOn : char { None = 0, Reactor = 1, TechLab = 2 };
 
 template<typename T> auto enumToOneHot(AddOn e) noexcept -> std::vector<T>
 {
@@ -238,13 +238,13 @@ template<typename T> auto enumToOneHot(AddOn e) noexcept -> std::vector<T>
 
 struct UnitOrder
 {
-    int ability_id;
+    int ability_id{ 0 };
+    //! Progress of the order.
+    float progress{ 0.0 };
     //! Target unit of the order, if there is one.
     UID tgtId{ 0 };
     //! Target position of the order, if there is one.
     Point2d target_pos{ 0, 0 };
-    //! Progress of the order.
-    float progress{ 0.0 };
 
     [[nodiscard]] auto operator==(const UnitOrder &other) const noexcept -> bool = default;
 };
@@ -256,6 +256,7 @@ struct Unit
     Visibility observation{};
     Alliance alliance{};
     CloakState cloak_state{ CloakState::Unknown };
+    AddOn add_on_tag{ AddOn::None };
     int unitType{};
     float health{};
     float health_max{};
@@ -263,31 +264,28 @@ struct Unit
     float shield_max{};
     float energy{};
     float energy_max{};
-    int cargo{};
-    int cargo_max{};
-    int assigned_harvesters{};
-    int ideal_harvesters{};
     float weapon_cooldown{};
+    int buff0;
+    int buff1;
     Point3f pos{};// x
     // y
     // z
     float heading{};
     float radius{};
     float build_progress{};
+    char cargo{};
+    char cargo_max{};
+    char assigned_harvesters{};
+    char ideal_harvesters{};
     bool is_blip{ false };// detected by sensor
     bool is_flying{ false };// flying ship
     bool is_burrowed{ false };// zerg
     bool is_powered{ false };// pylon
     bool in_cargo{ false };
-
     UnitOrder order0;
     UnitOrder order1;
     UnitOrder order2;
     UnitOrder order3;
-    int buff0;
-    int buff1;
-    AddOn add_on_tag{ AddOn::None };
-
 
     [[nodiscard]] auto operator==(const Unit &other) const noexcept -> bool = default;
 };
@@ -335,10 +333,10 @@ struct UnitSoA
     std::vector<float> shield_max{};
     std::vector<float> energy{};
     std::vector<float> energy_max{};
-    std::vector<int> cargo{};
-    std::vector<int> cargo_max{};
-    std::vector<int> assigned_harvesters{};
-    std::vector<int> ideal_harvesters{};
+    std::vector<char> cargo{};
+    std::vector<char> cargo_max{};
+    std::vector<char> assigned_harvesters{};
+    std::vector<char> ideal_harvesters{};
     std::vector<int> weapon_cooldown{};
     std::vector<UID> tgtId{};
     std::vector<CloakState> cloak_state{};
@@ -475,7 +473,6 @@ struct NeutralUnit
 {
     UID id{};
     int unitType{};
-    Visibility observation{};
     float health{};
     float health_max{};
     Point3f pos{};// x
@@ -483,7 +480,8 @@ struct NeutralUnit
     // z
     float heading{};
     float radius{};
-    int contents{};// minerals or vespene
+    std::uint16_t contents{};// minerals or vespene
+    Visibility observation{};
 
     [[nodiscard]] auto operator==(const NeutralUnit &other) const noexcept -> bool = default;
 };
@@ -498,7 +496,7 @@ struct NeutralUnitSoA
     std::vector<Point3f> pos{};
     std::vector<float> heading{};
     std::vector<float> radius{};
-    std::vector<int> contents{};
+    std::vector<std::uint16_t> contents{};
 
     [[nodiscard]] auto operator==(const NeutralUnitSoA &other) const noexcept -> bool = default;
 };
@@ -614,11 +612,11 @@ template<typename T> auto enumToOneHot(Action::Target_Type e) noexcept -> std::v
 struct StepData
 {
     std::uint32_t gameStep{};
-    std::uint32_t minearals{};
-    std::uint32_t vespere{};
-    std::uint32_t popMax{};
-    std::uint32_t popArmy{};
-    std::uint32_t popWorkers{};
+    std::uint16_t minearals{};
+    std::uint16_t vespere{};
+    std::uint16_t popMax{};
+    std::uint16_t popArmy{};
+    std::uint16_t popWorkers{};
     Score score{};
     Image<std::uint8_t> visibility{};
     Image<bool> creep{};
@@ -633,7 +631,7 @@ struct StepData
     [[nodiscard]] auto operator==(const StepData &other) const noexcept -> bool = default;
 };
 
-enum class Race { Terran, Zerg, Protoss, Random };
+enum class Race : char { Terran, Zerg, Protoss, Random };
 
 template<typename T> auto enumToOneHot(Race e) noexcept -> std::vector<T>
 {
@@ -642,7 +640,7 @@ template<typename T> auto enumToOneHot(Race e) noexcept -> std::vector<T>
     return detail::enumToOneHot_helper<T>(e, vals);
 }
 
-enum class Result { Win, Loss, Tie, Undecided };
+enum class Result : char { Win, Loss, Tie, Undecided };
 
 template<typename T> auto enumToOneHot(Result e) noexcept -> std::vector<T>
 {
@@ -683,11 +681,11 @@ struct ReplayDataSoA
 
     // Step data
     std::vector<std::uint32_t> gameStep{};
-    std::vector<std::uint32_t> minearals{};
-    std::vector<std::uint32_t> vespere{};
-    std::vector<std::uint32_t> popMax{};
-    std::vector<std::uint32_t> popArmy{};
-    std::vector<std::uint32_t> popWorkers{};
+    std::vector<std::uint16_t> minearals{};
+    std::vector<std::uint16_t> vespere{};
+    std::vector<std::uint16_t> popMax{};
+    std::vector<std::uint16_t> popArmy{};
+    std::vector<std::uint16_t> popWorkers{};
     std::vector<Score> score{};
     std::vector<Image<std::uint8_t>> visibility{};
     std::vector<Image<bool>> creep{};
