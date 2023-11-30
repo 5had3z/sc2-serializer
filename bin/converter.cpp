@@ -124,6 +124,7 @@ auto main(int argc, char *argv[]) -> int
       ("s,stride", "stride for the strided converter", cxxopts::value<std::size_t>())
       ("g,game", "path to game executable", cxxopts::value<std::string>())
       ("b,badfile", "file that contains a known set of bad replays", cxxopts::value<std::string>())
+      ("offset", "Offset to apply to partition index", cxxopts::value<int>())
       ("h,help", "This help");
     // clang-format on
     const auto cliOpts = cliParser.parse(argc, argv);
@@ -155,6 +156,9 @@ auto main(int argc, char *argv[]) -> int
         std::string_view s(tmp);
         // Extract the substring from the last delimiter to the end
         podIndex = s.substr(s.find_last_of('-') + 1);
+        if (cliOpts["offset"].count()) {// Add offset to pod index if specified
+            podIndex = std::to_string(std::stoi(podIndex.value()) + cliOpts["offset"].as<int>());
+        }
         SPDLOG_INFO("POD_NAME found, using index suffix: {}", podIndex.value());
     }
 
