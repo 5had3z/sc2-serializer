@@ -184,7 +184,9 @@ ReplayParser::ReplayParser(const std::filesystem::path &dataFile, const py::arra
     auto cols_ = shape[1];
 
     // Resize the normalizer vector to match the size of the NumPy array
-    normalizer_.resize(rows_ * cols_);
+    // normalizer_.resize(rows_ * cols_);
+    normalizer_.resize(rows_);
+    for (auto &innerVector : normalizer_) { innerVector.resize(cols_); }
 
     // Use std::copy to copy values from the NumPy array to the vector
     for (std::size_t i = 0; i < rows_; ++i) {
