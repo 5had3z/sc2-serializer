@@ -265,8 +265,8 @@ struct Unit
     float energy{};
     float energy_max{};
     float weapon_cooldown{};
-    int buff0;
-    int buff1;
+    int buff0{};
+    int buff1{};
     Point3f pos{};// x
     // y
     // z
@@ -282,10 +282,10 @@ struct Unit
     bool is_burrowed{ false };// zerg
     bool is_powered{ false };// pylon
     bool in_cargo{ false };
-    UnitOrder order0;
-    UnitOrder order1;
-    UnitOrder order2;
-    UnitOrder order3;
+    UnitOrder order0{};
+    UnitOrder order1{};
+    UnitOrder order2{};
+    UnitOrder order3{};
 
     [[nodiscard]] auto operator==(const Unit &other) const noexcept -> bool = default;
 };
