@@ -101,7 +101,7 @@ bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
     entryPtr_.push_back(dbStream.tellp());
 
     // Write compressed data to the end of the file
-    {
+    try {
         bio::filtering_ostream filterStream{};
         filterStream.push(bio::zlib_compressor(bio::zlib::best_compression));
         filterStream.push(dbStream);
@@ -112,6 +112,9 @@ bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
         }
         filterStream.flush();
         filterStream.reset();
+    } catch (const std::bad_alloc &e) {
+        SPDLOG_LOGGER_CRITICAL(gLogger, "Failed to write replay, got error: {}", e.what());
+        return false;
     }
 
     // Go to the db index and write new entry
@@ -181,7 +184,13 @@ auto ReplayDatabase::getEntry(std::size_t index) const -> ReplayDataSoA
 
     // Load and return the data
     ReplayDataSoA data;
-    deserialize(data, filterStream);
+    try {
+        deserialize(data, filterStream);
+    } catch (const std::bad_alloc &e) {
+        SPDLOG_LOGGER_CRITICAL(
+            gLogger, "Failed to load from {} at index {}, got error: {}", dbPath_.string(), index, e.what());
+        throw e;
+    }
     filterStream.reset();
     // fmt::print("Time Taken to Load: {}ms, Replay Size: {}\n",
     //     std::chrono::duration_cast<std::chrono::milliseconds>(clock::now() - start).count(),

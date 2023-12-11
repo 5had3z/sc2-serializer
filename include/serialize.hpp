@@ -10,12 +10,18 @@ namespace cvt {
 
 // ------- Generic Serialisation and Deserialisation Methods -------
 
+/**
+ * @brief Maximum range size that can be serialized
+ */
+constexpr std::size_t gMaxRangeSize = 1'000'000;
+
 template<std::ranges::range T>
     requires std::ranges::contiguous_range<T> && std::is_trivially_copyable_v<std::ranges::range_value_t<T>>
 void serialize(const T &data, std::ostream &stream)
 {
     // First write the number of elements then the data
     std::size_t nElem = data.size();
+    if (nElem > gMaxRangeSize) { throw std::bad_array_new_length{}; }
     stream.write(reinterpret_cast<const char *>(&nElem), sizeof(nElem));
     stream.write(reinterpret_cast<const char *>(data.data()), sizeof(std::ranges::range_value_t<T>) * nElem);
 }
@@ -24,6 +30,7 @@ template<std::ranges::range T> void serialize(const T &data, std::ostream &strea
 {
     // First write the number of elements then each element one-by-one
     std::size_t nElem = data.size();
+    if (nElem > gMaxRangeSize) { throw std::bad_array_new_length{}; }
     stream.write(reinterpret_cast<const char *>(&nElem), sizeof(nElem));
     for (const auto &elem : data) { serialize(elem, stream); }
 }
@@ -49,6 +56,7 @@ void deserialize(T &data, std::istream &stream)
 {
     std::size_t nElem = -1;
     stream.read(reinterpret_cast<char *>(&nElem), sizeof(nElem));
+    if (nElem > gMaxRangeSize) { throw std::bad_array_new_length{}; }
     data.resize(nElem);
     stream.read(reinterpret_cast<char *>(data.data()), sizeof(std::ranges::range_value_t<T>) * nElem);
 }
@@ -57,6 +65,7 @@ template<std::ranges::range T> void deserialize(T &data, std::istream &stream)
 {
     std::size_t nElem = -1;
     stream.read(reinterpret_cast<char *>(&nElem), sizeof(nElem));
+    if (nElem > gMaxRangeSize) { throw std::bad_array_new_length{}; }
     data.resize(nElem);
     for (auto &&elem : data) { deserialize(elem, stream); }
 }
