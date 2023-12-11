@@ -119,9 +119,9 @@ void loopReplayFiles(const fs::path &replayFolder,
             for (std::size_t retryCount = 0; !converter->hasWritten() && retryCount < maxRetry; ++retryCount) {
                 runReplay();
                 if (!converter->hasWritten()) {
-                    // rebuild the coordinator because sc2 doesn't have a proper restart api
-                    coordinator.reset();
-                    coordinator = make_coordinator();
+                    SPDLOG_ERROR(
+                        "Failed Converting Replay, Relaunching Coordinator, Attempt {} of {}", retryCount, maxRetry);
+                    coordinator->Relaunch();
                 }
             }
 
