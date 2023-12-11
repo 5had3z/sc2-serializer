@@ -30,11 +30,17 @@ class BaseConverter : public sc2::ReplayObserver
 
     void OnGameEnd() override;
 
+    // void OnError(const std::vector<sc2::ClientError> &clientErrors,
+    //     const std::vector<std::string> &protocolErrors = {}) override;
+
     [[nodiscard]] auto hasWritten() const noexcept -> bool;
 
     [[nodiscard]] auto isKnownHash(const std::string &hash) const noexcept -> bool;
 
     void addKnownHash(std::string hash) noexcept;
+
+    // Removes currently held replay data and logging/write flags
+    void clear() noexcept;
 
   protected:
     void copyHeightMapData() noexcept;
