@@ -47,6 +47,23 @@ pybind11-stubgen _sc2_replay_reader --module-path build/_sc2_replay_reader.cpyth
 
 It is also faster to iterate while developing by installing in editable mode, removing pip's compiled version `src/sc2_replay_reader/_sc2_replay_reader.cpython-310-x86_64-linux-gnu.so` and sybolically linking to `build/_sc2_replay_reader.cpython-310-x86_64-linux-gnu.so` instead for incremental builds. You will have manually update the stub with the previously mentioned script however if api changes are made.
 
+## Generating SQL Database
+
+To generate meta-data for all the replays, we require additional dependencies:
+
+Install additional dependencies with:
+```bash
+pip install sc2-replay-parser[database]
+```
+
+Set the environment variable "DATAPATH" to the directory containing "*.SC2Replays" files.
+
+Run `python gen_database.py --workspace <OUTPUT_DIR> --workers=8`
+
+- <OUTPUT_DIR> is the output directory.
+- --workers sets the number of data loader workers.
+
+
 ### Git hooks
 The CI will run several checks on the new code pushed to the repository. These checks can also be run locally without waiting for the CI by following the steps below:
 
