@@ -162,3 +162,5 @@ build
 write_data
 workspace
 src/sc2_replay_reader/_sc2_replay_reader.pyi
+*.png
+*.db

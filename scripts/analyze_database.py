@@ -5,6 +5,7 @@ from pathlib import Path
 from sc2_replay_reader import Race, Result
 from typing import List, Any, Callable, Dict, Tuple
 from functools import reduce
+import matplotlib.pyplot as plt
 
 app = typer.Typer()
 
@@ -30,7 +31,7 @@ def get_races(cursor: sqlite3.Cursor):
         typer.echo(f"Player Race {Race(int(playerrace))}: {count} occurrences")
 
 
-def get_races_per_column(
+def count_discrete_values(
     cursor: sqlite3.Cursor,
     columns: Dict[str, Tuple[List[Any], Callable[[str], Any] | None]],
 ):
@@ -62,6 +63,34 @@ def get_races_per_column(
         typer.echo(f"{formatted_values}, Count: {count} occurrences")
 
 
+def generate_scatter(
+    cursor: sqlite3.Cursor, column_x: str, column_y: str, x_filter=None, y_filter=None
+):
+    # Construct the SQL query with optional filters
+    query = f"SELECT {column_y}, {column_x} FROM game_data"
+    if x_filter is not None and y_filter is not None:
+        query += f" WHERE {column_x} {x_filter} AND {column_y} {y_filter}"
+    elif x_filter is not None:
+        query += f" WHERE {column_x} {x_filter}"
+    elif y_filter is not None:
+        query += f" WHERE {column_y} {y_filter}"
+
+    cursor.execute(query)
+    data = cursor.fetchall()
+    y_vals, x_vals = zip(*data)
+
+    # Create a scatter plot
+    plt.figure(figsize=(10, 6))
+    plt.scatter(y_vals, x_vals, alpha=0.5, color="green", edgecolors="black")
+
+    # Set labels and title
+    plt.title(f"Scatter Plot of {column_y} vs {column_x}")
+    plt.xlabel(column_y)
+    plt.ylabel(column_x)
+
+    plt.savefig(f"{column_y.replace(' ', '_')}_vs_{column_x.replace(' ', '_')}.png")
+
+
 @app.command()
 def main(database: Annotated[Path, typer.Option()]):
     database_str = str(database)
@@ -71,25 +100,26 @@ def main(database: Annotated[Path, typer.Option()]):
         conn = sqlite3.connect(database_str)
         cursor = conn.cursor()
 
-        get_races_per_column(cursor, {"playerRace": ([0, 1, 2], compose(Race, int))})
-        get_races_per_column(
+        count_discrete_values(cursor, {"playerRace": ([0, 1, 2], compose(Race, int))})
+        count_discrete_values(
             cursor,
             {"playerRace": ([0, 1, 2], compose(Race, int)), "playerId": ([1, 2], None)},
         )
-        get_races_per_column(
+        count_discrete_values(
             cursor,
             {
                 "playerRace": ([0, 1, 2], compose(Race, int)),
                 "playerResult": ([0, 1], compose(Result, int)),
             },
         )
-        get_races_per_column(
+        count_discrete_values(
             cursor,
             {
                 "playerId": ([1, 2], None),
                 "playerResult": ([0, 1], compose(Result, int)),
             },
         )
+        generate_scatter(cursor, "playerMMR", "game_length", x_filter="> 0")
 
         conn.close()
     except sqlite3.Error as e:
