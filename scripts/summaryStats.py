@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict, Tuple, Callable
+from typing import Dict, Tuple, Callable, Literal
 import torch
 from sc2_replay_reader import (
     GAME_INFO_FILE,
@@ -12,6 +12,7 @@ from torch.utils.data import Dataset
 
 from utils import upper_bound
 
+SQL_TYPES = Literal["INTEGER", "FLOAT", "TEXT"]
 ENUM_KEYS = {"playerRace", "playerResult"}
 LambdaFunctionType = Callable[[ReplayParser], float | int]
 
@@ -21,7 +22,7 @@ class SC2Replay(Dataset):
         self,
         basepath: Path,
         features: set[str],
-        lambda_columns: Dict[str, Tuple[str, LambdaFunctionType]],
+        lambda_columns: Dict[str, Tuple[SQL_TYPES, LambdaFunctionType]],
     ) -> None:
         super().__init__()
         self.features = features
@@ -50,6 +51,7 @@ class SC2Replay(Dataset):
     def __len__(self) -> int:
         return self.n_replays
 
+    # @profile
     def __getitem__(self, index: int):
         file_index = upper_bound(self._accumulated_replays, index)
         self.db_handle.open(self.replays[file_index])
