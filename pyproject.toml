@@ -35,6 +35,9 @@ classifiers = [
     "Natural Language :: English",
 ]
 
+[project.optional-dependencies]
+database = ["torch >=1.11.0", "typer>=0.9.0"]
+
 [project.urls]
 "Homepage" = "https://github.com/5had3z/sc2-serializer"
 
