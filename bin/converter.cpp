@@ -69,10 +69,26 @@ auto getReplaysFromFolder(const std::string_view folder) noexcept -> std::vector
 
 void loopReplayFiles(const fs::path &replayFolder,
     const std::vector<std::string> &replayHashes,
-    sc2::Coordinator &coordinator,
+    const std::string &gamePath,
     cvt::BaseConverter *converter,
     std::optional<fs::path> badFile)
 {
+    auto make_coordinator = [&]() {
+        auto coordinator = std::make_unique<sc2::Coordinator>();
+        {
+            constexpr int mapSize = 128;
+            sc2::FeatureLayerSettings fSettings;
+            fSettings.minimap_x = mapSize;
+            fSettings.minimap_y = mapSize;
+            coordinator->SetFeatureLayers(fSettings);
+        }
+        coordinator->AddReplayObserver(converter);
+        coordinator->SetProcessPath(gamePath);
+        coordinator->SetTimeoutMS(60'000);
+        return coordinator;
+    };
+    auto coordinator = make_coordinator();
+
     std::size_t nComplete = 0;
     for (auto &&replayHash : replayHashes) {
         const auto replayPath = (replayFolder / replayHash).replace_extension(".SC2Replay");
@@ -80,6 +96,7 @@ void loopReplayFiles(const fs::path &replayFolder,
             SPDLOG_ERROR("Replay file doesn't exist {}", replayPath.string());
             continue;
         }
+        SPDLOG_INFO("Starting replay: {}", replayPath.stem().string());
 
         for (uint32_t playerId = 1; playerId < 3; ++playerId) {
             const std::string replayHashPlayer = replayHash + std::to_string(playerId);
@@ -87,12 +104,27 @@ void loopReplayFiles(const fs::path &replayFolder,
                 SPDLOG_INFO("Skipping known Replay {}, PlayerID: {}", replayHash, playerId);
                 continue;
             }
-            // Setup Replay with Player
-            converter->setReplayInfo(replayHash, playerId);
-            coordinator.SetReplayPath(replayPath.string());
-            coordinator.SetReplayPerspective(playerId);
-            // Run Replay
-            while (coordinator.Update()) {}
+
+            auto runReplay = [&]() {
+                // Setup Replay with Player
+                converter->clear();
+                converter->setReplayInfo(replayHash, playerId);
+                coordinator->SetReplayPath(replayPath.string());
+                coordinator->SetReplayPerspective(playerId);
+                // Run Replay
+                while (coordinator->Update()) {}
+            };
+
+            constexpr std::size_t maxRetry = 3;
+            for (std::size_t retryCount = 0; !converter->hasWritten() && retryCount < maxRetry; ++retryCount) {
+                runReplay();
+                if (!converter->hasWritten()) {
+                    SPDLOG_ERROR(
+                        "Failed Converting Replay, Relaunching Coordinator, Attempt {} of {}", retryCount, maxRetry);
+                    coordinator->Relaunch();
+                }
+            }
+
             // If update has exited and games haven't ended, there must've been an error
             if (!converter->hasWritten()) {
                 SPDLOG_ERROR("Finished Game Without Writing, Must Contain An Error, Skipping");
@@ -104,6 +136,7 @@ void loopReplayFiles(const fs::path &replayFolder,
                 break;
             }
             converter->addKnownHash(replayHashPlayer);
+            converter->clear();
         }
 
         SPDLOG_INFO("Completed {} of {} replays", ++nComplete, replayHashes.size());
@@ -242,19 +275,7 @@ auto main(int argc, char *argv[]) -> int
         return -1;
     }
 
-    sc2::Coordinator coordinator;
-    {
-        constexpr int mapSize = 128;
-        sc2::FeatureLayerSettings fSettings;
-        fSettings.minimap_x = mapSize;
-        fSettings.minimap_y = mapSize;
-        coordinator.SetFeatureLayers(fSettings);
-    }
-    coordinator.AddReplayObserver(converter.get());
-    coordinator.SetProcessPath(gamePath);
-    coordinator.SetTimeoutMS(60'000);
-
-    loopReplayFiles(replayFolder, replayFiles, coordinator, converter.get(), badFile);
+    loopReplayFiles(replayFolder, replayFiles, gamePath, converter.get(), badFile);
 
     return 0;
 }

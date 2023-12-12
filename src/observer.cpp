@@ -118,9 +118,7 @@ void BaseConverter::OnGameStart()
     // Clear data collection structures, sc2api calls OnStep before OnGameStart
     // but some of the units are scuffed (particularly the resources), so we want
     // to clear it all out and only collect data from normal steps.
-    currentReplay_.stepData.clear();
-    currentReplay_.heightMap.clear();
-    resourceObs_.clear();
+    this->clear();
 
     const auto replayInfo = this->ReplayControl()->GetReplayInfo();
     assert(replayInfo.num_players >= currentReplay_.playerId && "Player ID should be at most be num_players");
@@ -138,10 +136,6 @@ void BaseConverter::OnGameStart()
 
     // Preallocate Step Data with Maximum Game Loops
     currentReplay_.stepData.reserve(replayInfo.duration_gameloops);
-
-    mapDynHasLogged_ = false;
-    mapHeightHasLogged_ = false;
-    writeSuccess_ = false;
 }
 
 
@@ -186,11 +180,21 @@ void BaseConverter::OnGameEnd()
     writeSuccess_ = database_.addEntry(SoA);
 }
 
-
 void BaseConverter::setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept
 {
     currentReplay_.replayHash = hash;
     currentReplay_.playerId = playerId;
+}
+
+void BaseConverter::clear() noexcept
+{
+    currentReplay_.stepData.clear();
+    currentReplay_.heightMap.clear();
+    resourceObs_.clear();
+
+    mapDynHasLogged_ = false;
+    mapHeightHasLogged_ = false;
+    writeSuccess_ = false;
 }
 
 void BaseConverter::copyHeightMapData() noexcept

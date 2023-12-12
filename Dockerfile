@@ -1,4 +1,17 @@
-# Compilation Stage
+# Download and compile zlib-ng
+FROM ubuntu:22.04 AS zlib-ng-builder
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    wget tar build-essential ninja-build cmake
+
+WORKDIR /opt/zlib-ng
+RUN wget https://github.com/zlib-ng/zlib-ng/archive/refs/tags/2.1.5.tar.gz && \
+    tar -xf 2.1.5.tar.gz && \
+    rm 2.1.5.tar.gz &&\
+    cmake -B build -S zlib-ng-2.1.5 -G Ninja -DZLIB_COMPAT=ON -DZLIB_ENABLE_TESTS=OFF -DWITH_NATIVE_INSTRUCTIONS=ON && \
+    cmake --build build --parallel
+
+# Compile Converter and Merger Programs
 FROM ubuntu:22.04 AS builder
 
 # Add GCC 13
@@ -25,6 +38,9 @@ RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common && \
     add-apt-repository ppa:ubuntu-toolchain-r/test && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y libboost-iostreams1.74.0 libstdc++6
+
+COPY --from=zlib-ng-builder /opt/zlib-ng/build/libz.so.1.3.0.zlib-ng /opt/zlib-ng/libz.so.1.3.0.zlib-ng
+ENV LD_PRELOAD=/opt/zlib-ng/libz.so.1.3.0.zlib-ng
 
 COPY --from=builder /app/build/sc2_converter /sc2_converter
 COPY --from=builder /app/build/sc2_merger /sc2_merger
