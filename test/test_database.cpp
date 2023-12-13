@@ -106,14 +106,7 @@ TEST(BoostZlib, WriteRead)
     {
         boost::iostreams::filtering_ostream output;
         output.push(boost::iostreams::zlib_compressor(boost::iostreams::zlib::best_compression));
-
-        // output.push(boost::iostreams::file_sink(testFile, std::ios::binary | std::ios::app), 0);
-
-        // Construct the file_sink object separately
-        boost::iostreams::file_sink fileSink(testFile.string(), std::ios::binary | std::ios::app);
-        output.push(fileSink, 0);
-
-
+        output.push(boost::iostreams::file_sink(testFile.string(), std::ios::binary | std::ios::app));
         output.write(reinterpret_cast<const char *>(writeData.data()), writeData.size() * sizeof(int));
         output.reset();
     }

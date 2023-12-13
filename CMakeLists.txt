@@ -3,9 +3,6 @@ cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
 project(sc2-cvt)
 
 if(WIN32)
-  set(CMAKE_CXX_STANDARD 17)
-  set(CMAKE_CXX_STANDARD_REQUIRED ON)
-  set(CMAKE_CXX_EXTENSIONS OFF)
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
@@ -93,19 +90,15 @@ if(SC2_CONVERTER)
     spdlog::spdlog
     boost_pfr
     Boost::iostreams
-    ZLIB::ZLIB)
+  )
 
-  if(WIN32)
-    target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS} /std:c++latest)
-  else()
-    target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS})
-  endif()
+  target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS})
 
   target_include_directories(replay_converter PUBLIC include 3rdparty/s2client-api/include
     ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated)
 
   if(SC2_SANITIZERS)
-    target_compile_options(replay_converter PUBLIC -fsanitize=address,leak,undefined /std:c++latest)
+    target_compile_options(replay_converter PUBLIC -fsanitize=address,leak,undefined)
     target_link_options(replay_converter PUBLIC -fsanitize=address,leak,undefined)
   endif()
 
@@ -125,7 +118,7 @@ if(SC2_CONVERTER)
     boost_pfr
     cxxopts
     Boost::iostreams
-    ZLIB::ZLIB)
+  )
 
   # Copy zlibd.dll to the build directory
   add_custom_command(TARGET replay_converter POST_BUILD
@@ -161,7 +154,6 @@ if(SC2_PY_READER)
     PUBLIC spdlog::spdlog
     boost_pfr
     Boost::iostreams
-    ZLIB::ZLIB
     yaml-cpp)
   target_compile_options(_sc2_replay_reader PUBLIC ${_COMPILE_OPTIONS} /std:c++latest)
   target_include_directories(_sc2_replay_reader PUBLIC include)
