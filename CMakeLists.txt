@@ -120,11 +120,13 @@ if(SC2_CONVERTER)
     Boost::iostreams
   )
 
-  # Copy zlibd.dll to the build directory
-  add_custom_command(TARGET replay_converter POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    $<TARGET_FILE:ZLIB::ZLIB> $<TARGET_FILE_DIR:replay_converter>
-  )
+  if(WIN32)
+    # Copy zlibd.dll to the build directory
+    add_custom_command(TARGET replay_converter POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+      $<TARGET_FILE:ZLIB::ZLIB> $<TARGET_FILE_DIR:replay_converter>
+    )
+  endif()
 endif()
 
 if(SC2_PY_READER)
