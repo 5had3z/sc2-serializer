@@ -10,6 +10,7 @@
 #include <span>
 #include <string>
 #include <vector>
+#include <array>
 
 namespace cvt {
 

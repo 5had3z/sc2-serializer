@@ -2,6 +2,13 @@ cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
 
 project(sc2-cvt)
 
+if(WIN32)
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+  set(CMAKE_CXX_EXTENSIONS OFF)
+  set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+
 option(SC2_CONVERTER "Build the Replay Conversion Engine" ON)
 option(SC2_PY_READER "Build the Python Reader" ON)
 option(SC2_TESTS "Build the test suite" ON)
@@ -9,9 +16,18 @@ option(SC2_SANITIZERS "Build with sanitizers enabled" OFF)
 
 set(_WARNING_OPTIONS "-Wall;-Wfatal-errors;-Wextra;-Wshadow;-Wcast-align;-Wpedantic;
     -Wconversion;-Wsign-conversion;-Wnull-dereference;-Wdouble-promotion")
-set(_COMPILE_OPTIONS
+
+if(WIN32)
+  set(_COMPILE_OPTIONS
+    "$<$<CONFIG:Debug>:/Od;/Zi;${WARNING_OPTIONS}>"
+    "$<$<CONFIG:Release>:/O2;/arch:AVX2;${WARNING_OPTIONS}>"
+    "$<$<CONFIG:RelWithDebInfo>:/O2;/arch:AVX2;/Zi;${WARNING_OPTIONS}>"
+  )
+else()
+  set(_COMPILE_OPTIONS
     "$<$<CONFIG:Debug>:-O0;-g;${WARNING_OPTIONS}>" "$<$<CONFIG:Release>:-O3;-march=native;${WARNING_OPTIONS}>"
     "$<$<CONFIG:RelWithDebInfo>:-O3;-march=native;-g;${WARNING_OPTIONS}>")
+endif()
 
 # ---- Add Dependencies ----
 include(cmake/CPM.cmake)
@@ -41,6 +57,8 @@ if(WIN32)
   )
 
   add_library(ZLIB::ZLIB ALIAS zlib)
+  include_directories("build\\_deps\\zlib-src")
+  include_directories("build\\_deps\\zlib-build")
 
   CPMAddPackage(
     NAME Boost
@@ -57,12 +75,10 @@ else()
     boostorg/pfr
     GIT_TAG
     2.1.0)
-    find_package(Boost REQUIRED COMPONENTS iostreams)
-
+  find_package(Boost REQUIRED COMPONENTS iostreams)
 endif()
 
 # ---- Main Library Components ----
-
 if(SC2_CONVERTER)
   # Add submodule path
   add_subdirectory(3rdparty/s2client-api)
@@ -72,17 +88,24 @@ if(SC2_CONVERTER)
   target_link_libraries(
     replay_converter
     PUBLIC sc2api
-           sc2lib
-           sc2utils
-           spdlog::spdlog
-           boost_pfr
-           Boost::iostreams)
-  target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS})
+    sc2lib
+    sc2utils
+    spdlog::spdlog
+    boost_pfr
+    Boost::iostreams
+    ZLIB::ZLIB)
+
+  if(WIN32)
+    target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS} /std:c++latest)
+  else()
+    target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS})
+  endif()
+
   target_include_directories(replay_converter PUBLIC include 3rdparty/s2client-api/include
-                                                     ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated)
+    ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated)
 
   if(SC2_SANITIZERS)
-    target_compile_options(replay_converter PUBLIC -fsanitize=address,leak,undefined)
+    target_compile_options(replay_converter PUBLIC -fsanitize=address,leak,undefined /std:c++latest)
     target_link_options(replay_converter PUBLIC -fsanitize=address,leak,undefined)
   endif()
 
@@ -101,7 +124,14 @@ if(SC2_CONVERTER)
     spdlog::spdlog
     boost_pfr
     cxxopts
-    Boost::iostreams)
+    Boost::iostreams
+    ZLIB::ZLIB)
+
+  # Copy zlibd.dll to the build directory
+  add_custom_command(TARGET replay_converter POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_FILE:ZLIB::ZLIB> $<TARGET_FILE_DIR:replay_converter>
+  )
 endif()
 
 if(SC2_PY_READER)
@@ -129,14 +159,15 @@ if(SC2_PY_READER)
   target_link_libraries(
     _sc2_replay_reader
     PUBLIC spdlog::spdlog
-           boost_pfr
-           Boost::iostreams
-           yaml-cpp)
-  target_compile_options(_sc2_replay_reader PUBLIC ${_COMPILE_OPTIONS})
+    boost_pfr
+    Boost::iostreams
+    ZLIB::ZLIB
+    yaml-cpp)
+  target_compile_options(_sc2_replay_reader PUBLIC ${_COMPILE_OPTIONS} /std:c++latest)
   target_include_directories(_sc2_replay_reader PUBLIC include)
 endif()
-# ---- Testing Suite ----
 
+# ---- Testing Suite ----
 if(SC2_TESTS)
   enable_testing()
   cpmaddpackage(
@@ -173,7 +204,6 @@ if(SC2_TESTS)
 endif()
 
 # ---- Executable for experimenting with the replay interface ----
-
 find_package(OpenCV COMPONENTS core imgcodecs)
 
 if(SC2_CONVERTER AND OpenCV_FOUND)
@@ -191,7 +221,8 @@ if(SC2_CONVERTER AND OpenCV_FOUND)
     opencv_core
     opencv_imgcodecs)
   target_include_directories(game_exp PRIVATE include 3rdparty/s2client-api/include
-                                              ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated)
+    ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated)
+
 elseif(SC2_CONVERTER)
   message("OpenCV Not Found, Not Building game_exp")
 endif()

@@ -38,7 +38,7 @@ void UpgradeTiming::loadInfo()
     if (!std::filesystem::exists(dataFile_)) {
         throw std::runtime_error(fmt::format("Data file does not exist: {}", dataFile_.string()));
     }
-    YAML::Node root = YAML::LoadFile(dataFile_);
+    YAML::Node root = YAML::LoadFile(dataFile_.string());
     auto node = std::find_if(
         root.begin(), root.end(), [&](const YAML::Node &n) { return n["version"].as<std::string>() == gameVersion_; });
     if (node == root.end()) {
