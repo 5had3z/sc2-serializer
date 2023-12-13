@@ -52,7 +52,7 @@ class FrequencyTimer
   public:
     std::chrono::seconds displayPeriod;
 
-    FrequencyTimer(std::string name, std::chrono::seconds displayPeriod_ = std::chrono::minutes(1))
+    explicit FrequencyTimer(std::string name, std::chrono::seconds displayPeriod_ = std::chrono::minutes(1))
         : timerName(std::move(name)), displayPeriod(displayPeriod_)
     {}
 
@@ -180,7 +180,7 @@ void BaseConverter::OnGameEnd()
     writeSuccess_ = database_.addEntry(SoA);
 }
 
-void BaseConverter::setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept
+void BaseConverter::setReplayInfo(const std::string_view& hash, std::uint32_t playerId) noexcept
 {
     currentReplay_.replayHash = hash;
     currentReplay_.playerId = playerId;
@@ -209,7 +209,7 @@ void BaseConverter::copyHeightMapData() noexcept
     copyMapData(currentReplay_.heightMap, minimapFeats.height_map());
 }
 
-[[nodiscard]] auto find_tagged_unit(const sc2::Tag add_on_tag, const sc2::Units &units) noexcept -> AddOn
+[[nodiscard]] auto find_tagged_unit(const sc2::Tag add_on_tag, const sc2::Units &units) -> AddOn
 {
     auto same_tag = [add_on_tag](const sc2::Unit *other) { return other->tag == add_on_tag; };
     auto it = std::ranges::find_if(units.begin(), units.end(), same_tag);
@@ -249,7 +249,7 @@ void BaseConverter::copyHeightMapData() noexcept
     return dst;
 }
 
-[[nodiscard]] auto convertScore(const sc2::Score *src) noexcept -> Score
+[[nodiscard]] auto convertScore(const sc2::Score *src) -> Score
 {
     if (src->score_type != sc2::ScoreType::Melee) {
         throw std::runtime_error(fmt::format("Score type is not melee, got {}", static_cast<int>(src->score_type)));
@@ -287,7 +287,7 @@ void BaseConverter::copyHeightMapData() noexcept
 
 
 // Convert StarCraft2 API Unit to Serializer Unit
-[[nodiscard]] auto convertSC2Unit(const sc2::Unit *src, const sc2::Units &units, const bool isPassenger) noexcept
+[[nodiscard]] auto convertSC2Unit(const sc2::Unit *src, const sc2::Units &units, const bool isPassenger)
     -> Unit
 {
     Unit dst{};
@@ -396,7 +396,7 @@ auto BaseConverter::reassignResourceId(const NeutralUnit &unit) noexcept -> bool
     // Check if there's an existing unit with the same x,y coordinate
     // (may move a little bit in z, but its fundamentally the same unit)
     auto oldKV = std::ranges::find_if(resourceObs_, [=](auto &&keyValue) {
-        auto &value = keyValue.second;
+        const auto &value = keyValue.second;
         return value.pos.x == unit.pos.x && value.pos.y == unit.pos.y;
     });
     if (oldKV == resourceObs_.end()) {

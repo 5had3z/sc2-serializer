@@ -34,3 +34,9 @@ repos:
     rev: "v0.0.254"
     hooks:
       - id: ruff
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: master
+    hooks:
+      - id: cppcheck
+        args:
+          - --inline-suppr

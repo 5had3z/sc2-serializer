@@ -57,7 +57,7 @@ auto getReplaysFromFile(const std::string &partitionFile) noexcept -> std::vecto
  * @param folder Folder that contains replays
  * @return Vector of Hash Strings
  */
-auto getReplaysFromFolder(const std::string_view folder) noexcept -> std::vector<std::string>
+auto getReplaysFromFolder(const std::string_view& folder) noexcept -> std::vector<std::string>
 {
     SPDLOG_INFO("Searching replays in {}", folder);
     std::vector<std::string> replays;

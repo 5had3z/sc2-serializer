@@ -26,7 +26,7 @@ auto ReplayDatabase::open(std::filesystem::path dbPath) noexcept -> bool
     }
 
     dbPath_ = std::move(dbPath);
-    bool ok = true;
+    bool ok;
     if (fs::exists(dbPath_)) {
         ok = this->load();
         if (ok) {

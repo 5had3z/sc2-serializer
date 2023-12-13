@@ -501,7 +501,7 @@ struct NeutralUnitSoA
     [[nodiscard]] auto operator==(const NeutralUnitSoA &other) const noexcept -> bool = default;
 };
 
-[[nodiscard]] inline auto NeutralUnitAoStoSoA(const std::vector<NeutralUnit> aos) noexcept -> NeutralUnitSoA
+[[nodiscard]] inline auto NeutralUnitAoStoSoA(const std::vector<NeutralUnit>& aos) noexcept -> NeutralUnitSoA
 {
     NeutralUnitSoA soa{};
     // Prealloc expected size

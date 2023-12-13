@@ -15,6 +15,7 @@ struct ResourceObs
 {
     UID id;// Original ID
     Point3f pos;// Point on map
+    // cppcheck-suppress unusedStructMember
     int qty;// Last observation
 };
 
@@ -24,7 +25,7 @@ class BaseConverter : public sc2::ReplayObserver
     auto loadDB(const std::filesystem::path &path) noexcept -> bool;
 
     // Set Replay file hash + playerId before launching the coordinator
-    void setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept;
+    void setReplayInfo(const std::string_view& hash, std::uint32_t playerId) noexcept;
 
     void OnGameStart() override;
 

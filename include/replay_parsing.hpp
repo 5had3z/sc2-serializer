@@ -14,7 +14,7 @@ namespace cvt {
 class UpgradeTiming
 {
   public:
-    UpgradeTiming(std::filesystem::path dataFile);
+    explicit UpgradeTiming(std::filesystem::path dataFile);
 
     // Set the game version
     void setVersion(std::string_view version);
@@ -55,7 +55,7 @@ class UpgradeTiming
 class ReplayParser
 {
   public:
-    ReplayParser(const std::filesystem::path &dataPath) noexcept;
+    explicit ReplayParser(const std::filesystem::path &dataPath) noexcept;
 
     // Parse replay data, ready to sample from
     void parseReplay(ReplayDataSoA replayData);
