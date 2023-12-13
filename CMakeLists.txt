@@ -32,15 +32,34 @@ cpmaddpackage(
   1.12.0
   OPTIONS
   "SPDLOG_BUILD_PIC ON")
-cpmaddpackage(
-  NAME
-  boost_pfr
-  GITHUB_REPOSITORY
-  boostorg/pfr
-  GIT_TAG
-  2.1.0)
 
-find_package(Boost REQUIRED COMPONENTS iostreams)
+if(WIN32)
+  CPMAddPackage(
+    NAME zlib
+    GITHUB_REPOSITORY madler/zlib
+    VERSION 1.3
+  )
+
+  add_library(ZLIB::ZLIB ALIAS zlib)
+
+  CPMAddPackage(
+    NAME Boost
+    URL "https://github.com/boostorg/boost/releases/download/boost-1.83.0/boost-1.83.0.zip"
+    OPTIONS
+    "BOOST_IOSTREAMS_ENABLE_ZLIB"
+  )
+
+else()
+  cpmaddpackage(
+    NAME
+    boost_pfr
+    GITHUB_REPOSITORY
+    boostorg/pfr
+    GIT_TAG
+    2.1.0)
+    find_package(Boost REQUIRED COMPONENTS iostreams)
+
+endif()
 
 # ---- Main Library Components ----
 
