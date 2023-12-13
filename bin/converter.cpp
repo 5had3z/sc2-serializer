@@ -2,6 +2,7 @@
 #include <spdlog/fmt/fmt.h>
 #include <spdlog/spdlog.h>
 
+#include <Python.h>
 #include <chrono>
 #include <filesystem>
 #include <fstream>
@@ -88,6 +89,7 @@ void loopReplayFiles(const fs::path &replayFolder,
         return coordinator;
     };
     auto coordinator = make_coordinator();
+    coordinator->SetDataVersion("22EAC562CD0C6A31FB2C2C21E3AA3680");
 
     std::size_t nComplete = 0;
     for (auto &&replayHash : replayHashes) {
@@ -104,6 +106,13 @@ void loopReplayFiles(const fs::path &replayFolder,
                 SPDLOG_INFO("Skipping known Replay {}, PlayerID: {}", replayHash, playerId);
                 continue;
             }
+            Py_Initialize();
+
+            FILE *file_1 = fopen("C:\\Users\\newbu\\Desktop\\sc2\\sc2-serializer\\src\\getReplayVersion.py", "r+");
+            PyRun_SimpleFile(file_1, "C:\\Users\\newbu\\Desktop\\sc2\\sc2-serializer\\src\\getReplayVersion.py");
+
+            Py_Finalize();
+
 
             auto runReplay = [&]() {
                 // Setup Replay with Player
@@ -111,6 +120,8 @@ void loopReplayFiles(const fs::path &replayFolder,
                 converter->setReplayInfo(replayHash, playerId);
                 coordinator->SetReplayPath(replayPath.string());
                 coordinator->SetReplayPerspective(playerId);
+                // converter->ReplayControl()->GatherReplayInfo(replayPath.string(), true);
+                // coordinator->SetDataVersion(converter->ReplayControl()->GetReplayInfo().data_version);
                 // Run Replay
                 while (coordinator->Update()) {}
             };

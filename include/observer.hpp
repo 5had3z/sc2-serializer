@@ -76,6 +76,7 @@ class BaseConverter : public sc2::ReplayObserver
     bool mapDynHasLogged_{ false };
     bool mapHeightHasLogged_{ false };
     bool writeSuccess_{ false };
+    std::string dataVersion_;
 };
 
 /**

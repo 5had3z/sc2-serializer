@@ -46,6 +46,26 @@ cpmaddpackage(
   OPTIONS
   "SPDLOG_BUILD_PIC ON")
 
+set(CMAKE_PREFIX_PATH "C:\\Users\\newbu\\miniconda3\\envs\\sc2")
+include_directories("C:\\Users\\newbu\\miniconda3\\envs\\sc2\\include")
+
+# set(PYTHON_INCLUDE_DIR "C:\\Users\\newbu\\miniconda3\\envs\\sc2\\include")
+# set(PYTHON_LIBRARY "C:\\Users\\newbu\\miniconda3\\envs\\sc2\\libs\\python310.lib")
+# find_package(Python3 REQUIRED COMPONENTS Development HINTS Python3_EXECUTABLE "C:\\Users\\newbu\\miniconda3\\envs\\sc2\\python.exe")
+find_package(Python3 COMPONENTS Interpreter Development)
+message(STATUS
+  "Python: version=${Python3_VERSION} interpreter=${Python3_EXECUTABLE}")
+
+if(NOT Python3_FOUND AND Python3_Development_FOUND)
+  # find_package() will not abort the build if anything's missing.
+  string(JOIN "\n" errmsg
+    "  Python3 and/or development libs not found."
+    "  - Python3_FOUND=${Python3_FOUND}"
+    "  - Python3_Development_FOUND=${Python3_Development_FOUND}"
+  )
+  message(FATAL_ERROR ${errmsg})
+endif()
+
 if(WIN32)
   CPMAddPackage(
     NAME zlib
@@ -95,7 +115,7 @@ if(SC2_CONVERTER)
   target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS})
 
   target_include_directories(replay_converter PUBLIC include 3rdparty/s2client-api/include
-    ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated)
+    ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated ${Python_INCLUDE_DIRS})
 
   if(SC2_SANITIZERS)
     target_compile_options(replay_converter PUBLIC -fsanitize=address,leak,undefined)
@@ -107,7 +127,8 @@ if(SC2_CONVERTER)
     sc2_converter
     replay_converter
     cxxopts
-    spdlog::spdlog)
+    spdlog::spdlog
+    ${Python_LIBRARIES})
 
   add_executable(sc2_merger bin/merge.cpp src/database.cpp)
   target_compile_features(sc2_merger PUBLIC cxx_std_23)

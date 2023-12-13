@@ -130,6 +130,19 @@ void BaseConverter::OnGameStart()
     currentReplay_.playerAPM = playerInfo.apm;
     currentReplay_.gameVersion = replayInfo.version;
 
+    // Py_Initialize();
+
+    // FILE *PythonScriptFile = fopen("Python Scripts/Test.py", "r");
+    // if (PythonScriptFile) {
+    //     PyRun_SimpleFile(PythonScriptFile, "Python Scripts/Test.py");
+    //     fclose(PythonScriptFile);
+    // }
+
+    // Py_Finalize();
+
+
+    dataVersion_ = replayInfo.data_version;
+
     const auto gameInfo = this->Observation()->GetGameInfo();
     if (!(gameInfo.height > 0 && gameInfo.width > 0)) { throw std::runtime_error("Missing map size data"); }
     currentReplay_.mapHeight = gameInfo.height;
@@ -288,8 +301,7 @@ void BaseConverter::copyHeightMapData() noexcept
 
 
 // Convert StarCraft2 API Unit to Serializer Unit
-[[nodiscard]] auto convertSC2Unit(const sc2::Unit *src, const sc2::Units &units, const bool isPassenger)
-    -> Unit
+[[nodiscard]] auto convertSC2Unit(const sc2::Unit *src, const sc2::Units &units, const bool isPassenger) -> Unit
 {
     Unit dst{};
     dst.id = src->tag;
