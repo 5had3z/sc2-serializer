@@ -111,7 +111,8 @@ class Observer : public sc2::ReplayObserver
     void reassignResourceId(const sc2::Unit *unit)
     {
         auto oldKV = std::ranges::find_if(resourceQty_, [=](auto &&keyValue) {
-            const auto &value = keyValue.second;
+            // cppcheck-suppress constVariable
+            auto &value = keyValue.second;
             return value.pos == unit->pos;
         });
         assert(oldKV != resourceQty_.end() && "No position match found???");
