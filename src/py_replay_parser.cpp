@@ -132,8 +132,10 @@ auto createMinimapFeatures(const ReplayDataSoA &data, std::size_t timeIdx, bool 
     dataPtr = unpackBoolImage<T>(data.buildable[timeIdx], dataPtr);
     dataPtr = unpackBoolImage<T>(data.pathable[timeIdx], dataPtr);
     if (expandPlayerRel) {
+        // cppcheck-suppress unreadVariable
         dataPtr = expandPlayerRelative<T>(data.player_relative[timeIdx], dataPtr);
     } else {
+        // cppcheck-suppress unreadVariable
         dataPtr = std::ranges::transform(data.player_relative[timeIdx].as_span(), dataPtr, Caster<T>()).out;
     }
     return featureMap;

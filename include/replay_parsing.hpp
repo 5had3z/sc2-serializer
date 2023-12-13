@@ -14,7 +14,8 @@ namespace cvt {
 class UpgradeTiming
 {
   public:
-    explicit UpgradeTiming(std::filesystem::path dataFile);
+    // cppcheck-suppress noExplicitConstructor
+    UpgradeTiming(std::filesystem::path dataFile);
 
     // Set the game version
     void setVersion(std::string_view version);

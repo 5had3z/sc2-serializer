@@ -52,7 +52,8 @@ class FrequencyTimer
   public:
     std::chrono::seconds displayPeriod;
 
-    explicit FrequencyTimer(std::string name, std::chrono::seconds displayPeriod_ = std::chrono::minutes(1))
+    // cppcheck-suppress noExplicitConstructor
+    FrequencyTimer(std::string name, std::chrono::seconds displayPeriod_ = std::chrono::minutes(1))
         : timerName(std::move(name)), displayPeriod(displayPeriod_)
     {}
 
@@ -180,7 +181,7 @@ void BaseConverter::OnGameEnd()
     writeSuccess_ = database_.addEntry(SoA);
 }
 
-void BaseConverter::setReplayInfo(const std::string_view& hash, std::uint32_t playerId) noexcept
+void BaseConverter::setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept
 {
     currentReplay_.replayHash = hash;
     currentReplay_.playerId = playerId;

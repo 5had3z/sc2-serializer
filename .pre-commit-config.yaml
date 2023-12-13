@@ -40,3 +40,8 @@ repos:
       - id: cppcheck
         args:
           - --inline-suppr
+          - --suppress=unusedStructMember
+          - --suppress=unmatchedSuppression
+          - --suppress=missingIncludeSystem
+          - --suppress=unusedFunction
+          - --suppress=missingInclude
