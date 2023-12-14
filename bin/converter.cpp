@@ -9,6 +9,13 @@
 #include <iostream>
 #include <ranges>
 
+#if defined(_WIN32)
+#include <Windows.h>
+#elif defined(__linux__)
+#include <unistd.h>
+#endif
+
+
 #include "observer.hpp"
 
 namespace fs = std::filesystem;
@@ -68,6 +75,76 @@ auto getReplaysFromFolder(const std::string_view folder) noexcept -> std::vector
     return replays;
 }
 
+std::string getExecutablePath()
+{
+    std::string executablePath;
+
+#if defined(_WIN32)
+    char buffer[MAX_PATH];
+    GetModuleFileName(NULL, buffer, MAX_PATH);
+    executablePath = std::filesystem::path(buffer).parent_path().string();
+#elif defined(__linux__)
+    char buffer[PATH_MAX];
+    ssize_t len = readlink("/proc/self/exe", buffer, sizeof(buffer) - 1);
+    if (len != -1) {
+        buffer[len] = '\0';
+        executablePath = std::filesystem::path(buffer).parent_path().string();
+    }
+#endif
+
+    return executablePath;
+}
+
+
+auto getDataVersion(const fs::path &replayPath) -> std::optional<std::string>
+{
+    PyObject *pName, *pModule, *pFunction, *pArgs, *pResult;
+
+    // Initialize the Python interpreter
+    Py_Initialize();
+
+    // Load the Python module
+    PyObject *sysPath = PySys_GetObject("path");
+    PyList_Append(sysPath, (PyUnicode_FromString(getExecutablePath().c_str())));
+
+    pName = PyUnicode_DecodeFSDefault("getReplayVersion");
+    pModule = PyImport_Import(pName);
+    Py_XDECREF(pName);
+
+    if (pModule != NULL) {
+        pFunction = PyObject_GetAttrString(pModule, "run_file");
+
+        if (PyCallable_Check(pFunction)) {
+            pArgs = PyTuple_Pack(1, PyUnicode_DecodeFSDefault(replayPath.string().c_str()));
+            pResult = PyObject_CallObject(pFunction, pArgs);
+
+            if (pResult != NULL) {
+                const char *resultStr = PyUnicode_AsUTF8(pResult);
+                Py_XDECREF(pResult);
+                return resultStr;
+            } else {
+                PyErr_Print();
+                return std::nullopt;
+            }
+
+            Py_XDECREF(pArgs);
+        } else {
+            SPDLOG_WARN("Function not callable");
+            return std::nullopt;
+        }
+
+        Py_XDECREF(pFunction);
+        Py_XDECREF(pModule);
+    } else {
+        SPDLOG_WARN("Module not loaded");
+        return std::nullopt;
+    }
+
+    // Finalize the Python interpreter
+    Py_Finalize();
+    return std::nullopt;
+}
+
 void loopReplayFiles(const fs::path &replayFolder,
     const std::vector<std::string> &replayHashes,
     const std::string &gamePath,
@@ -89,7 +166,7 @@ void loopReplayFiles(const fs::path &replayFolder,
         return coordinator;
     };
     auto coordinator = make_coordinator();
-    coordinator->SetDataVersion("22EAC562CD0C6A31FB2C2C21E3AA3680");
+    // coordinator->SetDataVersion("22EAC562CD0C6A31FB2C2C21E3AA3680");
 
     std::size_t nComplete = 0;
     for (auto &&replayHash : replayHashes) {
@@ -106,13 +183,11 @@ void loopReplayFiles(const fs::path &replayFolder,
                 SPDLOG_INFO("Skipping known Replay {}, PlayerID: {}", replayHash, playerId);
                 continue;
             }
-            Py_Initialize();
-
-            FILE *file_1 = fopen("C:\\Users\\newbu\\Desktop\\sc2\\sc2-serializer\\src\\getReplayVersion.py", "r+");
-            PyRun_SimpleFile(file_1, "C:\\Users\\newbu\\Desktop\\sc2\\sc2-serializer\\src\\getReplayVersion.py");
-
-            Py_Finalize();
-
+            auto versionResult = getDataVersion(replayPath);
+            if (versionResult.has_value()) {
+                // Call SetDataVersion with the non-empty value
+                coordinator->SetDataVersion(*versionResult);
+            }
 
             auto runReplay = [&]() {
                 // Setup Replay with Player

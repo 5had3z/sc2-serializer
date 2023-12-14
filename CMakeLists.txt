@@ -46,18 +46,12 @@ cpmaddpackage(
   OPTIONS
   "SPDLOG_BUILD_PIC ON")
 
-set(CMAKE_PREFIX_PATH "C:\\Users\\newbu\\miniconda3\\envs\\sc2")
-include_directories("C:\\Users\\newbu\\miniconda3\\envs\\sc2\\include")
-
-# set(PYTHON_INCLUDE_DIR "C:\\Users\\newbu\\miniconda3\\envs\\sc2\\include")
-# set(PYTHON_LIBRARY "C:\\Users\\newbu\\miniconda3\\envs\\sc2\\libs\\python310.lib")
-# find_package(Python3 REQUIRED COMPONENTS Development HINTS Python3_EXECUTABLE "C:\\Users\\newbu\\miniconda3\\envs\\sc2\\python.exe")
 find_package(Python3 COMPONENTS Interpreter Development)
 message(STATUS
   "Python: version=${Python3_VERSION} interpreter=${Python3_EXECUTABLE}")
+include_directories(${Python3_INCLUDE_DIRS})
 
 if(NOT Python3_FOUND AND Python3_Development_FOUND)
-  # find_package() will not abort the build if anything's missing.
   string(JOIN "\n" errmsg
     "  Python3 and/or development libs not found."
     "  - Python3_FOUND=${Python3_FOUND}"
@@ -65,6 +59,7 @@ if(NOT Python3_FOUND AND Python3_Development_FOUND)
   )
   message(FATAL_ERROR ${errmsg})
 endif()
+
 
 if(WIN32)
   CPMAddPackage(
@@ -128,7 +123,8 @@ if(SC2_CONVERTER)
     replay_converter
     cxxopts
     spdlog::spdlog
-    ${Python_LIBRARIES})
+    ${Python_LIBRARIES}
+    Python3::Python)
 
   add_executable(sc2_merger bin/merge.cpp src/database.cpp)
   target_compile_features(sc2_merger PUBLIC cxx_std_23)
@@ -140,6 +136,11 @@ if(SC2_CONVERTER)
     cxxopts
     Boost::iostreams
   )
+  # Copy version getter to build folder
+  add_custom_command(TARGET replay_converter POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+  ${CMAKE_SOURCE_DIR}/src/getReplayVersion.py $<TARGET_FILE_DIR:replay_converter>
+)
 
   if(WIN32)
     # Copy zlibd.dll to the build directory
@@ -178,7 +179,7 @@ if(SC2_PY_READER)
     boost_pfr
     Boost::iostreams
     yaml-cpp)
-  target_compile_options(_sc2_replay_reader PUBLIC ${_COMPILE_OPTIONS} /std:c++latest)
+  target_compile_options(_sc2_replay_reader PUBLIC ${_COMPILE_OPTIONS})
   target_include_directories(_sc2_replay_reader PUBLIC include)
 endif()
 

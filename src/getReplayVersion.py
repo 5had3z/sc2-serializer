@@ -19,6 +19,10 @@ def get_replay_version(replay_data):
     return metadata.get("DataVersion")  # Only in replays version 4.1+.
 
 
+def run_file(file_path: str):
+    return get_replay_version(replay_data(file_path))
+
+
 if __name__ == "__main__":
     rd = replay_data(sys.argv[1])
     print(get_replay_version(rd))
