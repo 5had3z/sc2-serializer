@@ -52,6 +52,8 @@ cmake --build build
 
 Only tested with Visual Studio 2022 Version 17.7.6, _MSC_VER=1936.
 
+I would not reccomend Python 3.12, [dm-tree will not compile](https://github.com/google-deepmind/tree/issues/109) 
+
 You will need to make sure PYTHONHOME is set correctly.
 
 This will compile both boost and zlib for you. 

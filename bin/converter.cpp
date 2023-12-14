@@ -185,7 +185,7 @@ void loopReplayFiles(const fs::path &replayFolder,
         }
         coordinator->AddReplayObserver(converter);
         coordinator->SetProcessPath(gamePath);
-        coordinator->SetTimeoutMS(60'000);
+        coordinator->SetTimeoutMS(2000'000);
         return coordinator;
     };
     auto coordinator = make_coordinator();
