@@ -37,7 +37,10 @@ jobs:
 
       - name: Build and run tests
         run: cmake --build build --parallel --config Release && ./build/test_database && ./build/test_readwrite
-
+      - name: Fix python setup issues
+        run : |
+          sudo apt purge python3-setuptools
+          pip install --upgrade pip
       - name: Ensure pybind11-stubgen installed
         run: pip install git+https://github.com/5had3z/pybind11-stubgen.git black
 
