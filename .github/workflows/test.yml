@@ -8,8 +8,8 @@ jobs:
 
     strategy:
       matrix:
-        cmake-version: [3.22]  # Specify your desired CMake version
-        gcc-version: [13]       # Specify your desired GCC version
+        cmake-version: [3.22]
+        gcc-version: [13]
 
     steps:
       - name: Checkout code
@@ -49,3 +49,6 @@ jobs:
 
       - name: Run python building
         run: pip install .
+
+      - name: Check the python imports
+        run: python -c "import sc2_replay_reader; db = sc2_replay_reader.ReplayDatabase()"
