@@ -11,6 +11,21 @@ Alternative to generating the "100's of TB" format from alphastar unplugged.
 
 ## Building C++ Observer and Tests
 
+### Python Dependencies
+
+This library relies on a python script to find the dataVersion for launching replays. This python script uses [mpyq](https://github.com/eagleflo/mpyq), which can be installed with 
+
+```
+pip install mpyq
+```
+
+You can manually define these variables to choose a python version.
+
+- -DPYTHON_INCLUDE
+- -DPYTHON_LIBRARIES
+
+### Linux
+
 This requires >=gcc-13 since some c++23 features are used.
 If using ubuntu 18.04 or higher, you can get this via the test toolchain ppa on ubuntu. To update cmake to latest and greatest, follow the instructions [here](https://apt.kitware.com/).
 
@@ -31,6 +46,25 @@ To build if you use vscode you should be able to just use the cmake extension an
 ```
 CC=/usr/bin/gcc-13 CXX=/usr/bin/g++-13 cmake -B build -GNinja
 cmake --build build
+```
+
+### Windows
+
+Only tested with Visual Studio 2022 Version 17.7.6, _MSC_VER=1936.
+
+This will compile both boost and zlib for you. 
+
+To use the SCII replay observer, you will need to initialize the 3rdparty submodule(s).
+
+```
+git submodule update --init --recursive
+```
+
+To build if you use vscode you should be able to just use the cmake extension Otherwise the CLI should be the following.
+
+```
+cmake -B build
+cmake --build build --target ALL_BUILD
 ```
 
 ## Building Python Bindigs
