@@ -28,6 +28,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y g++-${{ matrix.gcc-version }} gcc-${{ matrix.gcc-version }}
           sudo apt-get install -y cmake ninja-build git libboost-iostreams1.74-dev
+      - name: Fix python setup issues
+        run : |
+          sudo apt-get purge -y python3-setuptools
+          curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+          python get-pip.py
+          pip install --upgrade pip
 
       - name: Configure CMake
         run: |
@@ -37,10 +43,7 @@ jobs:
 
       - name: Build and run tests
         run: cmake --build build --parallel --config Release && ./build/test_database && ./build/test_readwrite
-      - name: Fix python setup issues
-        run : |
-          sudo apt purge python3-setuptools
-          pip install --upgrade pip
+
       - name: Ensure pybind11-stubgen installed
         run: pip install git+https://github.com/5had3z/pybind11-stubgen.git black
 
