@@ -194,6 +194,8 @@ void loopReplayFiles(const fs::path &replayFolder,
     };
     auto coordinator = make_coordinator();
 
+    std::string currVer = "";
+
     std::size_t nComplete = 0;
     for (auto &&replayHash : replayHashes) {
         const auto replayPath = (replayFolder / replayHash).replace_extension(".SC2Replay");
@@ -210,9 +212,15 @@ void loopReplayFiles(const fs::path &replayFolder,
                 continue;
             }
             auto versionResult = getDataVersion(replayPath);
-            if (versionResult.has_value()) {
+            // No current version, we can just set it
+            if (versionResult.has_value() && currVer.empty()) {
                 coordinator->SetDataVersion(*versionResult);
-                SPDLOG_INFO("Setting dataVersion as {}", (*versionResult).c_str());
+                currVer = *versionResult;
+            }
+            // uh oh game version has changed
+            else if (versionResult.has_value() && (*versionResult) != currVer) {
+                coordinator->Relaunch(*versionResult);
+                currVer = *versionResult;
             }
 
             auto runReplay = [&]() {
