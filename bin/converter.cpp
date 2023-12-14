@@ -26,8 +26,8 @@
 #include <unistd.h>
 #endif
 
-
 #include "observer.hpp"
+#include "versions.cpp"
 
 namespace fs = std::filesystem;
 
@@ -107,7 +107,7 @@ std::string getExecutablePath()
 }
 
 
-auto getDataVersion(const fs::path &replayPath) -> std::optional<std::string>
+auto getDataVersion(const fs::path &replayPath) -> std::optional<std::pair<std::string, std::string>>
 {
     PyObject *pName, *pModule, *pFunction, *pArgs, *pResult;
 
@@ -118,7 +118,7 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::string>
         return std::nullopt;
     }
 
-    auto result = [&]() -> std::optional<std::string> {
+    auto result = [&]() -> std::optional<std::pair<std::string, std::string>> {
         // Load the Python module
         PyObject *sysPath = PySys_GetObject("path");
         PyList_Append(sysPath, (PyUnicode_FromString(getExecutablePath().c_str())));
@@ -143,11 +143,19 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::string>
                 }
 
                 if (pResult != NULL) {
-                    const char *resultStr = PyUnicode_AsUTF8(pResult);
-                    std::string resultString(resultStr);
 
-                    Py_XDECREF(pResult);
-                    return resultString;
+                    PyObject *pItem1 = PyTuple_GetItem(pResult, 0);
+                    const char *resultStr1 = PyUnicode_AsUTF8(pItem1);
+                    std::string gameVersion(resultStr1);
+                    // Py_XDECREF(pItem1);
+
+                    // Assuming the second item is a string
+                    PyObject *pItem2 = PyTuple_GetItem(pResult, 1);
+                    const char *resultStr2 = PyUnicode_AsUTF8(pItem2);
+                    std::string dataVersion(resultStr2);
+                    // Py_XDECREF(pItem2);
+
+                    return std::make_pair(dataVersion, gameVersion);
                 } else {
                     PyErr_Print();
                     return std::nullopt;
@@ -212,15 +220,15 @@ void loopReplayFiles(const fs::path &replayFolder,
                 continue;
             }
             auto versionResult = getDataVersion(replayPath);
-            // No current version, we can just set it
-            if (versionResult.has_value() && currVer.empty()) {
-                coordinator->SetDataVersion(*versionResult);
-                currVer = *versionResult;
-            }
-            // uh oh game version has changed
-            else if (versionResult.has_value() && (*versionResult) != currVer) {
-                coordinator->Relaunch(*versionResult);
-                currVer = *versionResult;
+            if (versionResult.has_value()) {
+                auto [dataVersion, gameVersion] = *versionResult;
+                int gameVer = VERSIONS.at(gameVersion);
+                std::string fullPath = gamePath + "\\Base" + std::to_string(gameVer) + "\\SC2_x64.exe";
+                coordinator->SetDataVersion(dataVersion, true);
+                coordinator->SetProcessPath(fullPath, true);
+                // uh oh game version has changed
+                if (!currVer.empty() && dataVersion != currVer) { coordinator->Relaunch(); }
+                currVer = dataVersion;
             }
 
             auto runReplay = [&]() {
