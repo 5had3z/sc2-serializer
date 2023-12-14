@@ -2,12 +2,16 @@
 #include <spdlog/fmt/fmt.h>
 #include <spdlog/spdlog.h>
 
+#if defined(_WIN32)
 #ifdef _DEBUG
 #undef _DEBUG
 #include <python.h>
 #define _DEBUG
 #else
 #include <python.h>
+#endif
+#elif defined(__linux__)
+#include <Python.h>
 #endif
 
 #include <chrono>
