@@ -52,6 +52,8 @@ cmake --build build
 
 Only tested with Visual Studio 2022 Version 17.7.6, _MSC_VER=1936.
 
+You will need to make sure PYTHONHOME is set correctly.
+
 This will compile both boost and zlib for you. 
 
 To use the SCII replay observer, you will need to initialize the 3rdparty submodule(s).

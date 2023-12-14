@@ -51,6 +51,12 @@ message(STATUS
   "Python: version=${Python3_VERSION} interpreter=${Python3_EXECUTABLE}")
 include_directories(${Python3_INCLUDE_DIRS})
 
+if(WIN32)
+  link_directories(${Python3_INCLUDE_DIRS}\\..\\libs)
+endif()
+
+message(Python3_INCLUDE_DIRS: ${Python3_INCLUDE_DIRS})
+
 if(NOT Python3_FOUND AND Python3_Development_FOUND)
   string(JOIN "\n" errmsg
     "  Python3 and/or development libs not found."
@@ -59,7 +65,6 @@ if(NOT Python3_FOUND AND Python3_Development_FOUND)
   )
   message(FATAL_ERROR ${errmsg})
 endif()
-
 
 if(WIN32)
   CPMAddPackage(
@@ -136,17 +141,23 @@ if(SC2_CONVERTER)
     cxxopts
     Boost::iostreams
   )
+
   # Copy version getter to build folder
   add_custom_command(TARGET replay_converter POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different
-  ${CMAKE_SOURCE_DIR}/src/getReplayVersion.py $<TARGET_FILE_DIR:replay_converter>
-)
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${CMAKE_SOURCE_DIR}/src/getReplayVersion.py $<TARGET_FILE_DIR:replay_converter>
+  )
 
   if(WIN32)
     # Copy zlibd.dll to the build directory
     add_custom_command(TARGET replay_converter POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
       $<TARGET_FILE:ZLIB::ZLIB> $<TARGET_FILE_DIR:replay_converter>
+    )
+
+    add_custom_command(TARGET replay_converter POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+      $<TARGET_FILE:Python3::Python> $<TARGET_FILE_DIR:replay_converter>
     )
   endif()
 endif()

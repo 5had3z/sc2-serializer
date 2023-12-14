@@ -2,7 +2,14 @@
 #include <spdlog/fmt/fmt.h>
 #include <spdlog/spdlog.h>
 
-#include <Python.h>
+#ifdef _DEBUG
+#undef _DEBUG
+#include <python.h>
+#define _DEBUG
+#else
+#include <python.h>
+#endif
+
 #include <chrono>
 #include <filesystem>
 #include <fstream>
@@ -100,49 +107,65 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::string>
 {
     PyObject *pName, *pModule, *pFunction, *pArgs, *pResult;
 
-    // Initialize the Python interpreter
     Py_Initialize();
 
-    // Load the Python module
-    PyObject *sysPath = PySys_GetObject("path");
-    PyList_Append(sysPath, (PyUnicode_FromString(getExecutablePath().c_str())));
-
-    pName = PyUnicode_DecodeFSDefault("getReplayVersion");
-    pModule = PyImport_Import(pName);
-    Py_XDECREF(pName);
-
-    if (pModule != NULL) {
-        pFunction = PyObject_GetAttrString(pModule, "run_file");
-
-        if (PyCallable_Check(pFunction)) {
-            pArgs = PyTuple_Pack(1, PyUnicode_DecodeFSDefault(replayPath.string().c_str()));
-            pResult = PyObject_CallObject(pFunction, pArgs);
-
-            if (pResult != NULL) {
-                const char *resultStr = PyUnicode_AsUTF8(pResult);
-                Py_XDECREF(pResult);
-                return resultStr;
-            } else {
-                PyErr_Print();
-                return std::nullopt;
-            }
-
-            Py_XDECREF(pArgs);
-        } else {
-            SPDLOG_WARN("Function not callable");
-            return std::nullopt;
-        }
-
-        Py_XDECREF(pFunction);
-        Py_XDECREF(pModule);
-    } else {
-        SPDLOG_WARN("Module not loaded");
+    if (!Py_IsInitialized()) {
+        SPDLOG_WARN("Failed to initialize Python.");
         return std::nullopt;
     }
 
+    auto result = [&]() -> std::optional<std::string> {
+        // Load the Python module
+        PyObject *sysPath = PySys_GetObject("path");
+        PyList_Append(sysPath, (PyUnicode_FromString(getExecutablePath().c_str())));
+
+        pName = PyUnicode_DecodeFSDefault("getReplayVersion");
+        pModule = PyImport_Import(pName);
+        Py_XDECREF(pName);
+        if (PyErr_Occurred()) {
+            PyErr_Print();
+            return std::nullopt;
+        }
+
+        if (pModule != NULL) {
+            pFunction = PyObject_GetAttrString(pModule, "run_file");
+
+            if (PyCallable_Check(pFunction)) {
+                pArgs = PyTuple_Pack(1, PyUnicode_DecodeFSDefault(replayPath.string().c_str()));
+                pResult = PyObject_CallObject(pFunction, pArgs);
+                if (PyErr_Occurred()) {
+                    PyErr_Print();
+                    return std::nullopt;
+                }
+
+                if (pResult != NULL) {
+                    const char *resultStr = PyUnicode_AsUTF8(pResult);
+                    std::string resultString(resultStr);
+
+                    Py_XDECREF(pResult);
+                    return resultString;
+                } else {
+                    PyErr_Print();
+                    return std::nullopt;
+                }
+
+                Py_XDECREF(pArgs);
+            } else {
+                SPDLOG_WARN("Function not callable");
+                return std::nullopt;
+            }
+
+            Py_XDECREF(pFunction);
+            Py_XDECREF(pModule);
+        } else {
+            SPDLOG_WARN("Module not loaded");
+            return std::nullopt;
+        }
+    }();
+
     // Finalize the Python interpreter
     Py_Finalize();
-    return std::nullopt;
+    return result;
 }
 
 void loopReplayFiles(const fs::path &replayFolder,
@@ -166,7 +189,6 @@ void loopReplayFiles(const fs::path &replayFolder,
         return coordinator;
     };
     auto coordinator = make_coordinator();
-    // coordinator->SetDataVersion("22EAC562CD0C6A31FB2C2C21E3AA3680");
 
     std::size_t nComplete = 0;
     for (auto &&replayHash : replayHashes) {
@@ -185,8 +207,8 @@ void loopReplayFiles(const fs::path &replayFolder,
             }
             auto versionResult = getDataVersion(replayPath);
             if (versionResult.has_value()) {
-                // Call SetDataVersion with the non-empty value
                 coordinator->SetDataVersion(*versionResult);
+                SPDLOG_INFO("Setting dataVersion as {}", (*versionResult).c_str());
             }
 
             auto runReplay = [&]() {
@@ -195,8 +217,6 @@ void loopReplayFiles(const fs::path &replayFolder,
                 converter->setReplayInfo(replayHash, playerId);
                 coordinator->SetReplayPath(replayPath.string());
                 coordinator->SetReplayPerspective(playerId);
-                // converter->ReplayControl()->GatherReplayInfo(replayPath.string(), true);
-                // coordinator->SetDataVersion(converter->ReplayControl()->GetReplayInfo().data_version);
                 // Run Replay
                 while (coordinator->Update()) {}
             };
