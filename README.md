@@ -13,7 +13,7 @@ Alternative to generating the "100's of TB" format from alphastar unplugged.
 
 ### Python Dependencies
 
-This library relies on a python script to find the dataVersion for launching replays. This python script uses [mpyq](https://github.com/eagleflo/mpyq), which can be installed with 
+This library relies on a python script to find the dataVersion for launching replays. This python script uses [mpyq](https://github.com/eagleflo/mpyq), which can be installed with
 
 ```
 pip install mpyq
@@ -52,11 +52,11 @@ cmake --build build
 
 Only tested with Visual Studio 2022 Version 17.7.6, _MSC_VER=1936.
 
-I would not reccomend Python 3.12, [dm-tree will not compile](https://github.com/google-deepmind/tree/issues/109) 
+I would not recommend Python 3.12, [dm-tree will not compile](https://github.com/google-deepmind/tree/issues/109)
 
 You will need to make sure PYTHONHOME is set correctly.
 
-This will compile both boost and zlib for you. 
+This will compile both boost and zlib for you.
 
 To use the SCII replay observer, you will need to initialize the 3rdparty submodule(s).
 
