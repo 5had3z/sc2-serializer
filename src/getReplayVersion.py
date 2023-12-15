@@ -16,9 +16,9 @@ def get_replay_version(replay_data):
     replay_io.seek(0)
     archive = mpyq.MPQArchive(replay_io).extract()
     metadata = json.loads(archive[b"replay.gamemetadata.json"].decode("utf-8"))
-    game_version=".".join(metadata["GameVersion"].split(".")[:-1])
+    game_version = ".".join(metadata["GameVersion"].split(".")[:-1])
 
-    return (game_version, metadata.get("DataVersion"))  # Only in replays version 4.1+.
+    return game_version
 
 
 def run_file(file_path: str):

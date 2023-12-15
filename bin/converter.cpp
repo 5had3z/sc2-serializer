@@ -107,7 +107,7 @@ std::string getExecutablePath()
 }
 
 
-auto getDataVersion(const fs::path &replayPath) -> std::optional<std::pair<std::string, std::string>>
+auto getDataVersion(const fs::path &replayPath) -> std::optional<std::string>
 {
     PyObject *pName, *pModule, *pFunction, *pArgs, *pResult;
 
@@ -118,7 +118,7 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::pair<std::
         return std::nullopt;
     }
 
-    auto result = [&]() -> std::optional<std::pair<std::string, std::string>> {
+    auto result = [&]() -> std::optional<std::string> {
         // Load the Python module
         PyObject *sysPath = PySys_GetObject("path");
         PyList_Append(sysPath, (PyUnicode_FromString(getExecutablePath().c_str())));
@@ -144,18 +144,11 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::pair<std::
 
                 if (pResult != NULL) {
 
-                    PyObject *pItem1 = PyTuple_GetItem(pResult, 0);
-                    const char *resultStr1 = PyUnicode_AsUTF8(pItem1);
-                    std::string gameVersion(resultStr1);
-                    // Py_XDECREF(pItem1);
+                    const char *resultStr2 = PyUnicode_AsUTF8(pResult);
+                    std::string gameVersion(resultStr2);
+                    Py_XDECREF(pResult);
 
-                    // Assuming the second item is a string
-                    PyObject *pItem2 = PyTuple_GetItem(pResult, 1);
-                    const char *resultStr2 = PyUnicode_AsUTF8(pItem2);
-                    std::string dataVersion(resultStr2);
-                    // Py_XDECREF(pItem2);
-
-                    return std::make_pair(dataVersion, gameVersion);
+                    return gameVersion;
                 } else {
                     PyErr_Print();
                     return std::nullopt;
@@ -221,8 +214,11 @@ void loopReplayFiles(const fs::path &replayFolder,
             }
             auto versionResult = getDataVersion(replayPath);
             if (versionResult.has_value()) {
-                auto [dataVersion, gameVersion] = *versionResult;
-                int gameVer = VERSIONS.at(gameVersion);
+                if (VERSIONS.find(*versionResult) == VERSIONS.end()) {
+                    SPDLOG_WARN("Skipping unknown version {}", *versionResult);
+                    break;
+                }
+                auto [gameVer, dataVersion] = VERSIONS.at(*versionResult);
 
                 fs::path gamePath_ = gamePath;
                 auto path = gamePath_ / ("Base" + std::to_string(gameVer)) / "SC2_x64";
@@ -230,6 +226,13 @@ void loopReplayFiles(const fs::path &replayFolder,
                 // Add ".exe" only if compiling for Windows
                 path.replace_extension("exe");
 #endif
+                if (!fs::exists(path)) {
+                    SPDLOG_WARN(
+                        "You do not have the correct StarCraft II Version, you need version {} with Identifier {}",
+                        *versionResult,
+                        "Base" + std::to_string(gameVer));
+                    break;
+                }
 
                 coordinator->SetDataVersion(dataVersion, true);
                 coordinator->SetProcessPath(path.string(), true);

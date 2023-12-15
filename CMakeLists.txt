@@ -14,16 +14,14 @@ option(SC2_SANITIZERS "Build with sanitizers enabled" OFF)
 if(WIN32)
   set(_WARNING_OPTIONS "/W4 /w14640 /w14242 /w14263 /w14265 /w14456 /w14928")
   set(_COMPILE_OPTIONS
-    "$<$<CONFIG:Debug>:/Od;/Zi;${WARNING_OPTIONS}>"
-    "$<$<CONFIG:Release>:/O2;/arch:AVX2;${WARNING_OPTIONS}>"
-    "$<$<CONFIG:RelWithDebInfo>:/O2;/arch:AVX2;/Zi;${WARNING_OPTIONS}>"
-  )
+      "$<$<CONFIG:Debug>:/Od;/Zi;${WARNING_OPTIONS}>" "$<$<CONFIG:Release>:/O2;/arch:AVX2;${WARNING_OPTIONS}>"
+      "$<$<CONFIG:RelWithDebInfo>:/O2;/arch:AVX2;/Zi;${WARNING_OPTIONS}>")
 else()
   set(_WARNING_OPTIONS "-Wall;-Wfatal-errors;-Wextra;-Wshadow;-Wcast-align;-Wpedantic;
     -Wconversion;-Wsign-conversion;-Wnull-dereference;-Wdouble-promotion")
   set(_COMPILE_OPTIONS
-    "$<$<CONFIG:Debug>:-O0;-g;${WARNING_OPTIONS}>" "$<$<CONFIG:Release>:-O3;-march=native;${WARNING_OPTIONS}>"
-    "$<$<CONFIG:RelWithDebInfo>:-O3;-march=native;-g;${WARNING_OPTIONS}>")
+      "$<$<CONFIG:Debug>:-O0;-g;${WARNING_OPTIONS}>" "$<$<CONFIG:Release>:-O3;-march=native;${WARNING_OPTIONS}>"
+      "$<$<CONFIG:RelWithDebInfo>:-O3;-march=native;-g;${WARNING_OPTIONS}>")
 endif()
 
 # ---- Add Dependencies ----
@@ -47,8 +45,7 @@ cpmaddpackage(
   "SPDLOG_BUILD_PIC ON")
 
 find_package(Python3 COMPONENTS Interpreter Development)
-message(STATUS
-  "Python: version=${Python3_VERSION} interpreter=${Python3_EXECUTABLE}")
+message(STATUS "Python: version=${Python3_VERSION} interpreter=${Python3_EXECUTABLE}")
 include_directories(${Python3_INCLUDE_DIRS})
 
 if(WIN32)
@@ -58,30 +55,35 @@ endif()
 message(Python3_INCLUDE_DIRS: ${Python3_INCLUDE_DIRS})
 
 if(NOT Python3_FOUND AND Python3_Development_FOUND)
-  string(JOIN "\n" errmsg
+  string(
+    JOIN
+    "\n"
+    errmsg
     "  Python3 and/or development libs not found."
     "  - Python3_FOUND=${Python3_FOUND}"
-    "  - Python3_Development_FOUND=${Python3_Development_FOUND}"
-  )
+    "  - Python3_Development_FOUND=${Python3_Development_FOUND}")
   message(FATAL_ERROR ${errmsg})
 endif()
 
 if(WIN32)
-  CPMAddPackage(
-    NAME zlib
-    GITHUB_REPOSITORY madler/zlib
-    VERSION 1.3
-  )
+  cpmaddpackage(
+    NAME
+    zlib
+    GITHUB_REPOSITORY
+    madler/zlib
+    VERSION
+    1.3)
 
   add_library(ZLIB::ZLIB ALIAS zlib)
   include_directories(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR})
 
-  CPMAddPackage(
-    NAME Boost
-    URL "https://github.com/boostorg/boost/releases/download/boost-1.83.0/boost-1.83.0.zip"
+  cpmaddpackage(
+    NAME
+    Boost
+    URL
+    "https://github.com/boostorg/boost/releases/download/boost-1.83.0/boost-1.83.0.zip"
     OPTIONS
-    "BOOST_IOSTREAMS_ENABLE_ZLIB"
-  )
+    "BOOST_IOSTREAMS_ENABLE_ZLIB")
 
 else()
   cpmaddpackage(
@@ -104,17 +106,20 @@ if(SC2_CONVERTER)
   target_link_libraries(
     replay_converter
     PUBLIC sc2api
-    sc2lib
-    sc2utils
-    spdlog::spdlog
-    boost_pfr
-    Boost::iostreams
-  )
+           sc2lib
+           sc2utils
+           spdlog::spdlog
+           boost_pfr
+           Boost::iostreams)
 
   target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS})
 
-  target_include_directories(replay_converter PUBLIC include 3rdparty/s2client-api/include
-    ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated ${Python_INCLUDE_DIRS})
+  target_include_directories(
+    replay_converter
+    PUBLIC include
+           3rdparty/s2client-api/include
+           ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated
+           ${Python_INCLUDE_DIRS})
 
   if(SC2_SANITIZERS)
     target_compile_options(replay_converter PUBLIC -fsanitize=address,leak,undefined)
@@ -138,26 +143,26 @@ if(SC2_CONVERTER)
     spdlog::spdlog
     boost_pfr
     cxxopts
-    Boost::iostreams
-  )
+    Boost::iostreams)
 
   # Copy version getter to build folder
-  add_custom_command(TARGET replay_converter POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${CMAKE_SOURCE_DIR}/src/getReplayVersion.py $<TARGET_FILE_DIR:replay_converter>
-  )
+  add_custom_command(
+    TARGET replay_converter
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/src/getReplayVersion.py
+            $<TARGET_FILE_DIR:replay_converter>)
 
   if(WIN32)
     # Copy zlibd.dll to the build directory
-    add_custom_command(TARGET replay_converter POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different
-      $<TARGET_FILE:ZLIB::ZLIB> $<TARGET_FILE_DIR:replay_converter>
-    )
+    add_custom_command(
+      TARGET replay_converter
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:ZLIB::ZLIB> $<TARGET_FILE_DIR:replay_converter>)
 
-    add_custom_command(TARGET replay_converter POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different
-      $<TARGET_FILE:Python3::Python> $<TARGET_FILE_DIR:replay_converter>
-    )
+    add_custom_command(
+      TARGET replay_converter
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Python3::Python> $<TARGET_FILE_DIR:replay_converter>)
   endif()
 endif()
 
@@ -186,9 +191,9 @@ if(SC2_PY_READER)
   target_link_libraries(
     _sc2_replay_reader
     PUBLIC spdlog::spdlog
-    boost_pfr
-    Boost::iostreams
-    yaml-cpp)
+           boost_pfr
+           Boost::iostreams
+           yaml-cpp)
   target_compile_options(_sc2_replay_reader PUBLIC ${_COMPILE_OPTIONS})
   target_include_directories(_sc2_replay_reader PUBLIC include)
 endif()
@@ -247,7 +252,7 @@ if(SC2_CONVERTER AND OpenCV_FOUND)
     opencv_core
     opencv_imgcodecs)
   target_include_directories(game_exp PRIVATE include 3rdparty/s2client-api/include
-    ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated)
+                                              ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated)
 
 elseif(SC2_CONVERTER)
   message("OpenCV Not Found, Not Building game_exp")
