@@ -11,16 +11,16 @@ option(SC2_PY_READER "Build the Python Reader" ON)
 option(SC2_TESTS "Build the test suite" ON)
 option(SC2_SANITIZERS "Build with sanitizers enabled" OFF)
 
-set(_WARNING_OPTIONS "-Wall;-Wfatal-errors;-Wextra;-Wshadow;-Wcast-align;-Wpedantic;
-    -Wconversion;-Wsign-conversion;-Wnull-dereference;-Wdouble-promotion")
-
 if(WIN32)
+  set(_WARNING_OPTIONS "/W4 /w14640 /w14242 /w14263 /w14265 /w14456 /w14928")
   set(_COMPILE_OPTIONS
     "$<$<CONFIG:Debug>:/Od;/Zi;${WARNING_OPTIONS}>"
     "$<$<CONFIG:Release>:/O2;/arch:AVX2;${WARNING_OPTIONS}>"
     "$<$<CONFIG:RelWithDebInfo>:/O2;/arch:AVX2;/Zi;${WARNING_OPTIONS}>"
   )
 else()
+  set(_WARNING_OPTIONS "-Wall;-Wfatal-errors;-Wextra;-Wshadow;-Wcast-align;-Wpedantic;
+    -Wconversion;-Wsign-conversion;-Wnull-dereference;-Wdouble-promotion")
   set(_COMPILE_OPTIONS
     "$<$<CONFIG:Debug>:-O0;-g;${WARNING_OPTIONS}>" "$<$<CONFIG:Release>:-O3;-march=native;${WARNING_OPTIONS}>"
     "$<$<CONFIG:RelWithDebInfo>:-O3;-march=native;-g;${WARNING_OPTIONS}>")
@@ -74,8 +74,7 @@ if(WIN32)
   )
 
   add_library(ZLIB::ZLIB ALIAS zlib)
-  include_directories("build\\_deps\\zlib-src")
-  include_directories("build\\_deps\\zlib-build")
+  include_directories(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR})
 
   CPMAddPackage(
     NAME Boost
