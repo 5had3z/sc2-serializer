@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
 
 project(sc2-cvt)
 
-if(WIN32)
+if(MSVC)
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
@@ -11,7 +11,7 @@ option(SC2_PY_READER "Build the Python Reader" ON)
 option(SC2_TESTS "Build the test suite" ON)
 option(SC2_SANITIZERS "Build with sanitizers enabled" OFF)
 
-if(WIN32)
+if(MSVC)
   set(_WARNING_OPTIONS "/W4 /w14640 /w14242 /w14263 /w14265 /w14456 /w14928")
   set(_COMPILE_OPTIONS
       "$<$<CONFIG:Debug>:/Od;/Zi;${WARNING_OPTIONS}>" "$<$<CONFIG:Release>:/O2;/arch:AVX2;${WARNING_OPTIONS}>"
@@ -44,28 +44,7 @@ cpmaddpackage(
   OPTIONS
   "SPDLOG_BUILD_PIC ON")
 
-find_package(Python3 COMPONENTS Interpreter Development)
-message(STATUS "Python: version=${Python3_VERSION} interpreter=${Python3_EXECUTABLE}")
-include_directories(${Python3_INCLUDE_DIRS})
-
-if(WIN32)
-  link_directories(${Python3_INCLUDE_DIRS}\\..\\libs)
-endif()
-
-message(Python3_INCLUDE_DIRS: ${Python3_INCLUDE_DIRS})
-
-if(NOT Python3_FOUND AND Python3_Development_FOUND)
-  string(
-    JOIN
-    "\n"
-    errmsg
-    "  Python3 and/or development libs not found."
-    "  - Python3_FOUND=${Python3_FOUND}"
-    "  - Python3_Development_FOUND=${Python3_Development_FOUND}")
-  message(FATAL_ERROR ${errmsg})
-endif()
-
-if(WIN32)
+if(MSVC)
   cpmaddpackage(
     NAME
     zlib
@@ -98,6 +77,23 @@ endif()
 
 # ---- Main Library Components ----
 if(SC2_CONVERTER)
+
+  find_package(Python3 COMPONENTS Interpreter Development)
+  message(STATUS "Python: version=${Python3_VERSION} interpreter=${Python3_EXECUTABLE}")
+
+  message(Python3_INCLUDE_DIRS: ${Python3_INCLUDE_DIRS})
+
+  if(NOT (Python3_FOUND AND Python3_Development_FOUND))
+    string(
+      JOIN
+      "\n"
+      errmsg
+      "  Python3 and/or development libs not found."
+      "  - Python3_FOUND=${Python3_FOUND}"
+      "  - Python3_Development_FOUND=${Python3_Development_FOUND}")
+    message(FATAL_ERROR ${errmsg})
+  endif()
+
   # Add submodule path
   add_subdirectory(3rdparty/s2client-api)
 
@@ -115,13 +111,13 @@ if(SC2_CONVERTER)
   target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS})
 
   target_include_directories(
-    replay_converter
+    replay_converter SYSTEM
     PUBLIC include
            3rdparty/s2client-api/include
            ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated
            ${Python_INCLUDE_DIRS})
 
-  if(SC2_SANITIZERS)
+  if(SC2_SANITIZERS AND NOT MSVC)
     target_compile_options(replay_converter PUBLIC -fsanitize=address,leak,undefined)
     target_link_options(replay_converter PUBLIC -fsanitize=address,leak,undefined)
   endif()
@@ -129,21 +125,26 @@ if(SC2_CONVERTER)
   add_executable(sc2_converter bin/converter.cpp)
   target_link_libraries(
     sc2_converter
-    replay_converter
-    cxxopts
-    spdlog::spdlog
-    ${Python_LIBRARIES}
-    Python3::Python)
+    PUBLIC replay_converter
+           cxxopts
+           spdlog::spdlog
+           ${Python_LIBRARIES}
+           Python3::Python)
+
+  if(MSVC)
+    target_link_directories(sc2_converter PUBLIC ${Python3_INCLUDE_DIRS}\\..\\libs)
+  endif()
+  target_include_directories(sc2_converter PUBLIC ${Python3_INCLUDE_DIRS})
 
   add_executable(sc2_merger bin/merge.cpp src/database.cpp)
   target_compile_features(sc2_merger PUBLIC cxx_std_23)
   target_include_directories(sc2_merger PUBLIC include)
   target_link_libraries(
     sc2_merger
-    spdlog::spdlog
-    boost_pfr
-    cxxopts
-    Boost::iostreams)
+    PUBLIC spdlog::spdlog
+           boost_pfr
+           cxxopts
+           Boost::iostreams)
 
   # Copy version getter to build folder
   add_custom_command(
@@ -152,7 +153,7 @@ if(SC2_CONVERTER)
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/src/getReplayVersion.py
             $<TARGET_FILE_DIR:replay_converter>)
 
-  if(WIN32)
+  if(MSVC)
     # Copy zlibd.dll to the build directory
     add_custom_command(
       TARGET replay_converter
@@ -243,16 +244,16 @@ if(SC2_CONVERTER AND OpenCV_FOUND)
   target_compile_options(game_exp PUBLIC ${_COMPILE_OPTIONS})
   target_link_libraries(
     game_exp
-    sc2api
-    sc2lib
-    sc2utils
-    cxxopts
-    spdlog::spdlog
-    boost_pfr
-    opencv_core
-    opencv_imgcodecs)
-  target_include_directories(game_exp PRIVATE include 3rdparty/s2client-api/include
-                                              ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated)
+    PUBLIC sc2api
+           sc2lib
+           sc2utils
+           cxxopts
+           spdlog::spdlog
+           boost_pfr
+           opencv_core
+           opencv_imgcodecs)
+  target_include_directories(game_exp SYSTEM PRIVATE include 3rdparty/s2client-api/include
+                                                     ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated)
 
 elseif(SC2_CONVERTER)
   message("OpenCV Not Found, Not Building game_exp")
