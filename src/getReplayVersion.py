@@ -45,16 +45,3 @@ def get_all_versions(replay_data):
 
 def run_file(file_path: str):
     return get_replay_version(replay_data(file_path))
-
-
-
-if __name__ == "__main__":
-    all_versions = set()
-    p = Path(sys.argv[1])
-    print(p)
-    for i in p.glob("**/*.SC2Replay"):
-        versions = get_all_versions(replay_data(i))
-        if versions is not None:
-            all_versions.add((versions))
-        print(all_versions)
-    print(all_versions)
