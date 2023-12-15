@@ -223,9 +223,16 @@ void loopReplayFiles(const fs::path &replayFolder,
             if (versionResult.has_value()) {
                 auto [dataVersion, gameVersion] = *versionResult;
                 int gameVer = VERSIONS.at(gameVersion);
-                std::string fullPath = gamePath + "\\Base" + std::to_string(gameVer) + "\\SC2_x64.exe";
+
+                fs::path gamePath_ = gamePath;
+                auto path = gamePath_ / ("Base" + std::to_string(gameVer)) / "SC2_x64";
+#ifdef _WIN32
+                // Add ".exe" only if compiling for Windows
+                path.replace_extension("exe");
+#endif
+
                 coordinator->SetDataVersion(dataVersion, true);
-                coordinator->SetProcessPath(fullPath, true);
+                coordinator->SetProcessPath(path.string(), true);
                 // uh oh game version has changed
                 if (!currVer.empty() && dataVersion != currVer) { coordinator->Relaunch(); }
                 currVer = dataVersion;
