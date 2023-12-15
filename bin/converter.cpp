@@ -27,10 +27,9 @@
 #endif
 
 #include "observer.hpp"
-#include "versions.cpp"
 
 namespace fs = std::filesystem;
-
+using namespace std::string_literals;
 
 /**
  * @brief Add known bad replays from file to converter's knownHashes
@@ -107,7 +106,7 @@ std::string getExecutablePath()
 }
 
 
-auto getDataVersion(const fs::path &replayPath) -> std::optional<std::string>
+auto getDataVersion(const fs::path &replayPath) -> std::optional<std::tuple<std::string, std::string, std::string>>
 {
     PyObject *pName, *pModule, *pFunction, *pArgs, *pResult;
 
@@ -118,7 +117,7 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::string>
         return std::nullopt;
     }
 
-    auto result = [&]() -> std::optional<std::string> {
+    auto result = [&]() -> std::optional<std::tuple<std::string, std::string, std::string>> {
         // Load the Python module
         PyObject *sysPath = PySys_GetObject("path");
         PyList_Append(sysPath, (PyUnicode_FromString(getExecutablePath().c_str())));
@@ -144,11 +143,19 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::string>
 
                 if (pResult != NULL) {
 
-                    const char *resultStr2 = PyUnicode_AsUTF8(pResult);
-                    std::string gameVersion(resultStr2);
-                    Py_XDECREF(pResult);
+                    PyObject *pItem1 = PyTuple_GetItem(pResult, 0);
+                    const char *resultStr1 = PyUnicode_AsUTF8(pItem1);
+                    std::string gameVersion(resultStr1);
 
-                    return gameVersion;
+                    PyObject *pItem2 = PyTuple_GetItem(pResult, 1);
+                    const char *resultStr2 = PyUnicode_AsUTF8(pItem2);
+                    std::string dataVersion(resultStr2);
+
+                    PyObject *pItem3 = PyTuple_GetItem(pResult, 2);
+                    const char *resultStr3 = PyUnicode_AsUTF8(pItem3);
+                    std::string build_version(resultStr3);
+
+                    return std::make_tuple(gameVersion, dataVersion, build_version);
                 } else {
                     PyErr_Print();
                     return std::nullopt;
@@ -214,14 +221,10 @@ void loopReplayFiles(const fs::path &replayFolder,
             }
             auto versionResult = getDataVersion(replayPath);
             if (versionResult.has_value()) {
-                if (VERSIONS.find(*versionResult) == VERSIONS.end()) {
-                    SPDLOG_WARN("Skipping unknown version {}", *versionResult);
-                    break;
-                }
-                auto [gameVer, dataVersion] = VERSIONS.at(*versionResult);
+                auto [gameVersion, dataVersion, build_version] = *versionResult;
 
                 fs::path gamePath_ = gamePath;
-                auto path = gamePath_ / ("Base" + std::to_string(gameVer)) / "SC2_x64";
+                auto path = gamePath_ / ("Base"s + build_version) / "SC2_x64";
 #ifdef _WIN32
                 // Add ".exe" only if compiling for Windows
                 path.replace_extension("exe");
@@ -229,8 +232,8 @@ void loopReplayFiles(const fs::path &replayFolder,
                 if (!fs::exists(path)) {
                     SPDLOG_WARN(
                         "You do not have the correct StarCraft II Version, you need version {} with Identifier {}",
-                        *versionResult,
-                        "Base" + std::to_string(gameVer));
+                        gameVersion,
+                        "Base"s + build_version);
                     break;
                 }
 

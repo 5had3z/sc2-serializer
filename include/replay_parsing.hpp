@@ -1,3 +1,5 @@
+#pragma once
+
 #include "data.hpp"
 
 #include <pybind11/numpy.h>
