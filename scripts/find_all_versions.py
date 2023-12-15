@@ -3,6 +3,10 @@ import json
 import mpyq
 import sys
 from pathlib import Path
+import typer
+from typing_extensions import Annotated
+
+app = typer.Typer()
 
 def replay_data(replay_path: str):
     """Return the replay data given a path to the replay."""
@@ -45,3 +49,30 @@ def get_all_versions(replay_data):
 
 def run_file(file_path: str):
     return get_replay_version(replay_data(file_path))
+
+@app.command()
+def main(replay_paths : Annotated[Path, typer.Option()],
+         game_paths : Annotated[Path, typer.Option()]):
+    all_versions = set()
+
+    current_bases = set(game_paths.glob("*"))
+
+    games = []
+    missing_versions = []
+    for i in replay_paths.rglob("*.SC2Replay"):
+        versions = get_all_versions(replay_data(i))
+        if versions is not None:
+            if str(versions[2]) not in current_bases:
+                missing_versions.append([i, *versions])
+                current_bases.append(str(versions[2]))
+                                    
+            if versions not in all_versions:
+                games.append([i, *versions])
+                
+            all_versions.add((versions))
+    print("Missing versions: \n" + "\n".join(map(str, sorted(missing_versions, key=lambda x : x[0]))))
+    print("All versions: \n" + "\n".join(map(str, sorted(games, key=lambda x : x[0]))))
+
+if __name__ == "__main__":
+    app()
+    

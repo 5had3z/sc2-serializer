@@ -130,7 +130,7 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::tuple<std:
             return std::nullopt;
         }
 
-        if (pModule != NULL) {
+        if (pModule) {
             pFunction = PyObject_GetAttrString(pModule, "run_file");
 
             if (PyCallable_Check(pFunction)) {
@@ -141,7 +141,7 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::tuple<std:
                     return std::nullopt;
                 }
 
-                if (pResult != NULL) {
+                if (pResult) {
 
                     PyObject *pItem1 = PyTuple_GetItem(pResult, 0);
                     const char *resultStr1 = PyUnicode_AsUTF8(pItem1);
