@@ -230,7 +230,7 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::tuple<std:
 #else
 [[no_discard]] auto find_available_port(int start_port) -> std::optional<int>
 {
-    SPDLOG_WARNING("Find available port not currently implemented for non-windows platform");
+    SPDLOG_WARN("Find available port not currently implemented for non-windows platform");
     return start_port;
 }
 #endif
