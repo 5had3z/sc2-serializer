@@ -10,6 +10,7 @@
 #include <spdlog/spdlog.h>
 
 #include <cstring>
+#include <execution>
 #include <ranges>
 
 namespace cvt {
@@ -29,8 +30,8 @@ template<typename T, std::size_t N> class CircularBuffer
 
     template<std::invocable<T, T> F> [[nodiscard]] auto reduce(T init, F binaryOp) const noexcept -> T
     {
-        if (isFull) { return std::reduce(buffer.begin(), buffer.end(), init, binaryOp); }
-        return std::reduce(buffer.begin(), std::next(buffer.begin(), endIdx), init, binaryOp);
+        if (isFull) { return std::reduce(std::execution::unseq, buffer.begin(), buffer.end(), init, binaryOp); }
+        return std::reduce(std::execution::unseq, buffer.begin(), std::next(buffer.begin(), endIdx), init, binaryOp);
     }
 
     [[nodiscard]] auto size() const noexcept -> std::size_t
