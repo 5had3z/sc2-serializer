@@ -18,9 +18,11 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+#include <optional>
 #include <ranges>
 
 #if defined(_WIN32)
+#include <WinSock2.h>
 #include <Windows.h>
 #elif defined(__linux__)
 #include <unistd.h>
@@ -180,11 +182,65 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::tuple<std:
     return result;
 }
 
+#ifdef _WIN32
+// WARNING: Currently doesn't work
+[[no_discard]] auto find_available_port(int start_port) -> std::optional<int>
+{
+    WSADATA wsaData;
+
+    // Initialize Winsock
+    if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
+        SPDLOG_ERROR("WSAStartup failed.");
+        return std::nullopt;
+    }
+
+    // Create a socket
+    SOCKET sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (sock == INVALID_SOCKET) {
+        SPDLOG_ERROR("Socket creation failed.");
+        WSACleanup();
+        return std::nullopt;
+    }
+
+    auto testPort = [&](int port) -> bool {
+        // Set up sockaddr_in structure
+        sockaddr_in server;
+        server.sin_family = AF_INET;
+        server.sin_addr.s_addr = INADDR_ANY;
+        server.sin_port = htons(port);
+        return bind(sock, reinterpret_cast<sockaddr *>(&server), sizeof(server)) != SOCKET_ERROR;
+    };
+
+    // Linear probe from start port
+    std::optional<int> port;
+    for (std::size_t attempt = 0; attempt < 64; ++attempt) {
+        if (testPort(start_port + attempt)) {
+            port = start_port + attempt;
+            SPDLOG_INFO("Found available game port: {}", *port);
+            break;
+        }
+    }
+
+    // Clean up
+    closesocket(sock);
+    WSACleanup();
+
+    return port;
+}
+#else
+[[no_discard]] auto find_available_port(int start_port) -> std::optional<int>
+{
+    SPDLOG_WARNING("Find available port not currently implemented for non-windows platform");
+    return start_port;
+}
+#endif
+
 void loopReplayFiles(const fs::path &replayFolder,
     const std::vector<std::string> &replayHashes,
     const std::string &gamePath,
     cvt::BaseConverter *converter,
-    std::optional<fs::path> badFile)
+    std::optional<fs::path> badFile,
+    int port)
 {
     auto make_coordinator = [&]() {
         auto coordinator = std::make_unique<sc2::Coordinator>();
@@ -198,6 +254,8 @@ void loopReplayFiles(const fs::path &replayFolder,
         coordinator->AddReplayObserver(converter);
         coordinator->SetProcessPath(gamePath);
         coordinator->SetTimeoutMS(2000'000);
+        const auto newport = find_available_port(port);
+        if (newport.has_value()) { coordinator->SetPortStart(*newport); }
         return coordinator;
     };
     auto coordinator = make_coordinator();
@@ -297,6 +355,7 @@ auto main(int argc, char *argv[]) -> int
       ("g,game", "path to game executable", cxxopts::value<std::string>())
       ("b,badfile", "file that contains a known set of bad replays", cxxopts::value<std::string>())
       ("offset", "Offset to apply to partition index", cxxopts::value<int>())
+      ("port", "port for serving the game", cxxopts::value<int>()->default_value("9168"))
       ("h,help", "This help");
     // clang-format on
     const auto cliOpts = cliParser.parse(argc, argv);
@@ -414,7 +473,7 @@ auto main(int argc, char *argv[]) -> int
         return -1;
     }
 
-    loopReplayFiles(replayFolder, replayFiles, gamePath, converter.get(), badFile);
+    loopReplayFiles(replayFolder, replayFiles, gamePath, converter.get(), badFile, cliOpts["port"].as<int>());
 
     return 0;
 }
