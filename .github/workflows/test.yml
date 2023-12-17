@@ -27,7 +27,7 @@ jobs:
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test
           sudo apt-get update
           sudo apt-get install -y g++-${{ matrix.gcc-version }} gcc-${{ matrix.gcc-version }}
-          sudo apt-get install -y cmake ninja-build git libboost-iostreams1.74-dev
+          sudo apt-get install -y cmake ninja-build git libboost-iostreams1.74-dev libtbb-dev
       - name: Fix python setup issues
         run : |
           sudo apt-get purge -y python3-setuptools
