@@ -19,10 +19,13 @@ This library relies on a python script to find the dataVersion for launching rep
 pip install mpyq
 ```
 
-You can manually define these variables to choose a python version.
+To select a target python instance when compiling for linux during cmake configure step, you can set `-DPython3_EXECUTABLE=/usr/bin/python3.10`. If using VSCode this can also be achieved in the settings.json file by adding the below:
 
-- -DPYTHON_INCLUDE
-- -DPYTHON_LIBRARIES
+```json
+"cmake.configureSettings": {
+    "Python3_EXECUTABLE": "/usr/bin/python3.10"
+}
+```
 
 ### Linux
 
