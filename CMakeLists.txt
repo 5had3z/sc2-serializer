@@ -94,6 +94,8 @@ if(SC2_CONVERTER)
     message(FATAL_ERROR ${errmsg})
   endif()
 
+  find_package(TBB REQUIRED)
+
   # Add submodule path
   add_subdirectory(3rdparty/s2client-api)
 
@@ -106,6 +108,7 @@ if(SC2_CONVERTER)
            sc2utils
            spdlog::spdlog
            boost_pfr
+           tbb
            Boost::iostreams)
 
   target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS})
