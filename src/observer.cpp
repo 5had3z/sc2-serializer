@@ -370,9 +370,6 @@ void BaseConverter::copyHeightMapData() noexcept
 }
 
 
-<<<<<<< Updated upstream
-// Convert StarCraft2 API Unit to Serializer Unit
-=======
 /**
  * @brief Converts an SC2 unit to a custom Unit object.
  *
@@ -381,7 +378,6 @@ void BaseConverter::copyHeightMapData() noexcept
  * @param isPassenger Flag indicating whether the unit is a passenger.
  * @return The converted Unit object.
  */
->>>>>>> Stashed changes
 [[nodiscard]] auto convertSC2Unit(const sc2::Unit *src, const sc2::Units &units, const bool isPassenger) -> Unit
 {
     Unit dst{};
