@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Replay Parsing &mdash; C++ Sphinx Doxygen Breathe  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Serialize" href="serializer.html" />
+    <link rel="prev" title="Observer" href="observer.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            C++ Sphinx Doxygen Breathe
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Welcome to sc2-serializer’s documentation!</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="data.html">Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observer.html">Observer</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Replay Parsing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv43cvt"><code class="docutils literal notranslate"><span class="pre">cvt</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt15unpackBoolImageE2ItRK5ImageIbE2It"><code class="docutils literal notranslate"><span class="pre">cvt::unpackBoolImage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt15unpackBoolImageENSt6vectorI1TEERK5ImageIbE"><code class="docutils literal notranslate"><span class="pre">cvt::unpackBoolImage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt12ReplayParserE"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayParser</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt13UpgradeTimingE"><code class="docutils literal notranslate"><span class="pre">cvt::UpgradeTiming</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="serializer.html">Serialize</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">C++ Sphinx Doxygen Breathe</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API</a></li>
+      <li class="breadcrumb-item active">Replay Parsing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/replay_parsing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="replay-parsing">
+<span id="api-replay-parsing"></span><h1>Replay Parsing<a class="headerlink" href="#replay-parsing" title="Link to this heading"></a></h1>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv43cvt">
+<span id="_CPPv33cvt"></span><span id="_CPPv23cvt"></span><span id="cvt"></span><span class="target" id="df/d0d/namespacecvt"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cvt</span></span></span><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt15unpackBoolImageE2ItRK5ImageIbE2It">
+<span id="_CPPv3I0_NSt15output_iteratorI1TEEEN3cvt15unpackBoolImageERK5ImageIbE2It"></span><span id="_CPPv2I0_NSt15output_iteratorI1TEEEN3cvt15unpackBoolImageERK5ImageIbE2It"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">output_iterator</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt15unpackBoolImageE2ItRK5ImageIbE2It" title="cvt::unpackBoolImage::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">It</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d5/d1d/replay__parsing_8hpp_1ae7376afcbfbe42aa2f9dd90b24e5ad13"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">unpackBoolImage</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data.html#_CPPv4I0EN3cvt5ImageE" title="cvt::Image"><span class="n"><span class="pre">Image</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">bool</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">img</span></span>, <a class="reference internal" href="#_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt15unpackBoolImageE2ItRK5ImageIbE2It" title="cvt::unpackBoolImage::It"><span class="n"><span class="pre">It</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">out</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt15unpackBoolImageE2ItRK5ImageIbE2It" title="cvt::unpackBoolImage::It"><span class="n"><span class="pre">It</span></span></a><a class="headerlink" href="#_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt15unpackBoolImageE2ItRK5ImageIbE2It" title="Link to this definition"></a><br /></dt>
+<dd><p>Unpack bool image to output iterator. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – value type to unpack to </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>image</strong> – input image </p></li>
+<li><p><strong>out</strong> – span to write unpacked data into </p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>vector of value type of bool image </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt15unpackBoolImageENSt6vectorI1TEERK5ImageIbE">
+<span id="_CPPv3I0EN3cvt15unpackBoolImageERK5ImageIbE"></span><span id="_CPPv2I0EN3cvt15unpackBoolImageERK5ImageIbE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d5/d1d/replay__parsing_8hpp_1a7191cc12abe99255cdd214213bedead7"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">unpackBoolImage</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data.html#_CPPv4I0EN3cvt5ImageE" title="cvt::Image"><span class="n"><span class="pre">Image</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">bool</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">img</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3cvt15unpackBoolImageENSt6vectorI1TEERK5ImageIbE" title="cvt::unpackBoolImage::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN3cvt15unpackBoolImageENSt6vectorI1TEERK5ImageIbE" title="Link to this definition"></a><br /></dt>
+<dd><p>Unpack bool image to flattened std::vector. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – value type to unpack to </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>image</strong> – input image </p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>vector of value type of bool image </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParserE">
+<span id="_CPPv3N3cvt12ReplayParserE"></span><span id="_CPPv2N3cvt12ReplayParserE"></span><span id="cvt::ReplayParser"></span><span class="target" id="db/d4a/classcvt_1_1_replay_parser"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayParser</span></span></span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParserE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser12ReplayParserERKNSt10filesystem4pathE">
+<span id="_CPPv3N3cvt12ReplayParser12ReplayParserERKNSt10filesystem4pathE"></span><span id="_CPPv2N3cvt12ReplayParser12ReplayParserERKNSt10filesystem4pathE"></span><span id="cvt::ReplayParser::ReplayParser__std::filesystem::pathCR"></span><span class="target" id="db/d4a/classcvt_1_1_replay_parser_1a1b5cb2cf47fc4fa97e3402fdd70318c6"></span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayParser</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">filesystem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">dataPath</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser12ReplayParserERKNSt10filesystem4pathE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser11parseReplayE13ReplayDataSoA">
+<span id="_CPPv3N3cvt12ReplayParser11parseReplayE13ReplayDataSoA"></span><span id="_CPPv2N3cvt12ReplayParser11parseReplayE13ReplayDataSoA"></span><span id="cvt::ReplayParser::parseReplay__ReplayDataSoA"></span><span class="target" id="db/d4a/classcvt_1_1_replay_parser_1a09aa837d0e230ef2bbcd8ca7c345ef73"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">parseReplay</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="data.html#_CPPv4N3cvt13ReplayDataSoAE" title="cvt::ReplayDataSoA"><span class="n"><span class="pre">ReplayDataSoA</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">replayData</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser11parseReplayE13ReplayDataSoA" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser6sampleENSt6size_tEb">
+<span id="_CPPv3NK3cvt12ReplayParser6sampleENSt6size_tEb"></span><span id="_CPPv2NK3cvt12ReplayParser6sampleENSt6size_tEb"></span><span id="cvt::ReplayParser::sample__std::s.bC"></span><span class="target" id="db/d4a/classcvt_1_1_replay_parser_1aced2311f4764246981ba22ce8c664bcf"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sample</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">timeIdx</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">unit_alliance</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">py</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dict</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser6sampleENSt6size_tEb" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser4sizeEv">
+<span id="_CPPv3NK3cvt12ReplayParser4sizeEv"></span><span id="_CPPv2NK3cvt12ReplayParser4sizeEv"></span><span id="cvt::ReplayParser::sizeC"></span><span class="target" id="db/d4a/classcvt_1_1_replay_parser_1ad7daa8f304ae6bdb16a400201e99bedc"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">size</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser4sizeEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser5emptyEv">
+<span id="_CPPv3NK3cvt12ReplayParser5emptyEv"></span><span id="_CPPv2NK3cvt12ReplayParser5emptyEv"></span><span id="cvt::ReplayParser::emptyC"></span><span class="target" id="db/d4a/classcvt_1_1_replay_parser_1a7ccaaecb72d8bc9527f48959d20f6c83"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">empty</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser5emptyEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser4dataEv">
+<span id="_CPPv3NK3cvt12ReplayParser4dataEv"></span><span id="_CPPv2NK3cvt12ReplayParser4dataEv"></span><span id="cvt::ReplayParser::dataC"></span><span class="target" id="db/d4a/classcvt_1_1_replay_parser_1ab9b92dd35f02597614a8caafe54ae34d"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">data</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data.html#_CPPv4N3cvt13ReplayDataSoAE" title="cvt::ReplayDataSoA"><span class="n"><span class="pre">ReplayDataSoA</span></span></a><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser4dataEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser8upgrade_E">
+<span id="_CPPv3N3cvt12ReplayParser8upgrade_E"></span><span id="_CPPv2N3cvt12ReplayParser8upgrade_E"></span><span id="cvt::ReplayParser::upgrade___UpgradeTiming"></span><span class="target" id="db/d4a/classcvt_1_1_replay_parser_1a8ec3ee825a693e2196fb0b7072392c8b"></span><a class="reference internal" href="#_CPPv4N3cvt13UpgradeTimingE" title="cvt::UpgradeTiming"><span class="n"><span class="pre">UpgradeTiming</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">upgrade_</span></span></span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser8upgrade_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser11replayData_E">
+<span id="_CPPv3N3cvt12ReplayParser11replayData_E"></span><span id="_CPPv2N3cvt12ReplayParser11replayData_E"></span><span id="cvt::ReplayParser::replayData___ReplayDataSoA"></span><span class="target" id="db/d4a/classcvt_1_1_replay_parser_1a38634a1f4a44ee844c9adcda31617320"></span><a class="reference internal" href="data.html#_CPPv4N3cvt13ReplayDataSoAE" title="cvt::ReplayDataSoA"><span class="n"><span class="pre">ReplayDataSoA</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">replayData_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser11replayData_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt13UpgradeTimingE">
+<span id="_CPPv3N3cvt13UpgradeTimingE"></span><span id="_CPPv2N3cvt13UpgradeTimingE"></span><span id="cvt::UpgradeTiming"></span><span class="target" id="d8/d0a/classcvt_1_1_upgrade_timing"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">UpgradeTiming</span></span></span><a class="headerlink" href="#_CPPv4N3cvt13UpgradeTimingE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt13UpgradeTiming13UpgradeTimingENSt10filesystem4pathE">
+<span id="_CPPv3N3cvt13UpgradeTiming13UpgradeTimingENSt10filesystem4pathE"></span><span id="_CPPv2N3cvt13UpgradeTiming13UpgradeTimingENSt10filesystem4pathE"></span><span id="cvt::UpgradeTiming::UpgradeTiming__std::filesystem::path"></span><span class="target" id="d8/d0a/classcvt_1_1_upgrade_timing_1afc7091893216622273a704b3b8292fb6"></span><span class="sig-name descname"><span class="n"><span class="pre">UpgradeTiming</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">filesystem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dataFile</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3cvt13UpgradeTiming13UpgradeTimingENSt10filesystem4pathE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt13UpgradeTiming10setVersionENSt11string_viewE">
+<span id="_CPPv3N3cvt13UpgradeTiming10setVersionENSt11string_viewE"></span><span id="_CPPv2N3cvt13UpgradeTiming10setVersionENSt11string_viewE"></span><span id="cvt::UpgradeTiming::setVersion__std::string_view"></span><span class="target" id="d8/d0a/classcvt_1_1_upgrade_timing_1af78eb1ac447eb8946cedbe78ba394109"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setVersion</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string_view</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">version</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3cvt13UpgradeTiming10setVersionENSt11string_viewE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt13UpgradeTiming7setRaceE4Race">
+<span id="_CPPv3N3cvt13UpgradeTiming7setRaceE4Race"></span><span id="_CPPv2N3cvt13UpgradeTiming7setRaceE4Race"></span><span id="cvt::UpgradeTiming::setRace__Race"></span><span class="target" id="d8/d0a/classcvt_1_1_upgrade_timing_1ac7725f93ad5e5bfcb57412353a54dc59"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setRace</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="data.html#_CPPv4N3cvt4RaceE" title="cvt::Race"><span class="n"><span class="pre">Race</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">race</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt13UpgradeTiming7setRaceE4Race" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt13UpgradeTiming10setActionsERKNSt6vectorINSt6vectorI6ActionEEEERKNSt6vectorIjEE">
+<span id="_CPPv3N3cvt13UpgradeTiming10setActionsERKNSt6vectorINSt6vectorI6ActionEEEERKNSt6vectorIjEE"></span><span id="_CPPv2N3cvt13UpgradeTiming10setActionsERKNSt6vectorINSt6vectorI6ActionEEEERKNSt6vectorIjEE"></span><span id="cvt::UpgradeTiming::setActions__std::vector:std::vector:Action::CR.std::vector:unsigned-i:CR"></span><span class="target" id="d8/d0a/classcvt_1_1_upgrade_timing_1a76bd8c979f6506530827828dd91ac0d5"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setActions</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="data.html#_CPPv4N3cvt6ActionE" title="cvt::Action"><span class="n"><span class="pre">Action</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">actions</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">timeIdxs</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3cvt13UpgradeTiming10setActionsERKNSt6vectorINSt6vectorI6ActionEEEERKNSt6vectorIjEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0ENK3cvt13UpgradeTiming8getStateEN2py7array_tI1TEENSt6size_tE">
+<span id="_CPPv3I0ENK3cvt13UpgradeTiming8getStateENSt6size_tE"></span><span id="_CPPv2I0ENK3cvt13UpgradeTiming8getStateENSt6size_tE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d8/d0a/classcvt_1_1_upgrade_timing_1a6c289d43df59582bd0e54448853b4412"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getState</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">timeIdx</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">py</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">array_t</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0ENK3cvt13UpgradeTiming8getStateEN2py7array_tI1TEENSt6size_tE" title="cvt::UpgradeTiming::getState::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0ENK3cvt13UpgradeTiming8getStateEN2py7array_tI1TEENSt6size_tE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt13UpgradeTiming11getValidIdsEv">
+<span id="_CPPv3NK3cvt13UpgradeTiming11getValidIdsEv"></span><span id="_CPPv2NK3cvt13UpgradeTiming11getValidIdsEv"></span><span id="cvt::UpgradeTiming::getValidIdsC"></span><span class="target" id="d8/d0a/classcvt_1_1_upgrade_timing_1a192650ac6d7acd55aebaf92b7058d3c4"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getValidIds</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">set</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4NK3cvt13UpgradeTiming11getValidIdsEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt13UpgradeTiming13getValidRemapEv">
+<span id="_CPPv3NK3cvt13UpgradeTiming13getValidRemapEv"></span><span id="_CPPv2NK3cvt13UpgradeTiming13getValidRemapEv"></span><span id="cvt::UpgradeTiming::getValidRemapC"></span><span class="target" id="d8/d0a/classcvt_1_1_upgrade_timing_1a8b20a0635380092997fc846f2d372e13"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getValidRemap</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">array</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">3</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4NK3cvt13UpgradeTiming13getValidRemapEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt13UpgradeTiming8loadInfoEv">
+<span id="_CPPv3N3cvt13UpgradeTiming8loadInfoEv"></span><span id="_CPPv2N3cvt13UpgradeTiming8loadInfoEv"></span><span id="cvt::UpgradeTiming::loadInfo"></span><span class="target" id="d8/d0a/classcvt_1_1_upgrade_timing_1a4dd8e3affc5fbc4221b184a67e95a36a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">loadInfo</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3cvt13UpgradeTiming8loadInfoEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt13UpgradeTiming9dataFile_E">
+<span id="_CPPv3N3cvt13UpgradeTiming9dataFile_E"></span><span id="_CPPv2N3cvt13UpgradeTiming9dataFile_E"></span><span id="cvt::UpgradeTiming::dataFile___std::filesystem::path"></span><span class="target" id="d8/d0a/classcvt_1_1_upgrade_timing_1a38a8ccd91c3051a220b079d155734870"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">filesystem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dataFile_</span></span></span><a class="headerlink" href="#_CPPv4N3cvt13UpgradeTiming9dataFile_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt13UpgradeTiming9id2delay_E">
+<span id="_CPPv3N3cvt13UpgradeTiming9id2delay_E"></span><span id="_CPPv2N3cvt13UpgradeTiming9id2delay_E"></span><span id="cvt::UpgradeTiming::id2delay___std::unordered_map:i.i:"></span><span class="target" id="d8/d0a/classcvt_1_1_upgrade_timing_1a42f97b756d666192a344866c7c7bc549"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">id2delay_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt13UpgradeTiming9id2delay_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt13UpgradeTiming12currentRace_E">
+<span id="_CPPv3N3cvt13UpgradeTiming12currentRace_E"></span><span id="_CPPv2N3cvt13UpgradeTiming12currentRace_E"></span><span id="cvt::UpgradeTiming::currentRace___Race"></span><span class="target" id="d8/d0a/classcvt_1_1_upgrade_timing_1a7b47ede3b80918f2d3582fcc577fd6f4"></span><a class="reference internal" href="data.html#_CPPv4N3cvt4RaceE" title="cvt::Race"><span class="n"><span class="pre">Race</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">currentRace_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="data.html#_CPPv4N3cvt4RaceE" title="cvt::Race"><span class="n"><span class="pre">Race</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="data.html#_CPPv4N3cvt4Race6RandomE" title="cvt::Race::Random"><span class="n"><span class="pre">Random</span></span></a><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt13UpgradeTiming12currentRace_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt13UpgradeTiming13upgradeTimes_E">
+<span id="_CPPv3N3cvt13UpgradeTiming13upgradeTimes_E"></span><span id="_CPPv2N3cvt13UpgradeTiming13upgradeTimes_E"></span><span id="cvt::UpgradeTiming::upgradeTimes___std::vector:int32_t:"></span><span class="target" id="d8/d0a/classcvt_1_1_upgrade_timing_1abe20b91bf074ee41e2f2f7090af8f619"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">int32_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">upgradeTimes_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt13UpgradeTiming13upgradeTimes_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt13UpgradeTiming12gameVersion_E">
+<span id="_CPPv3N3cvt13UpgradeTiming12gameVersion_E"></span><span id="_CPPv2N3cvt13UpgradeTiming12gameVersion_E"></span><span id="cvt::UpgradeTiming::gameVersion___ss"></span><span class="target" id="d8/d0a/classcvt_1_1_upgrade_timing_1ad7492ffb64d5ba149e6bb671a6efa1f6"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gameVersion_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt13UpgradeTiming12gameVersion_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="observer.html" class="btn btn-neutral float-left" title="Observer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="serializer.html" class="btn btn-neutral float-right" title="Serialize" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, me.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
