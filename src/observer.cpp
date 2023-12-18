@@ -7,7 +7,6 @@
 // #include <boost/iostreams/filter/zlib.hpp>
 // #include <boost/iostreams/filtering_stream.hpp>
 
-#include <Python.h>
 #include <spdlog/spdlog.h>
 
 #include <cstring>
