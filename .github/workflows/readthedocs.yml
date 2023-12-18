@@ -41,7 +41,7 @@ jobs:
 
       - name: Generate Sphinx Configuration
         run: |
-          sphinx-quickstart --quiet --sep --project="sc2-serializer" --author="Bryce Ferenczi & Rhys Newbury" --version="0.1.0-alpha" --ext-autodoc
+          sphinx-quickstart --quiet --sep --project="sc2-serializer" --author="Bryce Ferenczi & Rhys Newbury" --ext-autodoc
 
       - name: Build Sphinx Documentation
         run: |
