@@ -1,13 +1,14 @@
 name: Docs
 
-on:
-  #push:
-  #  branches-ignore:
-  #    - '**'
-  push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+# on:
+#   #push:
+#   #  branches-ignore:
+#   #    - '**'
+#   push:
+#     branches: [ master ]
+#   pull_request:
+#     branches: [ master ]
+on: [push]
 
 jobs:
   build:
