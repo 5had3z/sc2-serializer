@@ -1,0 +1,39 @@
+# Doxyfile
+
+# Project information
+PROJECT_NAME           = "YourProject"
+PROJECT_BRIEF          = "Brief description of your project"
+OUTPUT_DIRECTORY       = ./docs/doxygen
+
+# Input files
+INPUT                  = ./src
+FILE_PATTERNS          = *.cpp *.h
+
+# Output format
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+
+# XML output
+GENERATE_XML           = YES
+XML_OUTPUT             = xml
+CREATE_SUBDIRS = YES
+# Optionally, configure additional Doxygen settings based on your needs.
+# For example:
+# - EXCLUDE to exclude specific files or directories from the documentation.
+# - EXTRACT_STATIC to include static members in the documentation.
+# - WARNINGS to control warning messages.
+# - ...
+
+# Example configuration:
+# EXCLUDE                = ./src/private/*
+# EXTRACT_STATIC         = YES
+# WARNINGS               = YES
+# ...
+
+# You may also add custom sections to describe your project and its configuration.
+
+# If using Markdown in Doxygen comments, enable the following option:
+# MARKDOWN_SUPPORT       = YES
+
+# If using MathJax for rendering math formulas in HTML, enable the following option:
+# USE_MATHJAX            = YES
