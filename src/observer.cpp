@@ -149,17 +149,6 @@ void BaseConverter::OnGameStart()
     // to clear it all out and only collect data from normal steps.
     this->clear();
 
-    Py_Initialize();
-
-    FILE *PythonScriptFile = fopen("Python Scripts/Test.py", "r");
-    if (PythonScriptFile) {
-        PyRun_SimpleFile(PythonScriptFile, "Python Scripts/Test.py");
-        fclose(PythonScriptFile);
-    }
-
-    Py_Finalize();
-
-
     const auto replayInfo = this->ReplayControl()->GetReplayInfo();
     assert(replayInfo.num_players >= currentReplay_.playerId && "Player ID should be at most be num_players");
     const auto &playerInfo = replayInfo.players[currentReplay_.playerId - 1];
