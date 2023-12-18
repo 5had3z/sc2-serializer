@@ -1,7 +1,9 @@
-.. _api:
+.. _api1:
+
 API
 ===
+
 .. toctree::
     :maxdepth: 2
-    :glob:
-    *
+
+    observer
