@@ -96,7 +96,8 @@ def add_to_database(cursor: sqlite3.Cursor, data_dict: Dict[str, Any]):
 
 @app.command()
 def main(
-    workspace: Annotated[Path, typer.Option()], workers: Annotated[int, typer.Option()]
+    workspace: Annotated[Path, typer.Option()] = Path("."),
+    workers: Annotated[int, typer.Option()] = 0,
 ):
     features: Dict[str, SQL_TYPES] = {
         "replayHash": "TEXT",

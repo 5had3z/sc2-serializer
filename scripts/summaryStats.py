@@ -63,12 +63,19 @@ class SC2Replay(Dataset):
         try:
             self.parser.parse_replay(self.db_handle.getEntry(db_index))
         except MemoryError:
-            print("Failed to get value")
-            return {
+            data = {
                 "partition": str(self.replays[file_index].name),
                 "idx": db_index,
                 "read_success": False,
             }
+            try:
+                hash, id = self.db_handle.getEntry(db_index)
+                data["playerId"] = id
+                data["replayHash"] = hash
+            except MemoryError:
+                pass
+
+            return data
 
         data = {p: getattr(self.parser.data, p, None) for p in self.features}
         data = {k: int(v) if k in ENUM_KEYS else v for k, v in data.items()}
