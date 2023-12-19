@@ -35,6 +35,8 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           workflow: test.yml  # Replace with your actual workflow file name
           workflow_conclusion: success  # Replace with the desired workflow conclusion
+          name: build
+        continue-on-error: true  # Continue even if artifacts are not found
 
       - name: Fix python setup issues
         run : |
@@ -55,7 +57,7 @@ jobs:
       - name: Archive build artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: build-artifacts
+          name: build
           path: build
         if: success()
 
