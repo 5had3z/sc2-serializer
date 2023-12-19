@@ -36,7 +36,7 @@ jobs:
           workflow: test.yml  # Replace with your actual workflow file name
           workflow_conclusion: success  # Replace with the desired workflow conclusion
           name: build
-          path: build # extract to build folder
+          path: /home/runner/work/sc2-serializer/sc2-serializer/build # extract to build folder
         continue-on-error: true  # Continue even if artifacts are not found
 
       - name: Fix python setup issues
