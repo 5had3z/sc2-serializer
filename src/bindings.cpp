@@ -288,7 +288,8 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def("open", &cvt::ReplayDatabase::open, py::arg("dbPath"))
         .def("isFull", &cvt::ReplayDatabase::isFull)
         .def("size", &cvt::ReplayDatabase::size)
-        .def("getEntry", &cvt::ReplayDatabase::getEntry, py::arg("index"));
+        .def("getEntry", &cvt::ReplayDatabase::getEntry, py::arg("index"))
+        .def("getHashIdEntry", &cvt::ReplayDatabase::getHashId, py::arg("index"));
 
     py::class_<cvt::ReplayParser>(m, "ReplayParser")
         .def(py::init<const std::filesystem::path &>(), py::arg("dataPath"))

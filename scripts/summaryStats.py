@@ -12,7 +12,7 @@ from torch.utils.data import Dataset
 
 from utils import upper_bound
 
-SQL_TYPES = Literal["INTEGER", "FLOAT", "TEXT"]
+SQL_TYPES = Literal["INTEGER", "FLOAT", "TEXT", "BOOLEAN"]
 ENUM_KEYS = {"playerRace", "playerResult"}
 LambdaFunctionType = Callable[[ReplayParser], float | int]
 
@@ -63,8 +63,19 @@ class SC2Replay(Dataset):
         try:
             self.parser.parse_replay(self.db_handle.getEntry(db_index))
         except MemoryError:
-            print("Failed to get value")
-            return None
+            data = {
+                "partition": str(self.replays[file_index].name),
+                "idx": db_index,
+                "read_success": False,
+            }
+            try:
+                hash, id = self.db_handle.getHashIdEntry(db_index)
+                data["playerId"] = id
+                data["replayHash"] = hash
+            except MemoryError:
+                pass
+
+            return data
 
         data = {p: getattr(self.parser.data, p, None) for p in self.features}
         data = {k: int(v) if k in ENUM_KEYS else v for k, v in data.items()}
@@ -75,6 +86,7 @@ class SC2Replay(Dataset):
         return {
             "partition": str(self.replays[file_index].name),
             "idx": db_index,
+            "read_success": True,
             **data,
         }
 

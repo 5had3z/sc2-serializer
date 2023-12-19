@@ -81,8 +81,11 @@ auto getReplaysFromFolder(const std::string_view folder) noexcept -> std::vector
 {
     SPDLOG_INFO("Searching replays in {}", folder);
     std::vector<std::string> replays;
-    std::ranges::transform(fs::directory_iterator{ folder }, std::back_inserter(replays), [](auto &&e) {
-        return e.path().stem().string();
+    constexpr std::string_view targetExtension(".SC2Replay");
+    std::ranges::transform(fs::directory_iterator{ folder } | std::views::filter([&targetExtension](const auto& entry) {
+        return fs::is_regular_file(entry) && entry.path().extension() == targetExtension;
+    }), std::back_inserter(replays), [](const auto& entry) {
+        return entry.path().stem().string();
     });
     return replays;
 }

@@ -13,6 +13,40 @@ from tqdm import tqdm
 app = typer.Typer()
 
 
+def custom_collate(batch):
+    # No read success in entire batch
+    if not any(item["read_success"] for item in batch):
+        raise Exception(
+            f"Nothing successful in entire batch of length {len(batch)}, try making it larger"
+        )
+    if any((not item["read_success"] for item in batch)):
+        first_read_success = next(
+            (item for item in batch if item.get("read_success")), None
+        )
+
+        # This must hold
+        assert first_read_success is not None
+
+        extra_keys = set(first_read_success.keys()) - {
+            "partition",
+            "idx",
+            "read_success",
+        }
+
+        # Create a dictionary with zero tensors for extra_keys
+        empty_batch = {key: 0 for key in extra_keys}
+
+        data_batch = [
+            {**empty_batch, **data} if not data["read_success"] else data
+            for data in batch
+        ]
+
+        return torch.utils.data.dataloader.default_collate(data_batch)
+
+    else:
+        return torch.utils.data.dataloader.default_collate(batch)
+
+
 def make_database(
     path: Path,
     additional_columns: Dict[str, SQL_TYPES],
@@ -60,7 +94,8 @@ def add_to_database(cursor: sqlite3.Cursor, data_dict: Dict[str, Any]):
 
 @app.command()
 def main(
-    workspace: Annotated[Path, typer.Option()], workers: Annotated[int, typer.Option()]
+    workspace: Annotated[Path, typer.Option()] = Path("."),
+    workers: Annotated[int, typer.Option()] = 0,
 ):
     features: Dict[str, SQL_TYPES] = {
         "replayHash": "TEXT",
@@ -72,7 +107,11 @@ def main(
         "playerAPM": "INTEGER",
     }
     # Manually include additional columns
-    additional_columns: Dict[str, SQL_TYPES] = {"partition": "TEXT", "idx": "INTEGER"}
+    additional_columns: Dict[str, SQL_TYPES] = {
+        "partition": "TEXT",
+        "idx": "INTEGER",
+        "read_success": "BOOLEAN",
+    }
 
     all_attributes = [
         attr
@@ -100,26 +139,26 @@ def main(
     dataset = SC2Replay(
         Path(os.environ["DATAPATH"]), set(features.keys()), lambda_columns
     )
-    dataloader = DataLoader(dataset, num_workers=workers, batch_size=1)
-    n_fails = 0
+    batch_size = 50
+    dataloader = DataLoader(
+        dataset, num_workers=workers, batch_size=batch_size, collate_fn=custom_collate
+    )
     for idx, d in tqdm(enumerate(dataloader), total=len(dataloader)):
-        if d is None:
-            n_fails += 1
-            print(n_fails)
-            continue
+        keys = d.keys()
+        for index in range(len(d["partition"])):
+            converted_d = {}
+            for key in keys:
+                value = d[key]
 
-        converted_d = {}
+                if isinstance(value, torch.Tensor):
+                    converted_d[key] = value[index].item()
+                elif isinstance(value, list):
+                    converted_d[key] = value[index]
 
-        for key, value in d.items():
-            assert len(value) == 1
-            if isinstance(value, torch.Tensor):
-                converted_d[key] = value[0].item()
-            elif isinstance(value, list):
-                converted_d[key] = value[0]
+            add_to_database(cursor, converted_d)
+
         if idx % 5 == 0:
             conn.commit()
-
-        add_to_database(cursor, converted_d)
 
 
 if __name__ == "__main__":
