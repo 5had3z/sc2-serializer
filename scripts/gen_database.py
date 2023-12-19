@@ -34,12 +34,10 @@ def custom_collate(batch):
         }
 
         # Create a dictionary with zero tensors for extra_keys
-        empty_batch = {
-            key: torch.zeros_like(first_read_success[key]) for key in extra_keys
-        }
+        empty_batch = {key: 0 for key in extra_keys}
 
         data_batch = [
-            {**data, **empty_batch} if not data["read_success"] else data
+            {**empty_batch, **data} if not data["read_success"] else data
             for data in batch
         ]
 
@@ -146,19 +144,21 @@ def main(
         dataset, num_workers=workers, batch_size=batch_size, collate_fn=custom_collate
     )
     for idx, d in tqdm(enumerate(dataloader), total=len(dataloader)):
-        converted_d = {}
+        keys = d.keys()
+        for index in range(len(d["partition"])):
+            converted_d = {}
+            for key in keys:
+                value = d[key]
 
-        for key, value in d.items():
-            for index in range(len(d["partition"])):
                 if isinstance(value, torch.Tensor):
                     converted_d[key] = value[index].item()
                 elif isinstance(value, list):
                     converted_d[key] = value[index]
 
+            add_to_database(cursor, converted_d)
+
         if idx % 5 == 0:
             conn.commit()
-
-        add_to_database(cursor, converted_d)
 
 
 if __name__ == "__main__":

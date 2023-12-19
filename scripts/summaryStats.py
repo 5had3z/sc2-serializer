@@ -69,7 +69,7 @@ class SC2Replay(Dataset):
                 "read_success": False,
             }
             try:
-                hash, id = self.db_handle.getEntry(db_index)
+                hash, id = self.db_handle.getHashIdEntry(db_index)
                 data["playerId"] = id
                 data["replayHash"] = hash
             except MemoryError:
