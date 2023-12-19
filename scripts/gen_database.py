@@ -8,6 +8,7 @@ from sc2_replay_reader import Score
 from typing import Dict, Tuple, Any
 import typer
 from typing_extensions import Annotated
+from tqdm import tqdm
 
 app = typer.Typer()
 
@@ -100,7 +101,13 @@ def main(
         Path(os.environ["DATAPATH"]), set(features.keys()), lambda_columns
     )
     dataloader = DataLoader(dataset, num_workers=workers, batch_size=1)
-    for idx, d in enumerate(dataloader):
+    n_fails = 0
+    for idx, d in tqdm(enumerate(dataloader), total=len(dataloader)):
+        if d is None:
+            n_fails += 1
+            print(n_fails)
+            continue
+
         converted_d = {}
 
         for key, value in d.items():

@@ -60,7 +60,12 @@ class SC2Replay(Dataset):
             db_index < self.db_handle.size()
         ), f"{db_index} exceeds {self.db_handle.size()}"
 
-        self.parser.parse_replay(self.db_handle.getEntry(db_index))
+        try:
+            self.parser.parse_replay(self.db_handle.getEntry(db_index))
+        except MemoryError:
+            print("Failed to get value")
+            return None
+
         data = {p: getattr(self.parser.data, p, None) for p in self.features}
         data = {k: int(v) if k in ENUM_KEYS else v for k, v in data.items()}
 
