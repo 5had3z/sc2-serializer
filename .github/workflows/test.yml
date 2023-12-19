@@ -54,7 +54,7 @@ jobs:
           cmake -B /home/runner/work/sc2-serializer/build -G Ninja -DSC2_PY_READER=OFF -DSC2_TESTS=ON
 
       - name: Build and run tests
-        run: cmake --build /home/runner/work/sc2-serializer/build --parallel --config Release && ./build/test_database && ./build/test_readwrite
+        run: cmake --build /home/runner/work/sc2-serializer/build --parallel --config Release && /home/runner/work/sc2-serializer/build/test_database && /home/runner/work/sc2-serializer/build/test_readwrite
 
       - name: Archive build artifacts
         uses: actions/upload-artifact@v2
