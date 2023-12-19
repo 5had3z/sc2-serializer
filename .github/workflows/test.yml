@@ -59,6 +59,7 @@ jobs:
           name: build-artifacts
           path: build
         if: success()
+
       - name: Ensure pybind11-stubgen installed
         run: pip install git+https://github.com/5had3z/pybind11-stubgen.git black
 
