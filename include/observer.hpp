@@ -23,6 +23,12 @@ struct ResourceObs
 class BaseConverter : public sc2::ReplayObserver
 {
   public:
+    /**
+     * @brief Loads the database from the specified path.
+     *
+     * @param path The path to the database file.
+     * @return True if the database was loaded successfully, false otherwise.
+     */
     auto loadDB(const std::filesystem::path &path) noexcept -> bool;
 
     // Set Replay file hash + playerId before launching the coordinator

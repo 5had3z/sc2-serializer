@@ -1,6 +1,10 @@
 # [WIP] sc2-serializer
 Alternative to generating the "100's of TB" format from alphastar unplugged.
 
+## Documentation
+
+See [https://5had3z.github.io/sc2-serializer/index.html](https://5had3z.github.io/sc2-serializer/index.html) for documentation.
+
 ## General Notes
 
  - If the generated_info.hpp is out-of-date compared to info found in PySC2, re-run scripts/gen_info_header.py.

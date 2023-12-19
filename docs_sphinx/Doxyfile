@@ -1,0 +1,24 @@
+# Doxyfile
+
+# Project information
+PROJECT_NAME           = "sc2-serializer"
+PROJECT_BRIEF          = "Brief description of your project"
+OUTPUT_DIRECTORY       = _build
+
+# Input files
+INPUT                  = "../include"
+FILE_PATTERNS          = *.cpp *.hpp
+
+# Output format
+GENERATE_HTML          = YES
+HTML_OUTPUT            = html
+
+# XML output
+GENERATE_XML           = YES
+XML_OUTPUT             = xml
+CREATE_SUBDIRS = YES
+RECURSIVE = YES
+
+VERBATIM_HEADERS  = NO
+
+GENERATE_LATEX  = NO

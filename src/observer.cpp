@@ -102,6 +102,12 @@ template<typename T> void copyMapData(Image<T> &dest, const SC2APIProtocol::Imag
 
 static_assert(std::is_same_v<UID, sc2::Tag> && "Mismatch between unique id tags in SC2 and this Lib");
 
+/**
+ * @brief Loads the database from the specified path.
+ *
+ * @param path The path to the database file.
+ * @return True if the database was loaded successfully, false otherwise.
+ */
 auto BaseConverter::loadDB(const std::filesystem::path &path) noexcept -> bool
 {
     auto result = database_.open(path);
@@ -109,12 +115,33 @@ auto BaseConverter::loadDB(const std::filesystem::path &path) noexcept -> bool
     return result;
 }
 
+/**
+ * Checks if the BaseConverter has successfully written data.
+ *
+ * @return true if the BaseConverter has successfully written data, false otherwise.
+ */
 auto BaseConverter::hasWritten() const noexcept -> bool { return writeSuccess_; }
 
+/**
+ * Checks if a given hash is known.
+ *
+ * @param hash The hash to check.
+ * @return True if the hash is known, false otherwise.
+ */
 auto BaseConverter::isKnownHash(const std::string &hash) const noexcept -> bool { return knownHashes_.contains(hash); }
 
+/**
+ * @brief Adds a known hash to the BaseConverter.
+ *
+ * This function adds a known hash to the BaseConverter's list of known hashes.
+ *
+ * @param hash The hash to be added.
+ */
 void BaseConverter::addKnownHash(std::string hash) noexcept { knownHashes_.emplace(std::move(hash)); }
 
+/**
+ * @brief This function is called when the game starts.
+ */
 void BaseConverter::OnGameStart()
 {
     // Clear data collection structures, sc2api calls OnStep before OnGameStart
@@ -154,6 +181,9 @@ void BaseConverter::OnGameStart()
 //     filterStream.reset();
 // }
 
+/**
+ * @brief This function is called when the game ends.
+ */
 void BaseConverter::OnGameEnd()
 {
     // Don't save replay if its cooked
@@ -182,12 +212,28 @@ void BaseConverter::OnGameEnd()
     writeSuccess_ = database_.addEntry(SoA);
 }
 
+/**
+ * @brief Sets the replay information for the BaseConverter.
+ *
+ * @param hash The hash of the replay.
+ * @param playerId The ID of the player.
+ */
 void BaseConverter::setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept
 {
     currentReplay_.replayHash = hash;
     currentReplay_.playerId = playerId;
 }
 
+/**
+ * @brief Clears the BaseConverter object.
+ *
+ * This function clears the internal state of the BaseConverter object.
+ * It resets all the member variables to their default values.
+ *
+ * @note This function does not deallocate any memory.
+ *
+ * @see BaseConverter
+ */
 void BaseConverter::clear() noexcept
 {
     currentReplay_.stepData.clear();
@@ -199,6 +245,12 @@ void BaseConverter::clear() noexcept
     writeSuccess_ = false;
 }
 
+/**
+ * @brief Copies the height map data.
+ *
+ * This function is responsible for copying the height map data.
+ * It is marked as noexcept, indicating that it does not throw any exceptions.
+ */
 void BaseConverter::copyHeightMapData() noexcept
 {
     const auto *rawObs = this->Observation()->GetRawObservation();
@@ -211,6 +263,13 @@ void BaseConverter::copyHeightMapData() noexcept
     copyMapData(currentReplay_.heightMap, minimapFeats.height_map());
 }
 
+/**
+ * @brief Finds the tagged unit with the specified add-on tag in the given units.
+ *
+ * @param add_on_tag The tag of the add-on to search for.
+ * @param units The list of units to search in.
+ * @return The found AddOn unit.
+ */
 [[nodiscard]] auto find_tagged_unit(const sc2::Tag add_on_tag, const sc2::Units &units) -> AddOn
 {
     auto same_tag = [add_on_tag](const sc2::Unit *other) { return other->tag == add_on_tag; };
@@ -239,6 +298,12 @@ void BaseConverter::copyHeightMapData() noexcept
 }
 
 
+/**
+ * @brief Converts an SC2 unit order to a custom UnitOrder.
+ *
+ * @param src Pointer to the SC2 unit order.
+ * @return The converted UnitOrder.
+ */
 [[nodiscard]] auto convertSC2UnitOrder(const sc2::UnitOrder *src) noexcept -> UnitOrder
 {
     UnitOrder dst;
@@ -251,6 +316,12 @@ void BaseConverter::copyHeightMapData() noexcept
     return dst;
 }
 
+/**
+ * @brief Converts a sc2::Score object to a Score object.
+ *
+ * @param src Pointer to the sc2::Score object to be converted.
+ * @return The converted Score object.
+ */
 [[nodiscard]] auto convertScore(const sc2::Score *src) -> Score
 {
     if (src->score_type != sc2::ScoreType::Melee) {
@@ -288,7 +359,14 @@ void BaseConverter::copyHeightMapData() noexcept
 }
 
 
-// Convert StarCraft2 API Unit to Serializer Unit
+/**
+ * @brief Converts an SC2 unit to a custom Unit object.
+ *
+ * @param src Pointer to the SC2 unit to be converted.
+ * @param units The collection of SC2 units.
+ * @param isPassenger Flag indicating whether the unit is a passenger.
+ * @return The converted Unit object.
+ */
 [[nodiscard]] auto convertSC2Unit(const sc2::Unit *src, const sc2::Units &units, const bool isPassenger) -> Unit
 {
     Unit dst{};
@@ -335,6 +413,12 @@ void BaseConverter::copyHeightMapData() noexcept
 }
 
 
+/**
+ * @brief Converts an SC2 neutral unit to a NeutralUnit object.
+ *
+ * @param src Pointer to the SC2 unit to be converted.
+ * @return The converted NeutralUnit object.
+ */
 [[nodiscard]] auto convertSC2NeutralUnit(const sc2::Unit *src) noexcept -> NeutralUnit
 {
     NeutralUnit dst{};
@@ -353,6 +437,12 @@ void BaseConverter::copyHeightMapData() noexcept
 }
 
 
+/**
+ * @brief Copies the unit data.
+ *
+ * This function is responsible for copying the unit data.
+ * It is noexcept, meaning it does not throw any exceptions.
+ */
 void BaseConverter::copyUnitData() noexcept
 {
     const auto unitData = this->Observation()->GetUnits();
@@ -382,6 +472,12 @@ void BaseConverter::copyUnitData() noexcept
     this->updateResourceObs();
 }
 
+/**
+ * @brief Initializes the resource observer.
+ *
+ * This function is responsible for initializing the resource observer in the BaseConverter class.
+ * It is marked as noexcept, indicating that it does not throw any exceptions.
+ */
 void BaseConverter::initResourceObs() noexcept
 {
     auto &neutralUnits = currentReplay_.stepData.back().neutralUnits;
@@ -392,6 +488,14 @@ void BaseConverter::initResourceObs() noexcept
     }
 }
 
+/**
+ * @brief Reassigns the resource ID for a given NeutralUnit.
+ *
+ * This function reassigns the resource ID of the provided NeutralUnit.
+ *
+ * @param unit The NeutralUnit for which the resource ID needs to be reassigned.
+ * @return True if the resource ID was successfully reassigned, false otherwise.
+ */
 auto BaseConverter::reassignResourceId(const NeutralUnit &unit) noexcept -> bool
 {
     // Check if there's an existing unit with the same x,y coordinate
@@ -411,6 +515,12 @@ auto BaseConverter::reassignResourceId(const NeutralUnit &unit) noexcept -> bool
     }
 }
 
+/**
+ * @brief Updates the resource observer.
+ *
+ * This function is responsible for updating the resource observer.
+ * It is noexcept, meaning it does not throw any exceptions.
+ */
 void BaseConverter::updateResourceObs() noexcept
 {
     auto &neutralUnits = currentReplay_.stepData.back().neutralUnits;
@@ -435,6 +545,12 @@ void BaseConverter::updateResourceObs() noexcept
     }
 }
 
+/**
+ * @brief Copies the action data.
+ *
+ * This function is responsible for copying the action data.
+ * It is marked as noexcept, indicating that it does not throw any exceptions.
+ */
 void BaseConverter::copyActionData() noexcept
 {
     const auto actionData = this->Observation()->GetRawActions();
@@ -462,6 +578,12 @@ void BaseConverter::copyActionData() noexcept
     });
 }
 
+/**
+ * @brief Copies the dynamic map data.
+ *
+ * This function is responsible for copying the dynamic map data.
+ * It is marked as noexcept, indicating that it does not throw any exceptions.
+ */
 void BaseConverter::copyDynamicMapData() noexcept
 {
     const auto *rawObs = this->Observation()->GetRawObservation();
@@ -490,6 +612,11 @@ void BaseConverter::copyDynamicMapData() noexcept
     if (minimapFeats.has_pathable()) { copyMapData(step.pathable, minimapFeats.pathable()); }
 }
 
+/**
+ * @brief Copies the common data from the source to the destination.
+ *
+ * This function is noexcept, meaning it does not throw any exceptions.
+ */
 void BaseConverter::copyCommonData() noexcept
 {
     // Logging performance
@@ -511,6 +638,11 @@ void BaseConverter::copyCommonData() noexcept
     currentReplay_.stepData.back().score = convertScore(&score);
 }
 
+/**
+ * @brief This function is called on each step of the FullConverter class.
+ *
+ * It performs some action on each step.
+ */
 void FullConverter::OnStep()
 {
     // "Initialize" next item
@@ -523,6 +655,10 @@ void FullConverter::OnStep()
 }
 
 
+/**
+ * @brief This function is called on each step of the game.
+ * It is responsible for converting actions into a serialized format.
+ */
 void ActionConverter::OnStep()
 {
     // Need to have at least one buffer
@@ -540,6 +676,11 @@ void ActionConverter::OnStep()
     this->copyDynamicMapData();
 }
 
+/**
+ * @brief This function is called on each step of the StridedConverter.
+ *
+ * It performs some action on each step of the StridedConverter.
+ */
 void StridedConverter::OnStep()
 {
     // Check if a logging step
@@ -556,6 +697,11 @@ void StridedConverter::OnStep()
     this->copyDynamicMapData();
 }
 
+/**
+ * @brief Sets the stride for the StridedConverter.
+ *
+ * @param stride The stride value to set.
+ */
 void StridedConverter::SetStride(std::size_t stride) noexcept
 {
     if (stride == 0 || stride > 10'000) {
@@ -564,8 +710,16 @@ void StridedConverter::SetStride(std::size_t stride) noexcept
     stride_ = stride;
 }
 
+/**
+ * @brief Get the stride value of the StridedConverter.
+ *
+ * @return The stride value.
+ */
 auto StridedConverter::GetStride() const noexcept -> std::size_t { return stride_; }
 
+/**
+ * @brief This function is called when a game starts.
+ */
 void StridedConverter::OnGameStart()
 {
     if (stride_ == 0) { throw std::logic_error(fmt::format("Stride not set: {}", stride_)); }

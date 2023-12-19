@@ -28,6 +28,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y g++-${{ matrix.gcc-version }} gcc-${{ matrix.gcc-version }}
           sudo apt-get install -y cmake ninja-build git libboost-iostreams1.74-dev libtbb-dev
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v2
+        with:
+          name: build-artifacts
+          path: build
+        if: always()
+        continue-on-error: true  # Continue even if artifacts are not found
+
       - name: Fix python setup issues
         run : |
           sudo apt-get purge -y python3-setuptools
@@ -44,6 +53,12 @@ jobs:
       - name: Build and run tests
         run: cmake --build build --parallel --config Release && ./build/test_database && ./build/test_readwrite
 
+      - name: Archive build artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-artifacts
+          path: build
+        if: success()
       - name: Ensure pybind11-stubgen installed
         run: pip install git+https://github.com/5had3z/pybind11-stubgen.git black
 
