@@ -29,13 +29,12 @@ jobs:
           sudo apt-get install -y g++-${{ matrix.gcc-version }} gcc-${{ matrix.gcc-version }}
           sudo apt-get install -y cmake ninja-build git libboost-iostreams1.74-dev libtbb-dev
 
-      - name: Download build artifacts
-        uses: actions/download-artifact@v2
+      - name: Download Artifact from Previous Workflow
+        uses: dawidd6/action-download-artifact@v3
         with:
-          name: build-artifacts
-          path: build
-        if: always()
-        continue-on-error: true  # Continue even if artifacts are not found
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: test.yml  # Replace with your actual workflow file name
+          workflow_conclusion: success  # Replace with the desired workflow conclusion
 
       - name: Fix python setup issues
         run : |
