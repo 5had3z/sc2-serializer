@@ -4,12 +4,9 @@ services:
   dev:
     volumes:
       - ./:/app/
-    network_mode: "host"
     build:
       dockerfile: Dockerfile
       context: .
     image: ${REGISTRY_URL}/sc2-serializer:latest
     tty: true
-    stdin_open: true
-    privileged: true
     restart: unless-stopped

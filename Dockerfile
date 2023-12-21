@@ -38,7 +38,8 @@ FROM ubuntu:22.04 AS runner
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common && \
     add-apt-repository ppa:ubuntu-toolchain-r/test && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y libboost-iostreams1.74.0 libstdc++6 python3 libtbb12
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    libboost-iostreams1.74.0 libstdc++6 python3-dev libtbb12
 
 COPY --from=zlib-ng-builder /opt/zlib-ng/build/libz.so.1.3.0.zlib-ng /opt/zlib-ng/libz.so.1.3.0.zlib-ng
 ENV LD_PRELOAD=/opt/zlib-ng/libz.so.1.3.0.zlib-ng
