@@ -108,7 +108,7 @@ if(SC2_CONVERTER)
            sc2utils
            spdlog::spdlog
            boost_pfr
-           tbb
+           TBB::tbb
            Boost::iostreams)
 
   target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS})

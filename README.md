@@ -57,7 +57,7 @@ cmake --build build
 
 ### Windows
 
-Only tested with Visual Studio 2022 Version 17.7.6, _MSC_VER=1936.
+Only tested with Visual Studio 2022 Version 17.7.6, _MSC_VER=1936. Downloading TBB from intel is also required, [link here](https://www.intel.com/content/www/us/en/developer/articles/tool/oneapi-standalone-components.html#onetbb) (Tested with 2021.11.0).
 
 I would not recommend Python 3.12, [dm-tree will not compile](https://github.com/google-deepmind/tree/issues/109)
 
