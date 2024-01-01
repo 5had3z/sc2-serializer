@@ -39,14 +39,15 @@ RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y software-properties-common && \
     add-apt-repository ppa:ubuntu-toolchain-r/test && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    libboost-iostreams1.74.0 libstdc++6 python3-dev libtbb12
+    libboost-iostreams1.74.0 libstdc++6 python3-dev python3-pip libtbb12 && pip3 install mpyq
 
 COPY --from=zlib-ng-builder /opt/zlib-ng/build/libz.so.1.3.0.zlib-ng /opt/zlib-ng/libz.so.1.3.0.zlib-ng
 ENV LD_PRELOAD=/opt/zlib-ng/libz.so.1.3.0.zlib-ng
 
-COPY --from=builder /app/build/sc2_converter /sc2_converter
-COPY --from=builder /app/build/sc2_merger /sc2_merger
+WORKDIR /app
+COPY --from=builder /app/build/sc2_converter sc2_converter
+COPY --from=builder /app/build/sc2_merger sc2_merger
+COPY --from=builder /app/build/getReplayVersion.py getReplayVersion.py
 
-
-ENTRYPOINT [ "/app/sc2_converter" ]
+ENTRYPOINT [ "./sc2_converter" ]
 CMD [ "-h" ]
