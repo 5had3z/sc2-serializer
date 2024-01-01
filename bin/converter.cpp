@@ -82,11 +82,11 @@ auto getReplaysFromFolder(const std::string_view folder) noexcept -> std::vector
     SPDLOG_INFO("Searching replays in {}", folder);
     std::vector<std::string> replays;
     constexpr std::string_view targetExtension(".SC2Replay");
-    std::ranges::transform(fs::directory_iterator{ folder } | std::views::filter([&targetExtension](const auto& entry) {
+    std::ranges::transform(fs::directory_iterator{ folder } | std::views::filter([&targetExtension](const auto &entry) {
         return fs::is_regular_file(entry) && entry.path().extension() == targetExtension;
-    }), std::back_inserter(replays), [](const auto& entry) {
-        return entry.path().stem().string();
-    });
+    }),
+        std::back_inserter(replays),
+        [](const auto &entry) { return entry.path().stem().string(); });
     return replays;
 }
 
@@ -256,7 +256,7 @@ void loopReplayFiles(const fs::path &replayFolder,
         }
         coordinator->AddReplayObserver(converter);
         coordinator->SetProcessPath(gamePath);
-        coordinator->SetTimeoutMS(2000'000);
+        coordinator->SetTimeoutMS(30'000);
         const auto newport = find_available_port(port);
         if (newport.has_value()) { coordinator->SetPortStart(*newport); }
         return coordinator;

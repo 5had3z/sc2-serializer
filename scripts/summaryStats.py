@@ -1,6 +1,9 @@
 from pathlib import Path
-from typing import Dict, Tuple, Callable, Literal
+from typing import Callable, Dict, Literal, Tuple
+
 import torch
+from torch.utils.data import Dataset
+from utils import upper_bound
 from sc2_replay_reader import (
     GAME_INFO_FILE,
     ReplayDatabase,
@@ -8,9 +11,6 @@ from sc2_replay_reader import (
     setReplayDBLoggingLevel,
     spdlog_lvl,
 )
-from torch.utils.data import Dataset
-
-from utils import upper_bound
 
 SQL_TYPES = Literal["INTEGER", "FLOAT", "TEXT", "BOOLEAN"]
 ENUM_KEYS = {"playerRace", "playerResult"}

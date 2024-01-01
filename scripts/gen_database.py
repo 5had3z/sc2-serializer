@@ -1,14 +1,16 @@
-import sqlite3
-from summaryStats import SC2Replay, LambdaFunctionType, SQL_TYPES
 import os
+import sqlite3
 from pathlib import Path
-from torch.utils.data import DataLoader
+from typing import Any, Dict, Tuple
+
 import torch
-from sc2_replay_reader import Score
-from typing import Dict, Tuple, Any
 import typer
-from typing_extensions import Annotated
+from torch.utils.data import DataLoader
 from tqdm import tqdm
+from typing_extensions import Annotated
+
+from sc2_replay_reader import Score
+from summaryStats import SQL_TYPES, LambdaFunctionType, SC2Replay
 
 app = typer.Typer()
 
@@ -19,32 +21,19 @@ def custom_collate(batch):
         raise Exception(
             f"Nothing successful in entire batch of length {len(batch)}, try making it larger"
         )
-    if any((not item["read_success"] for item in batch)):
-        first_read_success = next(
-            (item for item in batch if item.get("read_success")), None
-        )
-
-        # This must hold
-        assert first_read_success is not None
-
-        extra_keys = set(first_read_success.keys()) - {
-            "partition",
-            "idx",
-            "read_success",
-        }
-
-        # Create a dictionary with zero tensors for extra_keys
-        empty_batch = {key: 0 for key in extra_keys}
-
-        data_batch = [
-            {**empty_batch, **data} if not data["read_success"] else data
-            for data in batch
-        ]
-
-        return torch.utils.data.dataloader.default_collate(data_batch)
-
-    else:
+    if all(item["read_success"] for item in batch):
         return torch.utils.data.dataloader.default_collate(batch)
+
+    first_read_success = next((item for item in batch if item.get("read_success")))
+    extra_keys = set(first_read_success.keys()) - {"partition", "idx", "read_success"}
+
+    # Create a dictionary with zero tensors for extra_keys
+    empty_batch = {key: 0 for key in extra_keys}
+    data_batch = [
+        {**empty_batch, **data} if not data["read_success"] else data for data in batch
+    ]
+
+    return torch.utils.data.dataloader.default_collate(data_batch)
 
 
 def make_database(
@@ -67,7 +56,6 @@ def make_database(
             {', '.join(f"{column} {datatype}" for column, datatype in additional_columns.items())},
             {', '.join(f"{column} {datatype}" for column, datatype in features.items())},
             {', '.join(f"{column} {datatype}" for column, (datatype, _) in lambda_columns.items())}
-
         )
     """
     cursor.execute(create_table_sql)
