@@ -121,7 +121,7 @@ def main(
     }
 
     if "POD_NAME" in os.environ:
-        number = os.environ["POD_NAME"].split("_")[-1]
+        number = os.environ["POD_NAME"].split("-")[-1]
         dataset = SC2Replay(
             Path(os.environ["DATAPATH"]) / f"db_{number}.SC2Replays",
             set(features.keys()),
