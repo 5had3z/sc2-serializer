@@ -135,10 +135,17 @@ def main(
     conn, cursor = make_database(
         workspace / "gamedata.db", additional_columns, features, lambda_columns
     )
-
-    dataset = SC2Replay(
-        Path(os.environ["DATAPATH"]), set(features.keys()), lambda_columns
-    )
+    if "POD_NAME" in os.environ:
+        number = os.environ["POD_NAME"].split("_")[-1]
+        dataset = SC2Replay(
+            Path(os.environ["DATAPATH"]) / f"db_{number}.SC2Replays",
+            set(features.keys()),
+            lambda_columns,
+        )
+    else:
+        dataset = SC2Replay(
+            Path(os.environ["DATAPATH"]), set(features.keys()), lambda_columns
+        )
     batch_size = 50
     dataloader = DataLoader(
         dataset, num_workers=workers, batch_size=batch_size, collate_fn=custom_collate
