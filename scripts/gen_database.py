@@ -127,6 +127,17 @@ def main(
             set(features.keys()),
             lambda_columns,
         )
+        db_file = workspace / f"gamedata_{number}.db"
+        if db_file.is_file():
+            file_size_bytes = db_file.stat().st_size
+
+            # Convert bytes to megabytes
+            file_size_mb = file_size_bytes / (1024 * 1024)
+            print(f"Found existing file:  {db_file} with size {file_size_mb}MB")
+            if file_size_mb > 1:
+                print("skipping file which exists....")
+                return
+
         conn, cursor = make_database(
             workspace / f"gamedata_{number}.db",
             additional_columns,

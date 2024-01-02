@@ -31,6 +31,50 @@ def get_races(cursor: sqlite3.Cursor):
         typer.echo(f"Player Race {Race(int(playerrace))}: {count} occurrences")
 
 
+def get_rows(cursor: sqlite3.Cursor):
+    query = """
+        SELECT COUNT(*) as count
+        FROM game_data
+        """
+    cursor.execute(query)
+
+    # Fetch the results
+    results = cursor.fetchone()
+
+    typer.echo(f"Number of rows: {results[0]:,}")
+    return results[0]
+
+
+def count_invalid(cursor: sqlite3.Cursor, valid_rows: int | None = None):
+    min_game_time_minutes = 10
+    game_steps = int(min_game_time_minutes * 60 * 22.4)
+    invalid_criteria = [
+        "playerMMR < 0",
+        "read_success = 0",
+        "playerAPM < 0",
+        "final_score_float < 0",
+        f"game_length < {game_steps}",
+    ]
+    invalid_criteria.append(" OR ".join(invalid_criteria))
+    for ic in invalid_criteria:
+        query = f"""
+            SELECT COUNT(*) as count
+            FROM game_data
+            WHERE {ic}
+            """
+        cursor.execute(query)
+
+        # Fetch the results
+        results = cursor.fetchone()
+
+        if valid_rows is not None:
+            typer.echo(
+                f"Invalid rows ({ic}): {results[0]:,} ({results[0] * 100 / valid_rows:.2f}%)"
+            )
+        else:
+            typer.echo(f"Invalid rows ({ic}): {results[0]:,}")
+
+
 def count_discrete_values(
     cursor: sqlite3.Cursor,
     columns: Dict[str, Tuple[List[Any], Callable[[str], Any] | None]],
@@ -99,6 +143,9 @@ def main(database: Annotated[Path, typer.Option()]):
     try:
         conn = sqlite3.connect(database_str)
         cursor = conn.cursor()
+
+        rows = get_rows(cursor)
+        count_invalid(cursor, rows)
 
         count_discrete_values(cursor, {"playerRace": ([0, 1, 2], compose(Race, int))})
         count_discrete_values(
