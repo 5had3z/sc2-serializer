@@ -16,19 +16,8 @@ static auto gLogger = spdlog::stdout_color_mt("ReplayDatabase");
 
 namespace cvt {
 
-/**
- * @brief Constructs a ReplayDatabase object.
- *
- * @param dbPath The path to the database.
- */
 ReplayDatabase::ReplayDatabase(const std::filesystem::path &dbPath) noexcept { this->open(dbPath); }
 
-/**
- * Opens a replay database at the specified path.
- *
- * @param dbPath The path to the replay database.
- * @return True if the database was successfully opened, false otherwise.
- */
 auto ReplayDatabase::open(std::filesystem::path dbPath) noexcept -> bool
 {
     if (dbPath.string().empty()) {
@@ -56,11 +45,6 @@ auto ReplayDatabase::open(std::filesystem::path dbPath) noexcept -> bool
     return ok;
 }
 
-/**
- * @brief Creates a new entry in the replay database.
- *
- * @return true if the entry was successfully created, false otherwise.
- */
 auto ReplayDatabase::create() noexcept -> bool
 {
     entryPtr_.clear();// Clear existing LUT data
@@ -78,11 +62,6 @@ auto ReplayDatabase::create() noexcept -> bool
     return !dbStream.bad();
 }
 
-/**
- * @brief Loads the replay database.
- *
- * @return true if the replay database is successfully loaded, false otherwise.
- */
 auto ReplayDatabase::load() noexcept -> bool
 {
     std::ifstream dbStream(dbPath_, std::ios::binary);
@@ -90,25 +69,10 @@ auto ReplayDatabase::load() noexcept -> bool
     return !dbStream.bad();
 }
 
-/**
- * Checks if the replay database is full.
- *
- * @return true if the replay database is full, false otherwise.
- */
 auto ReplayDatabase::isFull() const noexcept -> bool { return entryPtr_.size() >= maxEntries; }
 
-/**
- * Returns the number of entries in the replay database.
- *
- * @return The number of entries in the replay database.
- */
 auto ReplayDatabase::size() const noexcept -> std::size_t { return entryPtr_.size(); }
 
-/**
- * @brief Retrieves the set of hashes stored in the replay database.
- *
- * @return The set of hashes as an unordered set of strings.
- */
 auto ReplayDatabase::getHashes() const noexcept -> std::unordered_set<std::string>
 {
     std::unordered_set<std::string> replayHashes{};
@@ -120,12 +84,8 @@ auto ReplayDatabase::getHashes() const noexcept -> std::unordered_set<std::strin
     return replayHashes;
 }
 
-/**
- * @brief Adds an entry to the replay database.
- *
- * @param data The replay data to be added.
- * @return True if the entry was successfully added, false otherwise.
- */
+auto ReplayDatabase::path() const noexcept -> std::filesystem::path { return dbPath_; }
+
 bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
 {
     // First ensure that the db is not at the maximum 1M entries
@@ -177,13 +137,6 @@ bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
 }
 
 
-/**
- * Retrieves the hash ID entry from the database stream at the specified entry position.
- *
- * @param dbStream The input file stream of the database.
- * @param entry The position of the entry in the database stream.
- * @return A pair containing the hash ID string and the associated 32-bit unsigned integer.
- */
 auto ReplayDatabase::getHashIdEntry(std::ifstream &dbStream, std::streampos entry) const
     -> std::pair<std::string, std::uint32_t>
 {
@@ -202,12 +155,6 @@ auto ReplayDatabase::getHashIdEntry(std::ifstream &dbStream, std::streampos entr
     return std::make_pair(replayHash, playerId);
 }
 
-/**
- * @brief Retrieves the hash ID at the specified index.
- *
- * @param index The index of the hash ID to retrieve.
- * @return A pair containing the hash ID as a string and its associated 32-bit unsigned integer.
- */
 auto ReplayDatabase::getHashId(std::size_t index) const -> std::pair<std::string, std::uint32_t>
 {
     // Check if valid index
@@ -220,12 +167,6 @@ auto ReplayDatabase::getHashId(std::size_t index) const -> std::pair<std::string
 }
 
 
-/**
- * Retrieves the replay data at the specified index from the database.
- *
- * @param index The index of the replay data entry to retrieve.
- * @return The replay data at the specified index.
- */
 auto ReplayDatabase::getEntry(std::size_t index) const -> ReplayDataSoA
 {
     // using clock = std::chrono::high_resolution_clock;
@@ -259,11 +200,6 @@ auto ReplayDatabase::getEntry(std::size_t index) const -> ReplayDataSoA
     return data;
 }
 
-/**
- * @brief Sets the logging level for the replay database.
- *
- * @param lvl The logging level to set.
- */
 void setReplayDBLoggingLevel(spdlog::level::level_enum lvl) noexcept { gLogger->set_level(lvl); }
 
 }// namespace cvt

@@ -174,7 +174,7 @@ void BaseConverter::OnGameStart()
 //     namespace bio = boost::iostreams;
 //     bio::filtering_ostream filterStream{};
 //     filterStream.push(bio::zlib_compressor(bio::zlib::best_compression));
-//     filterStream.push(bio::file_sink(outPath, std::ios::binary));
+//     filterStream.push(bio::file_sink(outPath, std::ios::binary | std::ios::app));
 //     serialize(data, filterStream);
 //     if (filterStream.bad()) { SPDLOG_ERROR("Error Serializing Replay Data"); }
 //     filterStream.flush();
@@ -192,23 +192,29 @@ void BaseConverter::OnGameEnd()
         return;
     }
 
-    // Save entry to DB
+    // Transform SoA to AoS
     const auto SoA = ReplayAoStoSoA(currentReplay_);
 
-    // For debugging storage space contribution of each observation component
-    // auto basePath =
-    //   std::filesystem::path("write_data") / std::format("{}_{}", currentReplay_.replayHash,
-    //   currentReplay_.playerId);
-    // write_data(SoA.visibility, basePath.replace_extension("visibility"));
-    // write_data(SoA.creep, basePath.replace_extension("creep"));
-    // write_data(SoA.player_relative, basePath.replace_extension("player_relative"));
-    // write_data(SoA.alerts, basePath.replace_extension("alerts"));
-    // write_data(SoA.buildable, basePath.replace_extension("buildable"));
-    // write_data(SoA.pathable, basePath.replace_extension("pathable"));
-    // write_data(SoA.actions, basePath.replace_extension("actions"));
-    // write_data(SoA.units, basePath.replace_extension("units"));
-    // write_data(SoA, basePath.replace_extension("all"));
+    // To show storage space contribution of each observation component
+    // write_data(SoA.gameStep, database_.path().replace_extension("gameStep"));
+    // write_data(SoA.minearals, database_.path().replace_extension("minerals"));
+    // write_data(SoA.vespere, database_.path().replace_extension("vespere"));
+    // write_data(SoA.popMax, database_.path().replace_extension("popMax"));
+    // write_data(SoA.popArmy, database_.path().replace_extension("popArmy"));
+    // write_data(SoA.popWorkers, database_.path().replace_extension("popWorkers"));
+    // write_data(SoA.score, database_.path().replace_extension("score"));
+    // write_data(SoA.visibility, database_.path().replace_extension("visibility"));
+    // write_data(SoA.creep, database_.path().replace_extension("creep"));
+    // write_data(SoA.player_relative, database_.path().replace_extension("player_relative"));
+    // write_data(SoA.alerts, database_.path().replace_extension("alerts"));
+    // write_data(SoA.buildable, database_.path().replace_extension("buildable"));
+    // write_data(SoA.pathable, database_.path().replace_extension("pathable"));
+    // write_data(SoA.actions, database_.path().replace_extension("actions"));
+    // write_data(SoA.units, database_.path().replace_extension("units"));
+    // write_data(SoA.neutralUnits, database_.path().replace_extension("neutralUnits"));
+    // write_data(currentReplay_, database_.path().replace_extension("array_of_structures"));
 
+    // Write to database
     writeSuccess_ = database_.addEntry(SoA);
 }
 
