@@ -621,7 +621,9 @@ void BaseConverter::copyCommonData() noexcept
 {
     // Logging performance
     static FrequencyTimer timer("Converter", std::chrono::seconds(30));
-    timer.step(fmt::format("Step {} of {}", this->Observation()->GetGameLoop(), currentReplay_.stepData.capacity()));
+    timer.step(fmt::format("Step {} of {}",
+        this->Observation()->GetGameLoop(),
+        this->ReplayControl()->GetReplayInfo().duration_gameloops));
 
     // Copy static height map if not already done
     if (currentReplay_.heightMap.empty()) { this->copyHeightMapData(); }
