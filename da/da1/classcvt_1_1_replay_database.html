@@ -84,41 +84,319 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a50b1c15f06d3b7eb056999b0e7786c4e" id="r_a50b1c15f06d3b7eb056999b0e7786c4e"><td class="memItemLeft" align="right" valign="top"><a id="a50b1c15f06d3b7eb056999b0e7786c4e" name="a50b1c15f06d3b7eb056999b0e7786c4e"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ReplayDatabase</b> (const std::filesystem::path &amp;dbPath) noexcept</td></tr>
+<tr class="memitem:a242defa4e580c3f5f831f73191f0e700" id="r_a242defa4e580c3f5f831f73191f0e700"><td class="memItemLeft" align="right" valign="top"><a id="a242defa4e580c3f5f831f73191f0e700" name="a242defa4e580c3f5f831f73191f0e700"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ReplayDatabase</b> ()</td></tr>
+<tr class="memdesc:a242defa4e580c3f5f831f73191f0e700"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an empty replay database with no associated path. <br /></td></tr>
+<tr class="separator:a242defa4e580c3f5f831f73191f0e700"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a50b1c15f06d3b7eb056999b0e7786c4e" id="r_a50b1c15f06d3b7eb056999b0e7786c4e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da1/classcvt_1_1_replay_database.html#a50b1c15f06d3b7eb056999b0e7786c4e">ReplayDatabase</a> (const std::filesystem::path &amp;dbPath) noexcept</td></tr>
+<tr class="memdesc:a50b1c15f06d3b7eb056999b0e7786c4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a <a class="el" href="../../da/da1/classcvt_1_1_replay_database.html">ReplayDatabase</a> and create or load from db path.  <br /></td></tr>
 <tr class="separator:a50b1c15f06d3b7eb056999b0e7786c4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96e8abe139075e0464e8d18319b6d739" id="r_a96e8abe139075e0464e8d18319b6d739"><td class="memItemLeft" align="right" valign="top"><a id="a96e8abe139075e0464e8d18319b6d739" name="a96e8abe139075e0464e8d18319b6d739"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>addEntry</b> (const <a class="el" href="../../da/d56/structcvt_1_1_replay_data_so_a.html">ReplayDataSoA</a> &amp;data)</td></tr>
+<tr class="memitem:a96e8abe139075e0464e8d18319b6d739" id="r_a96e8abe139075e0464e8d18319b6d739"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da1/classcvt_1_1_replay_database.html#a96e8abe139075e0464e8d18319b6d739">addEntry</a> (const <a class="el" href="../../da/d56/structcvt_1_1_replay_data_so_a.html">ReplayDataSoA</a> &amp;data)</td></tr>
+<tr class="memdesc:a96e8abe139075e0464e8d18319b6d739"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds an entry to the replay database.  <br /></td></tr>
 <tr class="separator:a96e8abe139075e0464e8d18319b6d739"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8a5e2163ccc76422beea20e5bbee96c" id="r_af8a5e2163ccc76422beea20e5bbee96c"><td class="memItemLeft" align="right" valign="top"><a id="af8a5e2163ccc76422beea20e5bbee96c" name="af8a5e2163ccc76422beea20e5bbee96c"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>getEntry</b> (std::size_t index) const -&gt; <a class="el" href="../../da/d56/structcvt_1_1_replay_data_so_a.html">ReplayDataSoA</a></td></tr>
+<tr class="memitem:af8a5e2163ccc76422beea20e5bbee96c" id="r_af8a5e2163ccc76422beea20e5bbee96c"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da1/classcvt_1_1_replay_database.html#af8a5e2163ccc76422beea20e5bbee96c">getEntry</a> (std::size_t index) const -&gt; <a class="el" href="../../da/d56/structcvt_1_1_replay_data_so_a.html">ReplayDataSoA</a></td></tr>
 <tr class="separator:af8a5e2163ccc76422beea20e5bbee96c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab3a25c07b29393dc139392aabfe42c94" id="r_ab3a25c07b29393dc139392aabfe42c94"><td class="memItemLeft" align="right" valign="top"><a id="ab3a25c07b29393dc139392aabfe42c94" name="ab3a25c07b29393dc139392aabfe42c94"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>getHashId</b> (std::size_t index) const -&gt; std::pair&lt; std::string, std::uint32_t &gt;</td></tr>
+<tr class="memitem:ab3a25c07b29393dc139392aabfe42c94" id="r_ab3a25c07b29393dc139392aabfe42c94"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da1/classcvt_1_1_replay_database.html#ab3a25c07b29393dc139392aabfe42c94">getHashId</a> (std::size_t index) const -&gt; std::pair&lt; std::string, std::uint32_t &gt;</td></tr>
+<tr class="memdesc:ab3a25c07b29393dc139392aabfe42c94"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the hash ID at the specified index.  <br /></td></tr>
 <tr class="separator:ab3a25c07b29393dc139392aabfe42c94"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab45a5e872056604764534dfd45970a3c" id="r_ab45a5e872056604764534dfd45970a3c"><td class="memItemLeft" align="right" valign="top"><a id="ab45a5e872056604764534dfd45970a3c" name="ab45a5e872056604764534dfd45970a3c"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>getHashIdEntry</b> (std::ifstream &amp;dbStream, std::streampos entry) const -&gt; std::pair&lt; std::string, std::uint32_t &gt;</td></tr>
+<tr class="memitem:ab45a5e872056604764534dfd45970a3c" id="r_ab45a5e872056604764534dfd45970a3c"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da1/classcvt_1_1_replay_database.html#ab45a5e872056604764534dfd45970a3c">getHashIdEntry</a> (std::ifstream &amp;dbStream, std::streampos entry) const -&gt; std::pair&lt; std::string, std::uint32_t &gt;</td></tr>
+<tr class="memdesc:ab45a5e872056604764534dfd45970a3c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the hash ID entry from the database stream at the specified entry position.  <br /></td></tr>
 <tr class="separator:ab45a5e872056604764534dfd45970a3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63f025da502b3144f7dc07cb2c770805" id="r_a63f025da502b3144f7dc07cb2c770805"><td class="memItemLeft" align="right" valign="top"><a id="a63f025da502b3144f7dc07cb2c770805" name="a63f025da502b3144f7dc07cb2c770805"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>isFull</b> () const noexcept -&gt; bool</td></tr>
+<tr class="memitem:a63f025da502b3144f7dc07cb2c770805" id="r_a63f025da502b3144f7dc07cb2c770805"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da1/classcvt_1_1_replay_database.html#a63f025da502b3144f7dc07cb2c770805">isFull</a> () const noexcept -&gt; bool</td></tr>
+<tr class="memdesc:a63f025da502b3144f7dc07cb2c770805"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the replay database is full.  <br /></td></tr>
 <tr class="separator:a63f025da502b3144f7dc07cb2c770805"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a84bd553389ed5383f08eff05d76d2156" id="r_a84bd553389ed5383f08eff05d76d2156"><td class="memItemLeft" align="right" valign="top"><a id="a84bd553389ed5383f08eff05d76d2156" name="a84bd553389ed5383f08eff05d76d2156"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>open</b> (std::filesystem::path dbPath) noexcept -&gt; bool</td></tr>
+<tr class="memitem:a84bd553389ed5383f08eff05d76d2156" id="r_a84bd553389ed5383f08eff05d76d2156"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da1/classcvt_1_1_replay_database.html#a84bd553389ed5383f08eff05d76d2156">open</a> (std::filesystem::path dbPath) noexcept -&gt; bool</td></tr>
+<tr class="memdesc:a84bd553389ed5383f08eff05d76d2156"><td class="mdescLeft">&#160;</td><td class="mdescRight">Opens a replay database at the specified path.  <br /></td></tr>
 <tr class="separator:a84bd553389ed5383f08eff05d76d2156"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae000eb2735703493dc018f5f7dc94273" id="r_ae000eb2735703493dc018f5f7dc94273"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da1/classcvt_1_1_replay_database.html#ae000eb2735703493dc018f5f7dc94273">size</a> () const noexcept -&gt; std::size_t</td></tr>
 <tr class="memdesc:ae000eb2735703493dc018f5f7dc94273"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of entries in the database.  <br /></td></tr>
 <tr class="separator:ae000eb2735703493dc018f5f7dc94273"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a483b3e765154aa97e38d7468e957756d" id="r_a483b3e765154aa97e38d7468e957756d"><td class="memItemLeft" align="right" valign="top"><a id="a483b3e765154aa97e38d7468e957756d" name="a483b3e765154aa97e38d7468e957756d"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>getHashes</b> () const noexcept -&gt; std::unordered_set&lt; std::string &gt;</td></tr>
+<tr class="memitem:a483b3e765154aa97e38d7468e957756d" id="r_a483b3e765154aa97e38d7468e957756d"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da1/classcvt_1_1_replay_database.html#a483b3e765154aa97e38d7468e957756d">getHashes</a> () const noexcept -&gt; std::unordered_set&lt; std::string &gt;</td></tr>
+<tr class="memdesc:a483b3e765154aa97e38d7468e957756d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return an set of hash+playerId entries in the database.  <br /></td></tr>
 <tr class="separator:a483b3e765154aa97e38d7468e957756d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74bec5b8bccbcb0df84557348322d1d7" id="r_a74bec5b8bccbcb0df84557348322d1d7"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/da1/classcvt_1_1_replay_database.html#a74bec5b8bccbcb0df84557348322d1d7">path</a> () const noexcept -&gt; std::filesystem::path</td></tr>
+<tr class="memdesc:a74bec5b8bccbcb0df84557348322d1d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the path of the database instance.  <br /></td></tr>
+<tr class="separator:a74bec5b8bccbcb0df84557348322d1d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:a94b9d790aaeb3718eac647333f601dba" id="r_a94b9d790aaeb3718eac647333f601dba"><td class="memItemLeft" align="right" valign="top"><a id="a94b9d790aaeb3718eac647333f601dba" name="a94b9d790aaeb3718eac647333f601dba"></a>
 static const std::size_t&#160;</td><td class="memItemRight" valign="bottom"><b>maxEntries</b> = 1'000'000</td></tr>
+<tr class="memdesc:a94b9d790aaeb3718eac647333f601dba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Maximum number of allowed entries in a replay database. This is the maximum lookup table size on disk. <br /></td></tr>
 <tr class="separator:a94b9d790aaeb3718eac647333f601dba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a50b1c15f06d3b7eb056999b0e7786c4e" name="a50b1c15f06d3b7eb056999b0e7786c4e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a50b1c15f06d3b7eb056999b0e7786c4e">&#9670;&#160;</a></span>ReplayDatabase()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cvt::ReplayDatabase::ReplayDatabase </td>
+          <td>(</td>
+          <td class="paramtype">const std::filesystem::path &amp;&#160;</td>
+          <td class="paramname"><em>dbPath</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Constructs a <a class="el" href="../../da/da1/classcvt_1_1_replay_database.html">ReplayDatabase</a> and create or load from db path. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dbPath</td><td>The path to the database. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a96e8abe139075e0464e8d18319b6d739" name="a96e8abe139075e0464e8d18319b6d739"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96e8abe139075e0464e8d18319b6d739">&#9670;&#160;</a></span>addEntry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cvt::ReplayDatabase::addEntry </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../da/d56/structcvt_1_1_replay_data_so_a.html">ReplayDataSoA</a> &amp;&#160;</td>
+          <td class="paramname"><em>data</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Adds an entry to the replay database. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">data</td><td>The replay data to be added. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the entry was successfully added, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="af8a5e2163ccc76422beea20e5bbee96c" name="af8a5e2163ccc76422beea20e5bbee96c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af8a5e2163ccc76422beea20e5bbee96c">&#9670;&#160;</a></span>getEntry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cvt::ReplayDatabase::getEntry </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const -&gt;  <a class="el" href="../../da/d56/structcvt_1_1_replay_data_so_a.html">ReplayDataSoA</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Retrieves the replay data at the specified index from the database. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>The index of the replay data entry to retrieve. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The replay data at the specified index. </dd></dl>
+
+</div>
+</div>
+<a id="a483b3e765154aa97e38d7468e957756d" name="a483b3e765154aa97e38d7468e957756d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a483b3e765154aa97e38d7468e957756d">&#9670;&#160;</a></span>getHashes()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cvt::ReplayDatabase::getHashes </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const -&gt;  std::unordered_set&lt; std::string &gt;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return an set of hash+playerId entries in the database. </p>
+<dl class="section return"><dt>Returns</dt><dd>Unordered set of std::string of concatenated hash and playerId </dd></dl>
+
+</div>
+</div>
+<a id="ab3a25c07b29393dc139392aabfe42c94" name="ab3a25c07b29393dc139392aabfe42c94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3a25c07b29393dc139392aabfe42c94">&#9670;&#160;</a></span>getHashId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cvt::ReplayDatabase::getHashId </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const -&gt;  std::pair&lt; std::string, std::uint32_t &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the hash ID at the specified index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>The index of the hash ID to retrieve. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pair containing the hash ID as a string and its associated 32-bit unsigned integer. </dd></dl>
+
+</div>
+</div>
+<a id="ab45a5e872056604764534dfd45970a3c" name="ab45a5e872056604764534dfd45970a3c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab45a5e872056604764534dfd45970a3c">&#9670;&#160;</a></span>getHashIdEntry()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cvt::ReplayDatabase::getHashIdEntry </td>
+          <td>(</td>
+          <td class="paramtype">std::ifstream &amp;&#160;</td>
+          <td class="paramname"><em>dbStream</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::streampos&#160;</td>
+          <td class="paramname"><em>entry</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const -&gt;  std::pair&lt; std::string, std::uint32_t &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Retrieves the hash ID entry from the database stream at the specified entry position. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dbStream</td><td>The input file stream of the database. </td></tr>
+    <tr><td class="paramname">entry</td><td>The position of the entry in the database stream. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pair containing the hash ID string and the associated 32-bit unsigned integer. </dd></dl>
+
+</div>
+</div>
+<a id="a63f025da502b3144f7dc07cb2c770805" name="a63f025da502b3144f7dc07cb2c770805"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63f025da502b3144f7dc07cb2c770805">&#9670;&#160;</a></span>isFull()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cvt::ReplayDatabase::isFull </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const -&gt;  bool</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks if the replay database is full. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if the replay database is full, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="a84bd553389ed5383f08eff05d76d2156" name="a84bd553389ed5383f08eff05d76d2156"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84bd553389ed5383f08eff05d76d2156">&#9670;&#160;</a></span>open()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cvt::ReplayDatabase::open </td>
+          <td>(</td>
+          <td class="paramtype">std::filesystem::path&#160;</td>
+          <td class="paramname"><em>dbPath</em></td><td>)</td>
+          <td> -&gt;  bool</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Opens a replay database at the specified path. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">dbPath</td><td>The path to the replay database. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the database was successfully opened, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="a74bec5b8bccbcb0df84557348322d1d7" name="a74bec5b8bccbcb0df84557348322d1d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a74bec5b8bccbcb0df84557348322d1d7">&#9670;&#160;</a></span>path()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cvt::ReplayDatabase::path </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const -&gt;  std::filesystem::path</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the path of the database instance. </p>
+<dl class="section return"><dt>Returns</dt><dd>path to database </dd></dl>
+
+</div>
+</div>
 <a id="ae000eb2735703493dc018f5f7dc94273" name="ae000eb2735703493dc018f5f7dc94273"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae000eb2735703493dc018f5f7dc94273">&#9670;&#160;</a></span>size()</h2>
 
