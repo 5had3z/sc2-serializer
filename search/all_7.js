@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['neutralunit_0',['NeutralUnit',['../de/dea/structcvt_1_1_neutral_unit.html',1,'cvt']]],
-  ['neutralunitsoa_1',['NeutralUnitSoA',['../d9/da4/structcvt_1_1_neutral_unit_so_a.html',1,'cvt']]]
+  ['loaddb_0',['loadDB',['../d8/d39/classcvt_1_1_base_converter.html#a728215d97040ee37dbce63822f36884f',1,'cvt::BaseConverter']]]
 ];

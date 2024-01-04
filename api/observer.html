@@ -107,7 +107,8 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt15ActionConverter6OnStepEv">
 <span id="_CPPv3N3cvt15ActionConverter6OnStepEv"></span><span id="_CPPv2N3cvt15ActionConverter6OnStepEv"></span><span id="cvt::ActionConverter::OnStep"></span><span class="target" id="d3/dbf/classcvt_1_1_action_converter_1a69b769854306fa0ec2e6c1d9a784e0a6"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">OnStep</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">final</span></span><a class="headerlink" href="#_CPPv4N3cvt15ActionConverter6OnStepEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Copies common data each step, will only commit that data on action observation. Each step will have the previous step’s observation and current step’s action. </p>
+</dd></dl>
 
 </div>
 </dd></dl>
@@ -135,37 +136,80 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt13BaseConverter13setReplayInfoEKNSt11string_viewENSt8uint32_tE">
 <span id="_CPPv3N3cvt13BaseConverter13setReplayInfoEKNSt11string_viewENSt8uint32_tE"></span><span id="_CPPv2N3cvt13BaseConverter13setReplayInfoEKNSt11string_viewENSt8uint32_tE"></span><span id="cvt::BaseConverter::setReplayInfo__std::string_viewC.std::uint32_t"></span><span class="target" id="d8/d39/classcvt_1_1_base_converter_1a3af8034c72dc4f7fbb75c861004dac35"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setReplayInfo</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string_view</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">hash</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">playerId</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt13BaseConverter13setReplayInfoEKNSt11string_viewENSt8uint32_tE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Sets the replay information for the <a class="reference internal" href="#d8/d39/classcvt_1_1_base_converter"><span class="std std-ref">BaseConverter</span></a>. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>hash</strong> – The hash of the replay. </p></li>
+<li><p><strong>playerId</strong> – The ID of the player. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt13BaseConverter11OnGameStartEv">
 <span id="_CPPv3N3cvt13BaseConverter11OnGameStartEv"></span><span id="_CPPv2N3cvt13BaseConverter11OnGameStartEv"></span><span id="cvt::BaseConverter::OnGameStart"></span><span class="target" id="d8/d39/classcvt_1_1_base_converter_1aaef1b1dd50509af09acf08dff8608619"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">OnGameStart</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3cvt13BaseConverter11OnGameStartEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>This function is called when the game starts. Gathers basic replay info such as player mmr. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt13BaseConverter9OnGameEndEv">
 <span id="_CPPv3N3cvt13BaseConverter9OnGameEndEv"></span><span id="_CPPv2N3cvt13BaseConverter9OnGameEndEv"></span><span id="cvt::BaseConverter::OnGameEnd"></span><span class="target" id="d8/d39/classcvt_1_1_base_converter_1a6b7a8efe2fc5f54b6ab9aa434aa0f05d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">OnGameEnd</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N3cvt13BaseConverter9OnGameEndEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Checks if the game has ended in a normal state and then writes replay to database. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK3cvt13BaseConverter10hasWrittenEv">
 <span id="_CPPv3NK3cvt13BaseConverter10hasWrittenEv"></span><span id="_CPPv2NK3cvt13BaseConverter10hasWrittenEv"></span><span id="cvt::BaseConverter::hasWrittenC"></span><span class="target" id="d8/d39/classcvt_1_1_base_converter_1aedda8d635378f618ae5941a03ab1182a"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">hasWritten</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><a class="headerlink" href="#_CPPv4NK3cvt13BaseConverter10hasWrittenEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Checks if the <a class="reference internal" href="#d8/d39/classcvt_1_1_base_converter"><span class="std std-ref">BaseConverter</span></a> has successfully written data. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>true if the <a class="reference internal" href="#d8/d39/classcvt_1_1_base_converter"><span class="std std-ref">BaseConverter</span></a> has successfully written data, false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK3cvt13BaseConverter11isKnownHashERKNSt6stringE">
 <span id="_CPPv3NK3cvt13BaseConverter11isKnownHashERKNSt6stringE"></span><span id="_CPPv2NK3cvt13BaseConverter11isKnownHashERKNSt6stringE"></span><span id="cvt::BaseConverter::isKnownHash__ssCRC"></span><span class="target" id="d8/d39/classcvt_1_1_base_converter_1a9dfafd409d1bedd807810949e124c557"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">isKnownHash</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">hash</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><a class="headerlink" href="#_CPPv4NK3cvt13BaseConverter11isKnownHashERKNSt6stringE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Checks if a given hash is known in the database. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hash</strong> – The hash to check. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the hash is known, false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt13BaseConverter12addKnownHashENSt6stringE">
 <span id="_CPPv3N3cvt13BaseConverter12addKnownHashENSt6stringE"></span><span id="_CPPv2N3cvt13BaseConverter12addKnownHashENSt6stringE"></span><span id="cvt::BaseConverter::addKnownHash__ss"></span><span class="target" id="d8/d39/classcvt_1_1_base_converter_1a7a5b9ba6c63a08d2bbf6e586d8ab07f3"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">addKnownHash</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">hash</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt13BaseConverter12addKnownHashENSt6stringE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Adds a known hash to the <a class="reference internal" href="#d8/d39/classcvt_1_1_base_converter"><span class="std std-ref">BaseConverter</span></a>’s list of known hashes. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hash</strong> – The hash to be added. </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt13BaseConverter5clearEv">
 <span id="_CPPv3N3cvt13BaseConverter5clearEv"></span><span id="_CPPv2N3cvt13BaseConverter5clearEv"></span><span id="cvt::BaseConverter::clear"></span><span class="target" id="d8/d39/classcvt_1_1_base_converter_1a76477f0016ec10e52a6352cc21dba3fb"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">clear</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt13BaseConverter5clearEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Clears the <a class="reference internal" href="#d8/d39/classcvt_1_1_base_converter"><span class="std std-ref">BaseConverter</span></a> object. </p>
+<p>This function clears the internal state of the <a class="reference internal" href="#d8/d39/classcvt_1_1_base_converter"><span class="std std-ref">BaseConverter</span></a> object. It resets all the member variables to their default values.</p>
+<p><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#d8/d39/classcvt_1_1_base_converter"><span class="std std-ref">BaseConverter</span></a></p>
+</div>
+</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This function does not deallocate any memory.</p>
+</div>
+</dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
@@ -173,42 +217,58 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt13BaseConverter17copyHeightMapDataEv">
 <span id="_CPPv3N3cvt13BaseConverter17copyHeightMapDataEv"></span><span id="_CPPv2N3cvt13BaseConverter17copyHeightMapDataEv"></span><span id="cvt::BaseConverter::copyHeightMapData"></span><span class="target" id="d8/d39/classcvt_1_1_base_converter_1ab22bd937e4bed41e443b15a68ff73dc3"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">copyHeightMapData</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt13BaseConverter17copyHeightMapDataEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Copies the height map data for the match. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt13BaseConverter12copyUnitDataEv">
 <span id="_CPPv3N3cvt13BaseConverter12copyUnitDataEv"></span><span id="_CPPv2N3cvt13BaseConverter12copyUnitDataEv"></span><span id="cvt::BaseConverter::copyUnitData"></span><span class="target" id="d8/d39/classcvt_1_1_base_converter_1a39c3df87bfdae6c328bf966267448ef7"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">copyUnitData</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt13BaseConverter12copyUnitDataEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Copies the unit data from observation to stepData.back(). </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt13BaseConverter14copyActionDataEv">
 <span id="_CPPv3N3cvt13BaseConverter14copyActionDataEv"></span><span id="_CPPv2N3cvt13BaseConverter14copyActionDataEv"></span><span id="cvt::BaseConverter::copyActionData"></span><span class="target" id="d8/d39/classcvt_1_1_base_converter_1aba231a2afb592494ac59555aae8a3356"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">copyActionData</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt13BaseConverter14copyActionDataEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Copies the action data to stepData.back(). </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt13BaseConverter18copyDynamicMapDataEv">
 <span id="_CPPv3N3cvt13BaseConverter18copyDynamicMapDataEv"></span><span id="_CPPv2N3cvt13BaseConverter18copyDynamicMapDataEv"></span><span id="cvt::BaseConverter::copyDynamicMapData"></span><span class="target" id="d8/d39/classcvt_1_1_base_converter_1a8b20a44d161c5cd640bc6f32ab818369"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">copyDynamicMapData</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt13BaseConverter18copyDynamicMapDataEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Copies the dynamic map data to stepData.back(). </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt13BaseConverter14copyCommonDataEv">
 <span id="_CPPv3N3cvt13BaseConverter14copyCommonDataEv"></span><span id="_CPPv2N3cvt13BaseConverter14copyCommonDataEv"></span><span id="cvt::BaseConverter::copyCommonData"></span><span class="target" id="d8/d39/classcvt_1_1_base_converter_1aedeb16cd9e7ca6f2bf0b264249edfe1e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">copyCommonData</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt13BaseConverter14copyCommonDataEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Copies the common data such as scalars gameStep, minerals, vespene to stepData.back(). </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt13BaseConverter17updateResourceObsEv">
 <span id="_CPPv3N3cvt13BaseConverter17updateResourceObsEv"></span><span id="_CPPv2N3cvt13BaseConverter17updateResourceObsEv"></span><span id="cvt::BaseConverter::updateResourceObs"></span><span class="target" id="d8/d39/classcvt_1_1_base_converter_1ab2fdfdab7255c1898867137089ee38c0"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">updateResourceObs</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt13BaseConverter17updateResourceObsEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Updates the resource observer. Update resourceObs_ based on visible units. Reassign jumbled UIDs to be consistent over the game assign snapshot unis the last known quantity. </p>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt13BaseConverter18reassignResourceIdERK11NeutralUnit">
 <span id="_CPPv3N3cvt13BaseConverter18reassignResourceIdERK11NeutralUnit"></span><span id="_CPPv2N3cvt13BaseConverter18reassignResourceIdERK11NeutralUnit"></span><span id="cvt::BaseConverter::reassignResourceId__NeutralUnitCR"></span><span class="target" id="d8/d39/classcvt_1_1_base_converter_1adca11b68b0cfc41bfcbed7485f6746fd"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reassignResourceId</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data.html#_CPPv4N3cvt11NeutralUnitE" title="cvt::NeutralUnit"><span class="n"><span class="pre">NeutralUnit</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">unit</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><a class="headerlink" href="#_CPPv4N3cvt13BaseConverter18reassignResourceIdERK11NeutralUnit" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Reassigns the resource ID for a given <a class="reference internal" href="data.html#de/dea/structcvt_1_1_neutral_unit"><span class="std std-ref">NeutralUnit</span></a> when it changes visibility. It gets reassociated with an old id based on locality. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>unit</strong> – The <a class="reference internal" href="data.html#de/dea/structcvt_1_1_neutral_unit"><span class="std std-ref">NeutralUnit</span></a> for which the resource ID needs to be reassigned. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the resource ID was successfully reassigned, false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt13BaseConverter15initResourceObsEv">
 <span id="_CPPv3N3cvt13BaseConverter15initResourceObsEv"></span><span id="_CPPv2N3cvt13BaseConverter15initResourceObsEv"></span><span id="cvt::BaseConverter::initResourceObs"></span><span class="target" id="d8/d39/classcvt_1_1_base_converter_1aef9b2bddf7c14c66f987255aa17d1033"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">initResourceObs</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt13BaseConverter15initResourceObsEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Initializes the resource observations with the first observation and default values. </p>
+</dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
@@ -262,7 +322,8 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt13FullConverter6OnStepEv">
 <span id="_CPPv3N3cvt13FullConverter6OnStepEv"></span><span id="_CPPv2N3cvt13FullConverter6OnStepEv"></span><span id="cvt::FullConverter::OnStep"></span><span class="target" id="db/d39/classcvt_1_1_full_converter_1aec0d4c6f3b0dcc1ff2b844709e345975"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">OnStep</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">final</span></span><a class="headerlink" href="#_CPPv4N3cvt13FullConverter6OnStepEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Copies observation data every step. </p>
+</dd></dl>
 
 </div>
 </dd></dl>
@@ -301,17 +362,30 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt16StridedConverter9SetStrideENSt6size_tE">
 <span id="_CPPv3N3cvt16StridedConverter9SetStrideENSt6size_tE"></span><span id="_CPPv2N3cvt16StridedConverter9SetStrideENSt6size_tE"></span><span id="cvt::StridedConverter::SetStride__std::s"></span><span class="target" id="d5/db8/classcvt_1_1_strided_converter_1afa9d9aae329cec85fd37e1c7ad6f27ab"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SetStride</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">stride</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt16StridedConverter9SetStrideENSt6size_tE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Set the sampling stride. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>stride</strong> – stride to set between 1 and 10’000 </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK3cvt16StridedConverter9GetStrideEv">
 <span id="_CPPv3NK3cvt16StridedConverter9GetStrideEv"></span><span id="_CPPv2NK3cvt16StridedConverter9GetStrideEv"></span><span id="cvt::StridedConverter::GetStrideC"></span><span class="target" id="d5/db8/classcvt_1_1_strided_converter_1a8aad159460beb72f9c2cde55fd858648"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetStride</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><a class="headerlink" href="#_CPPv4NK3cvt16StridedConverter9GetStrideEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Get the currently set stride. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Currently set stride </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt16StridedConverter11OnGameStartEv">
 <span id="_CPPv3N3cvt16StridedConverter11OnGameStartEv"></span><span id="_CPPv2N3cvt16StridedConverter11OnGameStartEv"></span><span id="cvt::StridedConverter::OnGameStart"></span><span class="target" id="d5/db8/classcvt_1_1_strided_converter_1a231c6a23ead0df9fdf7706c9f48f9a50"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">OnGameStart</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">final</span></span><a class="headerlink" href="#_CPPv4N3cvt16StridedConverter11OnGameStartEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Checks the stride has been set before normal start. </p>
+</dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
@@ -319,7 +393,8 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt16StridedConverter6OnStepEv">
 <span id="_CPPv3N3cvt16StridedConverter6OnStepEv"></span><span id="_CPPv2N3cvt16StridedConverter6OnStepEv"></span><span id="cvt::StridedConverter::OnStep"></span><span class="target" id="d5/db8/classcvt_1_1_strided_converter_1a8d2664850dbae2fb96517f90582879d5"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">OnStep</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">final</span></span><a class="headerlink" href="#_CPPv4N3cvt16StridedConverter6OnStepEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Only samples observation/action at strided intervals. </p>
+</dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">

@@ -99,53 +99,62 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a728215d97040ee37dbce63822f36884f" id="r_a728215d97040ee37dbce63822f36884f"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html#a728215d97040ee37dbce63822f36884f">loadDB</a> (const std::filesystem::path &amp;path) noexcept -&gt; bool</td></tr>
 <tr class="memdesc:a728215d97040ee37dbce63822f36884f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads the database from the specified path.  <br /></td></tr>
 <tr class="separator:a728215d97040ee37dbce63822f36884f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3af8034c72dc4f7fbb75c861004dac35" id="r_a3af8034c72dc4f7fbb75c861004dac35"><td class="memItemLeft" align="right" valign="top"><a id="a3af8034c72dc4f7fbb75c861004dac35" name="a3af8034c72dc4f7fbb75c861004dac35"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>setReplayInfo</b> (const std::string_view hash, std::uint32_t playerId) noexcept</td></tr>
+<tr class="memitem:a3af8034c72dc4f7fbb75c861004dac35" id="r_a3af8034c72dc4f7fbb75c861004dac35"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html#a3af8034c72dc4f7fbb75c861004dac35">setReplayInfo</a> (const std::string_view hash, std::uint32_t playerId) noexcept</td></tr>
+<tr class="memdesc:a3af8034c72dc4f7fbb75c861004dac35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the replay information for the <a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html">BaseConverter</a>.  <br /></td></tr>
 <tr class="separator:a3af8034c72dc4f7fbb75c861004dac35"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaef1b1dd50509af09acf08dff8608619" id="r_aaef1b1dd50509af09acf08dff8608619"><td class="memItemLeft" align="right" valign="top"><a id="aaef1b1dd50509af09acf08dff8608619" name="aaef1b1dd50509af09acf08dff8608619"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>OnGameStart</b> () override</td></tr>
+<tr class="memdesc:aaef1b1dd50509af09acf08dff8608619"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function is called when the game starts. Gathers basic replay info such as player mmr. <br /></td></tr>
 <tr class="separator:aaef1b1dd50509af09acf08dff8608619"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6b7a8efe2fc5f54b6ab9aa434aa0f05d" id="r_a6b7a8efe2fc5f54b6ab9aa434aa0f05d"><td class="memItemLeft" align="right" valign="top"><a id="a6b7a8efe2fc5f54b6ab9aa434aa0f05d" name="a6b7a8efe2fc5f54b6ab9aa434aa0f05d"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>OnGameEnd</b> () override</td></tr>
+<tr class="memdesc:a6b7a8efe2fc5f54b6ab9aa434aa0f05d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the game has ended in a normal state and then writes replay to database. <br /></td></tr>
 <tr class="separator:a6b7a8efe2fc5f54b6ab9aa434aa0f05d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aedda8d635378f618ae5941a03ab1182a" id="r_aedda8d635378f618ae5941a03ab1182a"><td class="memItemLeft" align="right" valign="top"><a id="aedda8d635378f618ae5941a03ab1182a" name="aedda8d635378f618ae5941a03ab1182a"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>hasWritten</b> () const noexcept -&gt; bool</td></tr>
+<tr class="memitem:aedda8d635378f618ae5941a03ab1182a" id="r_aedda8d635378f618ae5941a03ab1182a"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html#aedda8d635378f618ae5941a03ab1182a">hasWritten</a> () const noexcept -&gt; bool</td></tr>
+<tr class="memdesc:aedda8d635378f618ae5941a03ab1182a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the <a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html">BaseConverter</a> has successfully written data.  <br /></td></tr>
 <tr class="separator:aedda8d635378f618ae5941a03ab1182a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9dfafd409d1bedd807810949e124c557" id="r_a9dfafd409d1bedd807810949e124c557"><td class="memItemLeft" align="right" valign="top"><a id="a9dfafd409d1bedd807810949e124c557" name="a9dfafd409d1bedd807810949e124c557"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>isKnownHash</b> (const std::string &amp;hash) const noexcept -&gt; bool</td></tr>
+<tr class="memitem:a9dfafd409d1bedd807810949e124c557" id="r_a9dfafd409d1bedd807810949e124c557"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html#a9dfafd409d1bedd807810949e124c557">isKnownHash</a> (const std::string &amp;hash) const noexcept -&gt; bool</td></tr>
+<tr class="memdesc:a9dfafd409d1bedd807810949e124c557"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a given hash is known in the database.  <br /></td></tr>
 <tr class="separator:a9dfafd409d1bedd807810949e124c557"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a5b9ba6c63a08d2bbf6e586d8ab07f3" id="r_a7a5b9ba6c63a08d2bbf6e586d8ab07f3"><td class="memItemLeft" align="right" valign="top"><a id="a7a5b9ba6c63a08d2bbf6e586d8ab07f3" name="a7a5b9ba6c63a08d2bbf6e586d8ab07f3"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addKnownHash</b> (std::string hash) noexcept</td></tr>
+<tr class="memitem:a7a5b9ba6c63a08d2bbf6e586d8ab07f3" id="r_a7a5b9ba6c63a08d2bbf6e586d8ab07f3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html#a7a5b9ba6c63a08d2bbf6e586d8ab07f3">addKnownHash</a> (std::string hash) noexcept</td></tr>
+<tr class="memdesc:a7a5b9ba6c63a08d2bbf6e586d8ab07f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a known hash to the <a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html">BaseConverter</a>'s list of known hashes.  <br /></td></tr>
 <tr class="separator:a7a5b9ba6c63a08d2bbf6e586d8ab07f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a76477f0016ec10e52a6352cc21dba3fb" id="r_a76477f0016ec10e52a6352cc21dba3fb"><td class="memItemLeft" align="right" valign="top"><a id="a76477f0016ec10e52a6352cc21dba3fb" name="a76477f0016ec10e52a6352cc21dba3fb"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>clear</b> () noexcept</td></tr>
+<tr class="memitem:a76477f0016ec10e52a6352cc21dba3fb" id="r_a76477f0016ec10e52a6352cc21dba3fb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html#a76477f0016ec10e52a6352cc21dba3fb">clear</a> () noexcept</td></tr>
+<tr class="memdesc:a76477f0016ec10e52a6352cc21dba3fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the <a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html">BaseConverter</a> object.  <br /></td></tr>
 <tr class="separator:a76477f0016ec10e52a6352cc21dba3fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:ab22bd937e4bed41e443b15a68ff73dc3" id="r_ab22bd937e4bed41e443b15a68ff73dc3"><td class="memItemLeft" align="right" valign="top"><a id="ab22bd937e4bed41e443b15a68ff73dc3" name="ab22bd937e4bed41e443b15a68ff73dc3"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>copyHeightMapData</b> () noexcept</td></tr>
+<tr class="memdesc:ab22bd937e4bed41e443b15a68ff73dc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies the height map data for the match. <br /></td></tr>
 <tr class="separator:ab22bd937e4bed41e443b15a68ff73dc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39c3df87bfdae6c328bf966267448ef7" id="r_a39c3df87bfdae6c328bf966267448ef7"><td class="memItemLeft" align="right" valign="top"><a id="a39c3df87bfdae6c328bf966267448ef7" name="a39c3df87bfdae6c328bf966267448ef7"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>copyUnitData</b> () noexcept</td></tr>
+<tr class="memdesc:a39c3df87bfdae6c328bf966267448ef7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies the unit data from observation to stepData.back(). <br /></td></tr>
 <tr class="separator:a39c3df87bfdae6c328bf966267448ef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aba231a2afb592494ac59555aae8a3356" id="r_aba231a2afb592494ac59555aae8a3356"><td class="memItemLeft" align="right" valign="top"><a id="aba231a2afb592494ac59555aae8a3356" name="aba231a2afb592494ac59555aae8a3356"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>copyActionData</b> () noexcept</td></tr>
+<tr class="memdesc:aba231a2afb592494ac59555aae8a3356"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies the action data to stepData.back(). <br /></td></tr>
 <tr class="separator:aba231a2afb592494ac59555aae8a3356"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8b20a44d161c5cd640bc6f32ab818369" id="r_a8b20a44d161c5cd640bc6f32ab818369"><td class="memItemLeft" align="right" valign="top"><a id="a8b20a44d161c5cd640bc6f32ab818369" name="a8b20a44d161c5cd640bc6f32ab818369"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>copyDynamicMapData</b> () noexcept</td></tr>
+<tr class="memdesc:a8b20a44d161c5cd640bc6f32ab818369"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies the dynamic map data to stepData.back(). <br /></td></tr>
 <tr class="separator:a8b20a44d161c5cd640bc6f32ab818369"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aedeb16cd9e7ca6f2bf0b264249edfe1e" id="r_aedeb16cd9e7ca6f2bf0b264249edfe1e"><td class="memItemLeft" align="right" valign="top"><a id="aedeb16cd9e7ca6f2bf0b264249edfe1e" name="aedeb16cd9e7ca6f2bf0b264249edfe1e"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>copyCommonData</b> () noexcept</td></tr>
+<tr class="memdesc:aedeb16cd9e7ca6f2bf0b264249edfe1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copies the common data such as scalars gameStep, minerals, vespene to stepData.back(). <br /></td></tr>
 <tr class="separator:aedeb16cd9e7ca6f2bf0b264249edfe1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab2fdfdab7255c1898867137089ee38c0" id="r_ab2fdfdab7255c1898867137089ee38c0"><td class="memItemLeft" align="right" valign="top"><a id="ab2fdfdab7255c1898867137089ee38c0" name="ab2fdfdab7255c1898867137089ee38c0"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>updateResourceObs</b> () noexcept</td></tr>
+<tr class="memdesc:ab2fdfdab7255c1898867137089ee38c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Updates the resource observer. Update resourceObs_ based on visible units. Reassign jumbled UIDs to be consistent over the game assign snapshot unis the last known quantity. <br /></td></tr>
 <tr class="separator:ab2fdfdab7255c1898867137089ee38c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adca11b68b0cfc41bfcbed7485f6746fd" id="r_adca11b68b0cfc41bfcbed7485f6746fd"><td class="memItemLeft" align="right" valign="top"><a id="adca11b68b0cfc41bfcbed7485f6746fd" name="adca11b68b0cfc41bfcbed7485f6746fd"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>reassignResourceId</b> (const <a class="el" href="../../de/dea/structcvt_1_1_neutral_unit.html">NeutralUnit</a> &amp;unit) noexcept -&gt; bool</td></tr>
+<tr class="memitem:adca11b68b0cfc41bfcbed7485f6746fd" id="r_adca11b68b0cfc41bfcbed7485f6746fd"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html#adca11b68b0cfc41bfcbed7485f6746fd">reassignResourceId</a> (const <a class="el" href="../../de/dea/structcvt_1_1_neutral_unit.html">NeutralUnit</a> &amp;unit) noexcept -&gt; bool</td></tr>
+<tr class="memdesc:adca11b68b0cfc41bfcbed7485f6746fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reassigns the resource ID for a given <a class="el" href="../../de/dea/structcvt_1_1_neutral_unit.html">NeutralUnit</a> when it changes visibility. It gets reassociated with an old id based on locality.  <br /></td></tr>
 <tr class="separator:adca11b68b0cfc41bfcbed7485f6746fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef9b2bddf7c14c66f987255aa17d1033" id="r_aef9b2bddf7c14c66f987255aa17d1033"><td class="memItemLeft" align="right" valign="top"><a id="aef9b2bddf7c14c66f987255aa17d1033" name="aef9b2bddf7c14c66f987255aa17d1033"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>initResourceObs</b> () noexcept</td></tr>
+<tr class="memdesc:aef9b2bddf7c14c66f987255aa17d1033"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the resource observations with the first observation and default values. <br /></td></tr>
 <tr class="separator:aef9b2bddf7c14c66f987255aa17d1033"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
@@ -173,6 +182,133 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>writeSuccess_</b> { f
 <tr class="separator:a3239162aed1f40dd0a2989aea35658fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a7a5b9ba6c63a08d2bbf6e586d8ab07f3" name="a7a5b9ba6c63a08d2bbf6e586d8ab07f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7a5b9ba6c63a08d2bbf6e586d8ab07f3">&#9670;&#160;</a></span>addKnownHash()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cvt::BaseConverter::addKnownHash </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>hash</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Adds a known hash to the <a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html">BaseConverter</a>'s list of known hashes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">hash</td><td>The hash to be added. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a76477f0016ec10e52a6352cc21dba3fb" name="a76477f0016ec10e52a6352cc21dba3fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a76477f0016ec10e52a6352cc21dba3fb">&#9670;&#160;</a></span>clear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cvt::BaseConverter::clear </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Clears the <a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html">BaseConverter</a> object. </p>
+<p>This function clears the internal state of the <a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html">BaseConverter</a> object. It resets all the member variables to their default values.</p>
+<dl class="section note"><dt>Note</dt><dd>This function does not deallocate any memory.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html">BaseConverter</a> </dd></dl>
+
+</div>
+</div>
+<a id="aedda8d635378f618ae5941a03ab1182a" name="aedda8d635378f618ae5941a03ab1182a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aedda8d635378f618ae5941a03ab1182a">&#9670;&#160;</a></span>hasWritten()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cvt::BaseConverter::hasWritten </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const -&gt;  bool</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks if the <a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html">BaseConverter</a> has successfully written data. </p>
+<dl class="section return"><dt>Returns</dt><dd>true if the <a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html">BaseConverter</a> has successfully written data, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="a9dfafd409d1bedd807810949e124c557" name="a9dfafd409d1bedd807810949e124c557"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9dfafd409d1bedd807810949e124c557">&#9670;&#160;</a></span>isKnownHash()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cvt::BaseConverter::isKnownHash </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>hash</em></td><td>)</td>
+          <td> const -&gt;  bool</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks if a given hash is known in the database. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">hash</td><td>The hash to check. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the hash is known, false otherwise. </dd></dl>
+
+</div>
+</div>
 <a id="a728215d97040ee37dbce63822f36884f" name="a728215d97040ee37dbce63822f36884f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a728215d97040ee37dbce63822f36884f">&#9670;&#160;</a></span>loadDB()</h2>
 
@@ -205,6 +341,86 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>writeSuccess_</b> { f
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if the database was loaded successfully, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="adca11b68b0cfc41bfcbed7485f6746fd" name="adca11b68b0cfc41bfcbed7485f6746fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adca11b68b0cfc41bfcbed7485f6746fd">&#9670;&#160;</a></span>reassignResourceId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cvt::BaseConverter::reassignResourceId </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../de/dea/structcvt_1_1_neutral_unit.html">NeutralUnit</a> &amp;&#160;</td>
+          <td class="paramname"><em>unit</em></td><td>)</td>
+          <td> -&gt;  bool</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reassigns the resource ID for a given <a class="el" href="../../de/dea/structcvt_1_1_neutral_unit.html">NeutralUnit</a> when it changes visibility. It gets reassociated with an old id based on locality. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">unit</td><td>The <a class="el" href="../../de/dea/structcvt_1_1_neutral_unit.html">NeutralUnit</a> for which the resource ID needs to be reassigned. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the resource ID was successfully reassigned, false otherwise. </dd></dl>
+
+</div>
+</div>
+<a id="a3af8034c72dc4f7fbb75c861004dac35" name="a3af8034c72dc4f7fbb75c861004dac35"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3af8034c72dc4f7fbb75c861004dac35">&#9670;&#160;</a></span>setReplayInfo()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cvt::BaseConverter::setReplayInfo </td>
+          <td>(</td>
+          <td class="paramtype">const std::string_view&#160;</td>
+          <td class="paramname"><em>hash</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::uint32_t&#160;</td>
+          <td class="paramname"><em>playerId</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sets the replay information for the <a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html">BaseConverter</a>. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">hash</td><td>The hash of the replay. </td></tr>
+    <tr><td class="paramname">playerId</td><td>The ID of the player. </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
