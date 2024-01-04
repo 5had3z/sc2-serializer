@@ -62,7 +62,7 @@ void writeComponents(const cvt::ReplayDataSoA &data, const fs::path &outDir)
 void writeReplayStructures(const cvt::ReplayDataSoA &data, const fs::path &outDir)
 {
     writeData(data, outDir / "replay_soa.bin");
-    writeData(cvt::ReplaySoAtoAoS(data), outDir / "replay_aos.bin");
+    writeData(cvt::SoAtoAoS<cvt::ReplayData, cvt::ReplayDataSoA>(data), outDir / "replay_aos.bin");
 }
 
 /**
@@ -75,20 +75,19 @@ void writeReplayStructures(const cvt::ReplayDataSoA &data, const fs::path &outDi
  * @param prefix prefix for files
  * @param AoStoSoA instance of aos to soa transform function
  */
-template<typename UnitT, typename UnitSoAT, typename Transform>
-void implWriteUnitT(const std::vector<std::vector<UnitT>> &unitData,
-    const fs::path &outDir,
-    std::string_view prefix,
-    Transform AoStoSoA)
-    requires std::is_invocable_r_v<UnitSoAT, Transform, std::vector<UnitT>>
+template<typename UnitT, typename UnitSoAT>
+void implWriteUnitT(const std::vector<std::vector<UnitT>> &unitData, const fs::path &outDir, std::string_view prefix)
+    requires std::is_same_v<UnitT, typename UnitSoAT::struct_type>
 {
+    using AoS = std::vector<UnitT>;
     // Array-of-Array-of-Structures
     writeData(unitData, outDir / fmt::format("{}_aoaos.bin", prefix));
 
     // Array-of-Structure-of-Arrays
     {
         std::vector<UnitSoAT> units;
-        std::ranges::transform(unitData, std::back_inserter(units), AoStoSoA);
+        std::ranges::transform(
+            unitData, std::back_inserter(units), [](const AoS &u) { return cvt::AoStoSoA<AoS, UnitSoAT>(u); });
         writeData(units, outDir / fmt::format("{}_aosoa.bin", prefix));
     }
 
@@ -97,10 +96,10 @@ void implWriteUnitT(const std::vector<std::vector<UnitT>> &unitData,
         std::vector<UnitT> unitFlatten;
         for (auto &&units : unitData) { std::ranges::copy(units, std::back_inserter(unitFlatten)); }
         // Write sorted by time
-        writeData(AoStoSoA(unitFlatten), outDir / fmt::format("{}_sofa.bin", prefix));
+        writeData(cvt::AoStoSoA<AoS, UnitSoAT>(unitFlatten), outDir / fmt::format("{}_sofa.bin", prefix));
         // Write sorted by unit id (and time by stable sorting)
         std::ranges::stable_sort(unitFlatten, [](const UnitT &a, const UnitT &b) { return a.id < b.id; });
-        writeData(AoStoSoA(unitFlatten), outDir / fmt::format("{}_sorted_sofa.bin", prefix));
+        writeData(cvt::AoStoSoA<AoS, UnitSoAT>(unitFlatten), outDir / fmt::format("{}_sorted_sofa.bin", prefix));
     }
 }
 
@@ -111,13 +110,8 @@ void implWriteUnitT(const std::vector<std::vector<UnitT>> &unitData,
  */
 void writeUnitStructures(const cvt::ReplayDataSoA &data, const fs::path &outDir)
 {
-    implWriteUnitT<cvt::Unit, cvt::UnitSoA>(
-        data.units, outDir, "units", [](const std::vector<cvt::Unit> &unit) { return cvt::UnitAoStoSoA(unit); });
-
-    implWriteUnitT<cvt::NeutralUnit, cvt::NeutralUnitSoA>(
-        data.neutralUnits, outDir, "neutralUnits", [](const std::vector<cvt::NeutralUnit> &unit) {
-            return cvt::NeutralUnitAoStoSoA(unit);
-        });
+    implWriteUnitT<cvt::Unit, cvt::UnitSoA>(data.units, outDir, "units");
+    implWriteUnitT<cvt::NeutralUnit, cvt::NeutralUnitSoA>(data.neutralUnits, outDir, "neutralUnits");
 }
 
 int main(int argc, char *argv[])

@@ -65,7 +65,7 @@ auto createReplay(int seed) -> cvt::ReplayDataSoA
 
     // Add a hash "name" to it
     replay_.replayHash = "FooBarBaz";
-    return ReplayAoStoSoA(replay_);
+    return cvt::AoStoSoA<cvt::ReplayData, cvt::ReplayDataSoA>(replay_);
 }
 
 class DatabaseTest : public testing::Test

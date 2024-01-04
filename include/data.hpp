@@ -3,6 +3,7 @@
 #include <boost/pfr.hpp>
 
 #include <algorithm>
+#include <array>
 #include <cassert>
 #include <cstdint>
 #include <cstring>
@@ -10,7 +11,6 @@
 #include <span>
 #include <string>
 #include <vector>
-#include <array>
 
 namespace cvt {
 
@@ -22,13 +22,13 @@ typedef std::uint64_t UID;// Type that represents unique identifier in the game
 // Converts an enum value to a one-hot encoding
 template<typename E, typename T>
     requires std::is_enum_v<E>
-auto enumToOneHot(E e) noexcept -> std::vector<T>;
+constexpr auto enumToOneHot(E e) noexcept -> std::vector<T>;
 
 namespace detail {
 
     template<typename T, typename It>
         requires std::is_arithmetic_v<T>
-    auto vectorize_helper(T d, It it, bool onehotEnum) -> It
+    constexpr auto vectorize_helper(T d, It it, bool onehotEnum) -> It
     {
         *it++ = static_cast<It::container_type::value_type>(d);
         return it;
@@ -36,14 +36,14 @@ namespace detail {
 
     template<std::ranges::range T, typename It>
         requires std::is_arithmetic_v<std::ranges::range_value_t<T>>
-    auto vectorize_helper(const T &d, It it, bool onehotEnum) -> It
+    constexpr auto vectorize_helper(const T &d, It it, bool onehotEnum) -> It
     {
         return std::ranges::transform(d, it, [](auto e) { return static_cast<It::container_type::value_type>(e); }).out;
     }
 
     template<typename T, typename It>
         requires std::is_enum_v<T>
-    auto vectorize_helper(T d, It it, bool onehotEnum) -> It
+    constexpr auto vectorize_helper(T d, It it, bool onehotEnum) -> It
     {
         using value_type = It::container_type::value_type;
         if (onehotEnum) {
@@ -56,7 +56,7 @@ namespace detail {
 
     template<typename T, typename It>
         requires std::is_aggregate_v<T> && (!std::ranges::range<T>)
-    auto vectorize_helper(T d, It it, bool onehotEnum) -> It
+    constexpr auto vectorize_helper(T d, It it, bool onehotEnum) -> It
     {
         boost::pfr::for_each_field(
             d, [&it, onehotEnum](const auto &field) { it = detail::vectorize_helper(field, it, onehotEnum); });
@@ -65,7 +65,7 @@ namespace detail {
 
 
     template<typename T>
-    auto enumToOneHot_helper(auto enumVal, const std::ranges::range auto &enumValues) -> std::vector<T>
+    constexpr auto enumToOneHot_helper(auto enumVal, const std::ranges::range auto &enumValues) -> std::vector<T>
     {
         auto it = std::ranges::find(enumValues, enumVal);
         std::vector<T> ret(enumValues.size());
@@ -77,7 +77,7 @@ namespace detail {
 
 template<typename S, typename It>
     requires std::is_aggregate_v<S> && std::is_arithmetic_v<typename It::container_type::value_type>
-[[maybe_unused]] auto vectorize(S s, It it, bool onehotEnum = false) -> It
+[[maybe_unused]] constexpr auto vectorize(S s, It it, bool onehotEnum = false) -> It
 {
     boost::pfr::for_each_field(
         s, [&it, onehotEnum](const auto &field) { it = detail::vectorize_helper(field, it, onehotEnum); });
@@ -87,12 +87,15 @@ template<typename S, typename It>
 // TODO: Add helper fn to check the vectorization size
 template<typename T, typename S>
     requires std::is_aggregate_v<S> && std::is_arithmetic_v<T>
-auto vectorize(S s, bool onehotEnum = false) -> std::vector<T>
+constexpr auto vectorize(S s, bool onehotEnum = false) -> std::vector<T>
 {
     std::vector<T> out;
     vectorize(s, std::back_inserter(out), onehotEnum);
     return out;
 }
+
+template<typename AoS, typename SoA> [[nodiscard]] constexpr auto AoStoSoA(const AoS &aos) noexcept -> SoA;
+template<typename AoS, typename SoA> [[nodiscard]] constexpr auto SoAtoAoS(const SoA &soa) noexcept -> AoS;
 
 
 struct Point2d
@@ -198,6 +201,37 @@ struct Image
     }
 };
 
+struct Score
+{
+    float score_float;
+    float idle_production_time;
+    float idle_worker_time;
+    float total_value_units;
+    float total_value_structures;
+    float killed_value_units;
+    float killed_value_structures;
+    float collected_minerals;
+    float collected_vespene;
+    float collection_rate_minerals;
+    float collection_rate_vespene;
+    float spent_minerals;
+    float spent_vespene;
+
+    float total_damage_dealt_life;
+    float total_damage_dealt_shields;
+    float total_damage_dealt_energy;
+
+    float total_damage_taken_life;
+    float total_damage_taken_shields;
+    float total_damage_taken_energy;
+
+    float total_healed_life;
+    float total_healed_shields;
+    float total_healed_energy;
+
+    [[nodiscard]] auto operator==(const Score &other) const noexcept -> bool = default;
+};
+
 enum class Alliance : char { Self = 1, Ally = 2, Neutral = 3, Enemy = 4 };
 
 template<typename T> auto enumToOneHot(Alliance e) noexcept -> std::vector<T>
@@ -291,39 +325,10 @@ struct Unit
     [[nodiscard]] auto operator==(const Unit &other) const noexcept -> bool = default;
 };
 
-struct Score
-{
-    float score_float;
-    float idle_production_time;
-    float idle_worker_time;
-    float total_value_units;
-    float total_value_structures;
-    float killed_value_units;
-    float killed_value_structures;
-    float collected_minerals;
-    float collected_vespene;
-    float collection_rate_minerals;
-    float collection_rate_vespene;
-    float spent_minerals;
-    float spent_vespene;
-
-    float total_damage_dealt_life;
-    float total_damage_dealt_shields;
-    float total_damage_dealt_energy;
-
-    float total_damage_taken_life;
-    float total_damage_taken_shields;
-    float total_damage_taken_energy;
-
-    float total_healed_life;
-    float total_healed_shields;
-    float total_healed_energy;
-
-    [[nodiscard]] auto operator==(const Score &other) const noexcept -> bool = default;
-};
 
 struct UnitSoA
 {
+    using struct_type = Unit;
     std::vector<UID> id{};
     std::vector<int> unitType{};
     std::vector<Visibility> observation{};
@@ -368,8 +373,7 @@ struct UnitSoA
     [[nodiscard]] auto operator==(const UnitSoA &other) const noexcept -> bool = default;
 };
 
-
-[[nodiscard]] inline auto UnitAoStoSoA(const std::vector<Unit> &aos) noexcept -> UnitSoA
+template<> constexpr auto AoStoSoA(const std::vector<Unit> &aos) noexcept -> UnitSoA
 {
     UnitSoA soa{};
     // Prealloc expected size
@@ -416,7 +420,7 @@ struct UnitSoA
     return soa;
 }
 
-[[nodiscard]] inline auto UnitSoAtoAoS(const UnitSoA &soa) noexcept -> std::vector<Unit>
+template<> constexpr auto SoAtoAoS(const UnitSoA &soa) noexcept -> std::vector<Unit>
 {
     std::vector<Unit> aos{};
 
@@ -466,6 +470,7 @@ struct UnitSoA
     return aos;
 }
 
+
 // Static Neutral Units such as VespeneGeysers are missing
 // many of the common player unit properties and therefore
 // should be handled separately to save space and better
@@ -489,6 +494,7 @@ struct NeutralUnit
 
 struct NeutralUnitSoA
 {
+    using struct_type = NeutralUnit;
     std::vector<UID> id{};
     std::vector<int> unitType{};
     std::vector<Visibility> observation{};
@@ -502,7 +508,7 @@ struct NeutralUnitSoA
     [[nodiscard]] auto operator==(const NeutralUnitSoA &other) const noexcept -> bool = default;
 };
 
-[[nodiscard]] inline auto NeutralUnitAoStoSoA(const std::vector<NeutralUnit>& aos) noexcept -> NeutralUnitSoA
+template<> constexpr auto AoStoSoA(const std::vector<NeutralUnit> &aos) noexcept -> NeutralUnitSoA
 {
     NeutralUnitSoA soa{};
     // Prealloc expected size
@@ -522,7 +528,7 @@ struct NeutralUnitSoA
     return soa;
 }
 
-[[nodiscard]] inline auto NeutralUnitSoAtoAoS(const NeutralUnitSoA &soa) noexcept -> std::vector<NeutralUnit>
+template<> constexpr auto SoAtoAoS(const NeutralUnitSoA &soa) noexcept -> std::vector<NeutralUnit>
 {
     std::vector<NeutralUnit> aos{};
 
@@ -547,7 +553,6 @@ struct NeutralUnitSoA
     }
     return aos;
 }
-
 
 struct Action
 {
@@ -650,8 +655,10 @@ template<typename T> auto enumToOneHot(Result e) noexcept -> std::vector<T>
     return detail::enumToOneHot_helper<T>(e, vals);
 }
 
+
 struct ReplayData
 {
+    using value_type = ReplayData;
     std::string replayHash{};
     std::string gameVersion{};
     std::uint32_t playerId{};
@@ -669,6 +676,7 @@ struct ReplayData
 
 struct ReplayDataSoA
 {
+    using struct_type = ReplayData;
     std::string replayHash{};
     std::string gameVersion{};
     std::uint32_t playerId{};
@@ -701,7 +709,7 @@ struct ReplayDataSoA
     [[nodiscard]] auto operator==(const ReplayDataSoA &other) const noexcept -> bool = default;
 };
 
-[[nodiscard]] inline auto ReplayAoStoSoA(const ReplayData &aos) noexcept -> ReplayDataSoA
+template<> constexpr auto AoStoSoA(const ReplayData &aos) noexcept -> ReplayDataSoA
 {
     ReplayDataSoA soa = {
         .replayHash = aos.replayHash,
@@ -737,7 +745,7 @@ struct ReplayDataSoA
     return soa;
 }
 
-[[nodiscard]] inline auto ReplaySoAtoAoS(const ReplayDataSoA &soa) noexcept -> ReplayData
+template<> constexpr auto SoAtoAoS(const ReplayDataSoA &soa) noexcept -> ReplayData
 {
     ReplayData aos = {
         .replayHash = soa.replayHash,

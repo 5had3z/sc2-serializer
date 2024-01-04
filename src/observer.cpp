@@ -145,7 +145,7 @@ void BaseConverter::OnGameEnd()
         return;
     }
     // Transform SoA to AoS and Write to database
-    writeSuccess_ = database_.addEntry(ReplayAoStoSoA(currentReplay_));
+    writeSuccess_ = database_.addEntry(AoStoSoA<ReplayData, ReplayDataSoA>(currentReplay_));
 }
 
 void BaseConverter::setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept
@@ -364,7 +364,7 @@ void BaseConverter::copyUnitData() noexcept
     auto r = unitData | std::views::transform([](const sc2::Unit *unit) { return unit->passengers; }) | std::views::join
              | std::views::transform([](const sc2::PassengerUnit &p) { return p.tag; }) | std::views::common;
 
-    std::unordered_set<sc2::Tag> p_tags(std::begin(r), std::end(r));
+    std::unordered_set<sc2::Tag> p_tags(r.begin(), r.end());
 
     std::ranges::for_each(unitData, [&](const sc2::Unit *src) {
         const bool isPassenger = p_tags.contains(src->tag);
