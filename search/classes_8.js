@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['target_0',['Target',['../d7/d75/unioncvt_1_1_action_1_1_target.html',1,'cvt::Action']]]
+  ['score_0',['Score',['../d1/d48/structcvt_1_1_score.html',1,'cvt']]],
+  ['stepdata_1',['StepData',['../d1/df0/structcvt_1_1_step_data.html',1,'cvt']]],
+  ['stridedconverter_2',['StridedConverter',['../d5/db8/classcvt_1_1_strided_converter.html',1,'cvt']]]
 ];
