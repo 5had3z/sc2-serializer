@@ -1,17 +1,13 @@
 #include "observer.hpp"
 #include "generated_info.hpp"
 #include "serialize.hpp"
-#include <unordered_set>
-
-// #include <boost/iostreams/device/file.hpp>
-// #include <boost/iostreams/filter/zlib.hpp>
-// #include <boost/iostreams/filtering_stream.hpp>
 
 #include <spdlog/spdlog.h>
 
 #include <cstring>
 #include <execution>
 #include <ranges>
+#include <unordered_set>
 
 namespace cvt {
 
@@ -102,12 +98,6 @@ template<typename T> void copyMapData(Image<T> &dest, const SC2APIProtocol::Imag
 
 static_assert(std::is_same_v<UID, sc2::Tag> && "Mismatch between unique id tags in SC2 and this Lib");
 
-/**
- * @brief Loads the database from the specified path.
- *
- * @param path The path to the database file.
- * @return True if the database was loaded successfully, false otherwise.
- */
 auto BaseConverter::loadDB(const std::filesystem::path &path) noexcept -> bool
 {
     auto result = database_.open(path);
@@ -115,33 +105,12 @@ auto BaseConverter::loadDB(const std::filesystem::path &path) noexcept -> bool
     return result;
 }
 
-/**
- * Checks if the BaseConverter has successfully written data.
- *
- * @return true if the BaseConverter has successfully written data, false otherwise.
- */
 auto BaseConverter::hasWritten() const noexcept -> bool { return writeSuccess_; }
 
-/**
- * Checks if a given hash is known.
- *
- * @param hash The hash to check.
- * @return True if the hash is known, false otherwise.
- */
 auto BaseConverter::isKnownHash(const std::string &hash) const noexcept -> bool { return knownHashes_.contains(hash); }
 
-/**
- * @brief Adds a known hash to the BaseConverter.
- *
- * This function adds a known hash to the BaseConverter's list of known hashes.
- *
- * @param hash The hash to be added.
- */
 void BaseConverter::addKnownHash(std::string hash) noexcept { knownHashes_.emplace(std::move(hash)); }
 
-/**
- * @brief This function is called when the game starts.
- */
 void BaseConverter::OnGameStart()
 {
     // Clear data collection structures, sc2api calls OnStep before OnGameStart
@@ -168,22 +137,6 @@ void BaseConverter::OnGameStart()
 }
 
 
-// Helper for writing observation components
-// template<typename T> void write_data(T data, std::filesystem::path outPath)
-// {
-//     namespace bio = boost::iostreams;
-//     bio::filtering_ostream filterStream{};
-//     filterStream.push(bio::zlib_compressor(bio::zlib::best_compression));
-//     filterStream.push(bio::file_sink(outPath, std::ios::binary | std::ios::app));
-//     serialize(data, filterStream);
-//     if (filterStream.bad()) { SPDLOG_ERROR("Error Serializing Replay Data"); }
-//     filterStream.flush();
-//     filterStream.reset();
-// }
-
-/**
- * @brief This function is called when the game ends.
- */
 void BaseConverter::OnGameEnd()
 {
     // Don't save replay if its cooked
@@ -191,55 +144,16 @@ void BaseConverter::OnGameEnd()
         SPDLOG_ERROR("Not writing replay with bad SC2 AppState: {}", static_cast<int>(this->Control()->GetAppState()));
         return;
     }
-
-    // Transform SoA to AoS
-    const auto SoA = ReplayAoStoSoA(currentReplay_);
-
-    // To show storage space contribution of each observation component
-    // write_data(SoA.gameStep, database_.path().replace_extension("gameStep"));
-    // write_data(SoA.minearals, database_.path().replace_extension("minerals"));
-    // write_data(SoA.vespere, database_.path().replace_extension("vespere"));
-    // write_data(SoA.popMax, database_.path().replace_extension("popMax"));
-    // write_data(SoA.popArmy, database_.path().replace_extension("popArmy"));
-    // write_data(SoA.popWorkers, database_.path().replace_extension("popWorkers"));
-    // write_data(SoA.score, database_.path().replace_extension("score"));
-    // write_data(SoA.visibility, database_.path().replace_extension("visibility"));
-    // write_data(SoA.creep, database_.path().replace_extension("creep"));
-    // write_data(SoA.player_relative, database_.path().replace_extension("player_relative"));
-    // write_data(SoA.alerts, database_.path().replace_extension("alerts"));
-    // write_data(SoA.buildable, database_.path().replace_extension("buildable"));
-    // write_data(SoA.pathable, database_.path().replace_extension("pathable"));
-    // write_data(SoA.actions, database_.path().replace_extension("actions"));
-    // write_data(SoA.units, database_.path().replace_extension("units"));
-    // write_data(SoA.neutralUnits, database_.path().replace_extension("neutralUnits"));
-    // write_data(currentReplay_, database_.path().replace_extension("array_of_structures"));
-
-    // Write to database
-    writeSuccess_ = database_.addEntry(SoA);
+    // Transform SoA to AoS and Write to database
+    writeSuccess_ = database_.addEntry(ReplayAoStoSoA(currentReplay_));
 }
 
-/**
- * @brief Sets the replay information for the BaseConverter.
- *
- * @param hash The hash of the replay.
- * @param playerId The ID of the player.
- */
 void BaseConverter::setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept
 {
     currentReplay_.replayHash = hash;
     currentReplay_.playerId = playerId;
 }
 
-/**
- * @brief Clears the BaseConverter object.
- *
- * This function clears the internal state of the BaseConverter object.
- * It resets all the member variables to their default values.
- *
- * @note This function does not deallocate any memory.
- *
- * @see BaseConverter
- */
 void BaseConverter::clear() noexcept
 {
     currentReplay_.stepData.clear();
@@ -251,12 +165,6 @@ void BaseConverter::clear() noexcept
     writeSuccess_ = false;
 }
 
-/**
- * @brief Copies the height map data.
- *
- * This function is responsible for copying the height map data.
- * It is marked as noexcept, indicating that it does not throw any exceptions.
- */
 void BaseConverter::copyHeightMapData() noexcept
 {
     const auto *rawObs = this->Observation()->GetRawObservation();
@@ -279,8 +187,8 @@ void BaseConverter::copyHeightMapData() noexcept
 [[nodiscard]] auto find_tagged_unit(const sc2::Tag add_on_tag, const sc2::Units &units) -> AddOn
 {
     auto same_tag = [add_on_tag](const sc2::Unit *other) { return other->tag == add_on_tag; };
-    auto it = std::ranges::find_if(units.begin(), units.end(), same_tag);
-    if (it == std::end(units)) {
+    const auto it = std::ranges::find_if(units, same_tag);
+    if (it == units.end()) {
         throw std::out_of_range(fmt::format("Tagged unit was not found!", static_cast<int>(add_on_tag)));
     } else {
         const sc2::UNIT_TYPEID type = (*it)->unit_type.ToType();
@@ -442,13 +350,6 @@ void BaseConverter::copyHeightMapData() noexcept
     return dst;
 }
 
-
-/**
- * @brief Copies the unit data.
- *
- * This function is responsible for copying the unit data.
- * It is noexcept, meaning it does not throw any exceptions.
- */
 void BaseConverter::copyUnitData() noexcept
 {
     const auto unitData = this->Observation()->GetUnits();
@@ -478,12 +379,6 @@ void BaseConverter::copyUnitData() noexcept
     this->updateResourceObs();
 }
 
-/**
- * @brief Initializes the resource observer.
- *
- * This function is responsible for initializing the resource observer in the BaseConverter class.
- * It is marked as noexcept, indicating that it does not throw any exceptions.
- */
 void BaseConverter::initResourceObs() noexcept
 {
     auto &neutralUnits = currentReplay_.stepData.back().neutralUnits;
@@ -494,14 +389,6 @@ void BaseConverter::initResourceObs() noexcept
     }
 }
 
-/**
- * @brief Reassigns the resource ID for a given NeutralUnit.
- *
- * This function reassigns the resource ID of the provided NeutralUnit.
- *
- * @param unit The NeutralUnit for which the resource ID needs to be reassigned.
- * @return True if the resource ID was successfully reassigned, false otherwise.
- */
 auto BaseConverter::reassignResourceId(const NeutralUnit &unit) noexcept -> bool
 {
     // Check if there's an existing unit with the same x,y coordinate
@@ -521,12 +408,6 @@ auto BaseConverter::reassignResourceId(const NeutralUnit &unit) noexcept -> bool
     }
 }
 
-/**
- * @brief Updates the resource observer.
- *
- * This function is responsible for updating the resource observer.
- * It is noexcept, meaning it does not throw any exceptions.
- */
 void BaseConverter::updateResourceObs() noexcept
 {
     auto &neutralUnits = currentReplay_.stepData.back().neutralUnits;
@@ -551,12 +432,6 @@ void BaseConverter::updateResourceObs() noexcept
     }
 }
 
-/**
- * @brief Copies the action data.
- *
- * This function is responsible for copying the action data.
- * It is marked as noexcept, indicating that it does not throw any exceptions.
- */
 void BaseConverter::copyActionData() noexcept
 {
     const auto actionData = this->Observation()->GetRawActions();
@@ -584,12 +459,6 @@ void BaseConverter::copyActionData() noexcept
     });
 }
 
-/**
- * @brief Copies the dynamic map data.
- *
- * This function is responsible for copying the dynamic map data.
- * It is marked as noexcept, indicating that it does not throw any exceptions.
- */
 void BaseConverter::copyDynamicMapData() noexcept
 {
     const auto *rawObs = this->Observation()->GetRawObservation();
@@ -618,11 +487,6 @@ void BaseConverter::copyDynamicMapData() noexcept
     if (minimapFeats.has_pathable()) { copyMapData(step.pathable, minimapFeats.pathable()); }
 }
 
-/**
- * @brief Copies the common data from the source to the destination.
- *
- * This function is noexcept, meaning it does not throw any exceptions.
- */
 void BaseConverter::copyCommonData() noexcept
 {
     // Logging performance
@@ -637,7 +501,7 @@ void BaseConverter::copyCommonData() noexcept
     // Write directly into stepData.back()
     currentReplay_.stepData.back().gameStep = this->Observation()->GetGameLoop();
     currentReplay_.stepData.back().minearals = this->Observation()->GetMinerals();
-    currentReplay_.stepData.back().vespere = this->Observation()->GetVespene();
+    currentReplay_.stepData.back().vespene = this->Observation()->GetVespene();
     currentReplay_.stepData.back().popMax = this->Observation()->GetFoodCap();
     currentReplay_.stepData.back().popArmy = this->Observation()->GetFoodArmy();
     currentReplay_.stepData.back().popWorkers = this->Observation()->GetFoodWorkers();
@@ -646,11 +510,6 @@ void BaseConverter::copyCommonData() noexcept
     currentReplay_.stepData.back().score = convertScore(&score);
 }
 
-/**
- * @brief This function is called on each step of the FullConverter class.
- *
- * It performs some action on each step.
- */
 void FullConverter::OnStep()
 {
     // "Initialize" next item
@@ -662,11 +521,6 @@ void FullConverter::OnStep()
     this->copyDynamicMapData();
 }
 
-
-/**
- * @brief This function is called on each step of the game.
- * It is responsible for converting actions into a serialized format.
- */
 void ActionConverter::OnStep()
 {
     // Need to have at least one buffer
@@ -684,11 +538,6 @@ void ActionConverter::OnStep()
     this->copyDynamicMapData();
 }
 
-/**
- * @brief This function is called on each step of the StridedConverter.
- *
- * It performs some action on each step of the StridedConverter.
- */
 void StridedConverter::OnStep()
 {
     // Check if a logging step
@@ -705,11 +554,6 @@ void StridedConverter::OnStep()
     this->copyDynamicMapData();
 }
 
-/**
- * @brief Sets the stride for the StridedConverter.
- *
- * @param stride The stride value to set.
- */
 void StridedConverter::SetStride(std::size_t stride) noexcept
 {
     if (stride == 0 || stride > 10'000) {
@@ -718,21 +562,12 @@ void StridedConverter::SetStride(std::size_t stride) noexcept
     stride_ = stride;
 }
 
-/**
- * @brief Get the stride value of the StridedConverter.
- *
- * @return The stride value.
- */
 auto StridedConverter::GetStride() const noexcept -> std::size_t { return stride_; }
 
-/**
- * @brief This function is called when a game starts.
- */
 void StridedConverter::OnGameStart()
 {
     if (stride_ == 0) { throw std::logic_error(fmt::format("Stride not set: {}", stride_)); }
     BaseConverter::OnGameStart();
 }
-
 
 }// namespace cvt

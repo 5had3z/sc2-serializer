@@ -25,54 +25,107 @@ class BaseConverter : public sc2::ReplayObserver
   public:
     /**
      * @brief Loads the database from the specified path.
-     *
      * @param path The path to the database file.
      * @return True if the database was loaded successfully, false otherwise.
      */
     auto loadDB(const std::filesystem::path &path) noexcept -> bool;
 
-    // Set Replay file hash + playerId before launching the coordinator
+    /**
+     * @brief Sets the replay information for the BaseConverter.
+     * @param hash The hash of the replay.
+     * @param playerId The ID of the player.
+     */
     void setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept;
 
+    /**
+     * @brief This function is called when the game starts. Gathers basic replay info such as player mmr.
+     */
     void OnGameStart() override;
 
+    /**
+     * @brief Checks if the game has ended in a normal state and then writes replay to database.
+     */
     void OnGameEnd() override;
 
     // void OnError(const std::vector<sc2::ClientError> &clientErrors,
     //     const std::vector<std::string> &protocolErrors = {}) override;
 
+    /**
+     * @brief Checks if the BaseConverter has successfully written data.
+     * @return true if the BaseConverter has successfully written data, false otherwise.
+     */
     [[nodiscard]] auto hasWritten() const noexcept -> bool;
 
+    /**
+     * @brief Checks if a given hash is known in the database.
+     * @param hash The hash to check.
+     * @return True if the hash is known, false otherwise.
+     */
     [[nodiscard]] auto isKnownHash(const std::string &hash) const noexcept -> bool;
 
+
+    /**
+     * @brief Adds a known hash to the BaseConverter's list of known hashes.
+     * @param hash The hash to be added.
+     */
     void addKnownHash(std::string hash) noexcept;
 
-    // Removes currently held replay data and logging/write flags
+    /**
+     * @brief Clears the BaseConverter object.
+     *
+     * This function clears the internal state of the BaseConverter object.
+     * It resets all the member variables to their default values.
+     *
+     * @note This function does not deallocate any memory.
+     *
+     * @see BaseConverter
+     */
     void clear() noexcept;
 
   protected:
+    /**
+     * @brief Copies the height map data for the match.
+     */
     void copyHeightMapData() noexcept;
 
+    /**
+     * @brief Copies the unit data from observation to stepData.back().
+     */
     void copyUnitData() noexcept;
 
+    /**
+     * @brief Copies the action data to stepData.back().
+     */
     void copyActionData() noexcept;
 
+    /**
+     * @brief Copies the dynamic map data to stepData.back().
+     */
     void copyDynamicMapData() noexcept;
 
-    // Update resourceObs_ based on visible units
+    /**
+     * @brief Copies the common data such as scalars gameStep, minerals, vespene to stepData.back().
+     */
     void copyCommonData() noexcept;
 
-    // Update resourceObs_ based on visible units
-    // reassign jumbled UIDs to be consistent over the game
-    // assign snapshot unis the last known quantity
+    /**
+     * @brief Updates the resource observer.
+     * Update resourceObs_ based on visible units. Reassign jumbled UIDs to
+     * be consistent over the game assign snapshot unis the last known quantity.
+     */
     void updateResourceObs() noexcept;
 
-    // Resource UID changes when going in and out of view
-    // this is chat and we want to make UID consistent
+    /**
+     * @brief Reassigns the resource ID for a given NeutralUnit when it changes visibility.
+     *        It gets reassociated with an old id based on locality.
+     * @param unit The NeutralUnit for which the resource ID needs to be reassigned.
+     * @return True if the resource ID was successfully reassigned, false otherwise.
+     */
     auto reassignResourceId(const NeutralUnit &unit) noexcept -> bool;
 
-    // Get the initial UID for each natural resource and
-    // initialize with the default value
+    /**
+     * @brief Initializes the resource observations with the first observation and default values.
+     */
     void initResourceObs() noexcept;
 
     ReplayDatabase database_;
@@ -89,6 +142,9 @@ class BaseConverter : public sc2::ReplayObserver
  */
 class FullConverter : public BaseConverter
 {
+    /**
+     * @brief Copies observation data every step.
+     */
     void OnStep() final;
 };
 
@@ -98,6 +154,10 @@ class FullConverter : public BaseConverter
  */
 class ActionConverter : public BaseConverter
 {
+    /**
+     * @brief Copies common data each step, will only commit that data on action observation.
+     * Each step will have the previous step's observation and current step's action.
+     */
     void OnStep() final;
 };
 
@@ -107,15 +167,27 @@ class ActionConverter : public BaseConverter
 class StridedConverter : public BaseConverter
 {
   public:
-    // Set the sampling stride
+    /**
+     * @brief Set the sampling stride
+     * @param stride stride to set between 1 and 10'000
+     */
     void SetStride(std::size_t stride) noexcept;
 
-    // Get the current sampling stride
+    /**
+     * @brief Get the currently set stride
+     * @return Currently set stride
+     */
     auto GetStride() const noexcept -> std::size_t;
 
+    /**
+     * @brief Checks the stride has been set before normal start.
+     */
     void OnGameStart() final;
 
   private:
+    /**
+     * @brief Only samples observation/action at strided intervals
+     */
     void OnStep() final;
 
     // cppcheck-suppress unusedStructMember

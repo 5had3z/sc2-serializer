@@ -614,7 +614,7 @@ struct StepData
 {
     std::uint32_t gameStep{};
     std::uint16_t minearals{};
-    std::uint16_t vespere{};
+    std::uint16_t vespene{};
     std::uint16_t popMax{};
     std::uint16_t popArmy{};
     std::uint16_t popWorkers{};
@@ -683,7 +683,7 @@ struct ReplayDataSoA
     // Step data
     std::vector<std::uint32_t> gameStep{};
     std::vector<std::uint16_t> minearals{};
-    std::vector<std::uint16_t> vespere{};
+    std::vector<std::uint16_t> vespene{};
     std::vector<std::uint16_t> popMax{};
     std::vector<std::uint16_t> popArmy{};
     std::vector<std::uint16_t> popWorkers{};
@@ -719,7 +719,7 @@ struct ReplayDataSoA
     for (const StepData &step : aos.stepData) {
         soa.gameStep.push_back(step.gameStep);
         soa.minearals.push_back(step.minearals);
-        soa.vespere.push_back(step.vespere);
+        soa.vespene.push_back(step.vespene);
         soa.popMax.push_back(step.popMax);
         soa.popArmy.push_back(step.popArmy);
         soa.popWorkers.push_back(step.popWorkers);
@@ -759,7 +759,7 @@ struct ReplayDataSoA
         auto &stepData = stepDataVec[idx];
         if (idx < soa.gameStep.size()) { stepData.gameStep = soa.gameStep[idx]; }
         if (idx < soa.minearals.size()) { stepData.minearals = soa.minearals[idx]; }
-        if (idx < soa.vespere.size()) { stepData.vespere = soa.vespere[idx]; }
+        if (idx < soa.vespene.size()) { stepData.vespene = soa.vespene[idx]; }
         if (idx < soa.popMax.size()) { stepData.popMax = soa.popMax[idx]; }
         if (idx < soa.popArmy.size()) { stepData.popArmy = soa.popArmy[idx]; }
         if (idx < soa.popWorkers.size()) { stepData.popWorkers = soa.popWorkers[idx]; }

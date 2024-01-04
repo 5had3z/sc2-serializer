@@ -84,7 +84,7 @@ auto ReplayDatabase::getHashes() const noexcept -> std::unordered_set<std::strin
     return replayHashes;
 }
 
-auto ReplayDatabase::path() const noexcept -> std::filesystem::path { return dbPath_; }
+auto ReplayDatabase::path() const noexcept -> const std::filesystem::path & { return dbPath_; }
 
 bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
 {
@@ -161,7 +161,6 @@ auto ReplayDatabase::getHashId(std::size_t index) const -> std::pair<std::string
     if (index >= entryPtr_.size()) {
         throw std::out_of_range(fmt::format("Index {} exceeds database size {}", index, entryPtr_.size()));
     }
-
     std::ifstream dbStream(dbPath_, std::ios::binary);
     return getHashIdEntry(dbStream, entryPtr_[index]);
 }

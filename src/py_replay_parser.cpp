@@ -157,7 +157,7 @@ auto createScalarFeatures(const ReplayDataSoA &data, std::size_t timeIdx) -> py:
 {
     auto feats = vectorize<T>(data.score[timeIdx]);
     feats.emplace_back(data.minearals[timeIdx]);
-    feats.emplace_back(data.vespere[timeIdx]);
+    feats.emplace_back(data.vespene[timeIdx]);
     feats.emplace_back(data.popMax[timeIdx]);
     feats.emplace_back(data.popArmy[timeIdx]);
     feats.emplace_back(data.popWorkers[timeIdx]);
@@ -203,7 +203,7 @@ auto ReplayParser::sample(std::size_t timeIdx, bool unit_alliance) const noexcep
     std::ranges::for_each(replayData_.actions[timeIdx], [&](const Action &a) { actions.append(a); });
     result["actions"] = actions;
 
-    // Create feature image or minimap and feature vector of game state scalars (score, vespere, pop army etc.)
+    // Create feature image or minimap and feature vector of game state scalars (score, vespene, pop army etc.)
     result["minimap_features"] = createMinimapFeatures<feature_t>(replayData_, timeIdx);
     result["scalar_features"] = createScalarFeatures<feature_t>(replayData_, timeIdx);
 

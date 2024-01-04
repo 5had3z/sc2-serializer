@@ -24,7 +24,7 @@ class Unit:
     uid: int
     name: str
     mineral: int
-    vespere: int
+    vespene: int
     time: int
     food: int
 
@@ -35,7 +35,7 @@ class Upgrade:
     ability_id: int
     name: str
     mineral: int
-    vespere: int
+    vespene: int
     time: int
     button_name: str
     friendly_name: str

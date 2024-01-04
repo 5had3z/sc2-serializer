@@ -94,7 +94,7 @@ class ReplayDatabase
      * @brief Get the path of the database instance
      * @return path to database
      */
-    [[nodiscard]] auto path() const noexcept -> std::filesystem::path;
+    [[nodiscard]] auto path() const noexcept -> const std::filesystem::path &;
 
   private:
     /**
