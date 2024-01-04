@@ -6,6 +6,7 @@
 #include <serialize.hpp>
 #include <spdlog/fmt/fmt.h>
 
+#include <concepts>
 #include <filesystem>
 
 namespace fs = std::filesystem;
@@ -23,7 +24,7 @@ template<typename T> void writeData(T data, std::filesystem::path outPath)
     filterStream.push(bio::zlib_compressor(bio::zlib::best_compression));
     filterStream.push(bio::file_sink(outPath, std::ios::binary | std::ios::app));
     cvt::serialize(data, filterStream);
-    if (filterStream.bad()) { fmt::print("Error Serializing Data to {}", outPath.string()); }
+    if (filterStream.bad()) { fmt::print("Error Serializing Data to {}\n", outPath.string()); }
     filterStream.flush();
     filterStream.reset();
 }
@@ -64,6 +65,44 @@ void writeReplayStructures(const cvt::ReplayDataSoA &data, const fs::path &outDi
     writeData(cvt::ReplaySoAtoAoS(data), outDir / "replay_aos.bin");
 }
 
+/**
+ * @brief Write units to disk in various forms
+ * @tparam UnitT Basic type of unit
+ * @tparam UnitSoAT Structure of arrays variant of unit
+ * @tparam Transform Function to convert AoS to SoA
+ * @param unitData replay data for units (n timesteps * n units per timestep)
+ * @param outDir output directory to write data
+ * @param prefix prefix for files
+ * @param AoStoSoA instance of aos to soa transform function
+ */
+template<typename UnitT, typename UnitSoAT, typename Transform>
+void implWriteUnitT(const std::vector<std::vector<UnitT>> &unitData,
+    const fs::path &outDir,
+    std::string_view prefix,
+    Transform AoStoSoA)
+    requires std::is_invocable_r_v<UnitSoAT, Transform, std::vector<UnitT>>
+{
+    // Array-of-Array-of-Structures
+    writeData(unitData, outDir / fmt::format("{}_aoaos.bin", prefix));
+
+    // Array-of-Structure-of-Arrays
+    {
+        std::vector<UnitSoAT> units;
+        std::ranges::transform(unitData, std::back_inserter(units), AoStoSoA);
+        writeData(units, outDir / fmt::format("{}_aosoa.bin", prefix));
+    }
+
+    // Structure-of-Flattened-Arrays
+    {
+        std::vector<UnitT> unitFlatten;
+        for (auto &&units : unitData) { std::ranges::copy(units, std::back_inserter(unitFlatten)); }
+        // Write sorted by time
+        writeData(AoStoSoA(unitFlatten), outDir / fmt::format("{}_sofa.bin", prefix));
+        // Write sorted by unit id (and time by stable sorting)
+        std::ranges::stable_sort(unitFlatten, [](const UnitT &a, const UnitT &b) { return a.id < b.id; });
+        writeData(AoStoSoA(unitFlatten), outDir / fmt::format("{}_sorted_sofa.bin", prefix));
+    }
+}
 
 /**
  * @brief Write unit data with different structural methods
@@ -72,28 +111,13 @@ void writeReplayStructures(const cvt::ReplayDataSoA &data, const fs::path &outDi
  */
 void writeUnitStructures(const cvt::ReplayDataSoA &data, const fs::path &outDir)
 {
-    // Array-of-Array-of-Structures
-    writeData(data.units, outDir / "units_aoaos.bin");
+    implWriteUnitT<cvt::Unit, cvt::UnitSoA>(
+        data.units, outDir, "units", [](const std::vector<cvt::Unit> &unit) { return cvt::UnitAoStoSoA(unit); });
 
-    // Array-of-Structure-of-Arrays
-    {
-        std::vector<cvt::UnitSoA> units;
-        std::ranges::transform(data.units, std::back_inserter(units), [](const std::vector<cvt::Unit> &u) {
-            return cvt::UnitAoStoSoA(u);
+    implWriteUnitT<cvt::NeutralUnit, cvt::NeutralUnitSoA>(
+        data.neutralUnits, outDir, "neutralUnits", [](const std::vector<cvt::NeutralUnit> &unit) {
+            return cvt::NeutralUnitAoStoSoA(unit);
         });
-        writeData(units, outDir / "units_aosoa.bin");
-    }
-
-    // Structure-of-Flattened-Arrays
-    {
-        std::vector<cvt::Unit> unitFlatten;
-        for (auto &&units : data.units) { std::ranges::copy(units, std::back_inserter(unitFlatten)); }
-        // Write sorted by time
-        writeData(UnitAoStoSoA(unitFlatten), outDir / "units_sofa.bin");
-        // Write sorted by unit id (and time by stable sorting)
-        std::ranges::stable_sort(unitFlatten, [](const cvt::Unit &a, const cvt::Unit &b) { return a.id < b.id; });
-        writeData(UnitAoStoSoA(unitFlatten), outDir / "units_sorted_sofa.bin");
-    }
 }
 
 int main(int argc, char *argv[])
@@ -113,20 +137,20 @@ int main(int argc, char *argv[])
     const auto cliOpts = cliParser.parse(argc, argv);
 
     if (cliOpts.count("help")) {
-        fmt::print("{}", cliParser.help());
+        fmt::print("{}\n", cliParser.help());
         return 0;
     }
 
     const fs::path databasePath = cliOpts["input"].as<std::string>();
     if (!fs::exists(databasePath)) {
-        fmt::print("Database does not exist: {}", databasePath.string());
+        fmt::print("Database does not exist: {}\n", databasePath.string());
         return -1;
     }
 
     const fs::path writeFolder = cliOpts["output"].as<std::string>();
     if (!fs::exists(writeFolder)) {
         if (!fs::create_directory(writeFolder)) {
-            fmt::print("Unable to create output directory {}", writeFolder.string());
+            fmt::print("Unable to create output directory {}\n", writeFolder.string());
             return -1;
         }
     }
@@ -147,7 +171,7 @@ int main(int argc, char *argv[])
         if (unitFlag) { writeUnitStructures(replayData, writeFolder); }
         if (compFlag) { writeComponents(replayData, writeFolder); }
         if (metaFlag) { writeReplayStructures(replayData, writeFolder); }
-        fmt::print("Completed {} of {} Replays", idx, database.size());
+        fmt::print("Completed {} of {} Replays\n", idx, database.size());
     }
 
     return 0;
