@@ -151,3 +151,34 @@ TEST_F(DatabaseTest, LoadDB)
     ASSERT_EQ(replayDb_.size(), loadDB.size());
     for (std::size_t i = 0; i < replayDb_.size(); ++i) { ASSERT_EQ(replayDb_.getEntry(i), loadDB.getEntry(i)); }
 }
+
+
+template<typename UnitT>
+auto fuzzyEquality(std::vector<std::vector<UnitT>> replayUnitsA, std::vector<std::vector<UnitT>> replayUnitsB)
+{
+    for (auto &&[idx, unitsA, unitsB] :
+        std::views::zip(std::views::iota(replayUnitsA.size()), replayUnitsA, replayUnitsB)) {
+        std::unordered_set<UnitT, cvt::HashTrivial<UnitT>> setA(unitsA.begin(), unitsA.end());
+        std::unordered_set<UnitT, cvt::HashTrivial<UnitT>> setB(unitsB.begin(), unitsB.end());
+        ASSERT_EQ(setA, setB) << "Failed at step " << idx;
+    }
+}
+
+TEST(UnitSoA, ConversionToAndFrom)
+{
+    cvt::ReplayDatabase db("/home/bryce/SC2/converted/sc2_evaluation.SC2Replays");
+    const auto replayData = db.getEntry(0);
+
+    {
+        const auto flattened = cvt::flattenAndSortUnits<cvt::Unit, cvt::UnitSoA>(replayData.units);
+        const auto recovered = cvt::recoverFlattenedSortedUnits<cvt::Unit, cvt::UnitSoA>(flattened);
+        fuzzyEquality(recovered, replayData.units);
+    }
+
+    // {
+    //     const auto flattened = cvt::flattenAndSortUnits<cvt::NeutralUnit,
+    //     cvt::NeutralUnitSoA>(replayData.neutralUnits); const auto recovered =
+    //     cvt::recoverFlattenedSortedUnits<cvt::NeutralUnit, cvt::NeutralUnitSoA>(flattened); ASSERT_EQ(recovered,
+    //     replayData.neutralUnits);
+    // }
+}

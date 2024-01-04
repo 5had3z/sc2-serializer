@@ -4,9 +4,10 @@
 #include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
-#include <fstream>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
+
+#include <fstream>
 
 namespace fs = std::filesystem;
 namespace bio = boost::iostreams;

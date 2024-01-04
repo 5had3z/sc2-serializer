@@ -84,6 +84,31 @@ template<typename S, typename It>
     return it;
 }
 
+template<typename T> struct HashTrivial
+{
+    [[nodiscard]] constexpr auto operator()(const T &data) const noexcept -> std::size_t
+        requires std::is_trivially_copyable_v<T>
+    {
+        std::size_t res = 0;
+
+        constexpr std::size_t numLong = sizeof(T) / sizeof(std::size_t);
+        const std::size_t *longPtr = reinterpret_cast<const std::size_t *>(&data);
+        for (std::size_t off = 0; off < numLong; ++off) {
+            res ^= *longPtr;
+            ++longPtr;
+        }
+
+        constexpr std::size_t numBytes = sizeof(T) % sizeof(std::size_t);
+        const unsigned char *ucharPtr = reinterpret_cast<const unsigned char *>(longPtr);
+        for (std::size_t off = 0; off < numBytes; ++off) {
+            res ^= *ucharPtr;
+            ++ucharPtr;
+        }
+
+        return res;
+    }
+};
+
 // TODO: Add helper fn to check the vectorization size
 template<typename T, typename S>
     requires std::is_aggregate_v<S> && std::is_arithmetic_v<T>
@@ -95,8 +120,10 @@ constexpr auto vectorize(S s, bool onehotEnum = false) -> std::vector<T>
 }
 
 template<typename AoS, typename SoA> [[nodiscard]] constexpr auto AoStoSoA(const AoS &aos) noexcept -> SoA;
-template<typename AoS, typename SoA> [[nodiscard]] constexpr auto SoAtoAoS(const SoA &soa) noexcept -> AoS;
+template<typename AoS, typename SoA> [[nodiscard]] constexpr auto AoStoSoA(AoS &&aos) noexcept -> SoA;
 
+template<typename AoS, typename SoA> [[nodiscard]] constexpr auto SoAtoAoS(const SoA &soa) noexcept -> AoS;
+template<typename AoS, typename SoA> [[nodiscard]] constexpr auto SoAtoAoS(SoA &&soa) noexcept -> AoS;
 
 struct Point2d
 {
@@ -373,7 +400,9 @@ struct UnitSoA
     [[nodiscard]] auto operator==(const UnitSoA &other) const noexcept -> bool = default;
 };
 
-template<> constexpr auto AoStoSoA(const std::vector<Unit> &aos) noexcept -> UnitSoA
+template<std::ranges::range Range>
+constexpr auto AoStoSoA(Range &&aos) noexcept -> UnitSoA
+    requires std::is_same_v<std::ranges::range_value_t<Range>, Unit>
 {
     UnitSoA soa{};
     // Prealloc expected size
@@ -508,7 +537,9 @@ struct NeutralUnitSoA
     [[nodiscard]] auto operator==(const NeutralUnitSoA &other) const noexcept -> bool = default;
 };
 
-template<> constexpr auto AoStoSoA(const std::vector<NeutralUnit> &aos) noexcept -> NeutralUnitSoA
+template<std::ranges::range Range>
+constexpr auto AoStoSoA(Range &&aos) noexcept -> NeutralUnitSoA
+    requires std::is_same_v<std::ranges::range_value_t<Range>, NeutralUnit>
 {
     NeutralUnitSoA soa{};
     // Prealloc expected size

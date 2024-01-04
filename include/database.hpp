@@ -15,6 +15,59 @@ namespace cvt {
  */
 void setReplayDBLoggingLevel(spdlog::level::level_enum lvl) noexcept;
 
+/**
+ * @brief Flattened units in SoA form with associated step index
+ * @tparam UnitSoAT Type of flattened unit
+ */
+template<typename UnitSoAT> struct FlattenedUnits
+{
+    UnitSoAT units;
+    std::vector<std::uint32_t> indicies;
+};
+
+template<typename UnitT, typename UnitSoAT>
+[[nodiscard]] constexpr auto flattenAndSortUnits(const std::vector<std::vector<UnitT>> &replayUnits) noexcept
+    -> FlattenedUnits<UnitSoAT>
+{
+    using UnitStepT = std::pair<std::uint32_t, UnitT>;
+    std::vector<UnitStepT> unitStepFlatten;
+    for (auto &&[idx, units] : std::views::enumerate(replayUnits)) {
+        std::ranges::transform(
+            units, std::back_inserter(unitStepFlatten), [=](UnitT u) { return std::make_pair(idx, u); });
+    }
+
+    // Significantly better compressibility when sorted by unit (and implicity time)
+    std::ranges::stable_sort(
+        unitStepFlatten, [](const UnitStepT &a, const UnitStepT &b) { return a.second.id < b.second.id; });
+
+    // Create flattened SoA
+    UnitSoAT unitsSoA = cvt::AoStoSoA(std::views::values(unitStepFlatten));
+
+    // Create accompanying step indicies for reconstruction
+    std::vector<uint32_t> indicies;
+    indicies.resize(unitStepFlatten.size());
+    std::ranges::copy(std::views::keys(unitStepFlatten), indicies.begin());
+
+    return { unitsSoA, indicies };
+}
+
+template<typename UnitT, typename UnitSoAT>
+[[nodiscard]] constexpr auto recoverFlattenedSortedUnits(const FlattenedUnits<UnitSoAT> &flattenedUnits) noexcept
+    -> std::vector<std::vector<UnitT>>
+{
+    // Create outer dimension with the maximum game step index
+    std::vector<std::vector<UnitT>> replayUnits;
+    replayUnits.resize(std::ranges::max(flattenedUnits.indicies) + 1);
+
+    // Transform to AoS-Units and copy to the corresponding correct time step
+    const auto unitsAoS = cvt::SoAtoAoS<std::vector<UnitT>, UnitSoAT>(flattenedUnits.units);
+    for (auto &&[unit, stepIdx] : std::views::zip(unitsAoS, flattenedUnits.indicies)) {
+        replayUnits[stepIdx].emplace_back(unit);
+    }
+
+    return replayUnits;
+}
+
 class ReplayDatabase
 {
   public:

@@ -86,8 +86,7 @@ void implWriteUnitT(const std::vector<std::vector<UnitT>> &unitData, const fs::p
     // Array-of-Structure-of-Arrays
     {
         std::vector<UnitSoAT> units;
-        std::ranges::transform(
-            unitData, std::back_inserter(units), [](const AoS &u) { return cvt::AoStoSoA<AoS, UnitSoAT>(u); });
+        std::ranges::transform(unitData, std::back_inserter(units), [](const AoS &u) { return cvt::AoStoSoA(u); });
         writeData(units, outDir / fmt::format("{}_aosoa.bin", prefix));
     }
 
@@ -95,11 +94,12 @@ void implWriteUnitT(const std::vector<std::vector<UnitT>> &unitData, const fs::p
     {
         std::vector<UnitT> unitFlatten;
         for (auto &&units : unitData) { std::ranges::copy(units, std::back_inserter(unitFlatten)); }
-        // Write sorted by time
-        writeData(cvt::AoStoSoA<AoS, UnitSoAT>(unitFlatten), outDir / fmt::format("{}_sofa.bin", prefix));
-        // Write sorted by unit id (and time by stable sorting)
+        // Write sorted by time and observation api
+        writeData(cvt::AoStoSoA(unitFlatten), outDir / fmt::format("{}_sofa.bin", prefix));
+
+        // Write sorted by unit id (and then time by stable sorting)
         std::ranges::stable_sort(unitFlatten, [](const UnitT &a, const UnitT &b) { return a.id < b.id; });
-        writeData(cvt::AoStoSoA<AoS, UnitSoAT>(unitFlatten), outDir / fmt::format("{}_sorted_sofa.bin", prefix));
+        writeData(cvt::AoStoSoA(unitFlatten), outDir / fmt::format("{}_sorted_sofa.bin", prefix));
     }
 }
 
