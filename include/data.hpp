@@ -1,16 +1,234 @@
 #pragma once
 
 #include <boost/pfr.hpp>
+#include <spdlog/fmt/bundled/format.h>
 
 #include <algorithm>
 #include <array>
 #include <cassert>
 #include <cstdint>
 #include <cstring>
+#include <iostream>
 #include <ranges>
 #include <span>
 #include <string>
 #include <vector>
+
+// Enum things
+namespace cvt {
+
+// Converts an enum value to a one-hot encoding
+template<typename E, typename T>
+    requires std::is_enum_v<E>
+constexpr auto enumToOneHot(E e) noexcept -> std::vector<T>;
+
+namespace detail {
+    template<typename T>
+    constexpr auto enumToOneHot_helper(auto enumVal, const std::ranges::range auto &enumValues) -> std::vector<T>
+    {
+        auto it = std::ranges::find(enumValues, enumVal);
+        std::vector<T> ret(enumValues.size());
+        ret[std::distance(enumValues.begin(), it)] = static_cast<T>(1);
+        return ret;
+    }
+}// namespace detail
+
+enum class Alliance : char { Self = 1, Ally = 2, Neutral = 3, Enemy = 4 };
+
+template<typename T> auto enumToOneHot(Alliance e) noexcept -> std::vector<T>
+{
+    constexpr std::array vals = std::array{ Alliance::Self, Alliance::Ally, Alliance::Neutral, Alliance::Enemy };
+    static_assert(std::is_sorted(vals.begin(), vals.end()));
+    return detail::enumToOneHot_helper<T>(e, vals);
+}
+
+enum class CloakState : char { Unknown = 0, Cloaked = 1, Detected = 2, UnCloaked = 3, Allied = 4 };
+
+template<typename T> auto enumToOneHot(CloakState e) noexcept -> std::vector<T>
+{
+    constexpr std::array vals = {
+        CloakState::Unknown, CloakState::Cloaked, CloakState::Detected, CloakState::UnCloaked, CloakState::Allied
+    };
+    static_assert(std::is_sorted(vals.begin(), vals.end()));
+    return detail::enumToOneHot_helper<T>(e, vals);
+}
+
+enum class Visibility : char { Visible = 1, Snapshot = 2, Hidden = 3 };
+
+template<typename T> auto enumToOneHot(Visibility e) noexcept -> std::vector<T>
+{
+    constexpr std::array vals = { Visibility::Visible, Visibility::Snapshot, Visibility::Hidden };
+    static_assert(std::is_sorted(vals.begin(), vals.end()));
+    return detail::enumToOneHot_helper<T>(e, vals);
+}
+
+enum class AddOn : char { None = 0, Reactor = 1, TechLab = 2 };
+
+template<typename T> auto enumToOneHot(AddOn e) noexcept -> std::vector<T>
+{
+    constexpr std::array vals = { AddOn::None, AddOn::Reactor, AddOn::TechLab };
+    static_assert(std::is_sorted(vals.begin(), vals.end()));
+    return detail::enumToOneHot_helper<T>(e, vals);
+}
+
+enum class Race : char { Terran, Zerg, Protoss, Random };
+
+template<typename T> auto enumToOneHot(Race e) noexcept -> std::vector<T>
+{
+    constexpr std::array vals = { Race::Terran, Race::Zerg, Race::Protoss, Race::Random };
+    static_assert(std::is_sorted(vals.begin(), vals.end()));
+    return detail::enumToOneHot_helper<T>(e, vals);
+}
+
+enum class Result : char { Win, Loss, Tie, Undecided };
+
+template<typename T> auto enumToOneHot(Result e) noexcept -> std::vector<T>
+{
+    constexpr std::array vals = { Result::Win, Result::Loss, Result::Tie, Result::Undecided };
+    static_assert(std::is_sorted(vals.begin(), vals.end()));
+    return detail::enumToOneHot_helper<T>(e, vals);
+}
+
+
+}// namespace cvt
+
+
+template<> struct fmt::formatter<cvt::Alliance> : formatter<string_view>
+{
+    auto format(cvt::Alliance a, format_context &ctx) const
+    {
+        string_view ret = "Invalid";
+        switch (a) {
+        case cvt::Alliance::Self:
+            ret = "Self";
+            break;
+        case cvt::Alliance::Ally:
+            ret = "Ally";
+            break;
+        case cvt::Alliance::Neutral:
+            ret = "Neutral";
+            break;
+        case cvt::Alliance::Enemy:
+            ret = "Enemy";
+            break;
+        }
+        return formatter<string_view>::format(ret, ctx);
+    }
+};
+
+
+template<> struct fmt::formatter<cvt::CloakState> : formatter<string_view>
+{
+    auto format(cvt::CloakState c, format_context &ctx) const
+    {
+        string_view ret = "Invalid";
+        switch (c) {
+        case cvt::CloakState::Unknown:
+            ret = "Unknown";
+            break;
+        case cvt::CloakState::Cloaked:
+            ret = "Cloaked";
+            break;
+        case cvt::CloakState::Detected:
+            ret = "Detected";
+            break;
+        case cvt::CloakState::UnCloaked:
+            ret = "UnCloaked";
+            break;
+        case cvt::CloakState::Allied:
+            ret = "Allied";
+            break;
+        }
+        return formatter<string_view>::format(ret, ctx);
+    }
+};
+
+template<> struct fmt::formatter<cvt::Visibility> : formatter<string_view>
+{
+    // auto format(cvt::Visibility v, format_context &ctx) const;
+    auto format(cvt::Visibility v, format_context &ctx) const
+    {
+        string_view ret = "Invalid";
+        switch (v) {
+        case cvt::Visibility::Visible:
+            ret = "Visible";
+            break;
+        case cvt::Visibility::Snapshot:
+            ret = "Snapshot";
+            break;
+        case cvt::Visibility::Hidden:
+            ret = "Hidden";
+            break;
+        }
+        return formatter<string_view>::format(ret, ctx);
+    }
+};
+
+template<> struct fmt::formatter<cvt::AddOn> : formatter<string_view>
+{
+    auto format(cvt::AddOn a, format_context &ctx) const
+    {
+        string_view ret = "Invalid";
+        switch (a) {
+        case cvt::AddOn::None:
+            ret = "None";
+            break;
+        case cvt::AddOn::Reactor:
+            ret = "Reactor";
+            break;
+        case cvt::AddOn::TechLab:
+            ret = "TechLab";
+            break;
+        }
+        return formatter<string_view>::format(ret, ctx);
+    }
+};
+
+template<> struct fmt::formatter<cvt::Race> : formatter<string_view>
+{
+    auto format(cvt::Race r, format_context &ctx) const
+    {
+        string_view ret = "Invalid";
+        switch (r) {
+        case cvt::Race::Terran:
+            ret = "Terran";
+            break;
+        case cvt::Race::Zerg:
+            ret = "Zerg";
+            break;
+        case cvt::Race::Protoss:
+            ret = "Protoss";
+            break;
+        case cvt::Race::Random:
+            ret = "Random";
+            break;
+        }
+        return formatter<string_view>::format(ret, ctx);
+    }
+};
+
+template<> struct fmt::formatter<cvt::Result> : formatter<string_view>
+{
+    auto format(cvt::Result r, format_context &ctx) const
+    {
+        string_view ret = "Invalid";
+        switch (r) {
+        case cvt::Result::Win:
+            ret = "Win";
+            break;
+        case cvt::Result::Loss:
+            ret = "Loss";
+            break;
+        case cvt::Result::Tie:
+            ret = "Tie";
+            break;
+        case cvt::Result::Undecided:
+            ret = "Undecided";
+            break;
+        }
+        return formatter<string_view>::format(ret, ctx);
+    }
+};
 
 namespace cvt {
 
@@ -18,11 +236,6 @@ namespace cvt {
 
 typedef std::uint64_t UID;// Type that represents unique identifier in the game
 
-
-// Converts an enum value to a one-hot encoding
-template<typename E, typename T>
-    requires std::is_enum_v<E>
-constexpr auto enumToOneHot(E e) noexcept -> std::vector<T>;
 
 namespace detail {
 
@@ -64,15 +277,6 @@ namespace detail {
     }
 
 
-    template<typename T>
-    constexpr auto enumToOneHot_helper(auto enumVal, const std::ranges::range auto &enumValues) -> std::vector<T>
-    {
-        auto it = std::ranges::find(enumValues, enumVal);
-        std::vector<T> ret(enumValues.size());
-        ret[std::distance(enumValues.begin(), it)] = static_cast<T>(1);
-        return ret;
-    }
-
 }// namespace detail
 
 template<typename S, typename It>
@@ -83,31 +287,6 @@ template<typename S, typename It>
         s, [&it, onehotEnum](const auto &field) { it = detail::vectorize_helper(field, it, onehotEnum); });
     return it;
 }
-
-template<typename T> struct HashTrivial
-{
-    [[nodiscard]] constexpr auto operator()(const T &data) const noexcept -> std::size_t
-        requires std::is_trivially_copyable_v<T>
-    {
-        std::size_t res = 0;
-
-        constexpr std::size_t numLong = sizeof(T) / sizeof(std::size_t);
-        const std::size_t *longPtr = reinterpret_cast<const std::size_t *>(&data);
-        for (std::size_t off = 0; off < numLong; ++off) {
-            res ^= *longPtr;
-            ++longPtr;
-        }
-
-        constexpr std::size_t numBytes = sizeof(T) % sizeof(std::size_t);
-        const unsigned char *ucharPtr = reinterpret_cast<const unsigned char *>(longPtr);
-        for (std::size_t off = 0; off < numBytes; ++off) {
-            res ^= *ucharPtr;
-            ++ucharPtr;
-        }
-
-        return res;
-    }
-};
 
 // TODO: Add helper fn to check the vectorization size
 template<typename T, typename S>
@@ -259,44 +438,6 @@ struct Score
     [[nodiscard]] auto operator==(const Score &other) const noexcept -> bool = default;
 };
 
-enum class Alliance : char { Self = 1, Ally = 2, Neutral = 3, Enemy = 4 };
-
-template<typename T> auto enumToOneHot(Alliance e) noexcept -> std::vector<T>
-{
-    constexpr std::array vals = std::array{ Alliance::Self, Alliance::Ally, Alliance::Neutral, Alliance::Enemy };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
-}
-
-enum class CloakState : char { Unknown = 0, Cloaked = 1, Detected = 2, UnCloaked = 3, Allied = 4 };
-
-template<typename T> auto enumToOneHot(CloakState e) noexcept -> std::vector<T>
-{
-    constexpr std::array vals = {
-        CloakState::Unknown, CloakState::Cloaked, CloakState::Detected, CloakState::UnCloaked, CloakState::Allied
-    };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
-}
-
-enum class Visibility : char { Visible = 1, Snapshot = 2, Hidden = 3 };
-
-template<typename T> auto enumToOneHot(Visibility e) noexcept -> std::vector<T>
-{
-    constexpr std::array vals = { Visibility::Visible, Visibility::Snapshot, Visibility::Hidden };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
-}
-
-enum class AddOn : char { None = 0, Reactor = 1, TechLab = 2 };
-
-template<typename T> auto enumToOneHot(AddOn e) noexcept -> std::vector<T>
-{
-    constexpr std::array vals = { AddOn::None, AddOn::Reactor, AddOn::TechLab };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
-}
-
 
 struct UnitOrder
 {
@@ -309,6 +450,16 @@ struct UnitOrder
     Point2d target_pos{ 0, 0 };
 
     [[nodiscard]] auto operator==(const UnitOrder &other) const noexcept -> bool = default;
+
+    [[nodiscard]] operator std::string() const noexcept
+    {
+        return fmt::format("Order[ability: {}, prog: {}, tgtId: {}, tgtPos: ({},{})]",
+            ability_id,
+            progress,
+            tgtId,
+            target_pos.x,
+            target_pos.y);
+    }
 };
 
 struct Unit
@@ -350,6 +501,54 @@ struct Unit
     UnitOrder order3{};
 
     [[nodiscard]] auto operator==(const Unit &other) const noexcept -> bool = default;
+
+    [[nodiscard]] operator std::string() const noexcept
+    {
+        return fmt::format(
+            "id: {}, tgtId: {}, obs: {}, alliance: {}, cloak: {}, add_on: {}, unitType: {}, health: {:.1f}, "
+            "health_max: {:.1f}, shield: {:.1f}, shield_max: {:.1f}, energy: {:.1f}, energy_max: {:.1f}, "
+            "weapon_cooldown: {:.1f}, buff0: {}, buff1: {}, pos: [{:.2f},{:.2f},{:.2f},{:.2f}], radius: {:.1f}, "
+            "build_progress: {:.1f}, cargo: {}, cargo_max: {}, assigned_harv: {}, ideal_harv: {}, is_blip: {}, "
+            "is_flying: {}, is_burrowed: {}, is_powered: {}, in_cargo: {}, order0: {}, order1: {}, order2: {}, order3: "
+            "{}",
+            id,
+            tgtId,
+            observation,
+            alliance,
+            cloak_state,
+            add_on_tag,
+            unitType,
+            health,
+            health_max,
+            shield,
+            shield_max,
+            energy,
+            energy_max,
+            weapon_cooldown,
+            buff0,
+            buff1,
+            pos.x,
+            pos.y,
+            pos.z,
+            heading,
+            radius,
+            build_progress,
+            cargo,
+            cargo_max,
+            assigned_harvesters,
+            ideal_harvesters,
+            is_blip,
+            is_flying,
+            is_burrowed,
+            is_powered,
+            in_cargo,
+            std::string(order0),
+            std::string(order1),
+            std::string(order2),
+            std::string(order3));
+    }
+
+    friend std::ostream &operator<<(std::ostream &os, const Unit &unit) { return os << std::string(unit); }
 };
 
 
@@ -370,7 +569,7 @@ struct UnitSoA
     std::vector<char> cargo_max{};
     std::vector<char> assigned_harvesters{};
     std::vector<char> ideal_harvesters{};
-    std::vector<int> weapon_cooldown{};
+    std::vector<float> weapon_cooldown{};
     std::vector<UID> tgtId{};
     std::vector<CloakState> cloak_state{};
 
@@ -519,6 +718,24 @@ struct NeutralUnit
     Visibility observation{};
 
     [[nodiscard]] auto operator==(const NeutralUnit &other) const noexcept -> bool = default;
+
+    [[nodiscard]] operator std::string() const noexcept
+    {
+        return fmt::format(
+            "NeutralUnit[id: {}, type: {}, health: {:.1f}, health_max: {:.1f}, pos: ({:.1f}, {:.1f}, {:.1f}, {:.1f}), "
+            "radius: {:.1f}, contents: {}, vis: {}]",
+            id,
+            unitType,
+            health,
+            health_max,
+            pos.x,
+            pos.y,
+            pos.z,
+            heading,
+            radius,
+            contents,
+            observation);
+    }
 };
 
 struct NeutralUnitSoA
@@ -667,24 +884,6 @@ struct StepData
 
     [[nodiscard]] auto operator==(const StepData &other) const noexcept -> bool = default;
 };
-
-enum class Race : char { Terran, Zerg, Protoss, Random };
-
-template<typename T> auto enumToOneHot(Race e) noexcept -> std::vector<T>
-{
-    constexpr std::array vals = { Race::Terran, Race::Zerg, Race::Protoss, Race::Random };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
-}
-
-enum class Result : char { Win, Loss, Tie, Undecided };
-
-template<typename T> auto enumToOneHot(Result e) noexcept -> std::vector<T>
-{
-    constexpr std::array vals = { Result::Win, Result::Loss, Result::Tie, Result::Undecided };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
-}
 
 
 struct ReplayData

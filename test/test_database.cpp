@@ -5,6 +5,7 @@
 #include <boost/iostreams/filtering_stream.hpp>
 #include <spdlog/spdlog.h>
 
+#include <absl/strings/str_format.h>
 #include <gtest/gtest.h>
 #include <numeric>
 
@@ -152,15 +153,45 @@ TEST_F(DatabaseTest, LoadDB)
     for (std::size_t i = 0; i < replayDb_.size(); ++i) { ASSERT_EQ(replayDb_.getEntry(i), loadDB.getEntry(i)); }
 }
 
+namespace cvt {
+
+template<typename Sink> void AbslStringify(Sink &sink, Unit unit) { absl::Format(&sink, "%s", std::string(unit)); }
+
+template<typename Sink> void AbslStringify(Sink &sink, NeutralUnit unit)
+{
+    absl::Format(&sink, "%s", std::string(unit));
+}
+
+}// namespace cvt
+
+
+/**
+ * @brief Hash based on Unit ID
+ * @tparam T Unit Type
+ */
+template<typename T> struct HashID
+{
+    [[nodiscard]] constexpr auto operator()(const T &data) const noexcept -> std::size_t { return data.id; }
+};
 
 template<typename UnitT>
-auto fuzzyEquality(std::vector<std::vector<UnitT>> replayUnitsA, std::vector<std::vector<UnitT>> replayUnitsB)
+auto fuzzyEquality(std::vector<std::vector<UnitT>> expectedReplay, std::vector<std::vector<UnitT>> actualReplay)
 {
-    for (auto &&[idx, unitsA, unitsB] :
-        std::views::zip(std::views::iota(replayUnitsA.size()), replayUnitsA, replayUnitsB)) {
-        std::unordered_set<UnitT, cvt::HashTrivial<UnitT>> setA(unitsA.begin(), unitsA.end());
-        std::unordered_set<UnitT, cvt::HashTrivial<UnitT>> setB(unitsB.begin(), unitsB.end());
-        ASSERT_EQ(setA, setB) << "Failed at step " << idx;
+    using UnitSet = std::unordered_set<UnitT, HashID<UnitT>>;
+    for (auto &&[idx, expectedUnits, actualUnits] :
+        std::views::zip(std::views::iota(expectedReplay.size()), expectedReplay, actualReplay)) {
+        UnitSet expectedSet(expectedUnits.begin(), expectedUnits.end());
+        UnitSet actualSet(actualUnits.begin(), actualUnits.end());
+        UnitSet missing;
+        for (const auto &elem : expectedSet) {
+            if (!actualSet.contains(elem)) { missing.insert(elem); }
+        }
+        UnitSet extras;
+        for (const auto &elem : actualSet) {
+            if (!expectedSet.contains(elem)) { extras.insert(elem); }
+        }
+        ASSERT_EQ(missing, extras) << fmt::format(
+            "Failed at step {}, got {} missing and {} extras", idx, missing.size(), extras.size());
     }
 }
 
@@ -168,17 +199,14 @@ TEST(UnitSoA, ConversionToAndFrom)
 {
     cvt::ReplayDatabase db("/home/bryce/SC2/converted/sc2_evaluation.SC2Replays");
     const auto replayData = db.getEntry(0);
-
     {
         const auto flattened = cvt::flattenAndSortUnits<cvt::Unit, cvt::UnitSoA>(replayData.units);
         const auto recovered = cvt::recoverFlattenedSortedUnits<cvt::Unit, cvt::UnitSoA>(flattened);
-        fuzzyEquality(recovered, replayData.units);
+        fuzzyEquality(replayData.units, recovered);
     }
-
-    // {
-    //     const auto flattened = cvt::flattenAndSortUnits<cvt::NeutralUnit,
-    //     cvt::NeutralUnitSoA>(replayData.neutralUnits); const auto recovered =
-    //     cvt::recoverFlattenedSortedUnits<cvt::NeutralUnit, cvt::NeutralUnitSoA>(flattened); ASSERT_EQ(recovered,
-    //     replayData.neutralUnits);
-    // }
+    {
+        const auto flattened = cvt::flattenAndSortUnits<cvt::NeutralUnit, cvt::NeutralUnitSoA>(replayData.neutralUnits);
+        const auto recovered = cvt::recoverFlattenedSortedUnits<cvt::NeutralUnit, cvt::NeutralUnitSoA>(flattened);
+        fuzzyEquality(replayData.neutralUnits, recovered);
+    }
 }
