@@ -201,9 +201,9 @@ auto fuzzyEquality(std::vector<std::vector<UnitT>> expectedReplay, std::vector<s
 
 TEST(UnitSoA, ConversionToAndFrom)
 {
-    cvt::ReplayDatabase db("/home/bryce/SC2/converted/sc2_evaluation.SC2Replays");
-    using DataT = cvt::ReplayDataSoA;
-    const auto replayData = db.getEntry<DataT>(0);
+    using Interface = cvt::DatabaseInterface<cvt::ReplayDataSoA>;
+    cvt::ReplayDatabase<Interface> db("/home/bryce/SC2/converted/sc2_evaluation.SC2Replays");
+    const auto replayData = db.getEntry(0);
     {
         const auto flattened = cvt::flattenAndSortUnits<cvt::UnitSoA>(replayData.units);
         const auto recovered = cvt::recoverFlattenedSortedUnits<cvt::UnitSoA>(flattened);
