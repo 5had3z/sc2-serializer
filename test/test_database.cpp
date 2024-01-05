@@ -205,13 +205,13 @@ TEST(UnitSoA, ConversionToAndFrom)
     using DataT = cvt::ReplayDataSoA;
     const auto replayData = db.getEntry<DataT>(0);
     {
-        const auto flattened = cvt::flattenAndSortUnits<cvt::Unit, cvt::UnitSoA>(replayData.units);
-        const auto recovered = cvt::recoverFlattenedSortedUnits<cvt::Unit, cvt::UnitSoA>(flattened);
+        const auto flattened = cvt::flattenAndSortUnits<cvt::UnitSoA>(replayData.units);
+        const auto recovered = cvt::recoverFlattenedSortedUnits<cvt::UnitSoA>(flattened);
         fuzzyEquality(replayData.units, recovered);
     }
     {
-        const auto flattened = cvt::flattenAndSortUnits<cvt::NeutralUnit, cvt::NeutralUnitSoA>(replayData.neutralUnits);
-        const auto recovered = cvt::recoverFlattenedSortedUnits<cvt::NeutralUnit, cvt::NeutralUnitSoA>(flattened);
+        const auto flattened = cvt::flattenAndSortUnits<cvt::NeutralUnitSoA>(replayData.neutralUnits);
+        const auto recovered = cvt::recoverFlattenedSortedUnits<cvt::NeutralUnitSoA>(flattened);
         fuzzyEquality(replayData.neutralUnits, recovered);
     }
 }

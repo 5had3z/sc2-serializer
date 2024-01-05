@@ -159,14 +159,14 @@ void implBenchmarkUnit(const std::vector<std::vector<UnitT>> &unitData, bench_ti
         timing.readAoS.emplace_back(clk::now() - begin);
     }
 
-    const auto flatten = cvt::flattenAndSortUnits<UnitT, UnitSoAT>(unitData);
+    const auto flatten = cvt::flattenAndSortUnits<UnitSoAT>(unitData);
     writeData(flatten, tempFile, false);
     {
         auto begin = clk::now();
         const auto tmp = readData<cvt::FlattenedUnits<UnitSoAT>>(tempFile);
         timing.readSoA.emplace_back(clk::now() - begin);
         begin = clk::now();
-        const auto recovered = cvt::recoverFlattenedSortedUnits<UnitT, UnitSoAT>(tmp);
+        const auto recovered = cvt::recoverFlattenedSortedUnits<UnitSoAT>(tmp);
         timing.recover.emplace_back(clk::now() - begin);
     }
 

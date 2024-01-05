@@ -25,10 +25,11 @@ template<typename UnitSoAT> struct FlattenedUnits
     std::vector<std::uint32_t> indicies;
 };
 
-template<typename UnitT, typename UnitSoAT>
-[[nodiscard]] constexpr auto flattenAndSortUnits(const std::vector<std::vector<UnitT>> &replayUnits) noexcept
-    -> FlattenedUnits<UnitSoAT>
+template<typename UnitSoAT>
+[[nodiscard]] constexpr auto flattenAndSortUnits(
+    const std::vector<std::vector<typename UnitSoAT::struct_type>> &replayUnits) noexcept -> FlattenedUnits<UnitSoAT>
 {
+    using UnitT = UnitSoAT::struct_type;
     using UnitStepT = std::pair<std::uint32_t, UnitT>;
     std::vector<UnitStepT> unitStepFlatten;
     for (auto &&[idx, units] : std::views::enumerate(replayUnits)) {
@@ -51,12 +52,12 @@ template<typename UnitT, typename UnitSoAT>
     return { unitsSoA, indicies };
 }
 
-template<typename UnitT, typename UnitSoAT>
+template<typename UnitSoAT>
 [[nodiscard]] constexpr auto recoverFlattenedSortedUnits(const FlattenedUnits<UnitSoAT> &flattenedUnits) noexcept
-    -> std::vector<std::vector<UnitT>>
+    -> std::vector<std::vector<typename UnitSoAT::struct_type>>
 {
     // Create outer dimension with the maximum game step index
-    std::vector<std::vector<UnitT>> replayUnits;
+    std::vector<std::vector<typename UnitSoAT::struct_type>> replayUnits;
     replayUnits.resize(std::ranges::max(flattenedUnits.indicies) + 1);
 
     // Copy units to correct timestep
