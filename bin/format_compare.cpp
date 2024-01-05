@@ -275,7 +275,7 @@ int main(int argc, char *argv[])
 
     const cvt::ReplayDatabase database(databasePath);
     for (std::size_t idx = 0; idx < database.size(); ++idx) {
-        const auto replayData = database.getEntry(idx);
+        const auto replayData = database.getEntry<cvt::ReplayDataSoA>(idx);
         if (unitFlag) { writeUnitStructures(replayData, writeFolder); }
         if (compFlag) { writeComponents(replayData, writeFolder); }
         if (metaFlag) { writeReplayStructures(replayData, writeFolder); }

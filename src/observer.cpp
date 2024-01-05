@@ -101,7 +101,7 @@ static_assert(std::is_same_v<UID, sc2::Tag> && "Mismatch between unique id tags 
 auto BaseConverter::loadDB(const std::filesystem::path &path) noexcept -> bool
 {
     auto result = database_.open(path);
-    if (result) { knownHashes_ = database_.getHashes(); }
+    if (result) { knownHashes_ = database_.getHashes<ReplayDataSoA>(); }
     return result;
 }
 

@@ -140,17 +140,21 @@ TEST_F(DatabaseTest, CreateDB)
 
 TEST_F(DatabaseTest, ReadDB)
 {
+    using DataT = cvt::ReplayDataSoA;
     ASSERT_EQ(replayDb_.size(), 2);
-    ASSERT_EQ(replayDb_.getEntry(0), createReplay(1));
-    ASSERT_EQ(replayDb_.getEntry(1), createReplay(123));
-    ASSERT_NE(replayDb_.getEntry(1), createReplay(120));
+    ASSERT_EQ(replayDb_.getEntry<DataT>(0), createReplay(1));
+    ASSERT_EQ(replayDb_.getEntry<DataT>(1), createReplay(123));
+    ASSERT_NE(replayDb_.getEntry<DataT>(1), createReplay(120));
 }
 
 TEST_F(DatabaseTest, LoadDB)
 {
+    using DataT = cvt::ReplayDataSoA;
     cvt::ReplayDatabase loadDB(dbPath_);
     ASSERT_EQ(replayDb_.size(), loadDB.size());
-    for (std::size_t i = 0; i < replayDb_.size(); ++i) { ASSERT_EQ(replayDb_.getEntry(i), loadDB.getEntry(i)); }
+    for (std::size_t i = 0; i < replayDb_.size(); ++i) {
+        ASSERT_EQ(replayDb_.getEntry<DataT>(i), loadDB.getEntry<DataT>(i));
+    }
 }
 
 namespace cvt {
@@ -198,7 +202,8 @@ auto fuzzyEquality(std::vector<std::vector<UnitT>> expectedReplay, std::vector<s
 TEST(UnitSoA, ConversionToAndFrom)
 {
     cvt::ReplayDatabase db("/home/bryce/SC2/converted/sc2_evaluation.SC2Replays");
-    const auto replayData = db.getEntry(0);
+    using DataT = cvt::ReplayDataSoA;
+    const auto replayData = db.getEntry<DataT>(0);
     {
         const auto flattened = cvt::flattenAndSortUnits<cvt::Unit, cvt::UnitSoA>(replayData.units);
         const auto recovered = cvt::recoverFlattenedSortedUnits<cvt::Unit, cvt::UnitSoA>(flattened);

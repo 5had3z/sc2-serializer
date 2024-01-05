@@ -53,9 +53,9 @@ auto mergeDb(cvt::ReplayDatabase &target,
     const std::size_t nItems = source.size();
     for (std::size_t idx = 0; idx < nItems; ++idx) {
         // Deserialize first two entries only!
-        auto [hash, id] = source.getHashId(idx);
+        auto [hash, id] = source.getHashId<cvt::ReplayDataSoA>(idx);
         if (knownHashes.contains(hash + std::to_string(id))) { continue; }
-        auto replayData = source.getEntry(idx);
+        auto replayData = source.getEntry<cvt::ReplayDataSoA>(idx);
         bool ok = target.addEntry(replayData);
         if (!ok && target.isFull()) { return false; }
     }
@@ -126,7 +126,7 @@ int main(int argc, char *argv[])
     std::unordered_set<std::string> knownHashes{};
     if (strat == Stratergy::Replace) { fs::remove(outFile); }
     replayDb.open(outFile);
-    if (strat == Stratergy::Merge) { knownHashes = replayDb.getHashes(); }
+    if (strat == Stratergy::Merge) { knownHashes = replayDb.getHashes<cvt::ReplayDataSoA>(); }
 
     const auto ok = runOverFolder(replayDb, partsFolder, knownHashes);
     return ok ? 0 : -1;

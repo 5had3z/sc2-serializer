@@ -17,6 +17,8 @@ static auto gLogger = spdlog::stdout_color_mt("ReplayDatabase");
 
 namespace cvt {
 
+void setReplayDBLoggingLevel(spdlog::level::level_enum lvl) noexcept { gLogger->set_level(lvl); }
+
 ReplayDatabase::ReplayDatabase(const std::filesystem::path &dbPath) noexcept { this->open(dbPath); }
 
 auto ReplayDatabase::open(std::filesystem::path dbPath) noexcept -> bool
@@ -74,20 +76,9 @@ auto ReplayDatabase::isFull() const noexcept -> bool { return entryPtr_.size() >
 
 auto ReplayDatabase::size() const noexcept -> std::size_t { return entryPtr_.size(); }
 
-auto ReplayDatabase::getHashes() const noexcept -> std::unordered_set<std::string>
-{
-    std::unordered_set<std::string> replayHashes{};
-    std::ifstream dbStream(dbPath_, std::ios::binary);
-    for (auto &&entry : entryPtr_) {
-        auto [hash, id] = getHashIdEntry(dbStream, entry);
-        replayHashes.insert(hash + std::to_string(id));
-    }
-    return replayHashes;
-}
-
 auto ReplayDatabase::path() const noexcept -> const std::filesystem::path & { return dbPath_; }
 
-bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
+template<typename T> auto ReplayDatabase::addEntry(const T &data) -> bool
 {
     // First ensure that the db is not at the maximum 1M entries
     if (!fs::exists(dbPath_)) {
@@ -108,7 +99,7 @@ bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
         bio::filtering_ostream filterStream{};
         filterStream.push(bio::zlib_compressor(bio::zlib::best_compression));
         filterStream.push(dbStream);
-        serialize(data, filterStream);
+        DatabaseIO<T>::addEntryImpl(data, filterStream);
         if (filterStream.bad()) {
             SPDLOG_LOGGER_ERROR(gLogger, "Error Serializing Replay Data");
             return false;
@@ -137,37 +128,42 @@ bool ReplayDatabase::addEntry(const ReplayDataSoA &data)
     return true;
 }
 
+template auto ReplayDatabase::addEntry<ReplayDataSoA>(const ReplayDataSoA &data) -> bool;
 
-auto ReplayDatabase::getHashIdEntry(std::ifstream &dbStream, std::streampos entry) const
-    -> std::pair<std::string, std::uint32_t>
+template<typename T> auto ReplayDatabase::getHashes() const noexcept -> std::unordered_set<std::string>
 {
-    dbStream.seekg(entry);
-    // Maybe see if I can reuse the filter and seek
-    bio::filtering_istream filterStream{};
-    filterStream.push(bio::zlib_decompressor());
-    filterStream.push(dbStream);
-    std::string replayHash{};
-    std::string gameVersion{};
-    std::uint32_t playerId{};
-    deserialize(replayHash, filterStream);
-    deserialize(gameVersion, filterStream);
-    deserialize(playerId, filterStream);
-    filterStream.reset();
-    return std::make_pair(replayHash, playerId);
+    std::unordered_set<std::string> replayHashes{};
+    for (auto &&idx : std::views::iota(this->size())) {
+        auto [hash, id] = this->getHashId<T>(idx);
+        replayHashes.insert(hash + std::to_string(id));
+    }
+    return replayHashes;
 }
 
-auto ReplayDatabase::getHashId(std::size_t index) const -> std::pair<std::string, std::uint32_t>
+template auto ReplayDatabase::getHashes<ReplayDataSoA>() const noexcept -> std::unordered_set<std::string>;
+
+template<typename T> auto ReplayDatabase::getHashId(std::size_t index) const -> std::pair<std::string, std::uint32_t>
 {
     // Check if valid index
     if (index >= entryPtr_.size()) {
         throw std::out_of_range(fmt::format("Index {} exceeds database size {}", index, entryPtr_.size()));
     }
     std::ifstream dbStream(dbPath_, std::ios::binary);
-    return getHashIdEntry(dbStream, entryPtr_[index]);
+    dbStream.seekg(entryPtr_[index]);
+
+    // Maybe see if I can reuse the filter and seek
+    bio::filtering_istream filterStream{};
+    filterStream.push(bio::zlib_decompressor());
+    filterStream.push(dbStream);
+    auto result = DatabaseIO<T>::getHashIdImpl(filterStream);
+    filterStream.reset();
+    return result;
 }
 
+template auto ReplayDatabase::getHashId<ReplayDataSoA>(std::size_t index) const
+    -> std::pair<std::string, std::uint32_t>;
 
-auto ReplayDatabase::getEntry(std::size_t index) const -> ReplayDataSoA
+template<typename T> auto ReplayDatabase::getEntry(std::size_t index) const -> T
 {
     // using clock = std::chrono::high_resolution_clock;
     // const auto start = clock::now();
@@ -185,9 +181,9 @@ auto ReplayDatabase::getEntry(std::size_t index) const -> ReplayDataSoA
     filterStream.push(dbStream);
 
     // Load and return the data
-    ReplayDataSoA data;
+    T data;
     try {
-        deserialize(data, filterStream);
+        data = DatabaseIO<T>::getEntryImpl(filterStream);
     } catch (const std::bad_alloc &e) {
         SPDLOG_LOGGER_CRITICAL(
             gLogger, "Failed to load from {} at index {}, got error: {}", dbPath_.string(), index, e.what());
@@ -200,6 +196,35 @@ auto ReplayDatabase::getEntry(std::size_t index) const -> ReplayDataSoA
     return data;
 }
 
-void setReplayDBLoggingLevel(spdlog::level::level_enum lvl) noexcept { gLogger->set_level(lvl); }
+template auto ReplayDatabase::getEntry<ReplayDataSoA>(std::size_t index) const -> ReplayDataSoA;
+
+
+template<> struct DatabaseIO<ReplayDataSoA>
+{
+    static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>
+    {
+        std::string replayHash{};
+        std::string gameVersion{};
+        std::uint32_t playerId{};
+        deserialize(replayHash, dbStream);
+        deserialize(gameVersion, dbStream);
+        deserialize(playerId, dbStream);
+        return std::make_pair(replayHash, playerId);
+    }
+
+    static auto getEntryImpl(std::istream &dbStream) noexcept -> ReplayDataSoA
+    {
+        ReplayDataSoA result;
+        deserialize(result, dbStream);
+        return result;
+    }
+
+    static auto addEntryImpl(const ReplayDataSoA &d, std::ostream &dbStream) noexcept -> bool
+    {
+        serialize(d, dbStream);
+        return true;
+    }
+};
+
 
 }// namespace cvt

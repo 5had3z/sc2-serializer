@@ -892,6 +892,71 @@ struct StepData
     [[nodiscard]] auto operator==(const StepData &other) const noexcept -> bool = default;
 };
 
+struct StepDataSoA
+{
+    using struct_type = StepData;
+    std::vector<std::uint32_t> gameStep{};
+    std::vector<std::uint16_t> minearals{};
+    std::vector<std::uint16_t> vespene{};
+    std::vector<std::uint16_t> popMax{};
+    std::vector<std::uint16_t> popArmy{};
+    std::vector<std::uint16_t> popWorkers{};
+    std::vector<Score> score{};
+    std::vector<Image<std::uint8_t>> visibility{};
+    std::vector<Image<bool>> creep{};
+    std::vector<Image<std::uint8_t>> player_relative{};
+    std::vector<Image<std::uint8_t>> alerts{};
+    std::vector<Image<bool>> buildable{};
+    std::vector<Image<bool>> pathable{};
+    std::vector<std::vector<Action>> actions{};
+    std::vector<std::vector<Unit>> units{};
+    std::vector<std::vector<NeutralUnit>> neutralUnits{};
+
+    [[nodiscard]] auto operator==(const StepDataSoA &other) const noexcept -> bool = default;
+
+    [[nodiscard]] constexpr auto operator[](std::size_t idx) const noexcept -> StepData
+    {
+        StepData stepData;
+        stepData.gameStep = gameStep[idx];
+        stepData.minearals = minearals[idx];
+        stepData.vespene = vespene[idx];
+        stepData.popMax = popMax[idx];
+        stepData.popArmy = popArmy[idx];
+        stepData.popWorkers = popWorkers[idx];
+        stepData.score = score[idx];
+        stepData.visibility = visibility[idx];
+        stepData.creep = creep[idx];
+        stepData.player_relative = player_relative[idx];
+        stepData.alerts = alerts[idx];
+        stepData.buildable = buildable[idx];
+        stepData.pathable = pathable[idx];
+        stepData.actions = actions[idx];
+        stepData.units = units[idx];
+        stepData.neutralUnits = neutralUnits[idx];
+        return stepData;
+    }
+};
+
+struct ReplayInfo
+{
+    std::string replayHash{};
+    std::string gameVersion{};
+    std::uint32_t playerId{};
+    std::uint32_t durationSteps{};
+    Race playerRace{ Race::Random };
+    Result playerResult{ Result::Undecided };
+    int playerMMR{};
+    int playerAPM{};
+    int mapWidth{};
+    int mapHeight{};
+    Image<std::uint8_t> heightMap{};
+};
+
+struct ReplayData2
+{
+    ReplayInfo header;
+    StepDataSoA data;
+};
 
 struct ReplayData
 {
