@@ -59,10 +59,9 @@ template<typename UnitT, typename UnitSoAT>
     std::vector<std::vector<UnitT>> replayUnits;
     replayUnits.resize(std::ranges::max(flattenedUnits.indicies) + 1);
 
-    // Transform to AoS-Units and copy to the corresponding correct time step
-    const auto unitsAoS = cvt::SoAtoAoS<std::vector<UnitT>, UnitSoAT>(flattenedUnits.units);
-    for (auto &&[unit, stepIdx] : std::views::zip(unitsAoS, flattenedUnits.indicies)) {
-        replayUnits[stepIdx].emplace_back(unit);
+    // Copy units to correct timestep
+    for (auto &&[unitIdx, stepIdx] : std::views::enumerate(flattenedUnits.indicies)) {
+        replayUnits[stepIdx].emplace_back(flattenedUnits.units[unitIdx]);
     }
 
     return replayUnits;

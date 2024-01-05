@@ -505,12 +505,12 @@ struct Unit
     [[nodiscard]] operator std::string() const noexcept
     {
         return fmt::format(
-            "id: {}, tgtId: {}, obs: {}, alliance: {}, cloak: {}, add_on: {}, unitType: {}, health: {:.1f}, "
+            "Unit[id: {}, tgtId: {}, obs: {}, alliance: {}, cloak: {}, add_on: {}, unitType: {}, health: {:.1f}, "
             "health_max: {:.1f}, shield: {:.1f}, shield_max: {:.1f}, energy: {:.1f}, energy_max: {:.1f}, "
             "weapon_cooldown: {:.1f}, buff0: {}, buff1: {}, pos: [{:.2f},{:.2f},{:.2f},{:.2f}], radius: {:.1f}, "
             "build_progress: {:.1f}, cargo: {}, cargo_max: {}, assigned_harv: {}, ideal_harv: {}, is_blip: {}, "
             "is_flying: {}, is_burrowed: {}, is_powered: {}, in_cargo: {}, order0: {}, order1: {}, order2: {}, order3: "
-            "{}",
+            "{}]",
             id,
             tgtId,
             observation,
@@ -593,10 +593,48 @@ struct UnitSoA
     std::vector<float> radius{};
     std::vector<float> build_progress{};
 
-    std::vector<AddOn> add_on_tag{};// todo
-
+    std::vector<AddOn> add_on_tag{};
 
     [[nodiscard]] auto operator==(const UnitSoA &other) const noexcept -> bool = default;
+
+    [[nodiscard]] constexpr auto operator[](std::size_t idx) const noexcept -> Unit
+    {
+        Unit unit;
+        unit.id = id[idx];
+        unit.unitType = unitType[idx];
+        unit.observation = observation[idx];
+        unit.alliance = alliance[idx];
+        unit.health = health[idx];
+        unit.health_max = health_max[idx];
+        unit.shield = shield[idx];
+        unit.shield_max = shield_max[idx];
+        unit.energy = energy[idx];
+        unit.energy_max = energy_max[idx];
+        unit.cargo = cargo[idx];
+        unit.cargo_max = cargo_max[idx];
+        unit.assigned_harvesters = assigned_harvesters[idx];
+        unit.ideal_harvesters = ideal_harvesters[idx];
+        unit.weapon_cooldown = weapon_cooldown[idx];
+        unit.tgtId = tgtId[idx];
+        unit.cloak_state = cloak_state[idx];
+        unit.is_blip = is_blip[idx];
+        unit.is_flying = is_flying[idx];
+        unit.is_burrowed = is_burrowed[idx];
+        unit.is_powered = is_powered[idx];
+        unit.in_cargo = in_cargo[idx];
+        unit.pos = pos[idx];
+        unit.heading = heading[idx];
+        unit.radius = radius[idx];
+        unit.build_progress = build_progress[idx];
+        unit.order0 = order0[idx];
+        unit.order1 = order1[idx];
+        unit.order2 = order2[idx];
+        unit.order3 = order3[idx];
+        unit.buff0 = buff0[idx];
+        unit.buff1 = buff1[idx];
+        unit.add_on_tag = add_on_tag[idx];
+        return unit;
+    }
 };
 
 template<std::ranges::range Range>
@@ -658,43 +696,8 @@ template<> constexpr auto SoAtoAoS(const UnitSoA &soa) noexcept -> std::vector<U
     assert(std::all_of(sizes.begin(), sizes.end(), [sz = sizes.front()](std::size_t s) { return s == sz; }));
     aos.resize(sizes.front());
 
-    // Tediously copy data
-    for (std::size_t idx = 0; idx < sizes.front(); ++idx) {
-        auto &unit = aos[idx];
-        unit.id = soa.id[idx];
-        unit.unitType = soa.unitType[idx];
-        unit.observation = soa.observation[idx];
-        unit.alliance = soa.alliance[idx];
-        unit.health = soa.health[idx];
-        unit.health_max = soa.health_max[idx];
-        unit.shield = soa.shield[idx];
-        unit.shield_max = soa.shield_max[idx];
-        unit.energy = soa.energy[idx];
-        unit.energy_max = soa.energy_max[idx];
-        unit.cargo = soa.cargo[idx];
-        unit.cargo_max = soa.cargo_max[idx];
-        unit.assigned_harvesters = soa.assigned_harvesters[idx];
-        unit.ideal_harvesters = soa.ideal_harvesters[idx];
-        unit.weapon_cooldown = soa.weapon_cooldown[idx];
-        unit.tgtId = soa.tgtId[idx];
-        unit.cloak_state = soa.cloak_state[idx];
-        unit.is_blip = soa.is_blip[idx];
-        unit.is_flying = soa.is_flying[idx];
-        unit.is_burrowed = soa.is_burrowed[idx];
-        unit.is_powered = soa.is_powered[idx];
-        unit.in_cargo = soa.in_cargo[idx];
-        unit.pos = soa.pos[idx];
-        unit.heading = soa.heading[idx];
-        unit.radius = soa.radius[idx];
-        unit.build_progress = soa.build_progress[idx];
-        unit.order0 = soa.order0[idx];
-        unit.order1 = soa.order1[idx];
-        unit.order2 = soa.order2[idx];
-        unit.order3 = soa.order3[idx];
-        unit.buff0 = soa.buff0[idx];
-        unit.buff1 = soa.buff1[idx];
-        unit.add_on_tag = soa.add_on_tag[idx];
-    }
+    // Tediously copy unit data
+    for (std::size_t idx = 0; idx < sizes.front(); ++idx) { aos[idx] = soa[idx]; }
     return aos;
 }
 
@@ -752,6 +755,21 @@ struct NeutralUnitSoA
     std::vector<std::uint16_t> contents{};
 
     [[nodiscard]] auto operator==(const NeutralUnitSoA &other) const noexcept -> bool = default;
+
+    [[nodiscard]] constexpr auto operator[](std::size_t idx) const noexcept -> NeutralUnit
+    {
+        NeutralUnit unit;
+        unit.id = id[idx];
+        unit.unitType = unitType[idx];
+        unit.observation = observation[idx];
+        unit.health = health[idx];
+        unit.health_max = health_max[idx];
+        unit.pos = pos[idx];
+        unit.heading = heading[idx];
+        unit.radius = radius[idx];
+        unit.contents = contents[idx];
+        return unit;
+    }
 };
 
 template<std::ranges::range Range>
@@ -787,18 +805,7 @@ template<> constexpr auto SoAtoAoS(const NeutralUnitSoA &soa) noexcept -> std::v
     aos.resize(sizes.front());
 
     // Tediously copy data
-    for (std::size_t idx = 0; idx < sizes.front(); ++idx) {
-        auto &unit = aos[idx];
-        unit.id = soa.id[idx];
-        unit.unitType = soa.unitType[idx];
-        unit.observation = soa.observation[idx];
-        unit.health = soa.health[idx];
-        unit.health_max = soa.health_max[idx];
-        unit.pos = soa.pos[idx];
-        unit.heading = soa.heading[idx];
-        unit.radius = soa.radius[idx];
-        unit.contents = soa.contents[idx];
-    }
+    for (std::size_t idx = 0; idx < sizes.front(); ++idx) { aos[idx] = soa[idx]; }
     return aos;
 }
 

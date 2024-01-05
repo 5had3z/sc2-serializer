@@ -4,10 +4,16 @@
 #include <cxxopts.hpp>
 #include <database.hpp>
 #include <serialize.hpp>
+#include <spdlog/fmt/bundled/chrono.h>
+#include <spdlog/fmt/bundled/ranges.h>
 #include <spdlog/fmt/fmt.h>
 
+#include <chrono>
 #include <concepts>
+#include <execution>
 #include <filesystem>
+#include <numeric>
+#include <ranges>
 
 namespace fs = std::filesystem;
 
@@ -16,17 +22,33 @@ namespace fs = std::filesystem;
  * @tparam T type of data to write
  * @param data data to write
  * @param outPath filepath to write
+ * @param append should append to file, default = true
  */
-template<typename T> void writeData(T data, std::filesystem::path outPath)
+template<typename T> void writeData(T data, std::filesystem::path outPath, bool append = true)
 {
+    auto mode = std::ios::binary;
+    if (append) { mode |= std::ios::app; }
+
     namespace bio = boost::iostreams;
     bio::filtering_ostream filterStream{};
     filterStream.push(bio::zlib_compressor(bio::zlib::best_compression));
-    filterStream.push(bio::file_sink(outPath, std::ios::binary | std::ios::app));
+    filterStream.push(bio::file_sink(outPath, mode));
     cvt::serialize(data, filterStream);
     if (filterStream.bad()) { fmt::print("Error Serializing Data to {}\n", outPath.string()); }
     filterStream.flush();
     filterStream.reset();
+}
+
+template<typename T> [[nodiscard]] auto readData(std::filesystem::path readPath) -> T
+{
+    namespace bio = boost::iostreams;
+    bio::filtering_istream filterStream{};
+    filterStream.push(bio::zlib_decompressor());
+    filterStream.push(bio::file_source(readPath, std::ios::binary));
+    T data;
+    cvt::deserialize(data, filterStream);
+    filterStream.reset();
+    return data;
 }
 
 /**
@@ -114,6 +136,96 @@ void writeUnitStructures(const cvt::ReplayDataSoA &data, const fs::path &outDir)
     implWriteUnitT<cvt::NeutralUnit, cvt::NeutralUnitSoA>(data.neutralUnits, outDir, "neutralUnits");
 }
 
+
+using clk = std::chrono::high_resolution_clock;
+struct bench_timing
+{
+    std::vector<clk::duration> readAoS;
+    std::vector<clk::duration> readSoA;
+    std::vector<clk::duration> recover;
+};
+
+static bench_timing timingUnits{};
+static bench_timing timingNeutralUnits{};
+
+template<typename UnitT, typename UnitSoAT>
+void implBenchmarkUnit(const std::vector<std::vector<UnitT>> &unitData, bench_timing &timing)
+{
+    const auto tempFile = fs::current_path() / "temp.bin";
+    writeData(unitData, tempFile, false);
+    {
+        const auto begin = clk::now();
+        auto tmp = readData<std::vector<std::vector<UnitT>>>(tempFile);
+        timing.readAoS.emplace_back(clk::now() - begin);
+    }
+
+    const auto flatten = cvt::flattenAndSortUnits<UnitT, UnitSoAT>(unitData);
+    writeData(flatten, tempFile, false);
+    {
+        auto begin = clk::now();
+        const auto tmp = readData<cvt::FlattenedUnits<UnitSoAT>>(tempFile);
+        timing.readSoA.emplace_back(clk::now() - begin);
+        begin = clk::now();
+        const auto recovered = cvt::recoverFlattenedSortedUnits<UnitT, UnitSoAT>(tmp);
+        timing.recover.emplace_back(clk::now() - begin);
+    }
+
+    fs::remove(tempFile);
+}
+
+void printStats(const bench_timing &timing, std::string_view prefix)
+{
+    auto to_ms = [](clk::duration d) { return std::chrono::duration_cast<std::chrono::milliseconds>(d); };
+
+    auto mean_var = [to_ms](std::ranges::range auto vec) {
+        const clk::duration sum =
+            std::reduce(std::execution::unseq, vec.begin(), vec.end(), clk::duration{}, std::plus<>());
+        const clk::duration mean = sum / vec.size();
+        auto var_calc = [mean](clk::duration t) {
+            auto tmp = (t - mean).count();
+            tmp = std::pow(tmp, 2);
+            return clk::duration(tmp);
+        };
+        const clk::duration var =
+            std::transform_reduce(
+                std::execution::unseq, vec.begin(), vec.end(), clk::duration{}, std::plus<>(), var_calc)
+            / vec.size();
+
+        // Cast to millisecond precision, that's about the expected order of magnitude
+        return std::make_pair(to_ms(mean), to_ms(var));
+    };
+
+    const auto [aos_mean, aos_var] = mean_var(timing.readAoS);
+    const auto [soa_mean, soa_var] = mean_var(timing.readSoA);
+    const auto [recover_mean, recover_var] = mean_var(timing.recover);
+
+    const auto soaTotal =
+        std::views::zip_transform([](auto a, auto b) { return a + b; }, timing.readSoA, timing.recover);
+    const auto [total_mean, total_var] = mean_var(soaTotal);
+
+    fmt::print("{} Results:\n AoS: {}\n SoA: {}\n Recover: {}\n",
+        prefix,
+        timing.readAoS | std::views::transform(to_ms),
+        timing.readSoA | std::views::transform(to_ms),
+        timing.recover | std::views::transform(to_ms));
+
+    fmt::print("Summary\n AoS Read: {}({}),\n SoA Read: {}({})\n SoA Decode: {}({})\n SoA Total: {}({})\n",
+        aos_mean,
+        aos_var,
+        soa_mean,
+        soa_var,
+        recover_mean,
+        recover_var,
+        total_mean,
+        total_var);
+}
+
+void benchmarkUnitFormatting(const cvt::ReplayDataSoA &data)
+{
+    implBenchmarkUnit<cvt::Unit, cvt::UnitSoA>(data.units, timingUnits);
+    implBenchmarkUnit<cvt::NeutralUnit, cvt::NeutralUnitSoA>(data.neutralUnits, timingNeutralUnits);
+}
+
 int main(int argc, char *argv[])
 {
     cxxopts::Options cliParser("SC2 Format Comparison",
@@ -126,6 +238,7 @@ int main(int argc, char *argv[])
         ("unit-struct", "Analyse the size with different unit structures", cxxopts::value<bool>()->default_value("false"))
         ("components", "Break down contribution of each component", cxxopts::value<bool>()->default_value("false"))
         ("replay-meta", "Compare meta-stucture of entire replay SoA vs AoS", cxxopts::value<bool>()->default_value("false"))
+        ("benchmark", "Benchmark flattening and recovering unit data", cxxopts::value<bool>()->default_value("false"))
         ("h,help", "This Help", cxxopts::value<bool>());
     // clang-format on
     const auto cliOpts = cliParser.parse(argc, argv);
@@ -153,8 +266,9 @@ int main(int argc, char *argv[])
     const bool unitFlag = cliOpts["unit-struct"].as<bool>();
     const bool compFlag = cliOpts["components"].as<bool>();
     const bool metaFlag = cliOpts["replay-meta"].as<bool>();
+    const bool benchFlag = cliOpts["benchmark"].as<bool>();
 
-    if (!(unitFlag | compFlag | metaFlag)) {
+    if (!(unitFlag | compFlag | metaFlag | benchFlag)) {
         fmt::print("No comparison flags set!\n{}", cliParser.help());
         return -1;
     }
@@ -165,7 +279,13 @@ int main(int argc, char *argv[])
         if (unitFlag) { writeUnitStructures(replayData, writeFolder); }
         if (compFlag) { writeComponents(replayData, writeFolder); }
         if (metaFlag) { writeReplayStructures(replayData, writeFolder); }
+        if (benchFlag) { benchmarkUnitFormatting(replayData); }
         fmt::print("Completed {} of {} Replays\n", idx, database.size());
+    }
+
+    if (benchFlag) {
+        printStats(timingUnits, "units");
+        printStats(timingNeutralUnits, "neutralUnits");
     }
 
     return 0;
