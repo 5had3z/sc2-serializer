@@ -11,11 +11,9 @@ namespace bio = boost::iostreams;
 
 namespace cvt {
 
-static auto gLogger = spdlog::stdout_color_mt("ReplayDatabase");
+std::shared_ptr<spdlog::logger> gLoggerDB = spdlog::stdout_color_mt("ReplayDatabase");
 
-template<typename T> auto ReplayDatabase<T>::logger_ = gLogger;
-
-void setReplayDBLoggingLevel(spdlog::level::level_enum lvl) noexcept { gLogger->set_level(lvl); }
+void setReplayDBLoggingLevel(spdlog::level::level_enum lvl) noexcept { gLoggerDB->set_level(lvl); }
 
 template<> struct DatabaseInterface<ReplayDataSoA>
 {

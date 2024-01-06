@@ -22,6 +22,8 @@ namespace cvt {
  */
 void setReplayDBLoggingLevel(spdlog::level::level_enum lvl) noexcept;
 
+extern std::shared_ptr<spdlog::logger> gLoggerDB;
+
 /**
  * @brief Flattened units in SoA form with associated step index
  * @tparam UnitSoAT Type of flattened unit
@@ -32,7 +34,15 @@ template<typename UnitSoAT> struct FlattenedUnits
     std::vector<std::uint32_t> indicies;
 };
 
-template<typename UnitSoAT>
+template<typename T>
+concept IsSoAType = requires(T x) {
+    typename T::struct_type;
+    {
+        x[std::size_t{}]
+    } -> std::same_as<typename T::struct_type>;
+};
+
+template<IsSoAType UnitSoAT>
 [[nodiscard]] constexpr auto flattenAndSortUnits(
     const std::vector<std::vector<typename UnitSoAT::struct_type>> &replayUnits) noexcept -> FlattenedUnits<UnitSoAT>
 {
@@ -59,7 +69,7 @@ template<typename UnitSoAT>
     return { unitsSoA, indicies };
 }
 
-template<typename UnitSoAT>
+template<IsSoAType UnitSoAT>
 [[nodiscard]] constexpr auto recoverFlattenedSortedUnits(const FlattenedUnits<UnitSoAT> &flattenedUnits) noexcept
     -> std::vector<std::vector<typename UnitSoAT::struct_type>>
 {
@@ -93,29 +103,15 @@ template<typename T> struct DatabaseInterface
     [[maybe_unused]] static auto addEntryImpl(const T &d, std::ostream &dbStream) noexcept -> bool;
 };
 
-struct DatabaseInterface<ReplayDataSoA>;
-
 template<typename T>
-concept IsDatabaseInterface = requires(std::istream &stream, const T &d, std::ostream &out) {
-    {
-        T::getHashIdImpl(stream)
-    } -> std::same_as<std::pair<std::string, std::uint32_t>>;
-    // {
-    //     T::getEntryImpl(stream)
-    // } -> std::same_as<typename T::value_type>;
-    // {
-    //     T::addEntryImpl(d, out)
-    // } -> std::same_as<bool>;
-};
+concept HasDBInterface = requires { typename DatabaseInterface<T>; };
 
 /**
  * @brief
  * @tparam T is a DatabaseIO Type that implements interactions with the database
  */
-template<IsDatabaseInterface Interface> class ReplayDatabase
+template<HasDBInterface EntryType> class ReplayDatabase
 {
-    using value_type = Interface::value_type;
-
   public:
     /**
      * @brief Maximum number of allowed entries in a replay database. This is the maximum lookup table size on disk.
@@ -138,18 +134,18 @@ template<IsDatabaseInterface Interface> class ReplayDatabase
      * @param data The replay data to be added.
      * @return True if the entry was successfully added, false otherwise.
      */
-    [[maybe_unused]] auto addEntry(const value_type &data) -> bool
+    [[maybe_unused]] auto addEntry(const EntryType &data) -> bool
     {
         namespace fs = std::filesystem;
         namespace bio = boost::iostreams;
 
         // First ensure that the db is not at the maximum 1M entries
         if (!fs::exists(dbPath_)) {
-            SPDLOG_LOGGER_ERROR(logger_, "Database \"{}\" doesn't exist", dbPath_.string());
+            SPDLOG_LOGGER_ERROR(gLoggerDB, "Database \"{}\" doesn't exist", dbPath_.string());
             return false;
         }
         if (this->isFull()) {
-            SPDLOG_LOGGER_ERROR(logger_, "Database \"{}\" is full", dbPath_.string());
+            SPDLOG_LOGGER_ERROR(gLoggerDB, "Database \"{}\" is full", dbPath_.string());
             return false;
         }
 
@@ -162,15 +158,15 @@ template<IsDatabaseInterface Interface> class ReplayDatabase
             bio::filtering_ostream filterStream{};
             filterStream.push(bio::zlib_compressor(bio::zlib::best_compression));
             filterStream.push(dbStream);
-            Interface::addEntryImpl(data, filterStream);
+            DatabaseInterface<EntryType>::addEntryImpl(data, filterStream);
             if (filterStream.bad()) {
-                SPDLOG_LOGGER_ERROR(logger_, "Error Serializing Replay Data");
+                SPDLOG_LOGGER_ERROR(gLoggerDB, "Error Serializing Replay Data");
                 return false;
             }
             filterStream.flush();
             filterStream.reset();
         } catch (const std::bad_alloc &e) {
-            SPDLOG_LOGGER_CRITICAL(logger_, "Failed to write replay, got error: {}", e.what());
+            SPDLOG_LOGGER_CRITICAL(gLoggerDB, "Failed to write replay, got error: {}", e.what());
             return false;
         }
 
@@ -182,11 +178,11 @@ template<IsDatabaseInterface Interface> class ReplayDatabase
         dbStream.seekp((nEntries - 1) * sizeof(std::streampos) + sizeof(std::size_t), std::ios::beg);
         dbStream.write(reinterpret_cast<const char *>(&entryPtr_.back()), sizeof(std::streampos));
         if (dbStream.bad()) {
-            SPDLOG_LOGGER_ERROR(logger_, "Error Writing Db Offset Entry");
+            SPDLOG_LOGGER_ERROR(gLoggerDB, "Error Writing Db Offset Entry");
             return false;
         }
 
-        SPDLOG_LOGGER_INFO(logger_, "Saved Replay: {}, PlayerID: {}", data.replayHash, data.playerId);
+        SPDLOG_LOGGER_INFO(gLoggerDB, "Saved Replay: {}, PlayerID: {}", data.replayHash, data.playerId);
 
         return true;
     }
@@ -196,7 +192,7 @@ template<IsDatabaseInterface Interface> class ReplayDatabase
      * @param index The index of the replay data entry to retrieve.
      * @return The replay data at the specified index.
      */
-    [[nodiscard]] auto getEntry(std::size_t index) const -> value_type
+    [[nodiscard]] auto getEntry(std::size_t index) const -> EntryType
     {
         namespace bio = boost::iostreams;
         // using clock = std::chrono::high_resolution_clock;
@@ -215,12 +211,12 @@ template<IsDatabaseInterface Interface> class ReplayDatabase
         filterStream.push(dbStream);
 
         // Load and return the data
-        value_type data;
+        EntryType data;
         try {
-            data = Interface::getEntryImpl(filterStream);
+            data = DatabaseInterface<EntryType>::getEntryImpl(filterStream);
         } catch (const std::bad_alloc &e) {
             SPDLOG_LOGGER_CRITICAL(
-                logger_, "Failed to load from {} at index {}, got error: {}", dbPath_.string(), index, e.what());
+                gLoggerDB, "Failed to load from {} at index {}, got error: {}", dbPath_.string(), index, e.what());
             throw e;
         }
         filterStream.reset();
@@ -231,9 +227,9 @@ template<IsDatabaseInterface Interface> class ReplayDatabase
     }
 
     /**
-     * @brief Retrieves the hash ID at the specified index.
-     * @param index The index of the hash ID to retrieve.
-     * @return A pair containing the hash ID as a string and its associated 32-bit unsigned integer.
+     * @brief Retrieves the hash and player id at the specified index.
+     * @param index The index of the data to retrieve.
+     * @return A pair containing the replay hash and player id.
      */
     [[nodiscard]] auto getHashId(std::size_t index) const -> std::pair<std::string, std::uint32_t>
     {
@@ -249,7 +245,7 @@ template<IsDatabaseInterface Interface> class ReplayDatabase
         bio::filtering_istream filterStream{};
         filterStream.push(bio::zlib_decompressor());
         filterStream.push(dbStream);
-        auto result = Interface::getHashIdImpl(filterStream);
+        auto result = DatabaseInterface<EntryType>::getHashIdImpl(filterStream);
         filterStream.reset();
         return result;
     }
@@ -277,25 +273,25 @@ template<IsDatabaseInterface Interface> class ReplayDatabase
     {
         namespace fs = std::filesystem;
         if (dbPath.string().empty()) {
-            SPDLOG_LOGGER_ERROR(logger_, "Path to database not set");
+            SPDLOG_LOGGER_ERROR(gLoggerDB, "Path to database not set");
             return false;
         }
 
         dbPath_ = std::move(dbPath);
         bool ok;
         if (fs::exists(dbPath_)) {
-            ok = this->load();
+            ok = this->loadIndexTable();
             if (ok) {
-                SPDLOG_LOGGER_INFO(logger_, "Loaded Existing Database {}", dbPath_.string());
+                SPDLOG_LOGGER_INFO(gLoggerDB, "Loaded Existing Database {}", dbPath_.string());
             } else {
-                SPDLOG_LOGGER_ERROR(logger_, "Failed to Load Existing Database {}", dbPath_.string());
+                SPDLOG_LOGGER_ERROR(gLoggerDB, "Failed to Load Existing Database {}", dbPath_.string());
             }
         } else {
-            ok = this->create();
+            ok = this->createNewDatabaseFile();
             if (ok) {
-                SPDLOG_LOGGER_INFO(logger_, "Created New Database: {}", dbPath_.string());
+                SPDLOG_LOGGER_INFO(gLoggerDB, "Created New Database: {}", dbPath_.string());
             } else {
-                SPDLOG_LOGGER_ERROR(logger_, "Failed to Create New Database: {}", dbPath_.string());
+                SPDLOG_LOGGER_ERROR(gLoggerDB, "Failed to Create New Database: {}", dbPath_.string());
             }
         }
         return ok;
@@ -324,7 +320,7 @@ template<IsDatabaseInterface Interface> class ReplayDatabase
      * @brief Loads the entryPtr_ look up table from an existing database on disk.
      * @return true if the replay database is successfully loaded, false otherwise.
      */
-    [[maybe_unused]] auto load() noexcept -> bool
+    [[maybe_unused]] auto loadIndexTable() noexcept -> bool
     {
         std::ifstream dbStream(dbPath_, std::ios::binary);
         deserialize(entryPtr_, dbStream);
@@ -335,7 +331,7 @@ template<IsDatabaseInterface Interface> class ReplayDatabase
      * @brief Creates a new empty database.
      * @return true if the database was successfully created, false otherwise.
      */
-    [[maybe_unused]] auto create() noexcept -> bool
+    [[maybe_unused]] auto createNewDatabaseFile() noexcept -> bool
     {
         entryPtr_.clear();// Clear existing LUT data
 
@@ -361,8 +357,6 @@ template<IsDatabaseInterface Interface> class ReplayDatabase
      * @brief Look up table for database entries
      */
     std::vector<std::streampos> entryPtr_{};
-
-    static std::shared_ptr<spdlog::logger> logger_;
 };
 
 

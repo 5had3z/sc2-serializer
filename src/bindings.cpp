@@ -282,14 +282,14 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readwrite("neutralUnits", &cvt::ReplayDataSoA::neutralUnits);
 
     // Expose ReplayDatabase class
-    py::class_<cvt::ReplayDatabase>(m, "ReplayDatabase")
+    py::class_<cvt::ReplayDatabase<cvt::ReplayDataSoA>>(m, "ReplayDatabase")
         .def(py::init<>())
         .def(py::init<const std::filesystem::path &>(), py::arg("dbPath"))
         .def("open", &cvt::ReplayDatabase::open, py::arg("dbPath"))
         .def("isFull", &cvt::ReplayDatabase::isFull)
         .def("size", &cvt::ReplayDatabase::size)
-        .def("getEntry", &cvt::ReplayDatabase::getEntry<cvt::ReplayDataSoA>, py::arg("index"))
-        .def("getHashIdEntry", &cvt::ReplayDatabase::getHashId<cvt::ReplayDataSoA>, py::arg("index"));
+        .def("getEntry", &cvt::ReplayDatabase::getEntry, py::arg("index"))
+        .def("getHashIdEntry", &cvt::ReplayDatabase::getHashId, py::arg("index"));
 
     py::class_<cvt::ReplayParser>(m, "ReplayParser")
         .def(py::init<const std::filesystem::path &>(), py::arg("dataPath"))

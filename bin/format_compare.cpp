@@ -273,9 +273,9 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    const cvt::ReplayDatabase database(databasePath);
+    const cvt::ReplayDatabase<cvt::ReplayDataSoA> database(databasePath);
     for (std::size_t idx = 0; idx < database.size(); ++idx) {
-        const auto replayData = database.getEntry<cvt::ReplayDataSoA>(idx);
+        const auto replayData = database.getEntry(idx);
         if (unitFlag) { writeUnitStructures(replayData, writeFolder); }
         if (compFlag) { writeComponents(replayData, writeFolder); }
         if (metaFlag) { writeReplayStructures(replayData, writeFolder); }

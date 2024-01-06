@@ -87,7 +87,7 @@ class DatabaseTest : public testing::Test
 
     // Defaults
     fs::path dbPath_ = "testdb.sc2db";
-    cvt::ReplayDatabase replayDb_ = cvt::ReplayDatabase();
+    cvt::ReplayDatabase<cvt::ReplayDataSoA> replayDb_;
 };
 
 TEST(BoostZlib, WriteRead)
@@ -133,28 +133,24 @@ TEST_F(DatabaseTest, CreateDB)
     // Remove if it already exists
     if (fs::exists(tempPath)) { fs::remove(tempPath); }
 
-    cvt::ReplayDatabase tempDb(tempPath);
+    cvt::ReplayDatabase<cvt::ReplayDataSoA> tempDb(tempPath);
     ASSERT_EQ(fs::exists(tempPath), true);
     fs::remove(tempPath);
 }
 
 TEST_F(DatabaseTest, ReadDB)
 {
-    using DataT = cvt::ReplayDataSoA;
     ASSERT_EQ(replayDb_.size(), 2);
-    ASSERT_EQ(replayDb_.getEntry<DataT>(0), createReplay(1));
-    ASSERT_EQ(replayDb_.getEntry<DataT>(1), createReplay(123));
-    ASSERT_NE(replayDb_.getEntry<DataT>(1), createReplay(120));
+    ASSERT_EQ(replayDb_.getEntry(0), createReplay(1));
+    ASSERT_EQ(replayDb_.getEntry(1), createReplay(123));
+    ASSERT_NE(replayDb_.getEntry(1), createReplay(120));
 }
 
 TEST_F(DatabaseTest, LoadDB)
 {
-    using DataT = cvt::ReplayDataSoA;
-    cvt::ReplayDatabase loadDB(dbPath_);
+    cvt::ReplayDatabase<cvt::ReplayDataSoA> loadDB(dbPath_);
     ASSERT_EQ(replayDb_.size(), loadDB.size());
-    for (std::size_t i = 0; i < replayDb_.size(); ++i) {
-        ASSERT_EQ(replayDb_.getEntry<DataT>(i), loadDB.getEntry<DataT>(i));
-    }
+    for (std::size_t i = 0; i < replayDb_.size(); ++i) { ASSERT_EQ(replayDb_.getEntry(i), loadDB.getEntry(i)); }
 }
 
 namespace cvt {
@@ -201,8 +197,8 @@ auto fuzzyEquality(std::vector<std::vector<UnitT>> expectedReplay, std::vector<s
 
 TEST(UnitSoA, ConversionToAndFrom)
 {
-    using Interface = cvt::DatabaseInterface<cvt::ReplayDataSoA>;
-    cvt::ReplayDatabase<Interface> db("/home/bryce/SC2/converted/sc2_evaluation.SC2Replays");
+    // using Interface = cvt::DatabaseInterface<cvt::ReplayDataSoA>;
+    cvt::ReplayDatabase<cvt::ReplayDataSoA> db("/home/bryce/SC2/converted/sc2_evaluation.SC2Replays");
     const auto replayData = db.getEntry(0);
     {
         const auto flattened = cvt::flattenAndSortUnits<cvt::UnitSoA>(replayData.units);

@@ -11,6 +11,8 @@
 
 namespace cvt {
 
+static_assert(std::is_same_v<UID, sc2::Tag> && "Mismatch between unique id tags in SC2 and this Lib");
+
 // Simple circular buffer to hold number-like things and use to perform reductions over
 template<typename T, std::size_t N> class CircularBuffer
 {
@@ -82,99 +84,21 @@ class FrequencyTimer
 };
 
 /**
- * @brief Copy map data from protobuf return to Image struct.
- * @tparam T underlying type of image
- * @param dest Destination Image to copy to
- * @param mapData Source Protobuf Data
+ * @brief Converts an SC2 unit order to a custom UnitOrder.
+ *
+ * @param src Pointer to the SC2 unit order.
+ * @return The converted UnitOrder.
  */
-template<typename T> void copyMapData(Image<T> &dest, const SC2APIProtocol::ImageData &mapData)
+[[nodiscard]] auto convertSC2UnitOrder(const sc2::UnitOrder *src) noexcept -> UnitOrder
 {
-    dest.resize(mapData.size().y(), mapData.size().x());
-    if (dest.size() != mapData.data().size()) {
-        throw std::runtime_error("Expected mapData size doesn't match actual size");
-    }
-    std::memcpy(dest.data(), mapData.data().data(), dest.size());
-}
-
-static_assert(std::is_same_v<UID, sc2::Tag> && "Mismatch between unique id tags in SC2 and this Lib");
-
-auto BaseConverter::loadDB(const std::filesystem::path &path) noexcept -> bool
-{
-    auto result = database_.open(path);
-    if (result) { knownHashes_ = database_.getHashes<ReplayDataSoA>(); }
-    return result;
-}
-
-auto BaseConverter::hasWritten() const noexcept -> bool { return writeSuccess_; }
-
-auto BaseConverter::isKnownHash(const std::string &hash) const noexcept -> bool { return knownHashes_.contains(hash); }
-
-void BaseConverter::addKnownHash(std::string hash) noexcept { knownHashes_.emplace(std::move(hash)); }
-
-void BaseConverter::OnGameStart()
-{
-    // Clear data collection structures, sc2api calls OnStep before OnGameStart
-    // but some of the units are scuffed (particularly the resources), so we want
-    // to clear it all out and only collect data from normal steps.
-    this->clear();
-
-    const auto replayInfo = this->ReplayControl()->GetReplayInfo();
-    assert(replayInfo.num_players >= currentReplay_.playerId && "Player ID should be at most be num_players");
-    const auto &playerInfo = replayInfo.players[currentReplay_.playerId - 1];
-    currentReplay_.playerRace = static_cast<Race>(playerInfo.race);
-    currentReplay_.playerResult = static_cast<Result>(playerInfo.game_result);
-    currentReplay_.playerMMR = playerInfo.mmr;
-    currentReplay_.playerAPM = playerInfo.apm;
-    currentReplay_.gameVersion = replayInfo.version;
-
-    const auto gameInfo = this->Observation()->GetGameInfo();
-    if (!(gameInfo.height > 0 && gameInfo.width > 0)) { throw std::runtime_error("Missing map size data"); }
-    currentReplay_.mapHeight = gameInfo.height;
-    currentReplay_.mapWidth = gameInfo.width;
-
-    // Preallocate Step Data with Maximum Game Loops
-    currentReplay_.stepData.reserve(replayInfo.duration_gameloops);
-}
-
-
-void BaseConverter::OnGameEnd()
-{
-    // Don't save replay if its cooked
-    if (this->Control()->GetAppState() != sc2::AppState::normal) {
-        SPDLOG_ERROR("Not writing replay with bad SC2 AppState: {}", static_cast<int>(this->Control()->GetAppState()));
-        return;
-    }
-    // Transform SoA to AoS and Write to database
-    writeSuccess_ = database_.addEntry(AoStoSoA<ReplayData, ReplayDataSoA>(currentReplay_));
-}
-
-void BaseConverter::setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept
-{
-    currentReplay_.replayHash = hash;
-    currentReplay_.playerId = playerId;
-}
-
-void BaseConverter::clear() noexcept
-{
-    currentReplay_.stepData.clear();
-    currentReplay_.heightMap.clear();
-    resourceObs_.clear();
-
-    mapDynHasLogged_ = false;
-    mapHeightHasLogged_ = false;
-    writeSuccess_ = false;
-}
-
-void BaseConverter::copyHeightMapData() noexcept
-{
-    const auto *rawObs = this->Observation()->GetRawObservation();
-    const auto &minimapFeats = rawObs->feature_layer_data().minimap_renders();
-    if (!mapHeightHasLogged_) {
-        SPDLOG_INFO("Static HeightMap Availability : {}", minimapFeats.has_height_map());
-        mapHeightHasLogged_ = true;
-    }
-    if (!minimapFeats.has_height_map()) { return; }
-    copyMapData(currentReplay_.heightMap, minimapFeats.height_map());
+    UnitOrder dst;
+    static_assert(std::is_same_v<std::underlying_type_t<sc2::ABILITY_ID>, int>);
+    dst.ability_id = static_cast<int>(src->ability_id);
+    dst.progress = src->progress;
+    dst.tgtId = src->target_unit_tag;
+    dst.target_pos.x = src->target_pos.x;
+    dst.target_pos.y = src->target_pos.y;
+    return dst;
 }
 
 /**
@@ -210,68 +134,6 @@ void BaseConverter::copyHeightMapData() noexcept
         throw std::out_of_range(fmt::format("Invalid Add On Type, type was {}!", static_cast<int>(type)));
     }
 }
-
-
-/**
- * @brief Converts an SC2 unit order to a custom UnitOrder.
- *
- * @param src Pointer to the SC2 unit order.
- * @return The converted UnitOrder.
- */
-[[nodiscard]] auto convertSC2UnitOrder(const sc2::UnitOrder *src) noexcept -> UnitOrder
-{
-    UnitOrder dst;
-    static_assert(std::is_same_v<std::underlying_type_t<sc2::ABILITY_ID>, int>);
-    dst.ability_id = static_cast<int>(src->ability_id);
-    dst.progress = src->progress;
-    dst.tgtId = src->target_unit_tag;
-    dst.target_pos.x = src->target_pos.x;
-    dst.target_pos.y = src->target_pos.y;
-    return dst;
-}
-
-/**
- * @brief Converts a sc2::Score object to a Score object.
- *
- * @param src Pointer to the sc2::Score object to be converted.
- * @return The converted Score object.
- */
-[[nodiscard]] auto convertScore(const sc2::Score *src) -> Score
-{
-    if (src->score_type != sc2::ScoreType::Melee) {
-        throw std::runtime_error(fmt::format("Score type is not melee, got {}", static_cast<int>(src->score_type)));
-    };
-    Score dst{};
-
-    dst.score_float = src->score;
-    dst.idle_production_time = src->score_details.idle_production_time;
-    dst.idle_worker_time = src->score_details.idle_worker_time;
-    dst.total_value_units = src->score_details.total_value_units;
-    dst.total_value_structures = src->score_details.total_value_structures;
-    dst.killed_value_units = src->score_details.killed_value_units;
-    dst.killed_value_structures = src->score_details.killed_value_structures;
-    dst.collected_minerals = src->score_details.collected_minerals;
-    dst.collected_vespene = src->score_details.collected_vespene;
-    dst.collection_rate_minerals = src->score_details.collection_rate_minerals;
-    dst.collection_rate_vespene = src->score_details.collection_rate_vespene;
-    dst.spent_minerals = src->score_details.spent_minerals;
-    dst.spent_vespene = src->score_details.spent_vespene;
-
-    dst.total_damage_dealt_life = src->score_details.total_damage_dealt.life;
-    dst.total_damage_dealt_shields = src->score_details.total_damage_dealt.shields;
-    dst.total_damage_dealt_energy = src->score_details.total_damage_dealt.energy;
-
-    dst.total_damage_taken_life = src->score_details.total_damage_taken.life;
-    dst.total_damage_taken_shields = src->score_details.total_damage_taken.shields;
-    dst.total_damage_taken_energy = src->score_details.total_damage_taken.energy;
-
-    dst.total_healed_life = src->score_details.total_healed.life;
-    dst.total_healed_shields = src->score_details.total_healed.shields;
-    dst.total_healed_energy = src->score_details.total_healed.energy;
-
-    return dst;
-}
-
 
 /**
  * @brief Converts an SC2 unit to a custom Unit object.
@@ -326,7 +188,6 @@ void BaseConverter::copyHeightMapData() noexcept
     return dst;
 }
 
-
 /**
  * @brief Converts an SC2 neutral unit to a NeutralUnit object.
  *
@@ -350,94 +211,92 @@ void BaseConverter::copyHeightMapData() noexcept
     return dst;
 }
 
-void BaseConverter::copyUnitData() noexcept
+/**
+ * @brief Converts a sc2::Score object to a Score object.
+ *
+ * @param src Pointer to the sc2::Score object to be converted.
+ * @return The converted Score object.
+ */
+[[nodiscard]] auto convertScore(const sc2::Score *src) -> Score
 {
-    const auto unitData = this->Observation()->GetUnits();
-    auto &units = currentReplay_.stepData.back().units;
-    units.clear();
-    units.reserve(unitData.size());
-    auto &neutralUnits = currentReplay_.stepData.back().neutralUnits;
-    neutralUnits.clear();
-    neutralUnits.reserve(unitData.size());
+    if (src->score_type != sc2::ScoreType::Melee) {
+        throw std::runtime_error(fmt::format("Score type is not melee, got {}", static_cast<int>(src->score_type)));
+    };
+    Score dst{};
 
+    dst.score_float = src->score;
+    dst.idle_production_time = src->score_details.idle_production_time;
+    dst.idle_worker_time = src->score_details.idle_worker_time;
+    dst.total_value_units = src->score_details.total_value_units;
+    dst.total_value_structures = src->score_details.total_value_structures;
+    dst.killed_value_units = src->score_details.killed_value_units;
+    dst.killed_value_structures = src->score_details.killed_value_structures;
+    dst.collected_minerals = src->score_details.collected_minerals;
+    dst.collected_vespene = src->score_details.collected_vespene;
+    dst.collection_rate_minerals = src->score_details.collection_rate_minerals;
+    dst.collection_rate_vespene = src->score_details.collection_rate_vespene;
+    dst.spent_minerals = src->score_details.spent_minerals;
+    dst.spent_vespene = src->score_details.spent_vespene;
+
+    dst.total_damage_dealt_life = src->score_details.total_damage_dealt.life;
+    dst.total_damage_dealt_shields = src->score_details.total_damage_dealt.shields;
+    dst.total_damage_dealt_energy = src->score_details.total_damage_dealt.energy;
+
+    dst.total_damage_taken_life = src->score_details.total_damage_taken.life;
+    dst.total_damage_taken_shields = src->score_details.total_damage_taken.shields;
+    dst.total_damage_taken_energy = src->score_details.total_damage_taken.energy;
+
+    dst.total_healed_life = src->score_details.total_healed.life;
+    dst.total_healed_shields = src->score_details.total_healed.shields;
+    dst.total_healed_energy = src->score_details.total_healed.energy;
+
+    return dst;
+}
+
+
+/**
+ * @brief Copy map data from protobuf return to Image struct.
+ * @tparam T underlying type of image
+ * @param dest Destination Image to copy to
+ * @param mapData Source Protobuf Data
+ */
+template<typename T> void copyMapData(Image<T> &dest, const SC2APIProtocol::ImageData &mapData)
+{
+    dest.resize(mapData.size().y(), mapData.size().x());
+    if (dest.size() != mapData.data().size()) {
+        throw std::runtime_error("Expected mapData size doesn't match actual size");
+    }
+    std::memcpy(dest.data(), mapData.data().data(), dest.size());
+}
+
+template<typename UnitIt, typename NeutralUnitIt>
+    requires std::same_as<std::iter_value_t<UnitIt>, Unit>
+             && std::same_as<std::iter_value_t<NeutralUnitIt>, NeutralUnit>
+void copyUnitData(UnitIt &units, NeutralUnitIt &neutralUnits, const sc2::Units &unitData)
+{
     // Find all passengers across all units
     auto r = unitData | std::views::transform([](const sc2::Unit *unit) { return unit->passengers; }) | std::views::join
              | std::views::transform([](const sc2::PassengerUnit &p) { return p.tag; }) | std::views::common;
-
     std::unordered_set<sc2::Tag> p_tags(r.begin(), r.end());
 
     std::ranges::for_each(unitData, [&](const sc2::Unit *src) {
         const bool isPassenger = p_tags.contains(src->tag);
         if (neutralUnitTypes.contains(src->unit_type)) {
             if (isPassenger) { throw std::runtime_error("Neutral resource is somehow a passenger?"); };
-            neutralUnits.emplace_back(convertSC2NeutralUnit(src));
+            *neutralUnits = convertSC2NeutralUnit(src);
+            ++neutralUnits;
         } else {
-            units.emplace_back(convertSC2Unit(src, unitData, isPassenger));
+            *units = convertSC2Unit(src, unitData, isPassenger);
+            ++units;
         }
     });
-    if (resourceObs_.empty()) { this->initResourceObs(); }
-    this->updateResourceObs();
 }
 
-void BaseConverter::initResourceObs() noexcept
+template<typename ActionIt>
+    requires std::same_as<std::iter_value_t<ActionIt>, Action>
+void copyActionData(ActionIt &actions, const sc2::RawActions &actionData)
 {
-    auto &neutralUnits = currentReplay_.stepData.back().neutralUnits;
-    for (auto &unit : neutralUnits) {
-        // Skip Not a mineral/gas resource
-        if (!defaultResources.contains(unit.unitType)) { continue; }
-        resourceObs_.emplace(unit.id, ResourceObs{ unit.id, unit.pos, defaultResources.at(unit.unitType) });
-    }
-}
-
-auto BaseConverter::reassignResourceId(const NeutralUnit &unit) noexcept -> bool
-{
-    // Check if there's an existing unit with the same x,y coordinate
-    // (may move a little bit in z, but its fundamentally the same unit)
-    auto oldKV = std::ranges::find_if(resourceObs_, [=](auto &&keyValue) {
-        const auto &value = keyValue.second;
-        return value.pos.x == unit.pos.x && value.pos.y == unit.pos.y;
-    });
-    if (oldKV == resourceObs_.end()) {
-        SPDLOG_WARN(fmt::format(
-            "No matching position for unit {} (id: {}) adding new", sc2::UnitTypeToName(unit.unitType), unit.id));
-        return false;
-    } else {
-        resourceObs_.emplace(unit.id, std::move(oldKV->second));
-        resourceObs_.erase(oldKV->first);
-        return true;
-    }
-}
-
-void BaseConverter::updateResourceObs() noexcept
-{
-    auto &neutralUnits = currentReplay_.stepData.back().neutralUnits;
-    for (auto &unit : neutralUnits) {
-        // Skip Not a mineral/gas resource
-        if (!defaultResources.contains(unit.unitType)) { continue; }
-        // Reassign map id if identical position found, otherwise add to set
-        if (!resourceObs_.contains(unit.id)) {
-            bool hasReassigned = this->reassignResourceId(unit);
-            if (!hasReassigned) {
-                resourceObs_.emplace(unit.id, ResourceObs{ unit.id, unit.pos, defaultResources.at(unit.unitType) });
-            }
-        }
-
-        auto &prev = resourceObs_.at(unit.id);
-        // Update resourceObs_ if visible
-        if (unit.observation == Visibility::Visible) { prev.qty = unit.contents; }
-
-        // Set current step's neutral unit with consistent id and last observed qty
-        unit.contents = prev.qty;
-        unit.id = prev.id;
-    }
-}
-
-void BaseConverter::copyActionData() noexcept
-{
-    const auto actionData = this->Observation()->GetRawActions();
-    auto &actions = currentReplay_.stepData.back().actions;
-    actions.reserve(actionData.size());
-    std::ranges::transform(actionData, std::back_inserter(actions), [](const sc2::ActionRaw &src) -> Action {
+    std::ranges::transform(actionData, actions, [](const sc2::ActionRaw &src) -> Action {
         Action dst;
         dst.unit_ids.reserve(src.unit_tags.size());
         std::ranges::transform(
@@ -459,7 +318,99 @@ void BaseConverter::copyActionData() noexcept
     });
 }
 
-void BaseConverter::copyDynamicMapData() noexcept
+
+template<>
+void BaseConverter<ReplayDataSoA>::setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept
+{
+    replayData_.replayHash = hash;
+    replayData_.playerId = playerId;
+}
+
+template<> void BaseConverter<ReplayDataSoA>::OnGameStart()
+{
+    // Clear data collection structures, sc2api calls OnStep before OnGameStart
+    // but some of the units are scuffed (particularly the resources), so we want
+    // to clear it all out and only collect data from normal steps.
+    this->clear();
+
+    const auto replayInfo = this->ReplayControl()->GetReplayInfo();
+    assert(replayInfo.num_players >= replayData_.playerId && "Player ID should be at most be num_players");
+    const auto &playerInfo = replayInfo.players[replayData_.playerId - 1];
+    replayData_.playerRace = static_cast<Race>(playerInfo.race);
+    replayData_.playerResult = static_cast<Result>(playerInfo.game_result);
+    replayData_.playerMMR = playerInfo.mmr;
+    replayData_.playerAPM = playerInfo.apm;
+    replayData_.gameVersion = replayInfo.version;
+
+    const auto gameInfo = this->Observation()->GetGameInfo();
+    if (!(gameInfo.height > 0 && gameInfo.width > 0)) { throw std::runtime_error("Missing map size data"); }
+    replayData_.mapHeight = gameInfo.height;
+    replayData_.mapWidth = gameInfo.width;
+
+    // Preallocate Step Data with Maximum Game Loops
+    replayData_.stepData.reserve(replayInfo.duration_gameloops);
+}
+
+template<> void BaseConverter<ReplayDataSoA>::OnGameEnd();
+{
+    // Don't save replay if its cooked
+    if (this->Control()->GetAppState() != sc2::AppState::normal) {
+        SPDLOG_ERROR("Not writing replay with bad SC2 AppState: {}", static_cast<int>(this->Control()->GetAppState()));
+        return;
+    }
+    // Transform SoA to AoS and Write to database
+    writeSuccess_ = database_.addEntry(AoStoSoA<ReplayDataSoA::struct_type, ReplayDataSoA>(replayData_));
+}
+
+template<> void BaseConverter<ReplayDataSoA>::clear() noexcept
+{
+    replayData_.stepData.clear();
+    replayData_.heightMap.clear();
+    resourceObs_.clear();
+
+    mapDynHasLogged_ = false;
+    mapHeightHasLogged_ = false;
+    writeSuccess_ = false;
+}
+
+template<> void BaseConverter<ReplayDataSoA>::copyHeightMapData() noexcept
+{
+    const auto *rawObs = this->Observation()->GetRawObservation();
+    const auto &minimapFeats = rawObs->feature_layer_data().minimap_renders();
+    if (!mapHeightHasLogged_) {
+        SPDLOG_INFO("Static HeightMap Availability : {}", minimapFeats.has_height_map());
+        mapHeightHasLogged_ = true;
+    }
+    if (!minimapFeats.has_height_map()) { return; }
+    copyMapData(replayData_.heightMap, minimapFeats.height_map());
+}
+
+
+template<> void BaseConverter<ReplayDataSoA>::copyUnitData() noexcept
+{
+    const auto unitData = this->Observation()->GetUnits();
+    auto &units = replayData_.stepData.back().units;
+    units.clear();
+    units.reserve(unitData.size());
+    auto &neutralUnits = replayData_.stepData.back().neutralUnits;
+    neutralUnits.clear();
+    neutralUnits.reserve(unitData.size());
+
+    ::cvt::copyUnitData(std::back_inserter(units), std::back_inserter(neutralUnits), unitData);
+
+    if (resourceObs_.empty()) { this->initResourceObs(neutralUnits); }
+    this->updateResourceObs(neutralUnits);
+}
+
+template<> void BaseConverter<ReplayDataSoA>::copyActionData() noexcept
+{
+    const auto actionData = this->Observation()->GetRawActions();
+    auto &actions = replayData_.stepData.back().actions;
+    actions.reserve(actionData.size());
+    ::cvt::copyActionData(std::back_inserter(actions), actionData);
+}
+
+template<> void BaseConverter<ReplayDataSoA>::copyDynamicMapData() noexcept
 {
     const auto *rawObs = this->Observation()->GetRawObservation();
     const auto &minimapFeats = rawObs->feature_layer_data().minimap_renders();
@@ -478,7 +429,7 @@ void BaseConverter::copyDynamicMapData() noexcept
             minimapFeats.has_pathable());
     }
 
-    auto &step = currentReplay_.stepData.back();
+    auto &step = replayData_.stepData.back();
     if (minimapFeats.has_visibility_map()) { copyMapData(step.visibility, minimapFeats.visibility_map()); }
     if (minimapFeats.has_creep()) { copyMapData(step.creep, minimapFeats.creep()); }
     if (minimapFeats.has_player_relative()) { copyMapData(step.player_relative, minimapFeats.player_relative()); }
@@ -487,7 +438,7 @@ void BaseConverter::copyDynamicMapData() noexcept
     if (minimapFeats.has_pathable()) { copyMapData(step.pathable, minimapFeats.pathable()); }
 }
 
-void BaseConverter::copyCommonData() noexcept
+template<> void BaseConverter<ReplayDataSoA>::copyCommonData() noexcept
 {
     // Logging performance
     static FrequencyTimer timer("Converter", std::chrono::seconds(30));
@@ -496,24 +447,24 @@ void BaseConverter::copyCommonData() noexcept
         this->ReplayControl()->GetReplayInfo().duration_gameloops));
 
     // Copy static height map if not already done
-    if (currentReplay_.heightMap.empty()) { this->copyHeightMapData(); }
+    if (replayData_.heightMap.empty()) { this->copyHeightMapData(); }
 
     // Write directly into stepData.back()
-    currentReplay_.stepData.back().gameStep = this->Observation()->GetGameLoop();
-    currentReplay_.stepData.back().minearals = this->Observation()->GetMinerals();
-    currentReplay_.stepData.back().vespene = this->Observation()->GetVespene();
-    currentReplay_.stepData.back().popMax = this->Observation()->GetFoodCap();
-    currentReplay_.stepData.back().popArmy = this->Observation()->GetFoodArmy();
-    currentReplay_.stepData.back().popWorkers = this->Observation()->GetFoodWorkers();
+    replayData_.stepData.back().gameStep = this->Observation()->GetGameLoop();
+    replayData_.stepData.back().minearals = this->Observation()->GetMinerals();
+    replayData_.stepData.back().vespene = this->Observation()->GetVespene();
+    replayData_.stepData.back().popMax = this->Observation()->GetFoodCap();
+    replayData_.stepData.back().popArmy = this->Observation()->GetFoodArmy();
+    replayData_.stepData.back().popWorkers = this->Observation()->GetFoodWorkers();
 
     const sc2::Score &score = this->Observation()->GetScore();
-    currentReplay_.stepData.back().score = convertScore(&score);
+    replayData_.stepData.back().score = convertScore(&score);
 }
 
-void FullConverter::OnStep()
+template<> void FullConverter<ReplayDataSoA>::OnStep()
 {
     // "Initialize" next item
-    currentReplay_.stepData.resize(currentReplay_.stepData.size() + 1);
+    replayData_.stepData.resize(replayData_.stepData.size() + 1);
 
     this->copyCommonData();
     this->copyUnitData();
@@ -521,15 +472,15 @@ void FullConverter::OnStep()
     this->copyDynamicMapData();
 }
 
-void ActionConverter::OnStep()
+template<> void ActionConverter<ReplayDataSoA>::OnStep()
 {
     // Need to have at least one buffer
-    if (currentReplay_.stepData.empty()) { currentReplay_.stepData.resize(1); }
+    if (replayData_.stepData.empty()) { replayData_.stepData.resize(1); }
 
     if (!this->Observation()->GetRawActions().empty()) {
         this->copyActionData();
         // Previous observation locked in, current will write to new "space"
-        currentReplay_.stepData.resize(currentReplay_.stepData.size() + 1);
+        replayData_.stepData.resize(replayData_.stepData.size() + 1);
     }
 
     // Always copy observation, the next step might have an action
@@ -538,36 +489,20 @@ void ActionConverter::OnStep()
     this->copyDynamicMapData();
 }
 
-void StridedConverter::OnStep()
+template<> void StridedConverter<ReplayDataSoA>::OnStep()
 {
     // Check if a logging step
     const auto gameStep = this->Observation()->GetGameLoop();
     if (gameStep % stride_ != 0) { return; }
 
     // "Initialize" next item
-    currentReplay_.stepData.resize(currentReplay_.stepData.size() + 1);
+    replayData_.stepData.resize(replayData_.stepData.size() + 1);
 
     // Write directly into stepData.back()
     this->copyCommonData();
     this->copyUnitData();
     this->copyActionData();
     this->copyDynamicMapData();
-}
-
-void StridedConverter::SetStride(std::size_t stride) noexcept
-{
-    if (stride == 0 || stride > 10'000) {
-        throw std::logic_error(fmt::format("SetStride doesn't satisfy 0 < {} < 10'000", stride));
-    }
-    stride_ = stride;
-}
-
-auto StridedConverter::GetStride() const noexcept -> std::size_t { return stride_; }
-
-void StridedConverter::OnGameStart()
-{
-    if (stride_ == 0) { throw std::logic_error(fmt::format("Stride not set: {}", stride_)); }
-    BaseConverter::OnGameStart();
 }
 
 }// namespace cvt
