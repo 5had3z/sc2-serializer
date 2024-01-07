@@ -68,6 +68,67 @@ template<> struct DatabaseInterface<ReplayDataSoA>
     }
 };
 
+template<> struct DatabaseInterface<ReplayData2>
+{
+    static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>
+    {
+        ReplayInfo header;
+        deserialize(header, dbStream);
+        return std::make_pair(header.replayHash, header.playerId);
+    }
+    static auto getEntryImpl(std::istream &dbStream) noexcept -> ReplayData2
+    {
+        ReplayData2 result;
+        deserialize(result.header, dbStream);
+        deserialize(result.data.gameStep, dbStream);
+        deserialize(result.data.minearals, dbStream);
+        deserialize(result.data.vespene, dbStream);
+        deserialize(result.data.popMax, dbStream);
+        deserialize(result.data.popArmy, dbStream);
+        deserialize(result.data.popWorkers, dbStream);
+        deserialize(result.data.score, dbStream);
+        deserialize(result.data.visibility, dbStream);
+        deserialize(result.data.creep, dbStream);
+        deserialize(result.data.player_relative, dbStream);
+        deserialize(result.data.alerts, dbStream);
+        deserialize(result.data.buildable, dbStream);
+        deserialize(result.data.pathable, dbStream);
+        deserialize(result.data.actions, dbStream);
+        {
+            FlattenedUnits<UnitSoA> units;
+            deserialize(units, dbStream);
+            result.data.units = recoverFlattenedSortedUnits(units);
+        }
+        {
+            FlattenedUnits<NeutralUnitSoA> units;
+            deserialize(units, dbStream);
+            result.data.neutralUnits = recoverFlattenedSortedUnits(units);
+        }
+        return result;
+    }
+    static auto addEntryImpl(const ReplayData2 &d, std::ostream &dbStream) noexcept -> bool
+    {
+        serialize(d.header, dbStream);
+        serialize(d.data.gameStep, dbStream);
+        serialize(d.data.minearals, dbStream);
+        serialize(d.data.vespene, dbStream);
+        serialize(d.data.popMax, dbStream);
+        serialize(d.data.popArmy, dbStream);
+        serialize(d.data.popWorkers, dbStream);
+        serialize(d.data.score, dbStream);
+        serialize(d.data.visibility, dbStream);
+        serialize(d.data.creep, dbStream);
+        serialize(d.data.player_relative, dbStream);
+        serialize(d.data.alerts, dbStream);
+        serialize(d.data.buildable, dbStream);
+        serialize(d.data.pathable, dbStream);
+        serialize(d.data.actions, dbStream);
+        serialize(flattenAndSortUnits<UnitSoA>(d.data.units), dbStream);
+        serialize(flattenAndSortUnits<NeutralUnitSoA>(d.data.neutralUnits), dbStream);
+        return true;
+    }
+};
+
 template<typename T>
 concept HasDBInterface = requires { typename DatabaseInterface<T>; };
 
