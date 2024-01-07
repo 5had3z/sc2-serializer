@@ -68,7 +68,7 @@ template<> struct DatabaseInterface<ReplayDataSoA>
     }
 };
 
-template<> struct DatabaseInterface<ReplayData2>
+template<> struct DatabaseInterface<ReplayData2SoA>
 {
     static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>
     {
@@ -76,9 +76,10 @@ template<> struct DatabaseInterface<ReplayData2>
         deserialize(header, dbStream);
         return std::make_pair(header.replayHash, header.playerId);
     }
-    static auto getEntryImpl(std::istream &dbStream) noexcept -> ReplayData2
+
+    static auto getEntryImpl(std::istream &dbStream) noexcept -> ReplayData2SoA
     {
-        ReplayData2 result;
+        ReplayData2SoA result;
         deserialize(result.header, dbStream);
         deserialize(result.data.gameStep, dbStream);
         deserialize(result.data.minearals, dbStream);
@@ -106,7 +107,8 @@ template<> struct DatabaseInterface<ReplayData2>
         }
         return result;
     }
-    static auto addEntryImpl(const ReplayData2 &d, std::ostream &dbStream) noexcept -> bool
+
+    static auto addEntryImpl(const ReplayData2SoA &d, std::ostream &dbStream) noexcept -> bool
     {
         serialize(d.header, dbStream);
         serialize(d.data.gameStep, dbStream);

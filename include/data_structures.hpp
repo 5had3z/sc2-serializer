@@ -730,4 +730,51 @@ struct StepDataSoA
 };
 
 
+template<std::ranges::range Range>
+    requires std::same_as<std::ranges::range_value_t<Range>, StepData>
+constexpr auto AoStoSoA(Range &&aos) noexcept -> StepDataSoA
+{
+    StepDataSoA soa;
+
+    // Preallocate for expected size
+    boost::pfr::for_each_field(soa, [&](auto &field) { field.reserve(aos.size()); });
+
+    for (auto &&step : aos) {
+        soa.gameStep.emplace_back(step.gameStep);
+        soa.minearals.emplace_back(step.minearals);
+        soa.vespene.emplace_back(step.vespene);
+        soa.popMax.emplace_back(step.popMax);
+        soa.popArmy.emplace_back(step.popArmy);
+        soa.popWorkers.emplace_back(step.popWorkers);
+        soa.score.emplace_back(step.score);
+        soa.visibility.emplace_back(step.visibility);
+        soa.creep.emplace_back(step.creep);
+        soa.player_relative.emplace_back(step.player_relative);
+        soa.alerts.emplace_back(step.alerts);
+        soa.buildable.emplace_back(step.buildable);
+        soa.pathable.emplace_back(step.pathable);
+        soa.actions.emplace_back(step.actions);
+        soa.units.emplace_back(step.units);
+        soa.neutralUnits.emplace_back(step.neutralUnits);
+    }
+    return soa;
+}
+
+template<> constexpr auto SoAtoAoS(const StepDataSoA &soa) noexcept -> std::vector<StepData>
+{
+    std::vector<StepData> aos;
+
+    // Ensure SoA is all equally sized
+    std::vector<std::size_t> sizes;
+    boost::pfr::for_each_field(soa, [&](auto &field) { sizes.push_back(field.size()); });
+    const std::size_t size = sizes.front();
+    assert(std::all_of(sizes.begin(), sizes.end(), [=](std::size_t s) { return s == size; }));
+    aos.resize(size);
+
+    for (std::size_t idx = 0; idx < size; ++idx) { aos[idx] = soa[idx]; }
+
+    return aos;
+}
+
+
 }// namespace cvt

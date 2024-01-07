@@ -22,8 +22,32 @@ struct ReplayInfo
 struct ReplayData2
 {
     ReplayInfo header;
+    std::vector<StepData> data;
+};
+
+struct ReplayData2SoA
+{
+    using struct_type = ReplayData2;
+    ReplayInfo header;
     StepDataSoA data;
 };
+
+template<> constexpr auto AoStoSoA(const ReplayData2 &aos) noexcept -> ReplayData2SoA
+{
+    ReplayData2SoA soa;
+    soa.header = aos.header;
+    soa.data = AoStoSoA(aos.data);
+    return soa;
+}
+
+template<> constexpr auto SoAtoAoS(const ReplayData2SoA &soa) noexcept -> ReplayData2
+{
+    ReplayData2 aos;
+    aos.header = soa.header;
+    aos.data = SoAtoAoS<std::vector<StepData>, StepDataSoA>(soa.data);
+    return aos;
+}
+
 
 struct ReplayData
 {

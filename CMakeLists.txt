@@ -125,7 +125,7 @@ if(SC2_CONVERTER)
     target_link_options(replay_converter PUBLIC -fsanitize=address,leak,undefined)
   endif()
 
-  add_executable(sc2_converter bin/converter.cpp)
+  add_executable(sc2_converter bin/replay_converter.cpp)
   target_link_libraries(
     sc2_converter
     PUBLIC replay_converter
@@ -267,4 +267,9 @@ if (SC2_CONVERTER)
   target_compile_features(format_compare PUBLIC cxx_std_23)
   target_compile_options(format_compare PUBLIC ${_COMPILE_OPTIONS})
   target_link_libraries(format_compare PUBLIC replay_converter cxxopts)
+
+  add_executable(format_converter bin/format_converter.cpp)
+  target_compile_features(format_converter PUBLIC cxx_std_23)
+  target_compile_options(format_converter PUBLIC ${_COMPILE_OPTIONS})
+  target_link_libraries(format_converter PUBLIC replay_converter cxxopts)
 endif()
