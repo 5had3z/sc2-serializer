@@ -99,7 +99,7 @@ if(SC2_CONVERTER)
   # Add submodule path
   add_subdirectory(3rdparty/s2client-api)
 
-  add_library(replay_converter STATIC src/database.cpp src/observer.cpp)
+  add_library(replay_converter STATIC src/database.cpp src/observer_utils.cpp src/observer_v1.cpp src/observer_v2.cpp)
   target_compile_features(replay_converter PUBLIC cxx_std_23)
   target_link_libraries(
     replay_converter

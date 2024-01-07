@@ -1,7 +1,7 @@
 #pragma once
 
 #include <sc2api/sc2_api.h>
-#include <sc2api/sc2_score.h>
+#include <spdlog/spdlog.h>
 
 #include "database.hpp"
 #include "generated_info.hpp"
