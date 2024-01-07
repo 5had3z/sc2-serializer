@@ -78,10 +78,10 @@ void bindEnums(py::module &m)
         .value("Allied", cvt::CloakState::Allied)
         .export_values();
 
-    py::enum_<cvt::Action::Target_Type>(m, "ActionTargetType")
-        .value("Self", cvt::Action::Target_Type::Self)
-        .value("OtherUnit", cvt::Action::Target_Type::OtherUnit)
-        .value("Position", cvt::Action::Target_Type::Position)
+    py::enum_<cvt::Action::TargetType>(m, "ActionTargetType")
+        .value("Self", cvt::Action::TargetType::Self)
+        .value("OtherUnit", cvt::Action::TargetType::OtherUnit)
+        .value("Position", cvt::Action::TargetType::Position)
         .export_values();
 
     py::enum_<cvt::Visibility>(m, "Visibility")
@@ -150,12 +150,12 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readonly("target_type", &cvt::Action::target_type)
         .def_property_readonly("target_point",
             [](const cvt::Action &action) -> std::optional<cvt::Point2d> {
-                return action.target_type == cvt::Action::Target_Type::Position ? std::optional{ action.target.point }
-                                                                                : std::nullopt;
+                return action.target_type == cvt::Action::TargetType::Position ? std::optional{ action.target.point }
+                                                                               : std::nullopt;
             })
         .def_property_readonly("target_other", [](const cvt::Action &action) -> std::optional<cvt::UID> {
-            return action.target_type == cvt::Action::Target_Type::OtherUnit ? std::optional{ action.target.other }
-                                                                             : std::nullopt;
+            return action.target_type == cvt::Action::TargetType::OtherUnit ? std::optional{ action.target.other }
+                                                                            : std::nullopt;
         });
 
     py::class_<cvt::UnitOrder>(m, "UnitOrder")
@@ -282,14 +282,15 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readwrite("neutralUnits", &cvt::ReplayDataSoA::neutralUnits);
 
     // Expose ReplayDatabase class
-    py::class_<cvt::ReplayDatabase<cvt::ReplayDataSoA>>(m, "ReplayDatabase")
+    using ReplayDataType = cvt::ReplayDataSoA;
+    py::class_<cvt::ReplayDatabase<ReplayDataType>>(m, "ReplayDatabase")
         .def(py::init<>())
         .def(py::init<const std::filesystem::path &>(), py::arg("dbPath"))
-        .def("open", &cvt::ReplayDatabase::open, py::arg("dbPath"))
-        .def("isFull", &cvt::ReplayDatabase::isFull)
-        .def("size", &cvt::ReplayDatabase::size)
-        .def("getEntry", &cvt::ReplayDatabase::getEntry, py::arg("index"))
-        .def("getHashIdEntry", &cvt::ReplayDatabase::getHashId, py::arg("index"));
+        .def("open", &cvt::ReplayDatabase<ReplayDataType>::open, py::arg("dbPath"))
+        .def("isFull", &cvt::ReplayDatabase<ReplayDataType>::isFull)
+        .def("size", &cvt::ReplayDatabase<ReplayDataType>::size)
+        .def("getEntry", &cvt::ReplayDatabase<ReplayDataType>::getEntry, py::arg("index"))
+        .def("getHashIdEntry", &cvt::ReplayDatabase<ReplayDataType>::getHashId, py::arg("index"));
 
     py::class_<cvt::ReplayParser>(m, "ReplayParser")
         .def(py::init<const std::filesystem::path &>(), py::arg("dataPath"))

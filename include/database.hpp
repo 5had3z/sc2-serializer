@@ -1,6 +1,6 @@
 #pragma once
 
-#include "data.hpp"
+#include "replay_structures.hpp"
 #include "serialize.hpp"
 
 #include <boost/iostreams/device/file.hpp>
@@ -24,68 +24,6 @@ void setReplayDBLoggingLevel(spdlog::level::level_enum lvl) noexcept;
 
 extern std::shared_ptr<spdlog::logger> gLoggerDB;
 
-/**
- * @brief Flattened units in SoA form with associated step index
- * @tparam UnitSoAT Type of flattened unit
- */
-template<typename UnitSoAT> struct FlattenedUnits
-{
-    UnitSoAT units;
-    std::vector<std::uint32_t> indicies;
-};
-
-template<typename T>
-concept IsSoAType = requires(T x) {
-    typename T::struct_type;
-    {
-        x[std::size_t{}]
-    } -> std::same_as<typename T::struct_type>;
-};
-
-template<IsSoAType UnitSoAT>
-[[nodiscard]] constexpr auto flattenAndSortUnits(
-    const std::vector<std::vector<typename UnitSoAT::struct_type>> &replayUnits) noexcept -> FlattenedUnits<UnitSoAT>
-{
-    using UnitT = UnitSoAT::struct_type;
-    using UnitStepT = std::pair<std::uint32_t, UnitT>;
-    std::vector<UnitStepT> unitStepFlatten;
-    for (auto &&[idx, units] : std::views::enumerate(replayUnits)) {
-        std::ranges::transform(
-            units, std::back_inserter(unitStepFlatten), [=](UnitT u) { return std::make_pair(idx, u); });
-    }
-
-    // Significantly better compressibility when sorted by unit (and implicity time)
-    std::ranges::stable_sort(
-        unitStepFlatten, [](const UnitStepT &a, const UnitStepT &b) { return a.second.id < b.second.id; });
-
-    // Create flattened SoA
-    UnitSoAT unitsSoA = cvt::AoStoSoA(std::views::values(unitStepFlatten));
-
-    // Create accompanying step indicies for reconstruction
-    std::vector<uint32_t> indicies;
-    indicies.resize(unitStepFlatten.size());
-    std::ranges::copy(std::views::keys(unitStepFlatten), indicies.begin());
-
-    return { unitsSoA, indicies };
-}
-
-template<IsSoAType UnitSoAT>
-[[nodiscard]] constexpr auto recoverFlattenedSortedUnits(const FlattenedUnits<UnitSoAT> &flattenedUnits) noexcept
-    -> std::vector<std::vector<typename UnitSoAT::struct_type>>
-{
-    // Create outer dimension with the maximum game step index
-    std::vector<std::vector<typename UnitSoAT::struct_type>> replayUnits;
-    replayUnits.resize(std::ranges::max(flattenedUnits.indicies) + 1);
-
-    // Copy units to correct timestep
-    for (auto &&[unitIdx, stepIdx] : std::views::enumerate(flattenedUnits.indicies)) {
-        replayUnits[stepIdx].emplace_back(flattenedUnits.units[unitIdx]);
-    }
-
-    return replayUnits;
-}
-
-
 template<typename T> struct DatabaseInterface
 {
     using value_type = T;
@@ -101,6 +39,33 @@ template<typename T> struct DatabaseInterface
     [[nodiscard]] static auto getEntryImpl(std::istream &dbStream) noexcept -> T;
 
     [[maybe_unused]] static auto addEntryImpl(const T &d, std::ostream &dbStream) noexcept -> bool;
+};
+
+template<> struct DatabaseInterface<ReplayDataSoA>
+{
+    static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>
+    {
+        std::string replayHash{};
+        std::string gameVersion{};
+        std::uint32_t playerId{};
+        deserialize(replayHash, dbStream);
+        deserialize(gameVersion, dbStream);
+        deserialize(playerId, dbStream);
+        return std::make_pair(replayHash, playerId);
+    }
+
+    static auto getEntryImpl(std::istream &dbStream) noexcept -> ReplayDataSoA
+    {
+        ReplayDataSoA result;
+        deserialize(result, dbStream);
+        return result;
+    }
+
+    static auto addEntryImpl(const ReplayDataSoA &d, std::ostream &dbStream) noexcept -> bool
+    {
+        serialize(d, dbStream);
+        return true;
+    }
 };
 
 template<typename T>

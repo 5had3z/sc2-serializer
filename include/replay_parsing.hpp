@@ -1,6 +1,6 @@
 #pragma once
 
-#include "data.hpp"
+#include "replay_structures.hpp"
 
 #include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>

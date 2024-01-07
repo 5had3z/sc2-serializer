@@ -20,14 +20,14 @@ auto createReplay(int seed) -> cvt::ReplayDataSoA
     for (int i = 0; i < 3; ++i) {
         cvt::Action action = { .unit_ids = { 1, 2, static_cast<cvt::UID>(seed) },
             .ability_id = seed + i,
-            .target_type = cvt::Action::Target_Type::OtherUnit,
+            .target_type = cvt::Action::TargetType::OtherUnit,
             .target = cvt::Action::Target(static_cast<cvt::UID>(3)) };
         replay_.stepData[0].actions.emplace_back(std::move(action));
     }
     for (int i = 0; i < 3; ++i) {
         cvt::Action action = { .unit_ids = { 1, static_cast<cvt::UID>(i) },
             .ability_id = seed * i,
-            .target_type = cvt::Action::Target_Type::Position,
+            .target_type = cvt::Action::TargetType::Position,
             .target = cvt::Action::Target(cvt::Point2d(i, 2)) };
         replay_.stepData[0].actions.emplace_back(std::move(action));
     }

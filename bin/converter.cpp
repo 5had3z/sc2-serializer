@@ -38,7 +38,7 @@ using namespace std::string_literals;
  * @param badFile Path to file containing known bad replays
  * @param converter Converter engine to add replayHash to
  */
-void registerKnownBadReplays(const fs::path &badFile, cvt::BaseConverter *converter)
+template<typename T> void registerKnownBadReplays(const fs::path &badFile, cvt::BaseConverter<T> *converter)
 {
     std::ifstream badFileStream(badFile);
     std::string badHash;
@@ -238,10 +238,11 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::tuple<std:
 }
 #endif
 
+template<typename T>
 void loopReplayFiles(const fs::path &replayFolder,
     const std::vector<std::string> &replayHashes,
     const std::string &gamePath,
-    cvt::BaseConverter *converter,
+    cvt::BaseConverter<T> *converter,
     std::optional<fs::path> badFile,
     int port)
 {
@@ -411,11 +412,12 @@ auto main(int argc, char *argv[]) -> int
         }
     }
 
-    auto converter = [&](const std::string &cvtType) -> std::unique_ptr<cvt::BaseConverter> {
-        if (cvtType == "full") { return std::make_unique<cvt::FullConverter>(); }
-        if (cvtType == "action") { return std::make_unique<cvt::ActionConverter>(); }
+    using ReplayDataType = cvt::ReplayDataSoA;
+    auto converter = [&](const std::string &cvtType) -> std::unique_ptr<cvt::BaseConverter<ReplayDataType>> {
+        if (cvtType == "full") { return std::make_unique<cvt::FullConverter<ReplayDataType>>(); }
+        if (cvtType == "action") { return std::make_unique<cvt::ActionConverter<ReplayDataType>>(); }
         if (cvtType == "strided") {
-            auto converter = std::make_unique<cvt::StridedConverter>();
+            auto converter = std::make_unique<cvt::StridedConverter<ReplayDataType>>();
             if (cliOpts["stride"].count() == 0) {
                 SPDLOG_ERROR("Strided converter used but no --stride set");
                 return nullptr;

@@ -270,9 +270,9 @@ template<typename T> void copyMapData(Image<T> &dest, const SC2APIProtocol::Imag
 }
 
 template<typename UnitIt, typename NeutralUnitIt>
-    requires std::same_as<std::iter_value_t<UnitIt>, Unit>
-             && std::same_as<std::iter_value_t<NeutralUnitIt>, NeutralUnit>
-void copyUnitData(UnitIt &units, NeutralUnitIt &neutralUnits, const sc2::Units &unitData)
+    requires std::same_as<typename UnitIt::container_type::value_type, Unit>
+             && std::same_as<typename NeutralUnitIt::container_type::value_type, NeutralUnit>
+void copyUnitData(UnitIt units, NeutralUnitIt neutralUnits, const sc2::Units &unitData)
 {
     // Find all passengers across all units
     auto r = unitData | std::views::transform([](const sc2::Unit *unit) { return unit->passengers; }) | std::views::join
@@ -293,8 +293,8 @@ void copyUnitData(UnitIt &units, NeutralUnitIt &neutralUnits, const sc2::Units &
 }
 
 template<typename ActionIt>
-    requires std::same_as<std::iter_value_t<ActionIt>, Action>
-void copyActionData(ActionIt &actions, const sc2::RawActions &actionData)
+    requires std::same_as<typename ActionIt::container_type::value_type, Action>
+void copyActionData(ActionIt actions, const sc2::RawActions &actionData)
 {
     std::ranges::transform(actionData, actions, [](const sc2::ActionRaw &src) -> Action {
         Action dst;
@@ -302,22 +302,32 @@ void copyActionData(ActionIt &actions, const sc2::RawActions &actionData)
         std::ranges::transform(
             src.unit_tags, std::back_inserter(dst.unit_ids), [](sc2::Tag tag) { return static_cast<UID>(tag); });
         dst.ability_id = src.ability_id;
-        dst.target_type = static_cast<Action::Target_Type>(src.target_type);// These should match
+        dst.target_type = static_cast<Action::TargetType>(src.target_type);// These should match
         switch (dst.target_type) {
-        case Action::Target_Type::Position:
+        case Action::TargetType::Position:
             dst.target.point.x = src.target_point.x;
             dst.target.point.y = src.target_point.y;
             break;
-        case Action::Target_Type::OtherUnit:
+        case Action::TargetType::OtherUnit:
             dst.target.other = src.target_tag;
             break;
-        case Action::Target_Type::Self:
+        case Action::TargetType::Self:
             break;
         }
         return dst;
     });
 }
 
+template<> void BaseConverter<ReplayDataSoA>::clear() noexcept
+{
+    replayData_.stepData.clear();
+    replayData_.heightMap.clear();
+    resourceObs_.clear();
+
+    mapDynHasLogged_ = false;
+    mapHeightHasLogged_ = false;
+    writeSuccess_ = false;
+}
 
 template<>
 void BaseConverter<ReplayDataSoA>::setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept
@@ -351,7 +361,7 @@ template<> void BaseConverter<ReplayDataSoA>::OnGameStart()
     replayData_.stepData.reserve(replayInfo.duration_gameloops);
 }
 
-template<> void BaseConverter<ReplayDataSoA>::OnGameEnd();
+template<> void BaseConverter<ReplayDataSoA>::OnGameEnd()
 {
     // Don't save replay if its cooked
     if (this->Control()->GetAppState() != sc2::AppState::normal) {
@@ -362,16 +372,6 @@ template<> void BaseConverter<ReplayDataSoA>::OnGameEnd();
     writeSuccess_ = database_.addEntry(AoStoSoA<ReplayDataSoA::struct_type, ReplayDataSoA>(replayData_));
 }
 
-template<> void BaseConverter<ReplayDataSoA>::clear() noexcept
-{
-    replayData_.stepData.clear();
-    replayData_.heightMap.clear();
-    resourceObs_.clear();
-
-    mapDynHasLogged_ = false;
-    mapHeightHasLogged_ = false;
-    writeSuccess_ = false;
-}
 
 template<> void BaseConverter<ReplayDataSoA>::copyHeightMapData() noexcept
 {
