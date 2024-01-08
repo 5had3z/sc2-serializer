@@ -23,6 +23,11 @@ struct ReplayData2
 {
     ReplayInfo header;
     std::vector<StepData> data;
+
+    [[nodiscard]] auto getReplayHash() noexcept -> std::string & { return header.replayHash; }
+    [[nodiscard]] auto getReplayHash() const noexcept -> const std::string & { return header.replayHash; }
+    [[nodiscard]] auto getPlayerId() noexcept -> std::uint32_t & { return header.playerId; }
+    [[nodiscard]] auto getPlayerId() const noexcept -> std::uint32_t { return header.playerId; }
 };
 
 struct ReplayData2SoA
@@ -30,6 +35,11 @@ struct ReplayData2SoA
     using struct_type = ReplayData2;
     ReplayInfo header;
     StepDataSoA data;
+
+    [[nodiscard]] auto getReplayHash() noexcept -> std::string & { return header.replayHash; }
+    [[nodiscard]] auto getReplayHash() const noexcept -> const std::string & { return header.replayHash; }
+    [[nodiscard]] auto getPlayerId() noexcept -> std::uint32_t & { return header.playerId; }
+    [[nodiscard]] auto getPlayerId() const noexcept -> std::uint32_t { return header.playerId; }
 };
 
 template<> constexpr auto AoStoSoA(const ReplayData2 &aos) noexcept -> ReplayData2SoA
@@ -64,6 +74,10 @@ struct ReplayData
     std::vector<StepData> stepData{};
 
     [[nodiscard]] auto operator==(const ReplayData &other) const noexcept -> bool = default;
+    [[nodiscard]] auto getReplayHash() noexcept -> std::string & { return replayHash; }
+    [[nodiscard]] auto getReplayHash() const noexcept -> const std::string & { return replayHash; }
+    [[nodiscard]] auto getPlayerId() noexcept -> std::uint32_t & { return playerId; }
+    [[nodiscard]] auto getPlayerId() const noexcept -> std::uint32_t { return playerId; }
 };
 
 struct ReplayDataSoA
@@ -99,6 +113,10 @@ struct ReplayDataSoA
     std::vector<std::vector<NeutralUnit>> neutralUnits{};
 
     [[nodiscard]] auto operator==(const ReplayDataSoA &other) const noexcept -> bool = default;
+    [[nodiscard]] auto getReplayHash() noexcept -> std::string & { return replayHash; }
+    [[nodiscard]] auto getReplayHash() const noexcept -> const std::string & { return replayHash; }
+    [[nodiscard]] auto getPlayerId() noexcept -> std::uint32_t & { return playerId; }
+    [[nodiscard]] auto getPlayerId() const noexcept -> std::uint32_t { return playerId; }
 };
 
 template<> constexpr auto AoStoSoA(const ReplayData &aos) noexcept -> ReplayDataSoA

@@ -210,7 +210,7 @@ template<HasDBInterface EntryType> class ReplayDatabase
             return false;
         }
 
-        SPDLOG_LOGGER_INFO(gLoggerDB, "Saved Replay: {}, PlayerID: {}", data.replayHash, data.playerId);
+        SPDLOG_LOGGER_INFO(gLoggerDB, "Saved Replay: {}, PlayerID: {}", data.getReplayHash(), data.getPlayerId());
 
         return true;
     }

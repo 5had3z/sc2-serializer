@@ -41,7 +41,11 @@ template<typename DataSoA> class BaseConverter : public sc2::ReplayObserver
      * @param hash The hash of the replay.
      * @param playerId The ID of the player.
      */
-    void setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept;
+    void setReplayInfo(std::string_view hash, std::uint32_t playerId) noexcept
+    {
+        replayData_.getReplayHash() = hash;
+        replayData_.getPlayerId() = playerId;
+    }
 
     /**
      * @brief This function is called when the game starts. Gathers basic replay info such as player mmr.

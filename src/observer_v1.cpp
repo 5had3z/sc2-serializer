@@ -6,11 +6,6 @@
 #include "observer_utils.hpp"
 #include "serialize.hpp"
 
-#include <cstring>
-#include <execution>
-#include <ranges>
-#include <unordered_set>
-
 namespace cvt {
 
 static_assert(std::is_same_v<UID, sc2::Tag> && "Mismatch between unique id tags in SC2 and this Lib");
@@ -26,12 +21,6 @@ template<> void BaseConverter<ReplayDataSoA>::clear() noexcept
     writeSuccess_ = false;
 }
 
-template<>
-void BaseConverter<ReplayDataSoA>::setReplayInfo(const std::string_view hash, std::uint32_t playerId) noexcept
-{
-    replayData_.replayHash = hash;
-    replayData_.playerId = playerId;
-}
 
 template<> void BaseConverter<ReplayDataSoA>::OnGameStart()
 {
