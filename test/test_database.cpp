@@ -181,7 +181,7 @@ auto fuzzyEquality(std::vector<std::vector<UnitT>> expectedReplay, std::vector<s
 {
     using UnitSet = std::unordered_set<UnitT, HashID<UnitT>>;
     for (auto &&[idx, expectedUnits, actualUnits] :
-        std::views::zip(std::views::iota(expectedReplay.size()), expectedReplay, actualReplay)) {
+        std::views::zip(std::views::iota(0), expectedReplay, actualReplay)) {
         UnitSet expectedSet(expectedUnits.begin(), expectedUnits.end());
         UnitSet actualSet(actualUnits.begin(), actualUnits.end());
         UnitSet missing;

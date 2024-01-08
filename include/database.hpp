@@ -285,7 +285,7 @@ template<HasDBInterface EntryType> class ReplayDatabase
     [[nodiscard]] auto getHashes() const noexcept -> std::unordered_set<std::string>
     {
         std::unordered_set<std::string> replayHashes{};
-        for (auto &&idx : std::views::iota(this->size())) {
+        for (auto &&idx : std::views::iota(std::size_t{ 0 }, this->size())) {
             auto [hash, id] = this->getHashId(idx);
             replayHashes.insert(hash + std::to_string(id));
         }

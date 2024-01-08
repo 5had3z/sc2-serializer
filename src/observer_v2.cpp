@@ -23,7 +23,7 @@ template<> void BaseConverter<ReplayData2SoA>::OnGameStart()
 {
     this->clear();
     const auto replayInfo = this->ReplayControl()->GetReplayInfo();
-    assert(replayInfo.num_players >= replayData_.playerId && "Player ID should be at most be num_players");
+    assert(replayInfo.num_players >= replayData_.getPlayerId() && "Player ID should be at most be num_players");
     auto &replayHeader = replayData_.header;
     const auto &playerInfo = replayInfo.players[replayHeader.playerId - 1];
     replayHeader.playerRace = static_cast<Race>(playerInfo.race);
