@@ -84,7 +84,7 @@ void writeComponents(const cvt::ReplayDataSoA &data, const fs::path &outDir)
 void writeReplayStructures(const cvt::ReplayDataSoA &data, const fs::path &outDir)
 {
     writeData(data, outDir / "replay_soa.bin");
-    writeData(cvt::SoAtoAoS<cvt::ReplayData, cvt::ReplayDataSoA>(data), outDir / "replay_aos.bin");
+    writeData(cvt::SoAtoAoS<cvt::ReplayDataSoA, cvt::ReplayData>(data), outDir / "replay_aos.bin");
 }
 
 /**

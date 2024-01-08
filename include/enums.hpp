@@ -12,11 +12,11 @@ namespace cvt {
 // Converts an enum value to a one-hot encoding
 template<typename E, typename T>
     requires std::is_enum_v<E>
-constexpr auto enumToOneHot(E e) noexcept -> std::vector<T>;
+auto enumToOneHot(E e) noexcept -> std::vector<T>;
 
 namespace detail {
     template<typename T>
-    constexpr auto enumToOneHot_helper(auto enumVal, const std::ranges::range auto &enumValues) -> std::vector<T>
+    auto enumToOneHot_helper(auto enumVal, const std::ranges::range auto &enumValues) -> std::vector<T>
     {
         auto it = std::ranges::find(enumValues, enumVal);
         std::vector<T> ret(enumValues.size());

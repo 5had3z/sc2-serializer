@@ -33,7 +33,7 @@ namespace detail {
 
     template<typename T, typename It>
         requires std::is_arithmetic_v<T>
-    constexpr auto vectorize_helper(T d, It it, bool onehotEnum) -> It
+    auto vectorize_helper(T d, It it, bool onehotEnum) -> It
     {
         *it++ = static_cast<It::container_type::value_type>(d);
         return it;
@@ -41,14 +41,14 @@ namespace detail {
 
     template<std::ranges::range T, typename It>
         requires std::is_arithmetic_v<std::ranges::range_value_t<T>>
-    constexpr auto vectorize_helper(const T &d, It it, bool onehotEnum) -> It
+    auto vectorize_helper(const T &d, It it, bool onehotEnum) -> It
     {
         return std::ranges::transform(d, it, [](auto e) { return static_cast<It::container_type::value_type>(e); }).out;
     }
 
     template<typename T, typename It>
         requires std::is_enum_v<T>
-    constexpr auto vectorize_helper(T d, It it, bool onehotEnum) -> It
+    auto vectorize_helper(T d, It it, bool onehotEnum) -> It
     {
         using value_type = It::container_type::value_type;
         if (onehotEnum) {
@@ -61,7 +61,7 @@ namespace detail {
 
     template<typename T, typename It>
         requires std::is_aggregate_v<T> && (!std::ranges::range<T>)
-    constexpr auto vectorize_helper(T d, It it, bool onehotEnum) -> It
+    auto vectorize_helper(T d, It it, bool onehotEnum) -> It
     {
         boost::pfr::for_each_field(
             d, [&it, onehotEnum](const auto &field) { it = detail::vectorize_helper(field, it, onehotEnum); });
@@ -73,7 +73,7 @@ namespace detail {
 
 template<typename S, typename It>
     requires std::is_aggregate_v<S> && std::is_arithmetic_v<typename It::container_type::value_type>
-[[maybe_unused]] constexpr auto vectorize(S s, It it, bool onehotEnum = false) -> It
+[[maybe_unused]] auto vectorize(S s, It it, bool onehotEnum = false) -> It
 {
     boost::pfr::for_each_field(
         s, [&it, onehotEnum](const auto &field) { it = detail::vectorize_helper(field, it, onehotEnum); });
@@ -83,18 +83,33 @@ template<typename S, typename It>
 // TODO: Add helper fn to check the vectorization size
 template<typename T, typename S>
     requires std::is_aggregate_v<S> && std::is_arithmetic_v<T>
-constexpr auto vectorize(S s, bool onehotEnum = false) -> std::vector<T>
+auto vectorize(S s, bool onehotEnum = false) -> std::vector<T>
 {
     std::vector<T> out;
     vectorize(s, std::back_inserter(out), onehotEnum);
     return out;
 }
 
-template<typename AoS, typename SoA> [[nodiscard]] constexpr auto AoStoSoA(const AoS &aos) noexcept -> SoA;
-template<typename AoS, typename SoA> [[nodiscard]] constexpr auto AoStoSoA(AoS &&aos) noexcept -> SoA;
+template<typename AoS, typename SoA> [[nodiscard]] auto AoStoSoA(AoS &&aos) noexcept -> SoA;
 
-template<typename AoS, typename SoA> [[nodiscard]] constexpr auto SoAtoAoS(const SoA &soa) noexcept -> AoS;
-template<typename AoS, typename SoA> [[nodiscard]] constexpr auto SoAtoAoS(SoA &&soa) noexcept -> AoS;
+template<typename AoS, typename SoA> [[nodiscard]] auto AoStoSoA(const AoS &aos) noexcept -> SoA;
+
+template<typename SoA, typename AoS> [[nodiscard]] auto SoAtoAoS(const SoA &soa) noexcept -> AoS;
+
+template<IsSoAType SoA> [[nodiscard]] auto SoAtoAoS(const SoA &soa) noexcept -> std::vector<typename SoA::struct_type>
+{
+    std::vector<typename SoA::struct_type> aos{};
+
+    // Ensure SoA is all equally sized
+    std::vector<std::size_t> sizes;
+    boost::pfr::for_each_field(soa, [&](auto &field) { sizes.push_back(field.size()); });
+    assert(std::all_of(sizes.begin(), sizes.end(), [sz = sizes.front()](std::size_t s) { return s == sz; }));
+    aos.resize(sizes.front());
+
+    // Copy data element-by-element
+    for (std::size_t idx = 0; idx < sizes.front(); ++idx) { aos[idx] = soa[idx]; }
+    return aos;
+}
 
 struct Point2d
 {
@@ -389,7 +404,7 @@ struct UnitSoA
 
     [[nodiscard]] auto operator==(const UnitSoA &other) const noexcept -> bool = default;
 
-    [[nodiscard]] constexpr auto operator[](std::size_t idx) const noexcept -> Unit
+    [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> Unit
     {
         Unit unit;
         unit.id = id[idx];
@@ -430,7 +445,7 @@ struct UnitSoA
 };
 
 template<std::ranges::range Range>
-constexpr auto AoStoSoA(Range &&aos) noexcept -> UnitSoA
+auto AoStoSoA(Range &&aos) noexcept -> UnitSoA
     requires std::is_same_v<std::ranges::range_value_t<Range>, Unit>
 {
     UnitSoA soa{};
@@ -476,21 +491,6 @@ constexpr auto AoStoSoA(Range &&aos) noexcept -> UnitSoA
         soa.add_on_tag.push_back(unit.add_on_tag);
     }
     return soa;
-}
-
-template<> constexpr auto SoAtoAoS(const UnitSoA &soa) noexcept -> std::vector<Unit>
-{
-    std::vector<Unit> aos{};
-
-    // Ensure SoA is all equally sized
-    std::vector<std::size_t> sizes;
-    boost::pfr::for_each_field(soa, [&](auto &field) { sizes.push_back(field.size()); });
-    assert(std::all_of(sizes.begin(), sizes.end(), [sz = sizes.front()](std::size_t s) { return s == sz; }));
-    aos.resize(sizes.front());
-
-    // Tediously copy unit data
-    for (std::size_t idx = 0; idx < sizes.front(); ++idx) { aos[idx] = soa[idx]; }
-    return aos;
 }
 
 
@@ -548,7 +548,7 @@ struct NeutralUnitSoA
 
     [[nodiscard]] auto operator==(const NeutralUnitSoA &other) const noexcept -> bool = default;
 
-    [[nodiscard]] constexpr auto operator[](std::size_t idx) const noexcept -> NeutralUnit
+    [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> NeutralUnit
     {
         NeutralUnit unit;
         unit.id = id[idx];
@@ -565,7 +565,7 @@ struct NeutralUnitSoA
 };
 
 template<std::ranges::range Range>
-constexpr auto AoStoSoA(Range &&aos) noexcept -> NeutralUnitSoA
+auto AoStoSoA(Range &&aos) noexcept -> NeutralUnitSoA
     requires std::is_same_v<std::ranges::range_value_t<Range>, NeutralUnit>
 {
     NeutralUnitSoA soa{};
@@ -586,20 +586,6 @@ constexpr auto AoStoSoA(Range &&aos) noexcept -> NeutralUnitSoA
     return soa;
 }
 
-template<> constexpr auto SoAtoAoS(const NeutralUnitSoA &soa) noexcept -> std::vector<NeutralUnit>
-{
-    std::vector<NeutralUnit> aos{};
-
-    // Ensure SoA is all equally sized
-    std::vector<std::size_t> sizes;
-    boost::pfr::for_each_field(soa, [&](auto &field) { sizes.push_back(field.size()); });
-    assert(std::all_of(sizes.begin(), sizes.end(), [sz = sizes.front()](std::size_t s) { return s == sz; }));
-    aos.resize(sizes.front());
-
-    // Tediously copy data
-    for (std::size_t idx = 0; idx < sizes.front(); ++idx) { aos[idx] = soa[idx]; }
-    return aos;
-}
 
 struct Action
 {
@@ -706,7 +692,7 @@ struct StepDataSoA
 
     [[nodiscard]] auto operator==(const StepDataSoA &other) const noexcept -> bool = default;
 
-    [[nodiscard]] constexpr auto operator[](std::size_t idx) const noexcept -> StepData
+    [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> StepData
     {
         StepData stepData;
         stepData.gameStep = gameStep[idx];
@@ -729,10 +715,11 @@ struct StepDataSoA
     }
 };
 
+static_assert(IsSoAType<StepDataSoA>);
 
 template<std::ranges::range Range>
     requires std::same_as<std::ranges::range_value_t<Range>, StepData>
-constexpr auto AoStoSoA(Range &&aos) noexcept -> StepDataSoA
+auto AoStoSoA(Range &&aos) noexcept -> StepDataSoA
 {
     StepDataSoA soa;
 
@@ -759,22 +746,5 @@ constexpr auto AoStoSoA(Range &&aos) noexcept -> StepDataSoA
     }
     return soa;
 }
-
-template<> constexpr auto SoAtoAoS(const StepDataSoA &soa) noexcept -> std::vector<StepData>
-{
-    std::vector<StepData> aos;
-
-    // Ensure SoA is all equally sized
-    std::vector<std::size_t> sizes;
-    boost::pfr::for_each_field(soa, [&](auto &field) { sizes.push_back(field.size()); });
-    const std::size_t size = sizes.front();
-    assert(std::all_of(sizes.begin(), sizes.end(), [=](std::size_t s) { return s == size; }));
-    aos.resize(size);
-
-    for (std::size_t idx = 0; idx < size; ++idx) { aos[idx] = soa[idx]; }
-
-    return aos;
-}
-
 
 }// namespace cvt
