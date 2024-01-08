@@ -14,14 +14,14 @@ namespace fs = std::filesystem;
     std::ifstream csv_file(path);
     std::string row;
     while (std::getline(csv_file, row)) {
-        std::array<std::string_view, 2> hash_step_pair;
+        std::array<std::string, 2> hash_step_pair;
         for (auto &&[idx, elem] :
             std::views::split(row, ',') | std::views::take(hash_step_pair.size()) | std::views::enumerate) {
-            hash_step_pair[idx] = std::string_view(elem.begin(), elem.end());
+            hash_step_pair[idx] = std::string(elem.begin(), elem.end());
         }
         constexpr std::size_t trim_size = std::string(".SC2Replays").size();
         const auto hash = hash_step_pair[0].substr(0, hash_step_pair[0].size() - trim_size + 1);
-        hash_steps[std::string(hash)] = std::stoi(std::string(hash_step_pair[1]));
+        hash_steps[hash] = std::stoi(hash_step_pair[1]);
     }
     return hash_steps;
 }
