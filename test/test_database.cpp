@@ -125,6 +125,8 @@ TEST(BoostZlib, WriteRead)
     }
 
     ASSERT_EQ(writeData, readData);
+
+    if (fs::exists(testFile)) { fs::remove(testFile); }
 }
 
 TEST_F(DatabaseTest, CreateDB)
@@ -195,10 +197,11 @@ auto fuzzyEquality(std::vector<std::vector<UnitT>> expectedReplay, std::vector<s
     }
 }
 
-TEST(UnitSoA, ConversionToAndFrom)
+TEST(UnitSoA, DISABLED_ConversionToAndFrom)
 {
-    // using Interface = cvt::DatabaseInterface<cvt::ReplayDataSoA>;
-    cvt::ReplayDatabase<cvt::ReplayDataSoA> db("/home/bryce/SC2/converted/sc2_evaluation.SC2Replays");
+    auto dbPath = std::getenv("SC2_TEST_DB");
+    ASSERT_NE(dbPath, nullptr);
+    cvt::ReplayDatabase<cvt::ReplayDataSoA> db(dbPath);
     const auto replayData = db.getEntry(0);
     {
         const auto flattened = cvt::flattenAndSortUnits<cvt::UnitSoA>(replayData.units);
