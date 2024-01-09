@@ -36,6 +36,8 @@ template<typename T> struct DatabaseInterface
      */
     [[nodiscard]] static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>;
 
+    [[nodiscard]] static auto getHeaderImpl(std::istream &dbStream) -> ReplayInfo;
+
     [[nodiscard]] static auto getEntryImpl(std::istream &dbStream) noexcept -> T;
 
     [[maybe_unused]] static auto addEntryImpl(const T &d, std::ostream &dbStream) noexcept -> bool;
@@ -52,6 +54,28 @@ template<> struct DatabaseInterface<ReplayDataSoA>
         deserialize(gameVersion, dbStream);
         deserialize(playerId, dbStream);
         return std::make_pair(replayHash, playerId);
+    }
+
+
+    static auto getHeaderImpl(std::istream &dbStream) -> ReplayInfo
+    {
+        ReplayInfo result;
+        deserialize(result.replayHash, dbStream);
+        deserialize(result.gameVersion, dbStream);
+        deserialize(result.playerId, dbStream);
+        deserialize(result.playerRace, dbStream);
+        deserialize(result.playerResult, dbStream);
+        deserialize(result.playerMMR, dbStream);
+        deserialize(result.playerAPM, dbStream);
+        deserialize(result.mapWidth, dbStream);
+        deserialize(result.mapHeight, dbStream);
+        deserialize(result.heightMap, dbStream);
+
+        // Won't be entirely accurate, last recorded observation != duration
+        std::vector<std::uint32_t> gameSteps;
+        deserialize(gameSteps, dbStream);
+        result.durationSteps = gameSteps.back();
+        return result;
     }
 
     static auto getEntryImpl(std::istream &dbStream) noexcept -> ReplayDataSoA
@@ -75,6 +99,13 @@ template<> struct DatabaseInterface<ReplayData2SoA>
         ReplayInfo header;
         deserialize(header, dbStream);
         return std::make_pair(header.replayHash, header.playerId);
+    }
+
+    static auto getHeaderImpl(std::istream &dbStream) -> ReplayInfo
+    {
+        ReplayInfo result;
+        deserialize(result, dbStream);
+        return result;
     }
 
     static auto getEntryImpl(std::istream &dbStream) noexcept -> ReplayData2SoA
@@ -222,36 +253,17 @@ template<HasDBInterface EntryType> class ReplayDatabase
      */
     [[nodiscard]] auto getEntry(std::size_t index) const -> EntryType
     {
-        namespace bio = boost::iostreams;
-        // using clock = std::chrono::high_resolution_clock;
-        // const auto start = clock::now();
-        // Check if valid index
-        if (index >= entryPtr_.size()) {
-            throw std::out_of_range(fmt::format("Index {} exceeds database size {}", index, entryPtr_.size()));
-        }
+        return this->readFromDatabase(index, DatabaseInterface<EntryType>::getEntryImpl);
+    }
 
-        // Open database and seek to desired position
-        std::ifstream dbStream(dbPath_, std::ios::binary);
-        dbStream.seekg(entryPtr_[index]);
-
-        bio::filtering_istream filterStream{};
-        filterStream.push(bio::zlib_decompressor());
-        filterStream.push(dbStream);
-
-        // Load and return the data
-        EntryType data;
-        try {
-            data = DatabaseInterface<EntryType>::getEntryImpl(filterStream);
-        } catch (const std::bad_alloc &e) {
-            SPDLOG_LOGGER_CRITICAL(
-                gLoggerDB, "Failed to load from {} at index {}, got error: {}", dbPath_.string(), index, e.what());
-            throw e;
-        }
-        filterStream.reset();
-        // fmt::print("Time Taken to Load: {}ms, Replay Size: {}\n",
-        //     std::chrono::duration_cast<std::chrono::milliseconds>(clock::now() - start).count(),
-        //     data.gameStep.size());
-        return data;
+    /**
+     * @brief Retrieves replay header information from the database
+     * @param index Index to read from database
+     * @return ReplayInfo at index
+     */
+    [[nodiscard]] auto getHeader(std::size_t index) const -> ReplayInfo
+    {
+        return this->readFromDatabase(index, DatabaseInterface<EntryType>::getHeaderImpl);
     }
 
     /**
@@ -261,21 +273,7 @@ template<HasDBInterface EntryType> class ReplayDatabase
      */
     [[nodiscard]] auto getHashId(std::size_t index) const -> std::pair<std::string, std::uint32_t>
     {
-        namespace bio = boost::iostreams;
-        // Check if valid index
-        if (index >= entryPtr_.size()) {
-            throw std::out_of_range(fmt::format("Index {} exceeds database size {}", index, entryPtr_.size()));
-        }
-        std::ifstream dbStream(dbPath_, std::ios::binary);
-        dbStream.seekg(entryPtr_[index]);
-
-        // Maybe see if I can reuse the filter and seek
-        bio::filtering_istream filterStream{};
-        filterStream.push(bio::zlib_decompressor());
-        filterStream.push(dbStream);
-        auto result = DatabaseInterface<EntryType>::getHashIdImpl(filterStream);
-        filterStream.reset();
-        return result;
+        return this->readFromDatabase(index, DatabaseInterface<EntryType>::getHashIdImpl);
     }
 
     /**
@@ -293,7 +291,7 @@ template<HasDBInterface EntryType> class ReplayDatabase
     }
 
     /**
-     * @brief Opens a replay database at the specified path.
+     * @brief Opens a replay database at the specified path, will make a new one if it doesn't already exist.
      * @param dbPath The path to the replay database.
      * @return True if the database was successfully opened, false otherwise.
      */
@@ -374,6 +372,47 @@ template<HasDBInterface EntryType> class ReplayDatabase
         std::ofstream dbStream(dbPath_, std::ios::binary);
         for (std::size_t i = 0; i < nChunks; ++i) { dbStream.write(zeros.data(), sizeof(zeros)); }
         return !dbStream.bad();
+    }
+
+    /**
+     * @brief Read from database at index using pointer to reading function
+     * @tparam T type returned by the reading function
+     * @param index Index of database to read from
+     * @param reader pointer to function that knows how to read data
+     * @return Struct filled with data read by function pointer if successful, uninitialized if failed ( ͡° ͜ʖ ͡°)
+     */
+    template<typename T> [[nodiscard]] auto readFromDatabase(std::size_t index, T (*reader)(std::istream &)) const -> T
+    {
+        namespace bio = boost::iostreams;
+        // Check if valid index
+        if (index >= entryPtr_.size()) {
+            throw std::out_of_range(fmt::format("Index {} exceeds database size {}", index, entryPtr_.size()));
+        }
+
+        // Open database and seek to desired position
+        std::ifstream dbStream(dbPath_, std::ios::binary);
+        dbStream.seekg(entryPtr_[index]);
+
+        bio::filtering_istream filterStream{};
+        filterStream.push(bio::zlib_decompressor());
+        filterStream.push(dbStream);
+
+        // Load and return the data
+        // using clock = std::chrono::high_resolution_clock;
+        // const auto start = clock::now();
+        T data;
+        try {
+            data = reader(filterStream);
+        } catch (const std::bad_alloc &e) {
+            SPDLOG_LOGGER_CRITICAL(
+                gLoggerDB, "Failed to read from {} at index {}, got error: {}", dbPath_.string(), index, e.what());
+            throw e;
+        }
+        filterStream.reset();
+        // fmt::print("Time Taken to Load: {}ms, Replay Size: {}\n",
+        //     std::chrono::duration_cast<std::chrono::milliseconds>(clock::now() - start).count(),
+        //     data.gameStep.size());
+        return data;
     }
 
     /**
