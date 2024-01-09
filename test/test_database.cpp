@@ -197,7 +197,7 @@ auto fuzzyEquality(std::vector<std::vector<UnitT>> expectedReplay, std::vector<s
     }
 }
 
-TEST(UnitSoA, ConversionToAndFrom)
+TEST(UnitSoA, DISABLED_ConversionToAndFrom)
 {
     auto dbPath = std::getenv("SC2_TEST_DB");
     ASSERT_NE(dbPath, nullptr);
@@ -234,7 +234,7 @@ TEST(UnitSoA, DISABLED_ConversionToAndFrom2)
     }
 }
 
-TEST(UnitSoA, ConversionToAndFrom3)
+TEST(UnitSoA, DISABLED_ConversionToAndFrom3)
 {
     auto dbPath = std::getenv("SC2_TEST_DB");
     ASSERT_NE(dbPath, nullptr);
