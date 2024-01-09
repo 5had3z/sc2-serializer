@@ -88,7 +88,7 @@ template<typename T, std::output_iterator<T> It>
     std::ranges::fill(std::ranges::subrange(out, out + img.nelem() * nAlliance), 0);
     const auto imgData = img.as_span();
     for (std::size_t idx = 0; idx < img.nelem(); ++idx) {
-        assert(imgData[idx] < nAlliance && "Got invalid player relative > 4");
+        assert(imgData[idx] <= nAlliance && "Got invalid player relative > 4");
         if (imgData[idx] > 0) {
             std::size_t chOffset = imgData[idx] - 1;
             auto outPtr = std::next(out, idx + chOffset * img.nelem());

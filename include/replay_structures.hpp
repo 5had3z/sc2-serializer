@@ -17,6 +17,8 @@ struct ReplayInfo
     int mapWidth{};
     int mapHeight{};
     Image<std::uint8_t> heightMap{};
+
+    [[nodiscard]] auto operator==(const ReplayInfo &other) const noexcept -> bool = default;
 };
 
 struct ReplayData2

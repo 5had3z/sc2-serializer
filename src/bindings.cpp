@@ -3,6 +3,7 @@
 
 #include <pybind11/functional.h>// Include this header for Pybind11 string conversions
 #include <pybind11/numpy.h>
+#include <pybind11/operators.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/stl/filesystem.h>
@@ -145,6 +146,8 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
 
     py::class_<cvt::Action>(m, "Action")
         .def(py::init<>())
+        .def(py::self == py::self)
+        .def(py::self != py::self)
         .def_readonly("unit_ids", &cvt::Action::unit_ids)
         .def_readonly("ability_id", &cvt::Action::ability_id)
         .def_readonly("target_type", &cvt::Action::target_type)
@@ -166,6 +169,8 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
 
     py::class_<cvt::Score>(m, "Score")
         .def(py::init<>())
+        .def(py::self == py::self)
+        .def(py::self != py::self)
         .def_readonly("score_float", &cvt::Score::score_float)
         .def_readonly("idle_production_time", &cvt::Score::idle_production_time)
         .def_readonly("idle_worker_time", &cvt::Score::idle_worker_time)
@@ -191,6 +196,9 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
 
     py::class_<cvt::Unit>(m, "Unit")
         .def(py::init<>())
+        .def(py::self == py::self)
+        .def(py::self != py::self)
+        .def("__hash__", [](const cvt::Unit &data) { return data.id; })
         .def_readwrite("id", &cvt::Unit::id)
         .def_readwrite("tgtId", &cvt::Unit::tgtId)
         .def_readwrite("observation", &cvt::Unit::observation)
@@ -235,6 +243,9 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
 
     py::class_<cvt::NeutralUnit>(m, "NeutralUnit")
         .def(py::init<>())
+        .def(py::self == py::self)
+        .def(py::self != py::self)
+        .def("__hash__", [](const cvt::NeutralUnit &data) { return data.id; })
         .def_readwrite("id", &cvt::NeutralUnit::id)
         .def_readwrite("unitType", &cvt::NeutralUnit::unitType)
         .def_readwrite("observation", &cvt::NeutralUnit::observation)
@@ -282,6 +293,8 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readwrite("neutralUnits", &cvt::ReplayDataSoA::neutralUnits);
 
     py::class_<cvt::StepDataSoA>(m, "StepDataSoA")
+        .def(py::self == py::self)
+        .def(py::self != py::self)
         .def_readwrite("gameStep", &cvt::StepDataSoA::gameStep)
         .def_readwrite("minerals", &cvt::StepDataSoA::minearals)
         .def_readwrite("vespene", &cvt::StepDataSoA::vespene)
@@ -300,6 +313,8 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readwrite("neutralUnits", &cvt::StepDataSoA::neutralUnits);
 
     py::class_<cvt::ReplayInfo>(m, "ReplayInfo")
+        .def(py::self == py::self)
+        .def(py::self != py::self)
         .def_readwrite("replayHash", &cvt::ReplayInfo::replayHash)
         .def_readwrite("gameVersion", &cvt::ReplayInfo::gameVersion)
         .def_readwrite("playerId", &cvt::ReplayInfo::playerId)

@@ -113,10 +113,12 @@ def inspect(
         print("Ok")
 
     elif command is SubCommand.scatter_units:
+        outfolder.mkdir(exist_ok=True)
         parser.parse_replay(db.getEntry(idx))
         make_units_video(parser, outfolder / "raw_units.webm")
 
     elif command is SubCommand.minimap_video:
+        outfolder.mkdir(exist_ok=True)
         # fmt: off
         img_attrs = [
             "alerts", "buildable", "creep", "pathable",

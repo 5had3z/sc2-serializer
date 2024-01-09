@@ -125,7 +125,7 @@ template<> void BaseConverter<ReplayData2SoA>::copyCommonData() noexcept
     timer.step(fmt::format("Step {} of {}", this->Observation()->GetGameLoop(), replayData_.header.durationSteps));
 
     // Copy static height map if not already done
-    if (replayData_.data.empty()) { this->copyHeightMapData(); }
+    if (replayData_.header.heightMap.empty()) { this->copyHeightMapData(); }
 
     // Write directly into stepData.back()
     auto &currentStep = replayData_.data.back();
