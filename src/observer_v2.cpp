@@ -98,7 +98,7 @@ template<> void BaseConverter<ReplayData2SoA>::copyDynamicMapData() noexcept
     // Log available visibility per replay
     if (!mapDynHasLogged_) {
         mapDynHasLogged_ = true;
-        SPDLOG_INFO(
+        SPDLOG_DEBUG(
             "Minimap Features: visibility {}, creep: {}, player_relative: {}, "
             "alerts: {}, buildable: {}, pathable: {}",
             minimapFeats.has_visibility_map(),

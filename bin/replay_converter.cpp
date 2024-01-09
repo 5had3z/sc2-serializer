@@ -285,11 +285,9 @@ void loopReplayFiles(const fs::path &replayFolder,
             if (versionResult.has_value()) {
                 auto [gameVersion, dataVersion, build_version] = *versionResult;
 
-                fs::path gamePath_ = gamePath;
-                auto path = gamePath_ / ("Base"s + build_version) / "SC2_x64";
+                auto path = fs::path(gamePath) / ("Base"s + build_version) / "SC2_x64";
 #ifdef _WIN32
-                // Add ".exe" only if compiling for Windows
-                path.replace_extension("exe");
+                path.replace_extension("exe");// Add ".exe" only if compiling for Windows
 #endif
                 if (!fs::exists(path)) {
                     SPDLOG_WARN(
@@ -412,7 +410,7 @@ auto main(int argc, char *argv[]) -> int
         }
     }
 
-    using ReplayDataType = cvt::ReplayDataSoA;
+    using ReplayDataType = cvt::ReplayData2SoA;
     auto converter = [&](const std::string &cvtType) -> std::unique_ptr<cvt::BaseConverter<ReplayDataType>> {
         if (cvtType == "full") { return std::make_unique<cvt::FullConverter<ReplayDataType>>(); }
         if (cvtType == "action") { return std::make_unique<cvt::ActionConverter<ReplayDataType>>(); }
