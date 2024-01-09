@@ -127,14 +127,14 @@ template<> struct DatabaseInterface<ReplayData2SoA>
         deserialize(result.data.pathable, dbStream);
         deserialize(result.data.actions, dbStream);
         {
-            FlattenedUnits<UnitSoA> units;
+            FlattenedUnits3<UnitSoA> units;
             deserialize(units, dbStream);
-            result.data.units = recoverFlattenedSortedUnits(units);
+            result.data.units = recoverFlattenedSortedUnits3(units);
         }
         {
-            FlattenedUnits<NeutralUnitSoA> units;
+            FlattenedUnits3<NeutralUnitSoA> units;
             deserialize(units, dbStream);
-            result.data.neutralUnits = recoverFlattenedSortedUnits(units);
+            result.data.neutralUnits = recoverFlattenedSortedUnits3(units);
         }
         return result;
     }
@@ -156,8 +156,8 @@ template<> struct DatabaseInterface<ReplayData2SoA>
         serialize(d.data.buildable, dbStream);
         serialize(d.data.pathable, dbStream);
         serialize(d.data.actions, dbStream);
-        serialize(flattenAndSortUnits<UnitSoA>(d.data.units), dbStream);
-        serialize(flattenAndSortUnits<NeutralUnitSoA>(d.data.neutralUnits), dbStream);
+        serialize(flattenAndSortUnits3<UnitSoA>(d.data.units), dbStream);
+        serialize(flattenAndSortUnits3<NeutralUnitSoA>(d.data.neutralUnits), dbStream);
         return true;
     }
 };

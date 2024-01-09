@@ -197,20 +197,57 @@ auto fuzzyEquality(std::vector<std::vector<UnitT>> expectedReplay, std::vector<s
     }
 }
 
-TEST(UnitSoA, DISABLED_ConversionToAndFrom)
+TEST(UnitSoA, ConversionToAndFrom)
 {
     auto dbPath = std::getenv("SC2_TEST_DB");
     ASSERT_NE(dbPath, nullptr);
-    cvt::ReplayDatabase<cvt::ReplayDataSoA> db(dbPath);
+    cvt::ReplayDatabase<cvt::ReplayData2SoA> db(dbPath);
     const auto replayData = db.getEntry(0);
     {
-        const auto flattened = cvt::flattenAndSortUnits<cvt::UnitSoA>(replayData.units);
+        const auto flattened = cvt::flattenAndSortUnits<cvt::UnitSoA>(replayData.data.units);
         const auto recovered = cvt::recoverFlattenedSortedUnits<cvt::UnitSoA>(flattened);
-        fuzzyEquality(replayData.units, recovered);
+        fuzzyEquality(replayData.data.units, recovered);
     }
     {
-        const auto flattened = cvt::flattenAndSortUnits<cvt::NeutralUnitSoA>(replayData.neutralUnits);
+        const auto flattened = cvt::flattenAndSortUnits<cvt::NeutralUnitSoA>(replayData.data.neutralUnits);
         const auto recovered = cvt::recoverFlattenedSortedUnits<cvt::NeutralUnitSoA>(flattened);
-        fuzzyEquality(replayData.neutralUnits, recovered);
+        fuzzyEquality(replayData.data.neutralUnits, recovered);
+    }
+}
+
+// Assumptions do not hold
+TEST(UnitSoA, DISABLED_ConversionToAndFrom2)
+{
+    auto dbPath = std::getenv("SC2_TEST_DB");
+    ASSERT_NE(dbPath, nullptr);
+    cvt::ReplayDatabase<cvt::ReplayData2SoA> db(dbPath);
+    const auto replayData = db.getEntry(0);
+    {
+        const auto flattened = cvt::flattenAndSortUnits2<cvt::UnitSoA>(replayData.data.units);
+        const auto recovered = cvt::recoverFlattenedSortedUnits2<cvt::UnitSoA>(flattened);
+        fuzzyEquality(replayData.data.units, recovered);
+    }
+    {
+        const auto flattened = cvt::flattenAndSortUnits2<cvt::NeutralUnitSoA>(replayData.data.neutralUnits);
+        const auto recovered = cvt::recoverFlattenedSortedUnits2<cvt::NeutralUnitSoA>(flattened);
+        fuzzyEquality(replayData.data.neutralUnits, recovered);
+    }
+}
+
+TEST(UnitSoA, ConversionToAndFrom3)
+{
+    auto dbPath = std::getenv("SC2_TEST_DB");
+    ASSERT_NE(dbPath, nullptr);
+    cvt::ReplayDatabase<cvt::ReplayData2SoA> db(dbPath);
+    const auto replayData = db.getEntry(0);
+    {
+        const auto flattened = cvt::flattenAndSortUnits3<cvt::UnitSoA>(replayData.data.units);
+        const auto recovered = cvt::recoverFlattenedSortedUnits3<cvt::UnitSoA>(flattened);
+        fuzzyEquality(replayData.data.units, recovered);
+    }
+    {
+        const auto flattened = cvt::flattenAndSortUnits3<cvt::NeutralUnitSoA>(replayData.data.neutralUnits);
+        const auto recovered = cvt::recoverFlattenedSortedUnits3<cvt::NeutralUnitSoA>(flattened);
+        fuzzyEquality(replayData.data.neutralUnits, recovered);
     }
 }
