@@ -117,26 +117,27 @@ struct Caster
  */
 template<typename T>
     requires std::is_arithmetic_v<T>
-auto createMinimapFeatures(const ReplayDataSoA &data, std::size_t timeIdx, bool expandPlayerRel = true)
+auto createMinimapFeatures(const ReplayData2SoA &replay, std::size_t timeIdx, bool expandPlayerRel = true)
     -> py::array_t<T>
 {
     const std::size_t nChannels = expandPlayerRel ? 10 : 7;
-    py::array_t<T> featureMap(
-        { nChannels, static_cast<std::size_t>(data.heightMap._h), static_cast<std::size_t>(data.heightMap._w) });
+    py::array_t<T> featureMap({ nChannels,
+        static_cast<std::size_t>(replay.header.heightMap._h),
+        static_cast<std::size_t>(replay.header.heightMap._w) });
     std::span outData(featureMap.mutable_data(), featureMap.size());
     auto dataPtr = outData.begin();
-    dataPtr = std::ranges::transform(data.heightMap.as_span(), dataPtr, Caster<T>()).out;
-    dataPtr = std::ranges::transform(data.visibility[timeIdx].as_span(), dataPtr, Caster<T>()).out;
-    dataPtr = unpackBoolImage<T>(data.creep[timeIdx], dataPtr);
-    dataPtr = std::ranges::transform(data.alerts[timeIdx].as_span(), dataPtr, Caster<T>()).out;
-    dataPtr = unpackBoolImage<T>(data.buildable[timeIdx], dataPtr);
-    dataPtr = unpackBoolImage<T>(data.pathable[timeIdx], dataPtr);
+    dataPtr = std::ranges::transform(replay.header.heightMap.as_span(), dataPtr, Caster<T>()).out;
+    dataPtr = std::ranges::transform(replay.data.visibility[timeIdx].as_span(), dataPtr, Caster<T>()).out;
+    dataPtr = unpackBoolImage<T>(replay.data.creep[timeIdx], dataPtr);
+    dataPtr = std::ranges::transform(replay.data.alerts[timeIdx].as_span(), dataPtr, Caster<T>()).out;
+    dataPtr = unpackBoolImage<T>(replay.data.buildable[timeIdx], dataPtr);
+    dataPtr = unpackBoolImage<T>(replay.data.pathable[timeIdx], dataPtr);
     if (expandPlayerRel) {
         // cppcheck-suppress unreadVariable
-        dataPtr = expandPlayerRelative<T>(data.player_relative[timeIdx], dataPtr);
+        dataPtr = expandPlayerRelative<T>(replay.data.player_relative[timeIdx], dataPtr);
     } else {
         // cppcheck-suppress unreadVariable
-        dataPtr = std::ranges::transform(data.player_relative[timeIdx].as_span(), dataPtr, Caster<T>()).out;
+        dataPtr = std::ranges::transform(replay.data.player_relative[timeIdx].as_span(), dataPtr, Caster<T>()).out;
     }
     return featureMap;
 }
@@ -153,7 +154,7 @@ auto createMinimapFeatures(const ReplayDataSoA &data, std::size_t timeIdx, bool 
  */
 template<typename T>
     requires std::is_arithmetic_v<T>
-auto createScalarFeatures(const ReplayDataSoA &data, std::size_t timeIdx) -> py::array_t<T>
+auto createScalarFeatures(const StepDataSoA &data, std::size_t timeIdx) -> py::array_t<T>
 {
     auto feats = vectorize<T>(data.score[timeIdx]);
     feats.emplace_back(data.minearals[timeIdx]);
@@ -169,7 +170,7 @@ auto createScalarFeatures(const ReplayDataSoA &data, std::size_t timeIdx) -> py:
 
 ReplayParser::ReplayParser(const std::filesystem::path &dataFile) noexcept : upgrade_(dataFile) {}
 
-void ReplayParser::parseReplay(ReplayDataSoA replayData)
+void ReplayParser::parseReplay(ReplayData2SoA replayData)
 {
     replayData_ = std::move(replayData);
     // SPDLOG_INFO("Replay: {}, Player: {}, Race: {}, Last Step: {}",
@@ -177,9 +178,9 @@ void ReplayParser::parseReplay(ReplayDataSoA replayData)
     //     replayData_.playerId,
     //     static_cast<int>(replayData_.playerRace),
     //     replayData_.gameStep.back());
-    upgrade_.setRace(replayData_.playerRace);
-    upgrade_.setVersion(replayData_.gameVersion);
-    upgrade_.setActions(replayData_.actions, replayData_.gameStep);
+    upgrade_.setRace(replayData_.header.playerRace);
+    upgrade_.setVersion(replayData_.header.gameVersion);
+    upgrade_.setActions(replayData_.data.actions, replayData_.data.gameStep);
 }
 
 auto ReplayParser::sample(std::size_t timeIdx, bool unit_alliance) const noexcept -> py::dict
@@ -192,28 +193,30 @@ auto ReplayParser::sample(std::size_t timeIdx, bool unit_alliance) const noexcep
 
     // Process Units into feature vectors, maybe in inner dictionary separated by alliance
     if (unit_alliance) {
-        result["units"] = transformUnitsByAlliance<feature_t>(replayData_.units[timeIdx]);
+        result["units"] = transformUnitsByAlliance<feature_t>(replayData_.data.units[timeIdx]);
     } else {
-        result["units"] = transformUnits<feature_t>(replayData_.units[timeIdx]);
+        result["units"] = transformUnits<feature_t>(replayData_.data.units[timeIdx]);
     }
-    result["neutral_units"] = transformUnits<feature_t>(replayData_.neutralUnits[timeIdx]);
+    result["neutral_units"] = transformUnits<feature_t>(replayData_.data.neutralUnits[timeIdx]);
 
     // Create python list of actions, but keep in native struct rather than feature vector
     py::list actions;
-    std::ranges::for_each(replayData_.actions[timeIdx], [&](const Action &a) { actions.append(a); });
+    std::ranges::for_each(replayData_.data.actions[timeIdx], [&](const Action &a) { actions.append(a); });
     result["actions"] = actions;
 
     // Create feature image or minimap and feature vector of game state scalars (score, vespene, pop army etc.)
     result["minimap_features"] = createMinimapFeatures<feature_t>(replayData_, timeIdx);
-    result["scalar_features"] = createScalarFeatures<feature_t>(replayData_, timeIdx);
+    result["scalar_features"] = createScalarFeatures<feature_t>(replayData_.data, timeIdx);
 
     return result;
 }
 
-auto ReplayParser::size() const noexcept -> std::size_t { return replayData_.gameStep.size(); }
+auto ReplayParser::size() const noexcept -> std::size_t { return replayData_.data.gameStep.size(); }
 
-auto ReplayParser::empty() const noexcept -> bool { return replayData_.gameStep.empty(); }
+auto ReplayParser::empty() const noexcept -> bool { return replayData_.data.gameStep.empty(); }
 
-auto ReplayParser::data() const noexcept -> const ReplayDataSoA & { return replayData_; }
+auto ReplayParser::data() const noexcept -> const StepDataSoA & { return replayData_.data; }
+
+auto ReplayParser::info() const noexcept -> const ReplayInfo & { return replayData_.header; }
 
 }// namespace cvt

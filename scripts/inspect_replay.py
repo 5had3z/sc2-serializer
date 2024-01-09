@@ -48,8 +48,8 @@ def make_units_video(parser: sc2_replay_reader.ReplayParser, fname: Path):
     for tidx in range(parser.size()):
         sample = parser.sample(tidx)
         ax.clear()
-        ax.set_xlim(0, parser.data.mapWidth)
-        ax.set_ylim(0, parser.data.mapHeight)
+        ax.set_xlim(0, parser.info.mapWidth)
+        ax.set_ylim(0, parser.info.mapHeight)
         unit_xy = sample["units"][:, [UnitOH.x, UnitOH.y]]
         for a, c in zip([UnitOH.alliance_self, UnitOH.alliance_enemy], ["blue", "red"]):
             unit_filt = unit_xy[sample["units"][:, a] == 1]
@@ -125,7 +125,7 @@ def inspect(
         # fmt: on
         replay_data = db.getEntry(idx)
         for attr in img_attrs:
-            image_sequence = getattr(replay_data, attr)
+            image_sequence = getattr(replay_data.data, attr)
             make_minimap_video(image_sequence, outfolder / f"{attr}.webm")
 
 

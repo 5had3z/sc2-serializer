@@ -333,7 +333,8 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def("parse_replay", &cvt::ReplayParser::parseReplay, py::arg("replayData"))
         .def("size", &cvt::ReplayParser::size)
         .def("empty", &cvt::ReplayParser::empty)
-        .def_property_readonly("data", &cvt::ReplayParser::data, py::return_value_policy::reference_internal);
+        .def_property_readonly("data", &cvt::ReplayParser::data, py::return_value_policy::reference_internal)
+        .def_property_readonly("info", &cvt::ReplayParser::info, py::return_value_policy::reference_internal);
 
     m.def("setReplayDBLoggingLevel", &cvt::setReplayDBLoggingLevel, py::arg("lvl"));
 

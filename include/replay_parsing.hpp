@@ -61,7 +61,7 @@ class ReplayParser
     explicit ReplayParser(const std::filesystem::path &dataPath) noexcept;
 
     // Parse replay data, ready to sample from
-    void parseReplay(ReplayDataSoA replayData);
+    void parseReplay(ReplayData2SoA replayData);
 
     // Returns a python dictionary containing features from that timestep
     [[nodiscard]] auto sample(std::size_t timeIdx, bool unit_alliance = false) const noexcept -> py::dict;
@@ -73,11 +73,13 @@ class ReplayParser
     [[nodiscard]] auto empty() const noexcept -> bool;
 
     // Return read-only reference to currently loaded replay data
-    [[nodiscard]] auto data() const noexcept -> const ReplayDataSoA &;
+    [[nodiscard]] auto data() const noexcept -> const StepDataSoA &;
+
+    [[nodiscard]] auto info() const noexcept -> const ReplayInfo &;
 
   private:
     UpgradeTiming upgrade_;
-    ReplayDataSoA replayData_{};
+    ReplayData2SoA replayData_{};
 };
 
 
