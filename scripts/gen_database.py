@@ -18,7 +18,7 @@ app = typer.Typer()
 def custom_collate(batch):
     # No read success in entire batch
     if not any(item["read_success"] for item in batch):
-        raise Exception(
+        raise RuntimeError(
             f"Nothing successful in entire batch of length {len(batch)}, try making it larger"
         )
     if all(item["read_success"] for item in batch):
