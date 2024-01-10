@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['score_0',['Score',['../d1/d48/structcvt_1_1_score.html',1,'cvt']]],
-  ['stepdata_1',['StepData',['../d1/df0/structcvt_1_1_step_data.html',1,'cvt']]],
-  ['stridedconverter_2',['StridedConverter',['../d5/db8/classcvt_1_1_strided_converter.html',1,'cvt']]]
+  ['point2d_0',['Point2d',['../d3/d7a/structcvt_1_1_point2d.html',1,'cvt']]],
+  ['point3f_1',['Point3f',['../d5/db6/structcvt_1_1_point3f.html',1,'cvt']]]
 ];

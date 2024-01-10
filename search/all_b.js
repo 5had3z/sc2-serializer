@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['path_0',['path',['../da/da1/classcvt_1_1_replay_database.html#ab1d8783310e724b98ad18aa01a1ef9e7',1,'cvt::ReplayDatabase']]],
-  ['point2d_1',['Point2d',['../d3/d7a/structcvt_1_1_point2d.html',1,'cvt']]],
-  ['point3f_2',['Point3f',['../d5/db6/structcvt_1_1_point3f.html',1,'cvt']]],
-  ['progress_3',['progress',['../d2/d3c/structcvt_1_1_unit_order.html#afac732cb56dde1af1fd32c27af49f6be',1,'cvt::UnitOrder']]]
+  ['ongameend_0',['OnGameEnd',['../d8/d39/classcvt_1_1_base_converter.html#a3b7164d8368b3298aeba8f70ec28effe',1,'cvt::BaseConverter']]],
+  ['ongamestart_1',['ongamestart',['../d8/d39/classcvt_1_1_base_converter.html#a0153640dd6d53ec079cef40f1c08263a',1,'cvt::BaseConverter::OnGameStart()'],['../d5/db8/classcvt_1_1_strided_converter.html#aba2f60a6b05cc7f75b621ca73714948a',1,'cvt::StridedConverter::OnGameStart()']]],
+  ['open_2',['open',['../da/da1/classcvt_1_1_replay_database.html#a06f8646d61cc16572fa35cf7cce7ed71',1,'cvt::ReplayDatabase']]]
 ];

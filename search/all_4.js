@@ -1,8 +1,14 @@
 var searchData=
 [
-  ['getentry_0',['getEntry',['../da/da1/classcvt_1_1_replay_database.html#af8a5e2163ccc76422beea20e5bbee96c',1,'cvt::ReplayDatabase']]],
-  ['gethashes_1',['getHashes',['../da/da1/classcvt_1_1_replay_database.html#a483b3e765154aa97e38d7468e957756d',1,'cvt::ReplayDatabase']]],
-  ['gethashid_2',['getHashId',['../da/da1/classcvt_1_1_replay_database.html#ab3a25c07b29393dc139392aabfe42c94',1,'cvt::ReplayDatabase']]],
-  ['gethashidentry_3',['getHashIdEntry',['../da/da1/classcvt_1_1_replay_database.html#ab45a5e872056604764534dfd45970a3c',1,'cvt::ReplayDatabase']]],
-  ['getstride_4',['GetStride',['../d5/db8/classcvt_1_1_strided_converter.html#a8aad159460beb72f9c2cde55fd858648',1,'cvt::StridedConverter']]]
+  ['flattenedunits_0',['FlattenedUnits',['../da/d16/structcvt_1_1_flattened_units.html',1,'cvt']]],
+  ['flattenedunits2_1',['FlattenedUnits2',['../d3/d69/structcvt_1_1_flattened_units2.html',1,'cvt']]],
+  ['flattenedunits3_2',['FlattenedUnits3',['../d6/ded/structcvt_1_1_flattened_units3.html',1,'cvt']]],
+  ['formatter_3c_20cvt_3a_3aaddon_20_3e_3',['formatter&lt; cvt::AddOn &gt;',['../d8/d44/structfmt_1_1formatter_3_01cvt_1_1_add_on_01_4.html',1,'fmt']]],
+  ['formatter_3c_20cvt_3a_3aalliance_20_3e_4',['formatter&lt; cvt::Alliance &gt;',['../d1/dbb/structfmt_1_1formatter_3_01cvt_1_1_alliance_01_4.html',1,'fmt']]],
+  ['formatter_3c_20cvt_3a_3acloakstate_20_3e_5',['formatter&lt; cvt::CloakState &gt;',['../d7/d33/structfmt_1_1formatter_3_01cvt_1_1_cloak_state_01_4.html',1,'fmt']]],
+  ['formatter_3c_20cvt_3a_3arace_20_3e_6',['formatter&lt; cvt::Race &gt;',['../d3/d59/structfmt_1_1formatter_3_01cvt_1_1_race_01_4.html',1,'fmt']]],
+  ['formatter_3c_20cvt_3a_3aresult_20_3e_7',['formatter&lt; cvt::Result &gt;',['../d1/df6/structfmt_1_1formatter_3_01cvt_1_1_result_01_4.html',1,'fmt']]],
+  ['formatter_3c_20cvt_3a_3avisibility_20_3e_8',['formatter&lt; cvt::Visibility &gt;',['../dc/d6d/structfmt_1_1formatter_3_01cvt_1_1_visibility_01_4.html',1,'fmt']]],
+  ['frequencytimer_9',['FrequencyTimer',['../de/d40/classcvt_1_1_frequency_timer.html',1,'cvt']]],
+  ['fullconverter_10',['FullConverter',['../db/d39/classcvt_1_1_full_converter.html',1,'cvt']]]
 ];

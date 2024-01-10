@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['image_0',['Image',['../d1/d0a/structcvt_1_1_image.html',1,'cvt']]],
-  ['image_3c_20bool_20_3e_1',['Image&lt; bool &gt;',['../d1/d0a/structcvt_1_1_image.html',1,'cvt']]],
-  ['image_3c_20std_3a_3auint8_5ft_20_3e_2',['Image&lt; std::uint8_t &gt;',['../d1/d0a/structcvt_1_1_image.html',1,'cvt']]]
+  ['databaseinterface_0',['DatabaseInterface',['../d2/d1e/structcvt_1_1_database_interface.html',1,'cvt']]],
+  ['databaseinterface_3c_20replaydata2soa_20_3e_1',['DatabaseInterface&lt; ReplayData2SoA &gt;',['../d2/d45/structcvt_1_1_database_interface_3_01_replay_data2_so_a_01_4.html',1,'cvt']]],
+  ['databaseinterface_3c_20replaydatasoa_20_3e_2',['DatabaseInterface&lt; ReplayDataSoA &gt;',['../db/d9d/structcvt_1_1_database_interface_3_01_replay_data_so_a_01_4.html',1,'cvt']]]
 ];

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['neutralunit_0',['NeutralUnit',['../de/dea/structcvt_1_1_neutral_unit.html',1,'cvt']]],
-  ['neutralunitsoa_1',['NeutralUnitSoA',['../d9/da4/structcvt_1_1_neutral_unit_so_a.html',1,'cvt']]]
+  ['maxentries_0',['maxEntries',['../da/da1/classcvt_1_1_replay_database.html#ab6df6a4e6818d3704c0f10a88cde7959',1,'cvt::ReplayDatabase']]]
 ];

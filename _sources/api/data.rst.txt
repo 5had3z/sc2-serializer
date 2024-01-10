@@ -3,5 +3,5 @@
 Data
 ========
 
-.. doxygenfile:: data.hpp
+.. doxygenfile:: replay_structures.hpp
    :project: C++ Sphinx Doxygen Breathe
