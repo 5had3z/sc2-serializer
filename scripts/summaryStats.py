@@ -77,7 +77,7 @@ class SC2Replay(Dataset):
 
             return data
 
-        data = {p: getattr(self.parser.data, p, None) for p in self.features}
+        data = {p: getattr(self.parser.info, p, None) for p in self.features}
         data = {k: int(v) if k in ENUM_KEYS else v for k, v in data.items()}
 
         for k, (_, f) in self.lambda_columns.items():

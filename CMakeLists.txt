@@ -99,7 +99,13 @@ if(SC2_CONVERTER)
   # Add submodule path
   add_subdirectory(3rdparty/s2client-api)
 
-  add_library(replay_converter STATIC src/database.cpp src/observer.cpp)
+  add_library(
+    replay_converter STATIC
+    src/database.cpp
+    src/observer_utils.cpp
+    src/observer_v1.cpp
+    src/observer_v2.cpp
+    src/replay_structures.cpp)
   target_compile_features(replay_converter PUBLIC cxx_std_23)
   target_link_libraries(
     replay_converter
@@ -125,7 +131,7 @@ if(SC2_CONVERTER)
     target_link_options(replay_converter PUBLIC -fsanitize=address,leak,undefined)
   endif()
 
-  add_executable(sc2_converter bin/converter.cpp)
+  add_executable(sc2_converter bin/replay_converter.cpp)
   target_link_libraries(
     sc2_converter
     PUBLIC replay_converter
@@ -262,9 +268,14 @@ elseif(SC2_CONVERTER)
   message("OpenCV Not Found, Not Building game_exp")
 endif()
 
-if (SC2_CONVERTER)
+if(SC2_CONVERTER)
   add_executable(format_compare bin/format_compare.cpp)
   target_compile_features(format_compare PUBLIC cxx_std_23)
   target_compile_options(format_compare PUBLIC ${_COMPILE_OPTIONS})
   target_link_libraries(format_compare PUBLIC replay_converter cxxopts)
+
+  add_executable(format_converter bin/format_converter.cpp)
+  target_compile_features(format_converter PUBLIC cxx_std_23)
+  target_compile_options(format_converter PUBLIC ${_COMPILE_OPTIONS})
+  target_link_libraries(format_converter PUBLIC replay_converter cxxopts)
 endif()

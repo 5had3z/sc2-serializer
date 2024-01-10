@@ -1,6 +1,6 @@
 #pragma once
 
-#include "data.hpp"
+#include "replay_structures.hpp"
 
 #include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
@@ -61,7 +61,7 @@ class ReplayParser
     explicit ReplayParser(const std::filesystem::path &dataPath) noexcept;
 
     // Parse replay data, ready to sample from
-    void parseReplay(ReplayDataSoA replayData);
+    void parseReplay(ReplayData2SoA replayData);
 
     // Returns a python dictionary containing features from that timestep
     [[nodiscard]] auto sample(std::size_t timeIdx, bool unit_alliance = false) const noexcept -> py::dict;
@@ -73,11 +73,13 @@ class ReplayParser
     [[nodiscard]] auto empty() const noexcept -> bool;
 
     // Return read-only reference to currently loaded replay data
-    [[nodiscard]] auto data() const noexcept -> const ReplayDataSoA &;
+    [[nodiscard]] auto data() const noexcept -> const StepDataSoA &;
+
+    [[nodiscard]] auto info() const noexcept -> const ReplayInfo &;
 
   private:
     UpgradeTiming upgrade_;
-    ReplayDataSoA replayData_{};
+    ReplayData2SoA replayData_{};
 };
 
 
@@ -95,7 +97,7 @@ template<typename T, std::output_iterator<T> It>
     for (std::size_t i = 0; i < img.size(); ++i) {
         const auto bitset = std::bitset<8>(std::to_integer<uint8_t>(img._data[i]));
 #pragma unroll
-        for (std::size_t j = 0; j < 8; ++j) { *out++ = static_cast<T>(bitset[j]); }
+        for (int j = 7; j > -1; --j) { *out++ = static_cast<T>(bitset[j]); }
     }
     return out;
 }

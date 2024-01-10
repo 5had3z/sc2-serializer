@@ -9,12 +9,12 @@ from typing import Sequence
 
 import cv2
 import numpy as np
-import sc2_replay_reader
 import typer
 from typing_extensions import Annotated
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 
+from sc2_replay_reader import ReplayDatabase, ReplayParser, GAME_INFO_FILE
 from sc2_replay_reader.unit_features import Unit, UnitOH, NeutralUnit, NeutralUnitOH
 
 app = typer.Typer()
@@ -34,7 +34,7 @@ def make_minimap_video(image_sequence: Sequence, fname: Path):
     writer.release()
 
 
-def make_units_video(parser: sc2_replay_reader.ReplayParser, fname: Path):
+def make_units_video(parser: ReplayParser, fname: Path):
     img_w = 1920
     img_h = 1080
     writer = cv2.VideoWriter(
@@ -48,8 +48,8 @@ def make_units_video(parser: sc2_replay_reader.ReplayParser, fname: Path):
     for tidx in range(parser.size()):
         sample = parser.sample(tidx)
         ax.clear()
-        ax.set_xlim(0, parser.data.mapWidth)
-        ax.set_ylim(0, parser.data.mapHeight)
+        ax.set_xlim(0, parser.info.mapWidth)
+        ax.set_ylim(0, parser.info.mapHeight)
         unit_xy = sample["units"][:, [UnitOH.x, UnitOH.y]]
         for a, c in zip([UnitOH.alliance_self, UnitOH.alliance_enemy], ["blue", "red"]):
             unit_filt = unit_xy[sample["units"][:, a] == 1]
@@ -68,16 +68,17 @@ def make_units_video(parser: sc2_replay_reader.ReplayParser, fname: Path):
     writer.release()
 
 
-def test_parseable(db, idx, parser):
+def test_parseable(db: ReplayDatabase, parser: ReplayParser):
     """Try parse db at index with parser"""
-    replay_data = db.getEntry(idx)
-    parser.parse_replay(replay_data)
+    for idx in range(db.size()):
+        replay_data = db.getEntry(idx)
+        parser.parse_replay(replay_data)
 
 
 @app.command()
 def count(folder: Annotated[Path, typer.Option(help="Folder to count replays")]):
     """Count number of replays in a set of shards"""
-    db = sc2_replay_reader.ReplayDatabase()
+    db = ReplayDatabase()
     total = 0
     for file in folder.iterdir():
         if file.suffix == ".SC2Replays":
@@ -104,19 +105,20 @@ def inspect(
     / "workspace",
 ):
     """"""
-    db = sc2_replay_reader.ReplayDatabase(file)
-    parser = sc2_replay_reader.ReplayParser(sc2_replay_reader.GAME_INFO_FILE)
+    db = ReplayDatabase(file)
+    parser = ReplayParser(GAME_INFO_FILE)
 
     if command is SubCommand.test_parseable:
-        for i in range(db.size()):
-            test_parseable(db, i, parser)
+        test_parseable(db, parser)
         print("Ok")
 
     elif command is SubCommand.scatter_units:
+        outfolder.mkdir(exist_ok=True)
         parser.parse_replay(db.getEntry(idx))
-        make_units_video(parser, outfolder / "raw_units1.webm")
+        make_units_video(parser, outfolder / "raw_units.webm")
 
     elif command is SubCommand.minimap_video:
+        outfolder.mkdir(exist_ok=True)
         # fmt: off
         img_attrs = [
             "alerts", "buildable", "creep", "pathable",
@@ -125,7 +127,7 @@ def inspect(
         # fmt: on
         replay_data = db.getEntry(idx)
         for attr in img_attrs:
-            image_sequence = getattr(replay_data, attr)
+            image_sequence = getattr(replay_data.data, attr)
             make_minimap_video(image_sequence, outfolder / f"{attr}.webm")
 
 

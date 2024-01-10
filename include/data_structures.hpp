@@ -1,7 +1,6 @@
 #pragma once
 
 #include <boost/pfr.hpp>
-#include <spdlog/fmt/bundled/format.h>
 
 #include <algorithm>
 #include <array>
@@ -14,221 +13,7 @@
 #include <string>
 #include <vector>
 
-// Enum things
-namespace cvt {
-
-// Converts an enum value to a one-hot encoding
-template<typename E, typename T>
-    requires std::is_enum_v<E>
-constexpr auto enumToOneHot(E e) noexcept -> std::vector<T>;
-
-namespace detail {
-    template<typename T>
-    constexpr auto enumToOneHot_helper(auto enumVal, const std::ranges::range auto &enumValues) -> std::vector<T>
-    {
-        auto it = std::ranges::find(enumValues, enumVal);
-        std::vector<T> ret(enumValues.size());
-        ret[std::distance(enumValues.begin(), it)] = static_cast<T>(1);
-        return ret;
-    }
-}// namespace detail
-
-enum class Alliance : char { Self = 1, Ally = 2, Neutral = 3, Enemy = 4 };
-
-template<typename T> auto enumToOneHot(Alliance e) noexcept -> std::vector<T>
-{
-    constexpr std::array vals = std::array{ Alliance::Self, Alliance::Ally, Alliance::Neutral, Alliance::Enemy };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
-}
-
-enum class CloakState : char { Unknown = 0, Cloaked = 1, Detected = 2, UnCloaked = 3, Allied = 4 };
-
-template<typename T> auto enumToOneHot(CloakState e) noexcept -> std::vector<T>
-{
-    constexpr std::array vals = {
-        CloakState::Unknown, CloakState::Cloaked, CloakState::Detected, CloakState::UnCloaked, CloakState::Allied
-    };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
-}
-
-enum class Visibility : char { Visible = 1, Snapshot = 2, Hidden = 3 };
-
-template<typename T> auto enumToOneHot(Visibility e) noexcept -> std::vector<T>
-{
-    constexpr std::array vals = { Visibility::Visible, Visibility::Snapshot, Visibility::Hidden };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
-}
-
-enum class AddOn : char { None = 0, Reactor = 1, TechLab = 2 };
-
-template<typename T> auto enumToOneHot(AddOn e) noexcept -> std::vector<T>
-{
-    constexpr std::array vals = { AddOn::None, AddOn::Reactor, AddOn::TechLab };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
-}
-
-enum class Race : char { Terran, Zerg, Protoss, Random };
-
-template<typename T> auto enumToOneHot(Race e) noexcept -> std::vector<T>
-{
-    constexpr std::array vals = { Race::Terran, Race::Zerg, Race::Protoss, Race::Random };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
-}
-
-enum class Result : char { Win, Loss, Tie, Undecided };
-
-template<typename T> auto enumToOneHot(Result e) noexcept -> std::vector<T>
-{
-    constexpr std::array vals = { Result::Win, Result::Loss, Result::Tie, Result::Undecided };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
-}
-
-
-}// namespace cvt
-
-
-template<> struct fmt::formatter<cvt::Alliance> : formatter<string_view>
-{
-    auto format(cvt::Alliance a, format_context &ctx) const
-    {
-        string_view ret = "Invalid";
-        switch (a) {
-        case cvt::Alliance::Self:
-            ret = "Self";
-            break;
-        case cvt::Alliance::Ally:
-            ret = "Ally";
-            break;
-        case cvt::Alliance::Neutral:
-            ret = "Neutral";
-            break;
-        case cvt::Alliance::Enemy:
-            ret = "Enemy";
-            break;
-        }
-        return formatter<string_view>::format(ret, ctx);
-    }
-};
-
-
-template<> struct fmt::formatter<cvt::CloakState> : formatter<string_view>
-{
-    auto format(cvt::CloakState c, format_context &ctx) const
-    {
-        string_view ret = "Invalid";
-        switch (c) {
-        case cvt::CloakState::Unknown:
-            ret = "Unknown";
-            break;
-        case cvt::CloakState::Cloaked:
-            ret = "Cloaked";
-            break;
-        case cvt::CloakState::Detected:
-            ret = "Detected";
-            break;
-        case cvt::CloakState::UnCloaked:
-            ret = "UnCloaked";
-            break;
-        case cvt::CloakState::Allied:
-            ret = "Allied";
-            break;
-        }
-        return formatter<string_view>::format(ret, ctx);
-    }
-};
-
-template<> struct fmt::formatter<cvt::Visibility> : formatter<string_view>
-{
-    // auto format(cvt::Visibility v, format_context &ctx) const;
-    auto format(cvt::Visibility v, format_context &ctx) const
-    {
-        string_view ret = "Invalid";
-        switch (v) {
-        case cvt::Visibility::Visible:
-            ret = "Visible";
-            break;
-        case cvt::Visibility::Snapshot:
-            ret = "Snapshot";
-            break;
-        case cvt::Visibility::Hidden:
-            ret = "Hidden";
-            break;
-        }
-        return formatter<string_view>::format(ret, ctx);
-    }
-};
-
-template<> struct fmt::formatter<cvt::AddOn> : formatter<string_view>
-{
-    auto format(cvt::AddOn a, format_context &ctx) const
-    {
-        string_view ret = "Invalid";
-        switch (a) {
-        case cvt::AddOn::None:
-            ret = "None";
-            break;
-        case cvt::AddOn::Reactor:
-            ret = "Reactor";
-            break;
-        case cvt::AddOn::TechLab:
-            ret = "TechLab";
-            break;
-        }
-        return formatter<string_view>::format(ret, ctx);
-    }
-};
-
-template<> struct fmt::formatter<cvt::Race> : formatter<string_view>
-{
-    auto format(cvt::Race r, format_context &ctx) const
-    {
-        string_view ret = "Invalid";
-        switch (r) {
-        case cvt::Race::Terran:
-            ret = "Terran";
-            break;
-        case cvt::Race::Zerg:
-            ret = "Zerg";
-            break;
-        case cvt::Race::Protoss:
-            ret = "Protoss";
-            break;
-        case cvt::Race::Random:
-            ret = "Random";
-            break;
-        }
-        return formatter<string_view>::format(ret, ctx);
-    }
-};
-
-template<> struct fmt::formatter<cvt::Result> : formatter<string_view>
-{
-    auto format(cvt::Result r, format_context &ctx) const
-    {
-        string_view ret = "Invalid";
-        switch (r) {
-        case cvt::Result::Win:
-            ret = "Win";
-            break;
-        case cvt::Result::Loss:
-            ret = "Loss";
-            break;
-        case cvt::Result::Tie:
-            ret = "Tie";
-            break;
-        case cvt::Result::Undecided:
-            ret = "Undecided";
-            break;
-        }
-        return formatter<string_view>::format(ret, ctx);
-    }
-};
+#include "enums.hpp"
 
 namespace cvt {
 
@@ -236,12 +21,19 @@ namespace cvt {
 
 typedef std::uint64_t UID;// Type that represents unique identifier in the game
 
+template<typename T>
+concept IsSoAType = requires(T x) {
+    typename T::struct_type;
+    {
+        x[std::size_t{}]
+    } -> std::same_as<typename T::struct_type>;
+};
 
 namespace detail {
 
     template<typename T, typename It>
         requires std::is_arithmetic_v<T>
-    constexpr auto vectorize_helper(T d, It it, bool onehotEnum) -> It
+    auto vectorize_helper(T d, It it, bool onehotEnum) -> It
     {
         *it++ = static_cast<It::container_type::value_type>(d);
         return it;
@@ -249,14 +41,14 @@ namespace detail {
 
     template<std::ranges::range T, typename It>
         requires std::is_arithmetic_v<std::ranges::range_value_t<T>>
-    constexpr auto vectorize_helper(const T &d, It it, bool onehotEnum) -> It
+    auto vectorize_helper(const T &d, It it, bool onehotEnum) -> It
     {
         return std::ranges::transform(d, it, [](auto e) { return static_cast<It::container_type::value_type>(e); }).out;
     }
 
     template<typename T, typename It>
         requires std::is_enum_v<T>
-    constexpr auto vectorize_helper(T d, It it, bool onehotEnum) -> It
+    auto vectorize_helper(T d, It it, bool onehotEnum) -> It
     {
         using value_type = It::container_type::value_type;
         if (onehotEnum) {
@@ -269,7 +61,7 @@ namespace detail {
 
     template<typename T, typename It>
         requires std::is_aggregate_v<T> && (!std::ranges::range<T>)
-    constexpr auto vectorize_helper(T d, It it, bool onehotEnum) -> It
+    auto vectorize_helper(T d, It it, bool onehotEnum) -> It
     {
         boost::pfr::for_each_field(
             d, [&it, onehotEnum](const auto &field) { it = detail::vectorize_helper(field, it, onehotEnum); });
@@ -281,7 +73,7 @@ namespace detail {
 
 template<typename S, typename It>
     requires std::is_aggregate_v<S> && std::is_arithmetic_v<typename It::container_type::value_type>
-[[maybe_unused]] constexpr auto vectorize(S s, It it, bool onehotEnum = false) -> It
+[[maybe_unused]] auto vectorize(S s, It it, bool onehotEnum = false) -> It
 {
     boost::pfr::for_each_field(
         s, [&it, onehotEnum](const auto &field) { it = detail::vectorize_helper(field, it, onehotEnum); });
@@ -291,18 +83,33 @@ template<typename S, typename It>
 // TODO: Add helper fn to check the vectorization size
 template<typename T, typename S>
     requires std::is_aggregate_v<S> && std::is_arithmetic_v<T>
-constexpr auto vectorize(S s, bool onehotEnum = false) -> std::vector<T>
+auto vectorize(S s, bool onehotEnum = false) -> std::vector<T>
 {
     std::vector<T> out;
     vectorize(s, std::back_inserter(out), onehotEnum);
     return out;
 }
 
-template<typename AoS, typename SoA> [[nodiscard]] constexpr auto AoStoSoA(const AoS &aos) noexcept -> SoA;
-template<typename AoS, typename SoA> [[nodiscard]] constexpr auto AoStoSoA(AoS &&aos) noexcept -> SoA;
+template<typename AoS, typename SoA> [[nodiscard]] auto AoStoSoA(AoS &&aos) noexcept -> SoA;
 
-template<typename AoS, typename SoA> [[nodiscard]] constexpr auto SoAtoAoS(const SoA &soa) noexcept -> AoS;
-template<typename AoS, typename SoA> [[nodiscard]] constexpr auto SoAtoAoS(SoA &&soa) noexcept -> AoS;
+template<typename AoS, typename SoA> [[nodiscard]] auto AoStoSoA(const AoS &aos) noexcept -> SoA;
+
+template<typename SoA, typename AoS> [[nodiscard]] auto SoAtoAoS(const SoA &soa) noexcept -> AoS;
+
+template<IsSoAType SoA> [[nodiscard]] auto SoAtoAoS(const SoA &soa) noexcept -> std::vector<typename SoA::struct_type>
+{
+    std::vector<typename SoA::struct_type> aos{};
+
+    // Ensure SoA is all equally sized
+    std::vector<std::size_t> sizes;
+    boost::pfr::for_each_field(soa, [&](auto &field) { sizes.push_back(field.size()); });
+    assert(std::all_of(sizes.begin(), sizes.end(), [sz = sizes.front()](std::size_t s) { return s == sz; }));
+    aos.resize(sizes.front());
+
+    // Copy data element-by-element
+    for (std::size_t idx = 0; idx < sizes.front(); ++idx) { aos[idx] = soa[idx]; }
+    return aos;
+}
 
 struct Point2d
 {
@@ -597,7 +404,7 @@ struct UnitSoA
 
     [[nodiscard]] auto operator==(const UnitSoA &other) const noexcept -> bool = default;
 
-    [[nodiscard]] constexpr auto operator[](std::size_t idx) const noexcept -> Unit
+    [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> Unit
     {
         Unit unit;
         unit.id = id[idx];
@@ -638,7 +445,7 @@ struct UnitSoA
 };
 
 template<std::ranges::range Range>
-constexpr auto AoStoSoA(Range &&aos) noexcept -> UnitSoA
+auto AoStoSoA(Range &&aos) noexcept -> UnitSoA
     requires std::is_same_v<std::ranges::range_value_t<Range>, Unit>
 {
     UnitSoA soa{};
@@ -684,21 +491,6 @@ constexpr auto AoStoSoA(Range &&aos) noexcept -> UnitSoA
         soa.add_on_tag.push_back(unit.add_on_tag);
     }
     return soa;
-}
-
-template<> constexpr auto SoAtoAoS(const UnitSoA &soa) noexcept -> std::vector<Unit>
-{
-    std::vector<Unit> aos{};
-
-    // Ensure SoA is all equally sized
-    std::vector<std::size_t> sizes;
-    boost::pfr::for_each_field(soa, [&](auto &field) { sizes.push_back(field.size()); });
-    assert(std::all_of(sizes.begin(), sizes.end(), [sz = sizes.front()](std::size_t s) { return s == sz; }));
-    aos.resize(sizes.front());
-
-    // Tediously copy unit data
-    for (std::size_t idx = 0; idx < sizes.front(); ++idx) { aos[idx] = soa[idx]; }
-    return aos;
 }
 
 
@@ -756,7 +548,7 @@ struct NeutralUnitSoA
 
     [[nodiscard]] auto operator==(const NeutralUnitSoA &other) const noexcept -> bool = default;
 
-    [[nodiscard]] constexpr auto operator[](std::size_t idx) const noexcept -> NeutralUnit
+    [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> NeutralUnit
     {
         NeutralUnit unit;
         unit.id = id[idx];
@@ -773,7 +565,7 @@ struct NeutralUnitSoA
 };
 
 template<std::ranges::range Range>
-constexpr auto AoStoSoA(Range &&aos) noexcept -> NeutralUnitSoA
+auto AoStoSoA(Range &&aos) noexcept -> NeutralUnitSoA
     requires std::is_same_v<std::ranges::range_value_t<Range>, NeutralUnit>
 {
     NeutralUnitSoA soa{};
@@ -794,24 +586,10 @@ constexpr auto AoStoSoA(Range &&aos) noexcept -> NeutralUnitSoA
     return soa;
 }
 
-template<> constexpr auto SoAtoAoS(const NeutralUnitSoA &soa) noexcept -> std::vector<NeutralUnit>
-{
-    std::vector<NeutralUnit> aos{};
-
-    // Ensure SoA is all equally sized
-    std::vector<std::size_t> sizes;
-    boost::pfr::for_each_field(soa, [&](auto &field) { sizes.push_back(field.size()); });
-    assert(std::all_of(sizes.begin(), sizes.end(), [sz = sizes.front()](std::size_t s) { return s == sz; }));
-    aos.resize(sizes.front());
-
-    // Tediously copy data
-    for (std::size_t idx = 0; idx < sizes.front(); ++idx) { aos[idx] = soa[idx]; }
-    return aos;
-}
 
 struct Action
 {
-    enum Target_Type { Self, OtherUnit, Position };
+    enum TargetType { Self, OtherUnit, Position };
 
     // Use chat union and tag here because it's needed for serialization anyway
     union Target {
@@ -838,7 +616,7 @@ struct Action
 
     std::vector<UID> unit_ids{};
     int ability_id{};
-    Target_Type target_type{ Target_Type::Self };
+    TargetType target_type{ TargetType::Self };
     Target target{};
 
     [[nodiscard]] auto operator==(const Action &other) const noexcept -> bool
@@ -852,20 +630,20 @@ struct Action
 
         // Check if the unions match depending on tag (skip self check)
         switch (target_type) {
-        case Action::Target_Type::Position:
+        case Action::TargetType::Position:
             return target.point == other.target.point;
-        case Action::Target_Type::OtherUnit:
+        case Action::TargetType::OtherUnit:
             return target.other == other.target.other;
-        case Action::Target_Type::Self:
+        case Action::TargetType::Self:
             return true;
         }
         return false;// Unknown union type
     }
 };
 
-template<typename T> auto enumToOneHot(Action::Target_Type e) noexcept -> std::vector<T>
+template<typename T> auto enumToOneHot(Action::TargetType e) noexcept -> std::vector<T>
 {
-    using E = Action::Target_Type;
+    using E = Action::TargetType;
     constexpr std::array vals = { E::Self, E::OtherUnit, E::Position };
     return detail::enumToOneHot_helper<T>(e, vals);
 }
@@ -892,40 +670,9 @@ struct StepData
     [[nodiscard]] auto operator==(const StepData &other) const noexcept -> bool = default;
 };
 
-
-struct ReplayData
+struct StepDataSoA
 {
-    using value_type = ReplayData;
-    std::string replayHash{};
-    std::string gameVersion{};
-    std::uint32_t playerId{};
-    Race playerRace{ Race::Random };
-    Result playerResult{ Result::Undecided };
-    int playerMMR{};
-    int playerAPM{};
-    int mapWidth{};
-    int mapHeight{};
-    Image<std::uint8_t> heightMap{};
-    std::vector<StepData> stepData{};
-
-    [[nodiscard]] auto operator==(const ReplayData &other) const noexcept -> bool = default;
-};
-
-struct ReplayDataSoA
-{
-    using struct_type = ReplayData;
-    std::string replayHash{};
-    std::string gameVersion{};
-    std::uint32_t playerId{};
-    Race playerRace{ Race::Random };
-    Result playerResult{ Result::Undecided };
-    int playerMMR{};
-    int playerAPM{};
-    int mapWidth{};
-    int mapHeight{};
-    Image<std::uint8_t> heightMap{};
-
-    // Step data
+    using struct_type = StepData;
     std::vector<std::uint32_t> gameStep{};
     std::vector<std::uint16_t> minearals{};
     std::vector<std::uint16_t> vespene{};
@@ -943,83 +690,61 @@ struct ReplayDataSoA
     std::vector<std::vector<Unit>> units{};
     std::vector<std::vector<NeutralUnit>> neutralUnits{};
 
-    [[nodiscard]] auto operator==(const ReplayDataSoA &other) const noexcept -> bool = default;
+    [[nodiscard]] auto operator==(const StepDataSoA &other) const noexcept -> bool = default;
+
+    [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> StepData
+    {
+        StepData stepData;
+        stepData.gameStep = gameStep[idx];
+        stepData.minearals = minearals[idx];
+        stepData.vespene = vespene[idx];
+        stepData.popMax = popMax[idx];
+        stepData.popArmy = popArmy[idx];
+        stepData.popWorkers = popWorkers[idx];
+        stepData.score = score[idx];
+        stepData.visibility = visibility[idx];
+        stepData.creep = creep[idx];
+        stepData.player_relative = player_relative[idx];
+        stepData.alerts = alerts[idx];
+        stepData.buildable = buildable[idx];
+        stepData.pathable = pathable[idx];
+        stepData.actions = actions[idx];
+        stepData.units = units[idx];
+        stepData.neutralUnits = neutralUnits[idx];
+        return stepData;
+    }
 };
 
-template<> constexpr auto AoStoSoA(const ReplayData &aos) noexcept -> ReplayDataSoA
-{
-    ReplayDataSoA soa = {
-        .replayHash = aos.replayHash,
-        .gameVersion = aos.gameVersion,
-        .playerId = aos.playerId,
-        .playerRace = aos.playerRace,
-        .playerResult = aos.playerResult,
-        .playerMMR = aos.playerMMR,
-        .playerAPM = aos.playerAPM,
-        .mapWidth = aos.mapWidth,
-        .mapHeight = aos.mapHeight,
-        .heightMap = aos.heightMap,
-    };
+static_assert(IsSoAType<StepDataSoA>);
 
-    for (const StepData &step : aos.stepData) {
-        soa.gameStep.push_back(step.gameStep);
-        soa.minearals.push_back(step.minearals);
-        soa.vespene.push_back(step.vespene);
-        soa.popMax.push_back(step.popMax);
-        soa.popArmy.push_back(step.popArmy);
-        soa.popWorkers.push_back(step.popWorkers);
-        soa.score.push_back(step.score);
-        soa.visibility.push_back(step.visibility);
-        soa.creep.push_back(step.creep);
-        soa.player_relative.push_back(step.player_relative);
-        soa.alerts.push_back(step.alerts);
-        soa.buildable.push_back(step.buildable);
-        soa.pathable.push_back(step.pathable);
-        soa.actions.push_back(step.actions);
-        soa.units.push_back(step.units);
-        soa.neutralUnits.push_back(step.neutralUnits);
+template<std::ranges::range Range>
+    requires std::same_as<std::ranges::range_value_t<Range>, StepData>
+auto AoStoSoA(Range &&aos) noexcept -> StepDataSoA
+{
+    StepDataSoA soa;
+
+    // Preallocate for expected size
+    boost::pfr::for_each_field(soa, [&](auto &field) { field.reserve(aos.size()); });
+
+    for (auto &&step : aos) {
+        soa.gameStep.emplace_back(step.gameStep);
+        soa.minearals.emplace_back(step.minearals);
+        soa.vespene.emplace_back(step.vespene);
+        soa.popMax.emplace_back(step.popMax);
+        soa.popArmy.emplace_back(step.popArmy);
+        soa.popWorkers.emplace_back(step.popWorkers);
+        soa.score.emplace_back(step.score);
+        soa.visibility.emplace_back(step.visibility);
+        soa.creep.emplace_back(step.creep);
+        soa.player_relative.emplace_back(step.player_relative);
+        soa.alerts.emplace_back(step.alerts);
+        soa.buildable.emplace_back(step.buildable);
+        soa.pathable.emplace_back(step.pathable);
+        soa.actions.emplace_back(step.actions);
+        soa.units.emplace_back(step.units);
+        soa.neutralUnits.emplace_back(step.neutralUnits);
     }
     return soa;
-}
-
-template<> constexpr auto SoAtoAoS(const ReplayDataSoA &soa) noexcept -> ReplayData
-{
-    ReplayData aos = {
-        .replayHash = soa.replayHash,
-        .gameVersion = soa.gameVersion,
-        .playerId = soa.playerId,
-        .playerRace = soa.playerRace,
-        .playerResult = soa.playerResult,
-        .playerMMR = soa.playerMMR,
-        .playerAPM = soa.playerAPM,
-        .mapWidth = soa.mapWidth,
-        .mapHeight = soa.mapHeight,
-        .heightMap = soa.heightMap,
-    };
-
-    auto &stepDataVec = aos.stepData;
-    stepDataVec.resize(soa.units.size());
-
-    for (std::size_t idx = 0; idx < stepDataVec.size(); ++idx) {
-        auto &stepData = stepDataVec[idx];
-        if (idx < soa.gameStep.size()) { stepData.gameStep = soa.gameStep[idx]; }
-        if (idx < soa.minearals.size()) { stepData.minearals = soa.minearals[idx]; }
-        if (idx < soa.vespene.size()) { stepData.vespene = soa.vespene[idx]; }
-        if (idx < soa.popMax.size()) { stepData.popMax = soa.popMax[idx]; }
-        if (idx < soa.popArmy.size()) { stepData.popArmy = soa.popArmy[idx]; }
-        if (idx < soa.popWorkers.size()) { stepData.popWorkers = soa.popWorkers[idx]; }
-        if (idx < soa.score.size()) { stepData.score = soa.score[idx]; }
-        if (idx < soa.visibility.size()) { stepData.visibility = soa.visibility[idx]; }
-        if (idx < soa.creep.size()) { stepData.creep = soa.creep[idx]; }
-        if (idx < soa.player_relative.size()) { stepData.player_relative = soa.player_relative[idx]; }
-        if (idx < soa.alerts.size()) { stepData.alerts = soa.alerts[idx]; }
-        if (idx < soa.buildable.size()) { stepData.buildable = soa.buildable[idx]; }
-        if (idx < soa.pathable.size()) { stepData.pathable = soa.pathable[idx]; }
-        if (idx < soa.actions.size()) { stepData.actions = soa.actions[idx]; }
-        if (idx < soa.units.size()) { stepData.units = soa.units[idx]; }
-        if (idx < soa.neutralUnits.size()) { stepData.neutralUnits = soa.neutralUnits[idx]; }
-    }
-    return aos;
 }
 
 }// namespace cvt

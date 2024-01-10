@@ -3,6 +3,7 @@
 
 #include <pybind11/functional.h>// Include this header for Pybind11 string conversions
 #include <pybind11/numpy.h>
+#include <pybind11/operators.h>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/stl/filesystem.h>
@@ -78,10 +79,10 @@ void bindEnums(py::module &m)
         .value("Allied", cvt::CloakState::Allied)
         .export_values();
 
-    py::enum_<cvt::Action::Target_Type>(m, "ActionTargetType")
-        .value("Self", cvt::Action::Target_Type::Self)
-        .value("OtherUnit", cvt::Action::Target_Type::OtherUnit)
-        .value("Position", cvt::Action::Target_Type::Position)
+    py::enum_<cvt::Action::TargetType>(m, "ActionTargetType")
+        .value("Self", cvt::Action::TargetType::Self)
+        .value("OtherUnit", cvt::Action::TargetType::OtherUnit)
+        .value("Position", cvt::Action::TargetType::Position)
         .export_values();
 
     py::enum_<cvt::Visibility>(m, "Visibility")
@@ -145,17 +146,19 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
 
     py::class_<cvt::Action>(m, "Action")
         .def(py::init<>())
+        .def(py::self == py::self)
+        .def(py::self != py::self)
         .def_readonly("unit_ids", &cvt::Action::unit_ids)
         .def_readonly("ability_id", &cvt::Action::ability_id)
         .def_readonly("target_type", &cvt::Action::target_type)
         .def_property_readonly("target_point",
             [](const cvt::Action &action) -> std::optional<cvt::Point2d> {
-                return action.target_type == cvt::Action::Target_Type::Position ? std::optional{ action.target.point }
-                                                                                : std::nullopt;
+                return action.target_type == cvt::Action::TargetType::Position ? std::optional{ action.target.point }
+                                                                               : std::nullopt;
             })
         .def_property_readonly("target_other", [](const cvt::Action &action) -> std::optional<cvt::UID> {
-            return action.target_type == cvt::Action::Target_Type::OtherUnit ? std::optional{ action.target.other }
-                                                                             : std::nullopt;
+            return action.target_type == cvt::Action::TargetType::OtherUnit ? std::optional{ action.target.other }
+                                                                            : std::nullopt;
         });
 
     py::class_<cvt::UnitOrder>(m, "UnitOrder")
@@ -166,6 +169,8 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
 
     py::class_<cvt::Score>(m, "Score")
         .def(py::init<>())
+        .def(py::self == py::self)
+        .def(py::self != py::self)
         .def_readonly("score_float", &cvt::Score::score_float)
         .def_readonly("idle_production_time", &cvt::Score::idle_production_time)
         .def_readonly("idle_worker_time", &cvt::Score::idle_worker_time)
@@ -191,6 +196,9 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
 
     py::class_<cvt::Unit>(m, "Unit")
         .def(py::init<>())
+        .def(py::self == py::self)
+        .def(py::self != py::self)
+        .def("__hash__", [](const cvt::Unit &data) { return data.id; })
         .def_readwrite("id", &cvt::Unit::id)
         .def_readwrite("tgtId", &cvt::Unit::tgtId)
         .def_readwrite("observation", &cvt::Unit::observation)
@@ -235,6 +243,9 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
 
     py::class_<cvt::NeutralUnit>(m, "NeutralUnit")
         .def(py::init<>())
+        .def(py::self == py::self)
+        .def(py::self != py::self)
+        .def("__hash__", [](const cvt::NeutralUnit &data) { return data.id; })
         .def_readwrite("id", &cvt::NeutralUnit::id)
         .def_readwrite("unitType", &cvt::NeutralUnit::unitType)
         .def_readwrite("observation", &cvt::NeutralUnit::observation)
@@ -281,15 +292,56 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readwrite("units", &cvt::ReplayDataSoA::units)
         .def_readwrite("neutralUnits", &cvt::ReplayDataSoA::neutralUnits);
 
+    py::class_<cvt::StepDataSoA>(m, "StepDataSoA")
+        .def(py::self == py::self)
+        .def(py::self != py::self)
+        .def_readwrite("gameStep", &cvt::StepDataSoA::gameStep)
+        .def_readwrite("minerals", &cvt::StepDataSoA::minearals)
+        .def_readwrite("vespene", &cvt::StepDataSoA::vespene)
+        .def_readwrite("popMax", &cvt::StepDataSoA::popMax)
+        .def_readwrite("popArmy", &cvt::StepDataSoA::popArmy)
+        .def_readwrite("popWorkers", &cvt::StepDataSoA::popWorkers)
+        .def_readwrite("score", &cvt::StepDataSoA::score)
+        .def_readwrite("visibility", &cvt::StepDataSoA::visibility)
+        .def_readwrite("creep", &cvt::StepDataSoA::creep)
+        .def_readwrite("player_relative", &cvt::StepDataSoA::player_relative)
+        .def_readwrite("alerts", &cvt::StepDataSoA::alerts)
+        .def_readwrite("buildable", &cvt::StepDataSoA::buildable)
+        .def_readwrite("pathable", &cvt::StepDataSoA::pathable)
+        .def_readwrite("actions", &cvt::StepDataSoA::actions)
+        .def_readwrite("units", &cvt::StepDataSoA::units)
+        .def_readwrite("neutralUnits", &cvt::StepDataSoA::neutralUnits);
+
+    py::class_<cvt::ReplayInfo>(m, "ReplayInfo")
+        .def(py::self == py::self)
+        .def(py::self != py::self)
+        .def_readwrite("replayHash", &cvt::ReplayInfo::replayHash)
+        .def_readwrite("gameVersion", &cvt::ReplayInfo::gameVersion)
+        .def_readwrite("playerId", &cvt::ReplayInfo::playerId)
+        .def_readwrite("durationSteps", &cvt::ReplayInfo::durationSteps)
+        .def_readwrite("playerRace", &cvt::ReplayInfo::playerRace)
+        .def_readwrite("playerResult", &cvt::ReplayInfo::playerResult)
+        .def_readwrite("playerMMR", &cvt::ReplayInfo::playerMMR)
+        .def_readwrite("playerAPM", &cvt::ReplayInfo::playerAPM)
+        .def_readwrite("mapWidth", &cvt::ReplayInfo::mapWidth)
+        .def_readwrite("mapHeight", &cvt::ReplayInfo::mapHeight)
+        .def_readwrite("heightMap", &cvt::ReplayInfo::heightMap);
+
+    py::class_<cvt::ReplayData2SoA>(m, "ReplayData2SoA")
+        .def_readwrite("header", &cvt::ReplayData2SoA::header)
+        .def_readwrite("data", &cvt::ReplayData2SoA::data);
+
     // Expose ReplayDatabase class
-    py::class_<cvt::ReplayDatabase>(m, "ReplayDatabase")
+    using ReplayDataType = cvt::ReplayData2SoA;
+    py::class_<cvt::ReplayDatabase<ReplayDataType>>(m, "ReplayDatabase")
         .def(py::init<>())
         .def(py::init<const std::filesystem::path &>(), py::arg("dbPath"))
-        .def("open", &cvt::ReplayDatabase::open, py::arg("dbPath"))
-        .def("isFull", &cvt::ReplayDatabase::isFull)
-        .def("size", &cvt::ReplayDatabase::size)
-        .def("getEntry", &cvt::ReplayDatabase::getEntry, py::arg("index"))
-        .def("getHashIdEntry", &cvt::ReplayDatabase::getHashId, py::arg("index"));
+        .def("open", &cvt::ReplayDatabase<ReplayDataType>::open, py::arg("dbPath"))
+        .def("isFull", &cvt::ReplayDatabase<ReplayDataType>::isFull)
+        .def("size", &cvt::ReplayDatabase<ReplayDataType>::size)
+        .def("getEntry", &cvt::ReplayDatabase<ReplayDataType>::getEntry, py::arg("index"))
+        .def("getHeader", &cvt::ReplayDatabase<ReplayDataType>::getHeader, py::arg("index"))
+        .def("getHashIdEntry", &cvt::ReplayDatabase<ReplayDataType>::getHashId, py::arg("index"));
 
     py::class_<cvt::ReplayParser>(m, "ReplayParser")
         .def(py::init<const std::filesystem::path &>(), py::arg("dataPath"))
@@ -297,7 +349,8 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def("parse_replay", &cvt::ReplayParser::parseReplay, py::arg("replayData"))
         .def("size", &cvt::ReplayParser::size)
         .def("empty", &cvt::ReplayParser::empty)
-        .def_property_readonly("data", &cvt::ReplayParser::data, py::return_value_policy::reference_internal);
+        .def_property_readonly("data", &cvt::ReplayParser::data, py::return_value_policy::reference_internal)
+        .def_property_readonly("info", &cvt::ReplayParser::info, py::return_value_policy::reference_internal);
 
     m.def("setReplayDBLoggingLevel", &cvt::setReplayDBLoggingLevel, py::arg("lvl"));
 

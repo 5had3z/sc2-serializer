@@ -45,17 +45,17 @@ def from_database(file: Path, idx: int):
     db = sc2_replay_reader.ReplayDatabase(file)
     replay_data = db.getEntry(idx)
 
-    for unit in replay_data.neutralUnits[0]:
+    for unit in replay_data.data.neutralUnits[0]:
         if unit.contents > 0:
             temp[unit.id] = []
 
-    for time_step in replay_data.neutralUnits:
+    for time_step in replay_data.data.neutralUnits:
         for unit in time_step:
             if unit.id in temp:
                 temp[unit.id].append(unit.contents)
 
     resources: list[Resource] = []
-    for unit in replay_data.neutralUnits[-1]:
+    for unit in replay_data.data.neutralUnits[-1]:
         if unit.contents > 0:
             pos = np.array([unit.pos.x, unit.pos.y, unit.pos.z])
             resources.append(Resource(unit.id, pos, np.array(temp[unit.id])))
@@ -68,11 +68,11 @@ def find_later_additions(file: Path, idx: int):
     replay_data = db.getEntry(idx)
 
     starter_resources: dict[int, Resource] = {
-        u.id: Resource(u.id, u.pos, 0) for u in replay_data.neutralUnits[0]
+        u.id: Resource(u.id, u.pos, 0) for u in replay_data.data.neutralUnits[0]
     }
     new_resources: list[Resource] = []
 
-    for timestep in replay_data.neutralUnits:
+    for timestep in replay_data.data.neutralUnits:
         for unit in timestep:
             if unit.id not in starter_resources:
                 print(unit.id)

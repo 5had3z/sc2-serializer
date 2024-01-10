@@ -46,8 +46,9 @@ enum class Stratergy { Replace, Append, Merge };
     return outFiles;
 }
 
-auto mergeDb(cvt::ReplayDatabase &target,
-    const cvt::ReplayDatabase &source,
+template<typename T>
+auto mergeDb(cvt::ReplayDatabase<T> &target,
+    const cvt::ReplayDatabase<T> &source,
     const std::unordered_set<std::string> &knownHashes) -> bool
 {
     const std::size_t nItems = source.size();
@@ -62,13 +63,14 @@ auto mergeDb(cvt::ReplayDatabase &target,
     return true;
 }
 
-auto runOverFolder(cvt::ReplayDatabase &mainDb,
+template<typename T>
+auto runOverFolder(cvt::ReplayDatabase<T> &mainDb,
     const fs::path &folder,
     const std::unordered_set<std::string> &knownReplays) noexcept -> bool
 {
     auto replayFiles = getReplayParts(folder);
     for (auto &&replayFile : replayFiles) {
-        cvt::ReplayDatabase partDb(replayFile);
+        cvt::ReplayDatabase<T> partDb(replayFile);
         auto ok = mergeDb(mainDb, partDb, knownReplays);
         if (!ok && mainDb.isFull()) { return false; }
     }
@@ -122,7 +124,7 @@ int main(int argc, char *argv[])
     }();
     fmt::print("Strat: {}", static_cast<int>(strat));
 
-    cvt::ReplayDatabase replayDb{};
+    cvt::ReplayDatabase<cvt::ReplayDataSoA> replayDb{};
     std::unordered_set<std::string> knownHashes{};
     if (strat == Stratergy::Replace) { fs::remove(outFile); }
     replayDb.open(outFile);
