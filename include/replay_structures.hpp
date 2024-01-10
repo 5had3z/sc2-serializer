@@ -224,10 +224,23 @@ template<IsSoAType UnitSoAT>
     result.units = cvt::AoStoSoA(std::views::values(unitStepFlatten));
 
     // Create accompanying first step seen for reconstruction
-    for (auto &&same_unit_view : std::views::chunk_by(unitStepFlatten,
-             [](const UnitStepT &prev, const UnitStepT &next) { return prev.second.id == next.second.id; })) {
-        result.indicies.emplace_back(same_unit_view.front().first);
+
+    // Views impl
+    // for (auto &&same_unit_view : std::views::chunk_by(unitStepFlatten,
+    //          [](const UnitStepT &prev, const UnitStepT &next) { return prev.second.id == next.second.id; })) {
+    //     result.indicies.emplace_back(same_unit_view.front().first);
+    // }
+
+    // Iterator impl of chunk-by
+    auto start = unitStepFlatten.begin();
+    for (auto end = unitStepFlatten.begin(); end != unitStepFlatten.end(); ++end) {
+        // Check if we've passed the end of our chunk
+        if (start->second.id != end->second.id) {
+            result.indicies.emplace_back(start->first);
+            start = end;// set start to next chunk
+        }
     }
+    result.indicies.emplace_back(start->first);// Handle last chunk
 
     return result;
 }
@@ -306,11 +319,26 @@ template<IsSoAType UnitSoAT>
     result.units = cvt::AoStoSoA(std::views::values(unitStepFlatten));
 
     // Create accompanying first step seen for reconstruction
-    std::array<std::uint32_t, 2> step_count = { unitStepFlatten.front().first, 1 };
-    for (auto &&iota_steps : std::views::keys(unitStepFlatten)
-                                 | std::views::chunk_by([](std::uint32_t p, std::uint32_t n) { return p + 1 == n; })) {
-        result.step_count.emplace_back(iota_steps.front(), static_cast<std::uint32_t>(std::ranges::size(iota_steps)));
+    // std::vector<IotaRange> test;
+    // for (auto &&iota_steps : std::views::keys(unitStepFlatten)
+    //                              | std::views::chunk_by([](std::uint32_t p, std::uint32_t n) { return p + 1 == n; }))
+    //                              {
+    //     test.emplace_back(iota_steps.front(), static_cast<std::uint32_t>(std::ranges::size(iota_steps)));
+    // }
+
+    // Iterator impl of chunk-by
+    auto start = unitStepFlatten.begin();
+    auto end = unitStepFlatten.begin();
+    for (; end != unitStepFlatten.end(); ++end) {
+        // Check if we're at the end the end of our chunk
+        const auto next = std::next(end, 1);
+        if (end->first + 1 != next->first) {
+            result.step_count.emplace_back(start->first, static_cast<std::uint32_t>(std::distance(start, end) + 1));
+            start = next;// set start to next chunk
+        }
     }
+    result.step_count.emplace_back(
+        start->first, static_cast<std::uint32_t>(std::distance(start, end) + 1));// Handle last chunk
 
     return result;
 }
