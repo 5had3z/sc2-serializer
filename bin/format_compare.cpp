@@ -123,6 +123,12 @@ void implWriteUnitT(const std::vector<std::vector<UnitT>> &unitData, const fs::p
         std::ranges::stable_sort(unitFlatten, [](const UnitT &a, const UnitT &b) { return a.id < b.id; });
         writeData(cvt::AoStoSoA(unitFlatten), outDir / fmt::format("{}_sorted_sofa.bin", prefix));
     }
+    // Structure-of-Flattened-Arrays Index Varaints
+    {
+        writeData(cvt::flattenAndSortUnits<UnitSoAT>(unitData), outDir / fmt::format("{}_sorted_sofa1.bin", prefix));
+        writeData(cvt::flattenAndSortUnits2<UnitSoAT>(unitData), outDir / fmt::format("{}_sorted_sofa2.bin", prefix));
+        writeData(cvt::flattenAndSortUnits3<UnitSoAT>(unitData), outDir / fmt::format("{}_sorted_sofa3.bin", prefix));
+    }
 }
 
 /**
@@ -159,14 +165,14 @@ void implBenchmarkUnit(const std::vector<std::vector<UnitT>> &unitData, bench_ti
         timing.readAoS.emplace_back(clk::now() - begin);
     }
 
-    const auto flatten = cvt::flattenAndSortUnits<UnitSoAT>(unitData);
+    const auto flatten = cvt::flattenAndSortUnits3<UnitSoAT>(unitData);
     writeData(flatten, tempFile, false);
     {
         auto begin = clk::now();
-        const auto tmp = readData<cvt::FlattenedUnits<UnitSoAT>>(tempFile);
+        const auto tmp = readData<cvt::FlattenedUnits3<UnitSoAT>>(tempFile);
         timing.readSoA.emplace_back(clk::now() - begin);
         begin = clk::now();
-        const auto recovered = cvt::recoverFlattenedSortedUnits<UnitSoAT>(tmp);
+        const auto recovered = cvt::recoverFlattenedSortedUnits3<UnitSoAT>(tmp);
         timing.recover.emplace_back(clk::now() - begin);
     }
 
@@ -280,7 +286,7 @@ int main(int argc, char *argv[])
         if (compFlag) { writeComponents(replayData, writeFolder); }
         if (metaFlag) { writeReplayStructures(replayData, writeFolder); }
         if (benchFlag) { benchmarkUnitFormatting(replayData); }
-        fmt::print("Completed {} of {} Replays\n", idx, database.size());
+        fmt::print("Completed {} of {} Replays\n", idx + 1, database.size());
     }
 
     if (benchFlag) {
