@@ -13,7 +13,7 @@ namespace cvt {
 /**
  * @brief Maximum range size that can be serialized
  */
-constexpr std::size_t gMaxRangeSize = 1'000'000;
+constexpr std::size_t gMaxRangeSize = 1'000'000'000;
 
 template<std::ranges::range T>
     requires std::ranges::contiguous_range<T> && std::is_trivially_copyable_v<std::ranges::range_value_t<T>>
