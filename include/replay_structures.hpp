@@ -21,10 +21,11 @@ struct ReplayInfo
     [[nodiscard]] auto operator==(const ReplayInfo &other) const noexcept -> bool = default;
 };
 
-struct ReplayData2
+template <typename StepDataType>
+struct ReplayDataTemplate
 {
     ReplayInfo header;
-    std::vector<StepData> data;
+    std::vector<StepDataType> data;
 
     [[nodiscard]] auto getReplayHash() noexcept -> std::string & { return header.replayHash; }
     [[nodiscard]] auto getReplayHash() const noexcept -> const std::string & { return header.replayHash; }
@@ -32,19 +33,28 @@ struct ReplayData2
     [[nodiscard]] auto getPlayerId() const noexcept -> std::uint32_t { return header.playerId; }
 };
 
-struct ReplayData2SoA
+template <typename StepDataType, typename StepDataSoAType>
+struct ReplayDataTemplateSoA
 {
-    using struct_type = ReplayData2;
+    using struct_type = ReplayDataTemplate<StepDataType>;
     ReplayInfo header;
-    StepDataSoA data;
+    StepDataSoAType data;
 
     [[nodiscard]] auto getReplayHash() noexcept -> std::string & { return header.replayHash; }
     [[nodiscard]] auto getReplayHash() const noexcept -> const std::string & { return header.replayHash; }
     [[nodiscard]] auto getPlayerId() noexcept -> std::uint32_t & { return header.playerId; }
     [[nodiscard]] auto getPlayerId() const noexcept -> std::uint32_t { return header.playerId; }
 
-    [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> StepData { return data[idx]; }
+    [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> StepDataType { return data[idx]; }
 };
+
+using ReplayData2NoUnitsMiniMap = ReplayDataTemplate<StepDataNoUnitsMiniMap>;
+using ReplayData2NoUnits = ReplayDataTemplate<StepDataNoUnits>;
+using ReplayData2 = ReplayDataTemplate<StepData>;
+
+using ReplayData2SoANoUnitsMiniMap = ReplayDataTemplateSoA<StepDataNoUnitsMiniMap, StepDataSoANoUnitsMiniMap>;
+using ReplayData2SoANoUnits = ReplayDataTemplateSoA<StepDataNoUnits, StepDataSoANoUnits>;
+using ReplayData2SoA = ReplayDataTemplateSoA<StepData, StepDataSoA>;
 
 struct ReplayData
 {
@@ -139,7 +149,7 @@ struct ReplayDataSoA
 template<typename UnitSoAT> struct FlattenedUnits
 {
     UnitSoAT units;
-    std::vector<std::uint32_t> indicies;
+    std::vector<std::uint32_t> indices;
 };
 
 template<IsSoAType UnitSoAT>
@@ -154,19 +164,19 @@ template<IsSoAType UnitSoAT>
             replayUnits[idx], std::back_inserter(unitStepFlatten), [=](UnitT u) { return std::make_pair(idx, u); });
     }
 
-    // Significantly better compressibility when sorted by unit (and implicity time)
+    // Significantly better compressibility when sorted by unit (and implicitly time)
     std::ranges::stable_sort(
         unitStepFlatten, [](const UnitStepT &a, const UnitStepT &b) { return a.second.id < b.second.id; });
 
     // Create flattened SoA
     UnitSoAT unitsSoA = cvt::AoStoSoA(std::views::values(unitStepFlatten));
 
-    // Create accompanying step indicies for reconstruction
-    std::vector<uint32_t> indicies;
-    indicies.resize(unitStepFlatten.size());
-    std::ranges::copy(std::views::keys(unitStepFlatten), indicies.begin());
+    // Create accompanying step indices for reconstruction
+    std::vector<uint32_t> indices;
+    indices.resize(unitStepFlatten.size());
+    std::ranges::copy(std::views::keys(unitStepFlatten), indices.begin());
 
-    return { unitsSoA, indicies };
+    return { unitsSoA, indices };
 }
 
 template<IsSoAType UnitSoAT>
@@ -175,12 +185,12 @@ template<IsSoAType UnitSoAT>
 {
     // Create outer dimension with the maximum game step index
     std::vector<std::vector<typename UnitSoAT::struct_type>> replayUnits;
-    replayUnits.resize(std::ranges::max(flattenedUnits.indicies) + 1);
+    replayUnits.resize(std::ranges::max(flattenedUnits.indices) + 1);
 
     // Copy units to correct timestep
-    const auto &indicies = flattenedUnits.indicies;
-    for (std::size_t idx = 0; idx < indicies.size(); ++idx) {
-        replayUnits[indicies[idx]].emplace_back(flattenedUnits.units[idx]);
+    const auto &indices = flattenedUnits.indices;
+    for (std::size_t idx = 0; idx < indices.size(); ++idx) {
+        replayUnits[indices[idx]].emplace_back(flattenedUnits.units[idx]);
     }
     return replayUnits;
 }
@@ -198,7 +208,7 @@ template<IsSoAType UnitSoAT>
 template<typename UnitSoAT> struct FlattenedUnits2
 {
     UnitSoAT units;
-    std::vector<std::uint32_t> indicies;
+    std::vector<std::uint32_t> indices;
     std::uint32_t max_step;
 };
 
@@ -214,7 +224,7 @@ template<IsSoAType UnitSoAT>
             replayUnits[idx], std::back_inserter(unitStepFlatten), [=](UnitT u) { return std::make_pair(idx, u); });
     }
 
-    // Significantly better compressibility when sorted by unit (and implicity time)
+    // Significantly better compressibility when sorted by unit (and implicitly time)
     std::ranges::stable_sort(
         unitStepFlatten, [](const UnitStepT &a, const UnitStepT &b) { return a.second.id < b.second.id; });
 
@@ -228,7 +238,7 @@ template<IsSoAType UnitSoAT>
     // Views impl
     // for (auto &&same_unit_view : std::views::chunk_by(unitStepFlatten,
     //          [](const UnitStepT &prev, const UnitStepT &next) { return prev.second.id == next.second.id; })) {
-    //     result.indicies.emplace_back(same_unit_view.front().first);
+    //     result.indices.emplace_back(same_unit_view.front().first);
     // }
 
     // Iterator impl of chunk-by
@@ -236,11 +246,11 @@ template<IsSoAType UnitSoAT>
     for (auto end = unitStepFlatten.begin(); end != unitStepFlatten.end(); ++end) {
         // Check if we've passed the end of our chunk
         if (start->second.id != end->second.id) {
-            result.indicies.emplace_back(start->first);
+            result.indices.emplace_back(start->first);
             start = end;// set start to next chunk
         }
     }
-    result.indicies.emplace_back(start->first);// Handle last chunk
+    result.indices.emplace_back(start->first);// Handle last chunk
 
     return result;
 }
@@ -256,7 +266,7 @@ template<IsSoAType UnitSoAT>
 
     // Copy units to correct timestep
     const std::size_t num_units = flattenedUnits.units.id.size();
-    auto base = flattenedUnits.indicies.begin();
+    auto base = flattenedUnits.indices.begin();
     std::size_t offset = 0;
     const auto &unit_ids = flattenedUnits.units.id;
     auto unit_id = unit_ids[0];
@@ -309,7 +319,7 @@ template<IsSoAType UnitSoAT>
             replayUnits[idx], std::back_inserter(unitStepFlatten), [=](UnitT u) { return std::make_pair(idx, u); });
     }
 
-    // Significantly better compressibility when sorted by unit (and implicity time)
+    // Significantly better compressibility when sorted by unit (and implicitly time)
     std::ranges::stable_sort(
         unitStepFlatten, [](const UnitStepT &a, const UnitStepT &b) { return a.second.id < b.second.id; });
 

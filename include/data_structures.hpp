@@ -648,6 +648,39 @@ template<typename T> auto enumToOneHot(Action::TargetType e) noexcept -> std::ve
     return detail::enumToOneHot_helper<T>(e, vals);
 }
 
+struct StepDataNoUnitsMiniMap
+{
+    std::uint32_t gameStep{};
+    std::uint16_t minearals{};
+    std::uint16_t vespene{};
+    std::uint16_t popMax{};
+    std::uint16_t popArmy{};
+    std::uint16_t popWorkers{};
+    Score score{};
+
+    [[nodiscard]] auto operator==(const StepDataNoUnitsMiniMap &other) const noexcept -> bool = default;
+};
+
+
+struct StepDataNoUnits
+{
+    std::uint32_t gameStep{};
+    std::uint16_t minearals{};
+    std::uint16_t vespene{};
+    std::uint16_t popMax{};
+    std::uint16_t popArmy{};
+    std::uint16_t popWorkers{};
+    Score score{};
+    Image<std::uint8_t> visibility{};
+    Image<bool> creep{};
+    Image<std::uint8_t> player_relative{};
+    Image<std::uint8_t> alerts{};
+    Image<bool> buildable{};
+    Image<bool> pathable{};
+
+    [[nodiscard]] auto operator==(const StepDataNoUnits &other) const noexcept -> bool = default;
+};
+
 struct StepData
 {
     std::uint32_t gameStep{};
@@ -669,6 +702,75 @@ struct StepData
 
     [[nodiscard]] auto operator==(const StepData &other) const noexcept -> bool = default;
 };
+
+
+struct StepDataSoANoUnitsMiniMap {
+
+    using struct_type = StepDataNoUnitsMiniMap;
+    std::vector<std::uint32_t> gameStep{};
+    std::vector<std::uint16_t> minearals{};
+    std::vector<std::uint16_t> vespene{};
+    std::vector<std::uint16_t> popMax{};
+    std::vector<std::uint16_t> popArmy{};
+    std::vector<std::uint16_t> popWorkers{};
+    std::vector<Score> score{};
+
+    [[nodiscard]] auto operator==(const StepDataSoANoUnitsMiniMap &other) const noexcept -> bool = default;
+
+    [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> StepDataNoUnitsMiniMap
+    {
+        StepDataNoUnitsMiniMap stepData;
+        stepData.gameStep = gameStep[idx];
+        stepData.minearals = minearals[idx];
+        stepData.vespene = vespene[idx];
+        stepData.popMax = popMax[idx];
+        stepData.popArmy = popArmy[idx];
+        stepData.popWorkers = popWorkers[idx];
+        stepData.score = score[idx];
+        return stepData;
+    }
+};
+
+struct StepDataSoANoUnits {
+
+    using struct_type = StepDataNoUnits;
+    std::vector<std::uint32_t> gameStep{};
+    std::vector<std::uint16_t> minearals{};
+    std::vector<std::uint16_t> vespene{};
+    std::vector<std::uint16_t> popMax{};
+    std::vector<std::uint16_t> popArmy{};
+    std::vector<std::uint16_t> popWorkers{};
+    std::vector<Score> score{};
+    std::vector<Image<std::uint8_t>> visibility{};
+    std::vector<Image<bool>> creep{};
+    std::vector<Image<std::uint8_t>> player_relative{};
+    std::vector<Image<std::uint8_t>> alerts{};
+    std::vector<Image<bool>> buildable{};
+    std::vector<Image<bool>> pathable{};
+
+    [[nodiscard]] auto operator==(const StepDataSoANoUnits &other) const noexcept -> bool = default;
+
+    [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> StepDataNoUnits
+    {
+        StepDataNoUnits stepData;
+        stepData.gameStep = gameStep[idx];
+        stepData.minearals = minearals[idx];
+        stepData.vespene = vespene[idx];
+        stepData.popMax = popMax[idx];
+        stepData.popArmy = popArmy[idx];
+        stepData.popWorkers = popWorkers[idx];
+        stepData.score = score[idx];
+        stepData.visibility = visibility[idx];
+        stepData.creep = creep[idx];
+        stepData.player_relative = player_relative[idx];
+        stepData.alerts = alerts[idx];
+        stepData.buildable = buildable[idx];
+        stepData.pathable = pathable[idx];
+        return stepData;
+    }
+};
+
+
 
 struct StepDataSoA
 {
@@ -716,6 +818,9 @@ struct StepDataSoA
 };
 
 static_assert(IsSoAType<StepDataSoA>);
+static_assert(IsSoAType<StepDataSoANoUnits>);
+static_assert(IsSoAType<StepDataSoANoUnitsMiniMap>);
+
 
 template<std::ranges::range Range>
     requires std::same_as<std::ranges::range_value_t<Range>, StepData>

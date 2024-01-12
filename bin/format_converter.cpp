@@ -37,7 +37,7 @@ int main(int argc, char *argv[])
         ("o,output", "Destination database, if folder then use source filename", cxxopts::value<std::string>())
         ("steps-file", "Contains hash-gamestep pairs", cxxopts::value<std::string>())
         ("h,help", "This help");
-    // clang-format on 
+    // clang-format on
     const auto cliOpts = cliParser.parse(argc, argv);
 
     if (cliOpts.count("help")){
@@ -45,7 +45,22 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    const fs::path sourcePath = cliOpts["input"].as<std::string>();
+    fs::path sourcePath = cliOpts["input"].as<std::string>();
+
+    const auto *tmp = std::getenv("POD_NAME");
+    std::optional<std::string> podIndex;
+    if (tmp == nullptr) {
+        SPDLOG_INFO("POD_NAME not in ENV, not appending index suffix");
+    } else {
+        std::string_view s(tmp);
+        // Extract the substring from the last delimiter to the end
+        podIndex = s.substr(s.find_last_of('-') + 1);
+
+        SPDLOG_INFO("POD_NAME found, using index suffix: {}", podIndex.value());
+
+        sourcePath /= "db_" + podIndex.value() + ".SC2Replays";
+    }
+
     if (!fs::exists(sourcePath)) {
         fmt::print("ERROR: Source Database doesn't exist: {}\n", sourcePath.string());
         return -1;
@@ -75,7 +90,15 @@ int main(int argc, char *argv[])
     auto already_converted = dest.getHashes();
     const auto print_modulo = source.size() / 10;
     for (std::size_t idx = 0; idx < source.size(); ++idx) {
-        const auto old_data = source.getEntry(idx);
+
+        cvt::ReplayDataSoA old_data;
+        try {
+            old_data = source.getEntry(idx);
+        } catch (const std::bad_alloc &e) {
+            fmt::print("Skipping as failed to read...\n");
+            continue;
+        }
+
         const auto old_hash = old_data.replayHash + std::to_string(old_data.playerId);
         if (already_converted.contains(old_hash)) {
             continue;
