@@ -292,6 +292,34 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readwrite("units", &cvt::ReplayDataSoA::units)
         .def_readwrite("neutralUnits", &cvt::ReplayDataSoA::neutralUnits);
 
+    py::class_<cvt::StepDataSoANoUnitsMiniMap>(m, "StepDataSoANoUnitsMiniMap")
+        .def(py::self == py::self)
+        .def(py::self != py::self)
+        .def_readwrite("gameStep", &cvt::StepDataSoANoUnitsMiniMap::gameStep)
+        .def_readwrite("minerals", &cvt::StepDataSoANoUnitsMiniMap::minearals)
+        .def_readwrite("vespene", &cvt::StepDataSoANoUnitsMiniMap::vespene)
+        .def_readwrite("popMax", &cvt::StepDataSoANoUnitsMiniMap::popMax)
+        .def_readwrite("popArmy", &cvt::StepDataSoANoUnitsMiniMap::popArmy)
+        .def_readwrite("popWorkers", &cvt::StepDataSoANoUnitsMiniMap::popWorkers)
+        .def_readwrite("score", &cvt::StepDataSoANoUnitsMiniMap::score);
+
+    py::class_<cvt::StepDataSoANoUnits>(m, "StepDataSoANoUnits")
+        .def(py::self == py::self)
+        .def(py::self != py::self)
+        .def_readwrite("gameStep", &cvt::StepDataSoANoUnits::gameStep)
+        .def_readwrite("minerals", &cvt::StepDataSoANoUnits::minearals)
+        .def_readwrite("vespene", &cvt::StepDataSoANoUnits::vespene)
+        .def_readwrite("popMax", &cvt::StepDataSoANoUnits::popMax)
+        .def_readwrite("popArmy", &cvt::StepDataSoANoUnits::popArmy)
+        .def_readwrite("popWorkers", &cvt::StepDataSoANoUnits::popWorkers)
+        .def_readwrite("score", &cvt::StepDataSoANoUnits::score)
+        .def_readwrite("visibility", &cvt::StepDataSoANoUnits::visibility)
+        .def_readwrite("creep", &cvt::StepDataSoANoUnits::creep)
+        .def_readwrite("player_relative", &cvt::StepDataSoANoUnits::player_relative)
+        .def_readwrite("alerts", &cvt::StepDataSoANoUnits::alerts)
+        .def_readwrite("buildable", &cvt::StepDataSoANoUnits::buildable)
+        .def_readwrite("pathable", &cvt::StepDataSoANoUnits::pathable);
+
     py::class_<cvt::StepDataSoA>(m, "StepDataSoA")
         .def(py::self == py::self)
         .def(py::self != py::self)
@@ -327,12 +355,22 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readwrite("mapHeight", &cvt::ReplayInfo::mapHeight)
         .def_readwrite("heightMap", &cvt::ReplayInfo::heightMap);
 
+    py::class_<cvt::ReplayData2SoANoUnitsMiniMap>(m, "ReplayData2SoANoUnitsMiniMap")
+        .def_readwrite("header", &cvt::ReplayData2SoANoUnitsMiniMap::header)
+        .def_readwrite("data", &cvt::ReplayData2SoANoUnitsMiniMap::data);
+
+    py::class_<cvt::ReplayData2SoANoUnits>(m, "ReplayData2SoANoUnits")
+        .def_readwrite("header", &cvt::ReplayData2SoANoUnits::header)
+        .def_readwrite("data", &cvt::ReplayData2SoANoUnits::data);
+
     py::class_<cvt::ReplayData2SoA>(m, "ReplayData2SoA")
         .def_readwrite("header", &cvt::ReplayData2SoA::header)
         .def_readwrite("data", &cvt::ReplayData2SoA::data);
 
+
     // Expose ReplayDatabase class
-    using ReplayDataType = cvt::ReplayData2SoA;
+    using ReplayDataType = cvt::ReplayData2SoANoUnitsMiniMap;
+
     py::class_<cvt::ReplayDatabase<ReplayDataType>>(m, "ReplayDatabase")
         .def(py::init<>())
         .def(py::init<const std::filesystem::path &>(), py::arg("dbPath"))
