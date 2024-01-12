@@ -51,6 +51,12 @@
 <li class="toctree-l2"><a class="reference internal" href="benchmark.html">Benchmark</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Data</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv43cvt"><code class="docutils literal notranslate"><span class="pre">cvt</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt25ReplayData2NoUnitsMiniMapE"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayData2NoUnitsMiniMap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt18ReplayData2NoUnitsE"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayData2NoUnits</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt11ReplayData2E"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayData2</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt28ReplayData2SoANoUnitsMiniMapE"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayData2SoANoUnitsMiniMap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt21ReplayData2SoANoUnitsE"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayData2SoANoUnits</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt14ReplayData2SoAE"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayData2SoA</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4I_9IsSoATypeEN3cvt19flattenAndSortUnitsE14FlattenedUnitsI8UnitSoATERKNSt6vectorINSt6vectorIN8UnitSoAT11struct_typeEEEEE"><code class="docutils literal notranslate"><span class="pre">cvt::flattenAndSortUnits()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4I_9IsSoATypeEN3cvt27recoverFlattenedSortedUnitsENSt6vectorINSt6vectorIN8UnitSoAT11struct_typeEEEEERK14FlattenedUnitsI8UnitSoATE"><code class="docutils literal notranslate"><span class="pre">cvt::recoverFlattenedSortedUnits()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4I_9IsSoATypeEN3cvt20flattenAndSortUnits2E15FlattenedUnits2I8UnitSoATERKNSt6vectorINSt6vectorIN8UnitSoAT11struct_typeEEEEE"><code class="docutils literal notranslate"><span class="pre">cvt::flattenAndSortUnits2()</span></code></a></li>
@@ -62,9 +68,9 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt15FlattenedUnits3E"><code class="docutils literal notranslate"><span class="pre">cvt::FlattenedUnits3</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt9IotaRangeE"><code class="docutils literal notranslate"><span class="pre">cvt::IotaRange</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt10ReplayDataE"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayData</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt11ReplayData2E"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayData2</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt14ReplayData2SoAE"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayData2SoA</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt13ReplayDataSoAE"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayDataSoA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt18ReplayDataTemplateE"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayDataTemplate</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I00EN3cvt21ReplayDataTemplateSoAE"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayDataTemplateSoA</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt10ReplayInfoE"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayInfo</span></code></a></li>
 </ul>
 </li>
@@ -108,6 +114,39 @@
 <dt class="sig sig-object cpp" id="_CPPv43cvt">
 <span id="_CPPv33cvt"></span><span id="_CPPv23cvt"></span><span id="cvt"></span><span class="target" id="df/d0d/namespacecvt"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cvt</span></span></span><a class="headerlink" href="#_CPPv43cvt" title="Link to this definition"></a><br /></dt>
 <dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-typedefs">Typedefs</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt25ReplayData2NoUnitsMiniMapE">
+<span id="_CPPv3N3cvt25ReplayData2NoUnitsMiniMapE"></span><span id="_CPPv2N3cvt25ReplayData2NoUnitsMiniMapE"></span><span class="target" id="d7/d48/replay__structures_8hpp_1a562b970bbf3914a16f5a07cbc5f00a4b"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayData2NoUnitsMiniMap</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3cvt18ReplayDataTemplateE" title="cvt::ReplayDataTemplate"><span class="n"><span class="pre">ReplayDataTemplate</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">StepDataNoUnitsMiniMap</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3cvt25ReplayData2NoUnitsMiniMapE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt18ReplayData2NoUnitsE">
+<span id="_CPPv3N3cvt18ReplayData2NoUnitsE"></span><span id="_CPPv2N3cvt18ReplayData2NoUnitsE"></span><span class="target" id="d7/d48/replay__structures_8hpp_1ad19aed7547587042048b9bcffb10aaa3"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayData2NoUnits</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3cvt18ReplayDataTemplateE" title="cvt::ReplayDataTemplate"><span class="n"><span class="pre">ReplayDataTemplate</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">StepDataNoUnits</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3cvt18ReplayData2NoUnitsE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt11ReplayData2E">
+<span id="_CPPv3N3cvt11ReplayData2E"></span><span id="_CPPv2N3cvt11ReplayData2E"></span><span class="target" id="d7/d48/replay__structures_8hpp_1aa9b8b09b7db2d99887b1bb8aaf87d42b"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayData2</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3cvt18ReplayDataTemplateE" title="cvt::ReplayDataTemplate"><span class="n"><span class="pre">ReplayDataTemplate</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">StepData</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3cvt11ReplayData2E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt28ReplayData2SoANoUnitsMiniMapE">
+<span id="_CPPv3N3cvt28ReplayData2SoANoUnitsMiniMapE"></span><span id="_CPPv2N3cvt28ReplayData2SoANoUnitsMiniMapE"></span><span class="target" id="d7/d48/replay__structures_8hpp_1a11a48bba3384368d7065f842e6e38253"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayData2SoANoUnitsMiniMap</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3cvt21ReplayDataTemplateSoAE" title="cvt::ReplayDataTemplateSoA"><span class="n"><span class="pre">ReplayDataTemplateSoA</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">StepDataNoUnitsMiniMap</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">StepDataSoANoUnitsMiniMap</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3cvt28ReplayData2SoANoUnitsMiniMapE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt21ReplayData2SoANoUnitsE">
+<span id="_CPPv3N3cvt21ReplayData2SoANoUnitsE"></span><span id="_CPPv2N3cvt21ReplayData2SoANoUnitsE"></span><span class="target" id="d7/d48/replay__structures_8hpp_1aa1c396721b99240c279feddcc35ab3b9"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayData2SoANoUnits</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3cvt21ReplayDataTemplateSoAE" title="cvt::ReplayDataTemplateSoA"><span class="n"><span class="pre">ReplayDataTemplateSoA</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">StepDataNoUnits</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">StepDataSoANoUnits</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3cvt21ReplayData2SoANoUnitsE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt14ReplayData2SoAE">
+<span id="_CPPv3N3cvt14ReplayData2SoAE"></span><span id="_CPPv2N3cvt14ReplayData2SoAE"></span><span class="target" id="d7/d48/replay__structures_8hpp_1ab11699f6c00993bb7560f45f66326505"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayData2SoA</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3cvt21ReplayDataTemplateSoAE" title="cvt::ReplayDataTemplateSoA"><span class="n"><span class="pre">ReplayDataTemplateSoA</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">StepData</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">StepDataSoA</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3cvt14ReplayData2SoAE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4I_9IsSoATypeEN3cvt19flattenAndSortUnitsE14FlattenedUnitsI8UnitSoATERKNSt6vectorINSt6vectorIN8UnitSoAT11struct_typeEEEEE">
@@ -159,8 +198,8 @@
 <dd></dd></dl>
 
 <dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt14FlattenedUnits8indiciesE">
-<span id="_CPPv3N3cvt14FlattenedUnits8indiciesE"></span><span id="_CPPv2N3cvt14FlattenedUnits8indiciesE"></span><span id="cvt::FlattenedUnits::indicies__std::vector:std::uint32_t:"></span><span class="target" id="da/d16/structcvt_1_1_flattened_units_1ab2a9be0ef1b40116607a27bc322d9f77"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">indicies</span></span></span><a class="headerlink" href="#_CPPv4N3cvt14FlattenedUnits8indiciesE" title="Link to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt14FlattenedUnits7indicesE">
+<span id="_CPPv3N3cvt14FlattenedUnits7indicesE"></span><span id="_CPPv2N3cvt14FlattenedUnits7indicesE"></span><span id="cvt::FlattenedUnits::indices__std::vector:std::uint32_t:"></span><span class="target" id="da/d16/structcvt_1_1_flattened_units_1a26483ebb8fe5011e6569bff5951343b9"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">indices</span></span></span><a class="headerlink" href="#_CPPv4N3cvt14FlattenedUnits7indicesE" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 </div>
@@ -185,8 +224,8 @@
 <dd></dd></dl>
 
 <dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt15FlattenedUnits28indiciesE">
-<span id="_CPPv3N3cvt15FlattenedUnits28indiciesE"></span><span id="_CPPv2N3cvt15FlattenedUnits28indiciesE"></span><span id="cvt::FlattenedUnits2::indicies__std::vector:std::uint32_t:"></span><span class="target" id="d3/d69/structcvt_1_1_flattened_units2_1a0e43ff4246a6aa036e46e9ed113b5652"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">indicies</span></span></span><a class="headerlink" href="#_CPPv4N3cvt15FlattenedUnits28indiciesE" title="Link to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt15FlattenedUnits27indicesE">
+<span id="_CPPv3N3cvt15FlattenedUnits27indicesE"></span><span id="_CPPv2N3cvt15FlattenedUnits27indicesE"></span><span id="cvt::FlattenedUnits2::indices__std::vector:std::uint32_t:"></span><span class="target" id="d3/d69/structcvt_1_1_flattened_units2_1a13a78060c3916d656ddd21dae4f25409"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">indices</span></span></span><a class="headerlink" href="#_CPPv4N3cvt15FlattenedUnits27indicesE" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp var">
@@ -332,101 +371,6 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt10ReplayData8stepDataE">
 <span id="_CPPv3N3cvt10ReplayData8stepDataE"></span><span id="_CPPv2N3cvt10ReplayData8stepDataE"></span><span id="cvt::ReplayData::stepData__std::vector:StepData:"></span><span class="target" id="df/d6f/structcvt_1_1_replay_data_1a151c35145b15a08d920d04dbb951e86c"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">StepData</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stepData</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt10ReplayData8stepDataE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-</div>
-</dd></dl>
-
-<dl class="cpp struct">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt11ReplayData2E">
-<span id="_CPPv3N3cvt11ReplayData2E"></span><span id="_CPPv2N3cvt11ReplayData2E"></span><span id="cvt::ReplayData2"></span><span class="target" id="d7/d38/structcvt_1_1_replay_data2"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayData2</span></span></span><a class="headerlink" href="#_CPPv4N3cvt11ReplayData2E" title="Link to this definition"></a><br /></dt>
-<dd><div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt11ReplayData213getReplayHashEv">
-<span id="_CPPv3N3cvt11ReplayData213getReplayHashEv"></span><span id="_CPPv2N3cvt11ReplayData213getReplayHashEv"></span><span id="cvt::ReplayData2::getReplayHash"></span><span class="target" id="d7/d38/structcvt_1_1_replay_data2_1a89570d4f1852ade25e3350c78c59b7e8"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getReplayHash</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4N3cvt11ReplayData213getReplayHashEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK3cvt11ReplayData213getReplayHashEv">
-<span id="_CPPv3NK3cvt11ReplayData213getReplayHashEv"></span><span id="_CPPv2NK3cvt11ReplayData213getReplayHashEv"></span><span id="cvt::ReplayData2::getReplayHashC"></span><span class="target" id="d7/d38/structcvt_1_1_replay_data2_1ae904c535603977e594bd29d6de374755"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getReplayHash</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4NK3cvt11ReplayData213getReplayHashEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt11ReplayData211getPlayerIdEv">
-<span id="_CPPv3N3cvt11ReplayData211getPlayerIdEv"></span><span id="_CPPv2N3cvt11ReplayData211getPlayerIdEv"></span><span id="cvt::ReplayData2::getPlayerId"></span><span class="target" id="d7/d38/structcvt_1_1_replay_data2_1af739d149722d01ef35ee2306b5822645"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getPlayerId</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4N3cvt11ReplayData211getPlayerIdEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK3cvt11ReplayData211getPlayerIdEv">
-<span id="_CPPv3NK3cvt11ReplayData211getPlayerIdEv"></span><span id="_CPPv2NK3cvt11ReplayData211getPlayerIdEv"></span><span id="cvt::ReplayData2::getPlayerIdC"></span><span class="target" id="d7/d38/structcvt_1_1_replay_data2_1a6067c55147ebbb9f63ceb42c9e549157"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getPlayerId</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><a class="headerlink" href="#_CPPv4NK3cvt11ReplayData211getPlayerIdEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt11ReplayData26headerE">
-<span id="_CPPv3N3cvt11ReplayData26headerE"></span><span id="_CPPv2N3cvt11ReplayData26headerE"></span><span id="cvt::ReplayData2::header__ReplayInfo"></span><span class="target" id="d7/d38/structcvt_1_1_replay_data2_1af914eb2b3801e8aa82bf197daad64fda"></span><a class="reference internal" href="#_CPPv4N3cvt10ReplayInfoE" title="cvt::ReplayInfo"><span class="n"><span class="pre">ReplayInfo</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">header</span></span></span><a class="headerlink" href="#_CPPv4N3cvt11ReplayData26headerE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt11ReplayData24dataE">
-<span id="_CPPv3N3cvt11ReplayData24dataE"></span><span id="_CPPv2N3cvt11ReplayData24dataE"></span><span id="cvt::ReplayData2::data__std::vector:StepData:"></span><span class="target" id="d7/d38/structcvt_1_1_replay_data2_1a1ba49cf00eb0d92806c7ed930acd2c5b"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">StepData</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">data</span></span></span><a class="headerlink" href="#_CPPv4N3cvt11ReplayData24dataE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-</div>
-</dd></dl>
-
-<dl class="cpp struct">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt14ReplayData2SoAE">
-<span id="_CPPv3N3cvt14ReplayData2SoAE"></span><span id="_CPPv2N3cvt14ReplayData2SoAE"></span><span id="cvt::ReplayData2SoA"></span><span class="target" id="d4/dff/structcvt_1_1_replay_data2_so_a"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayData2SoA</span></span></span><a class="headerlink" href="#_CPPv4N3cvt14ReplayData2SoAE" title="Link to this definition"></a><br /></dt>
-<dd><div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
-<dl class="cpp type">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt14ReplayData2SoA11struct_typeE">
-<span id="_CPPv3N3cvt14ReplayData2SoA11struct_typeE"></span><span id="_CPPv2N3cvt14ReplayData2SoA11struct_typeE"></span><span class="target" id="d4/dff/structcvt_1_1_replay_data2_so_a_1a64469d6db0f4a22b9daa0b797dcf95b2"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">struct_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3cvt11ReplayData2E" title="cvt::ReplayData2"><span class="n"><span class="pre">ReplayData2</span></span></a><a class="headerlink" href="#_CPPv4N3cvt14ReplayData2SoA11struct_typeE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt14ReplayData2SoA13getReplayHashEv">
-<span id="_CPPv3N3cvt14ReplayData2SoA13getReplayHashEv"></span><span id="_CPPv2N3cvt14ReplayData2SoA13getReplayHashEv"></span><span id="cvt::ReplayData2SoA::getReplayHash"></span><span class="target" id="d4/dff/structcvt_1_1_replay_data2_so_a_1a241a3bfed4bbe371a1437cdc025cc343"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getReplayHash</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4N3cvt14ReplayData2SoA13getReplayHashEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK3cvt14ReplayData2SoA13getReplayHashEv">
-<span id="_CPPv3NK3cvt14ReplayData2SoA13getReplayHashEv"></span><span id="_CPPv2NK3cvt14ReplayData2SoA13getReplayHashEv"></span><span id="cvt::ReplayData2SoA::getReplayHashC"></span><span class="target" id="d4/dff/structcvt_1_1_replay_data2_so_a_1a5a7887dad636b0a5cb1f489d6347478a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getReplayHash</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4NK3cvt14ReplayData2SoA13getReplayHashEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt14ReplayData2SoA11getPlayerIdEv">
-<span id="_CPPv3N3cvt14ReplayData2SoA11getPlayerIdEv"></span><span id="_CPPv2N3cvt14ReplayData2SoA11getPlayerIdEv"></span><span id="cvt::ReplayData2SoA::getPlayerId"></span><span class="target" id="d4/dff/structcvt_1_1_replay_data2_so_a_1a2c06ace0162b15f6f73be4833f7e9365"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getPlayerId</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4N3cvt14ReplayData2SoA11getPlayerIdEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK3cvt14ReplayData2SoA11getPlayerIdEv">
-<span id="_CPPv3NK3cvt14ReplayData2SoA11getPlayerIdEv"></span><span id="_CPPv2NK3cvt14ReplayData2SoA11getPlayerIdEv"></span><span id="cvt::ReplayData2SoA::getPlayerIdC"></span><span class="target" id="d4/dff/structcvt_1_1_replay_data2_so_a_1ac0ce0e922246bbc85c96a845a5187166"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getPlayerId</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><a class="headerlink" href="#_CPPv4NK3cvt14ReplayData2SoA11getPlayerIdEv" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK3cvt14ReplayData2SoAixENSt6size_tE">
-<span id="_CPPv3NK3cvt14ReplayData2SoAixENSt6size_tE"></span><span id="_CPPv2NK3cvt14ReplayData2SoAixENSt6size_tE"></span><span id="cvt::ReplayData2SoA::subscript-operator__std::sC"></span><span class="target" id="d4/dff/structcvt_1_1_replay_data2_so_a_1a8ca5523bb04d7198ff9dac0924de16ec"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">[]</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">idx</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">StepData</span></span><a class="headerlink" href="#_CPPv4NK3cvt14ReplayData2SoAixENSt6size_tE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt14ReplayData2SoA6headerE">
-<span id="_CPPv3N3cvt14ReplayData2SoA6headerE"></span><span id="_CPPv2N3cvt14ReplayData2SoA6headerE"></span><span id="cvt::ReplayData2SoA::header__ReplayInfo"></span><span class="target" id="d4/dff/structcvt_1_1_replay_data2_so_a_1adf7b9d58b80334c889deb7d4261dde7f"></span><a class="reference internal" href="#_CPPv4N3cvt10ReplayInfoE" title="cvt::ReplayInfo"><span class="n"><span class="pre">ReplayInfo</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">header</span></span></span><a class="headerlink" href="#_CPPv4N3cvt14ReplayData2SoA6headerE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt14ReplayData2SoA4dataE">
-<span id="_CPPv3N3cvt14ReplayData2SoA4dataE"></span><span id="_CPPv2N3cvt14ReplayData2SoA4dataE"></span><span id="cvt::ReplayData2SoA::data__StepDataSoA"></span><span class="target" id="d4/dff/structcvt_1_1_replay_data2_so_a_1aff84aaf8b3e6097b4499aa6c5ec1ee01"></span><span class="n"><span class="pre">StepDataSoA</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">data</span></span></span><a class="headerlink" href="#_CPPv4N3cvt14ReplayData2SoA4dataE" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 </div>
@@ -606,6 +550,101 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt13ReplayDataSoA12neutralUnitsE">
 <span id="_CPPv3N3cvt13ReplayDataSoA12neutralUnitsE"></span><span id="_CPPv2N3cvt13ReplayDataSoA12neutralUnitsE"></span><span id="cvt::ReplayDataSoA::neutralUnits__std::vector:std::vector:NeutralUnit::"></span><span class="target" id="da/d56/structcvt_1_1_replay_data_so_a_1a28517ccacf84101040d7a100bb41f75b"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">NeutralUnit</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">neutralUnits</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt13ReplayDataSoA12neutralUnitsE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt18ReplayDataTemplateE">
+<span id="_CPPv3I0EN3cvt18ReplayDataTemplateE"></span><span id="_CPPv2I0EN3cvt18ReplayDataTemplateE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">StepDataType</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d4/d5b/structcvt_1_1_replay_data_template"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayDataTemplate</span></span></span><a class="headerlink" href="#_CPPv4I0EN3cvt18ReplayDataTemplateE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt18ReplayDataTemplate13getReplayHashEv">
+<span id="_CPPv3N3cvt18ReplayDataTemplate13getReplayHashEv"></span><span id="_CPPv2N3cvt18ReplayDataTemplate13getReplayHashEv"></span><span id="cvt::ReplayDataTemplate::getReplayHash"></span><span class="target" id="d4/d5b/structcvt_1_1_replay_data_template_1a350c86b7472e5ba824f6f63958e9600b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getReplayHash</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4N3cvt18ReplayDataTemplate13getReplayHashEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt18ReplayDataTemplate13getReplayHashEv">
+<span id="_CPPv3NK3cvt18ReplayDataTemplate13getReplayHashEv"></span><span id="_CPPv2NK3cvt18ReplayDataTemplate13getReplayHashEv"></span><span id="cvt::ReplayDataTemplate::getReplayHashC"></span><span class="target" id="d4/d5b/structcvt_1_1_replay_data_template_1af318c2ab6b104bef5caa67b849612379"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getReplayHash</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4NK3cvt18ReplayDataTemplate13getReplayHashEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt18ReplayDataTemplate11getPlayerIdEv">
+<span id="_CPPv3N3cvt18ReplayDataTemplate11getPlayerIdEv"></span><span id="_CPPv2N3cvt18ReplayDataTemplate11getPlayerIdEv"></span><span id="cvt::ReplayDataTemplate::getPlayerId"></span><span class="target" id="d4/d5b/structcvt_1_1_replay_data_template_1a0c3d686c9e718b97b3b3aac127aa237f"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getPlayerId</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4N3cvt18ReplayDataTemplate11getPlayerIdEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt18ReplayDataTemplate11getPlayerIdEv">
+<span id="_CPPv3NK3cvt18ReplayDataTemplate11getPlayerIdEv"></span><span id="_CPPv2NK3cvt18ReplayDataTemplate11getPlayerIdEv"></span><span id="cvt::ReplayDataTemplate::getPlayerIdC"></span><span class="target" id="d4/d5b/structcvt_1_1_replay_data_template_1a102ea0406146b8f76079c28294781f87"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getPlayerId</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><a class="headerlink" href="#_CPPv4NK3cvt18ReplayDataTemplate11getPlayerIdEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt18ReplayDataTemplate6headerE">
+<span id="_CPPv3N3cvt18ReplayDataTemplate6headerE"></span><span id="_CPPv2N3cvt18ReplayDataTemplate6headerE"></span><span id="cvt::ReplayDataTemplate::header__ReplayInfo"></span><span class="target" id="d4/d5b/structcvt_1_1_replay_data_template_1a556a6d307287edcf9b7ca4e1edb02620"></span><a class="reference internal" href="#_CPPv4N3cvt10ReplayInfoE" title="cvt::ReplayInfo"><span class="n"><span class="pre">ReplayInfo</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">header</span></span></span><a class="headerlink" href="#_CPPv4N3cvt18ReplayDataTemplate6headerE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt18ReplayDataTemplate4dataE">
+<span id="_CPPv3N3cvt18ReplayDataTemplate4dataE"></span><span id="_CPPv2N3cvt18ReplayDataTemplate4dataE"></span><span id="cvt::ReplayDataTemplate::data__std::vector:StepDataType:"></span><span class="target" id="d4/d5b/structcvt_1_1_replay_data_template_1ae91d297a44362cc9cc1c4e5c84d3bfab"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3cvt18ReplayDataTemplateE" title="cvt::ReplayDataTemplate::StepDataType"><span class="n"><span class="pre">StepDataType</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">data</span></span></span><a class="headerlink" href="#_CPPv4N3cvt18ReplayDataTemplate4dataE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN3cvt21ReplayDataTemplateSoAE">
+<span id="_CPPv3I00EN3cvt21ReplayDataTemplateSoAE"></span><span id="_CPPv2I00EN3cvt21ReplayDataTemplateSoAE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">StepDataType</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">StepDataSoAType</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="df/dd2/structcvt_1_1_replay_data_template_so_a"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayDataTemplateSoA</span></span></span><a class="headerlink" href="#_CPPv4I00EN3cvt21ReplayDataTemplateSoAE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt21ReplayDataTemplateSoA11struct_typeE">
+<span id="_CPPv3N3cvt21ReplayDataTemplateSoA11struct_typeE"></span><span id="_CPPv2N3cvt21ReplayDataTemplateSoA11struct_typeE"></span><span class="target" id="df/dd2/structcvt_1_1_replay_data_template_so_a_1aa9202867699759c6e781fb8aa8f2bae8"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">struct_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3cvt18ReplayDataTemplateE" title="cvt::ReplayDataTemplate"><span class="n"><span class="pre">ReplayDataTemplate</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3cvt21ReplayDataTemplateSoAE" title="cvt::ReplayDataTemplateSoA::StepDataType"><span class="n"><span class="pre">StepDataType</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3cvt21ReplayDataTemplateSoA11struct_typeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt21ReplayDataTemplateSoA13getReplayHashEv">
+<span id="_CPPv3N3cvt21ReplayDataTemplateSoA13getReplayHashEv"></span><span id="_CPPv2N3cvt21ReplayDataTemplateSoA13getReplayHashEv"></span><span id="cvt::ReplayDataTemplateSoA::getReplayHash"></span><span class="target" id="df/dd2/structcvt_1_1_replay_data_template_so_a_1a7246f4e97594d51564af1af70a9d743c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getReplayHash</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4N3cvt21ReplayDataTemplateSoA13getReplayHashEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt21ReplayDataTemplateSoA13getReplayHashEv">
+<span id="_CPPv3NK3cvt21ReplayDataTemplateSoA13getReplayHashEv"></span><span id="_CPPv2NK3cvt21ReplayDataTemplateSoA13getReplayHashEv"></span><span id="cvt::ReplayDataTemplateSoA::getReplayHashC"></span><span class="target" id="df/dd2/structcvt_1_1_replay_data_template_so_a_1ae1cf7ddfda08df3c0656946fd9234ec3"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getReplayHash</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4NK3cvt21ReplayDataTemplateSoA13getReplayHashEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt21ReplayDataTemplateSoA11getPlayerIdEv">
+<span id="_CPPv3N3cvt21ReplayDataTemplateSoA11getPlayerIdEv"></span><span id="_CPPv2N3cvt21ReplayDataTemplateSoA11getPlayerIdEv"></span><span id="cvt::ReplayDataTemplateSoA::getPlayerId"></span><span class="target" id="df/dd2/structcvt_1_1_replay_data_template_so_a_1a4891a212e5f2e3a065851584125ac858"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getPlayerId</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4N3cvt21ReplayDataTemplateSoA11getPlayerIdEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt21ReplayDataTemplateSoA11getPlayerIdEv">
+<span id="_CPPv3NK3cvt21ReplayDataTemplateSoA11getPlayerIdEv"></span><span id="_CPPv2NK3cvt21ReplayDataTemplateSoA11getPlayerIdEv"></span><span id="cvt::ReplayDataTemplateSoA::getPlayerIdC"></span><span class="target" id="df/dd2/structcvt_1_1_replay_data_template_so_a_1ae5a6c52f58ac78583cc89c9a09d5ddd6"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getPlayerId</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><a class="headerlink" href="#_CPPv4NK3cvt21ReplayDataTemplateSoA11getPlayerIdEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt21ReplayDataTemplateSoAixENSt6size_tE">
+<span id="_CPPv3NK3cvt21ReplayDataTemplateSoAixENSt6size_tE"></span><span id="_CPPv2NK3cvt21ReplayDataTemplateSoAixENSt6size_tE"></span><span id="cvt::ReplayDataTemplateSoA::subscript-operator__std::sC"></span><span class="target" id="df/dd2/structcvt_1_1_replay_data_template_so_a_1a5459f1fe0957e6d81f3571404bc82704"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">[]</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">idx</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3cvt21ReplayDataTemplateSoAE" title="cvt::ReplayDataTemplateSoA::StepDataType"><span class="n"><span class="pre">StepDataType</span></span></a><a class="headerlink" href="#_CPPv4NK3cvt21ReplayDataTemplateSoAixENSt6size_tE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt21ReplayDataTemplateSoA6headerE">
+<span id="_CPPv3N3cvt21ReplayDataTemplateSoA6headerE"></span><span id="_CPPv2N3cvt21ReplayDataTemplateSoA6headerE"></span><span id="cvt::ReplayDataTemplateSoA::header__ReplayInfo"></span><span class="target" id="df/dd2/structcvt_1_1_replay_data_template_so_a_1a762386576ac35cea4e65c355c76d6a1d"></span><a class="reference internal" href="#_CPPv4N3cvt10ReplayInfoE" title="cvt::ReplayInfo"><span class="n"><span class="pre">ReplayInfo</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">header</span></span></span><a class="headerlink" href="#_CPPv4N3cvt21ReplayDataTemplateSoA6headerE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt21ReplayDataTemplateSoA4dataE">
+<span id="_CPPv3N3cvt21ReplayDataTemplateSoA4dataE"></span><span id="_CPPv2N3cvt21ReplayDataTemplateSoA4dataE"></span><span id="cvt::ReplayDataTemplateSoA::data__StepDataSoAType"></span><span class="target" id="df/dd2/structcvt_1_1_replay_data_template_so_a_1aa89686dc4abaa2f2c1ed65b14ab97e89"></span><a class="reference internal" href="#_CPPv4I00EN3cvt21ReplayDataTemplateSoAE" title="cvt::ReplayDataTemplateSoA::StepDataSoAType"><span class="n"><span class="pre">StepDataSoAType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">data</span></span></span><a class="headerlink" href="#_CPPv4N3cvt21ReplayDataTemplateSoA4dataE" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 </div>
