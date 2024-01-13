@@ -21,8 +21,7 @@ struct ReplayInfo
     [[nodiscard]] auto operator==(const ReplayInfo &other) const noexcept -> bool = default;
 };
 
-template <typename StepDataType>
-struct ReplayDataTemplate
+template<typename StepDataType> struct ReplayDataTemplate
 {
     ReplayInfo header;
     std::vector<StepDataType> data;
@@ -33,10 +32,9 @@ struct ReplayDataTemplate
     [[nodiscard]] auto getPlayerId() const noexcept -> std::uint32_t { return header.playerId; }
 };
 
-template <typename StepDataType, typename StepDataSoAType>
-struct ReplayDataTemplateSoA
+template<IsSoAType StepDataSoAType> struct ReplayDataTemplateSoA
 {
-    using struct_type = ReplayDataTemplate<StepDataType>;
+    using struct_type = ReplayDataTemplate<typename StepDataSoAType::struct_type>;
     ReplayInfo header;
     StepDataSoAType data;
 
@@ -45,16 +43,20 @@ struct ReplayDataTemplateSoA
     [[nodiscard]] auto getPlayerId() noexcept -> std::uint32_t & { return header.playerId; }
     [[nodiscard]] auto getPlayerId() const noexcept -> std::uint32_t { return header.playerId; }
 
-    [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> StepDataType { return data[idx]; }
+    [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> StepDataSoAType::struct_type { return data[idx]; }
 };
 
 using ReplayData2NoUnitsMiniMap = ReplayDataTemplate<StepDataNoUnitsMiniMap>;
 using ReplayData2NoUnits = ReplayDataTemplate<StepDataNoUnits>;
 using ReplayData2 = ReplayDataTemplate<StepData>;
 
-using ReplayData2SoANoUnitsMiniMap = ReplayDataTemplateSoA<StepDataNoUnitsMiniMap, StepDataSoANoUnitsMiniMap>;
-using ReplayData2SoANoUnits = ReplayDataTemplateSoA<StepDataNoUnits, StepDataSoANoUnits>;
-using ReplayData2SoA = ReplayDataTemplateSoA<StepData, StepDataSoA>;
+using ReplayData2SoANoUnitsMiniMap = ReplayDataTemplateSoA<StepDataSoANoUnitsMiniMap>;
+using ReplayData2SoANoUnits = ReplayDataTemplateSoA<StepDataSoANoUnits>;
+using ReplayData2SoA = ReplayDataTemplateSoA<StepDataSoA>;
+
+static_assert(std::same_as<ReplayData2SoANoUnitsMiniMap::struct_type, ReplayData2NoUnitsMiniMap>);
+static_assert(std::same_as<ReplayData2SoANoUnits::struct_type, ReplayData2NoUnits>);
+static_assert(std::same_as<ReplayData2SoA::struct_type, ReplayData2>);
 
 struct ReplayData
 {
