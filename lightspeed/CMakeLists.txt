@@ -23,11 +23,22 @@ cpmaddpackage(
     DOWNLOAD_ONLY 
 )
 
+cpmaddpackage(
+    NAME
+    boost
+    GITHUB_REPOSITORY
+    boostorg/boost 
+    GIT_TAG
+    boost-1.84.0
+    OPTIONS 
+    "BOOST_INCLUDE_LIBRARIES beast"
+)
+
 file(GLOB SC2_PROTO_FILES ${s2client-proto_SOURCE_DIR}/s2clientprotocol/*.proto)
 add_executable(lightspeed ${SC2_PROTO_FILES} lightspeed.cpp)
 target_compile_features(lightspeed PUBLIC cxx_std_23)
 target_compile_options(lightspeed PUBLIC ${_COMPILE_OPTIONS})
-target_link_libraries(lightspeed PRIVATE protobuf::libprotobuf protobuf::libprotoc)
+target_link_libraries(lightspeed PRIVATE protobuf::libprotobuf protobuf::libprotoc Boost::beast)
 
 set(SC2_PROTO_SRC ${CMAKE_CURRENT_BINARY_DIR}/generated)
 target_include_directories(lightspeed PRIVATE ${SC2_PROTO_SRC})

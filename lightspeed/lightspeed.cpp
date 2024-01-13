@@ -13,21 +13,51 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+#include <boost/asio/connect.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/beast/core.hpp>
+#include <boost/beast/websocket.hpp>
+
 #include "s2clientprotocol/sc2api.pb.h"
 
 using namespace std::chrono_literals;
 
-void run_test() {}
+namespace beast = boost::beast;
+namespace http = beast::http;
+namespace ws = beast::websocket;
+namespace net = boost::asio;
+using tcp = boost::asio::ip::tcp;
+
+std::string default_host = "127.0.0.1";
+std::string default_port = "5679";
+
+void run_test()
+{
+    // net::io_context ioc;
+    // tcp::resolver resolver{ ioc };
+    // ws::stream<tcp::socket> ws_instance;
+
+    // auto const results = resolver.resolve(default_host, default_port);
+
+    // auto endpoint = net::connect(ws_instance.next_layer(), results);
+
+    // const std::string host = default_host + ":" + default_port;
+    // ws_instance.set_option(ws::stream_base::decorator([](ws::request_type &req) {
+    //     req.set(http::field::user_agent, std::string(BOOST_BEAST_VERSION_STRING) + "test client");
+    // }));
+
+    // ws_instance.handshake(host, "/sc2api");
+}
 
 int main(int argc, char *argv[])
 {
     // Can't be const because of execve
-    std::vector<char *> char_list = {
+    std::vector<std::string> cli_args = {
         "/home/bryce/SC2/game/4.9.2/Versions/Base74741/SC2_x64",
         "-listen",
-        "127.0.0.1",
+        default_host,
         "-port",
-        "5679",
+        default_port,
         "-displayMode",
         "0",
         "-windowwidth",
@@ -36,14 +66,19 @@ int main(int argc, char *argv[])
         "256",
         // "-dataVersion",
         // "",
-        nullptr// End for execve
     };
+
+    std::vector<char *> char_args;
+    std::ranges::for_each(
+        cli_args, [&](std::string &c) { return char_args.emplace_back(const_cast<char *>(c.c_str())); });
+    char_args.emplace_back(nullptr);
+
 
     // Start the process.
     pid_t process_id = fork();
     if (process_id == 0) {
-        if (execve(char_list[0], &char_list[0], nullptr) == -1) {
-            std::cerr << "Failed to execute process " << char_list[0] << " error: " << strerror(errno) << std::endl;
+        if (execve(char_args[0], &char_args[0], nullptr) == -1) {
+            std::cerr << "Failed to execute process " << char_args[0] << " error: " << strerror(errno) << std::endl;
             exit(-1);
         }
         std::cout << "Forked thread started process!\n";
