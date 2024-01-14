@@ -77,7 +77,7 @@ auto getReplaysFromFile(const std::string &partitionFile) noexcept -> std::vecto
  * @param folder Folder that contains replays
  * @return Vector of Hash Strings
  */
-auto getReplaysFromFolder(const std::string_view folder) noexcept -> std::vector<std::string>
+auto getReplaysFromFolder(std::string_view folder) noexcept -> std::vector<std::string>
 {
     SPDLOG_INFO("Searching replays in {}", folder);
     std::vector<std::string> replays;
@@ -349,7 +349,7 @@ auto main(int argc, char *argv[]) -> int
         "SC2 Replay Converter", "Convert SC2 Replays into a database which can be sampled for machine learning");
     // clang-format off
     cliParser.add_options()
-      ("r,replays", "path to folder of replays", cxxopts::value<std::string>())
+      ("r,replays", "path to folder of replays or replay file", cxxopts::value<std::string>())
       ("p,partition", "partition file to select a subset of replays from the folder", cxxopts::value<std::string>())
       ("o,output", "output filename for replay database", cxxopts::value<std::string>())
       ("c,converter", "type of converter to use [action|full|strided]", cxxopts::value<std::string>())
@@ -466,8 +466,10 @@ auto main(int argc, char *argv[]) -> int
             }
             SPDLOG_INFO("Using partition file: {}", partitionFile);
             return getReplaysFromFile(partitionFile);
-        } else {
+        } else if (fs::is_directory(replayFolder)) {
             return getReplaysFromFolder(replayFolder);
+        } else {// Is a single replay file
+            return std::vector{ replayFolder };
         }
     }();
 

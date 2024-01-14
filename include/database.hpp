@@ -280,7 +280,7 @@ template<HasDBInterface EntryType> class ReplayDatabase
      * @brief Return an set of hash+playerId entries in the database
      * @return Unordered set of std::string of concatenated hash and playerId
      */
-    [[nodiscard]] auto getHashes() const noexcept -> std::unordered_set<std::string>
+    [[nodiscard]] auto getHashes() const -> std::unordered_set<std::string>
     {
         std::unordered_set<std::string> replayHashes{};
         for (auto &&idx : std::views::iota(std::size_t{ 0 }, this->size())) {
