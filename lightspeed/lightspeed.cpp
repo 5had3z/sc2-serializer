@@ -20,6 +20,7 @@
 #include <boost/asio/ip/tcp.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/beast/websocket.hpp>
+#include <cxxopts.hpp>
 #include <fmt/chrono.h>
 #include <fmt/format.h>
 
@@ -123,14 +124,19 @@ void run_test()
 
     ws_instance.handshake(host, "/sc2api");
 
-    auto send_request = [&](SC2APIProtocol::Request req) { ws_instance.write(net::buffer(req.SerializeAsString())); };
+    std::string requestBuffer;
+    auto send_request = [&](SC2APIProtocol::Request req) {
+        req.SerializeToString(&requestBuffer);
+        ws_instance.write(net::buffer(requestBuffer));
+    };
 
+    beast::flat_buffer readBuff;
     auto get_response = [&]() -> std::optional<SC2APIProtocol::Response> {
-        beast::flat_buffer readBuff;
         ws_instance.read(readBuff);
         if (readBuff.size() > 0) {
             SC2APIProtocol::Response response;
             response.ParseFromArray(readBuff.data().data(), readBuff.size());
+            readBuff.clear();
             return response;
         }
         return {};
@@ -274,6 +280,14 @@ void run_test()
 
 int main(int argc, char *argv[])
 {
+    cxxopts::Options cliParser("Protobuf Test", "Barebones test to see how fast sc2 can run");
+    // clang-format off
+    cliParser.add_options()
+        ("p,port", "Port to listen on the game", cxxopts::value<uint32_t>()->default_value(default_port));
+    // clang-format on
+    const auto args = cliParser.parse(argc, argv);
+    default_port = std::to_string(args["port"].as<uint32_t>());
+
     // Can't be const because of execve
     std::vector<std::string> cli_args = {
         "/home/bryce/SC2/game/4.9.2/Versions/Base74741/SC2_x64",

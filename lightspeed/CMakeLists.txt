@@ -42,6 +42,16 @@ cpmaddpackage(
   OPTIONS
   "FMT_SYSTEM_HEADERS on")
 
+cpmaddpackage(
+  GITHUB_REPOSITORY
+  jarro2783/cxxopts
+  VERSION
+  2.2.1
+  OPTIONS
+  "CXXOPTS_BUILD_EXAMPLES NO"
+  "CXXOPTS_BUILD_TESTS NO"
+  "CXXOPTS_ENABLE_INSTALL NO")
+
 find_package(TBB REQUIRED)
 
 set(_COMPILE_OPTIONS
@@ -58,7 +68,8 @@ target_link_libraries(
           protobuf::libprotoc
           Boost::beast
           fmt::fmt
-          TBB::tbb)
+          TBB::tbb
+          cxxopts)
 
 set(SC2_PROTO_SRC ${CMAKE_CURRENT_BINARY_DIR}/generated)
 target_include_directories(lightspeed PRIVATE ${SC2_PROTO_SRC})
