@@ -50,3 +50,4 @@ repos:
     rev: v0.6.13
     hooks:
       - id: cmake-format
+        additional_dependencies: [pyyaml>=5.1]
