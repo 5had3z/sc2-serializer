@@ -96,9 +96,9 @@ Inheritance diagram for cvt::BaseConverter&lt; DataSoA &gt;:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a099e0f0b287b3a82102b60db758dbfde" id="r_a099e0f0b287b3a82102b60db758dbfde"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html#a099e0f0b287b3a82102b60db758dbfde">loadDB</a> (const std::filesystem::path &amp;path) noexcept -&gt; bool</td></tr>
-<tr class="memdesc:a099e0f0b287b3a82102b60db758dbfde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads the database from the specified path.  <br /></td></tr>
-<tr class="separator:a099e0f0b287b3a82102b60db758dbfde"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af559397bbf2e4f3bf18a40bbb07cf420" id="r_af559397bbf2e4f3bf18a40bbb07cf420"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html#af559397bbf2e4f3bf18a40bbb07cf420">loadDB</a> (const std::filesystem::path &amp;path) -&gt; bool</td></tr>
+<tr class="memdesc:af559397bbf2e4f3bf18a40bbb07cf420"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads the database from the specified path.  <br /></td></tr>
+<tr class="separator:af559397bbf2e4f3bf18a40bbb07cf420"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72fad2ae1125761bdff88adef451f6e3" id="r_a72fad2ae1125761bdff88adef451f6e3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html#a72fad2ae1125761bdff88adef451f6e3">setReplayInfo</a> (std::string_view hash, std::uint32_t playerId) noexcept</td></tr>
 <tr class="memdesc:a72fad2ae1125761bdff88adef451f6e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the replay information for the <a class="el" href="../../d8/d39/classcvt_1_1_base_converter.html">BaseConverter</a>.  <br /></td></tr>
 <tr class="separator:a72fad2ae1125761bdff88adef451f6e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -184,6 +184,9 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>mapHeightHasLogged_</
 <tr class="memitem:a5c46c1a4a591d7ebd671848511534fc3" id="r_a5c46c1a4a591d7ebd671848511534fc3"><td class="memItemLeft" align="right" valign="top"><a id="a5c46c1a4a591d7ebd671848511534fc3" name="a5c46c1a4a591d7ebd671848511534fc3"></a>
 bool&#160;</td><td class="memItemRight" valign="bottom"><b>writeSuccess_</b> { false }</td></tr>
 <tr class="separator:a5c46c1a4a591d7ebd671848511534fc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d8e7431f6e007a50e6e145001f52991" id="r_a5d8e7431f6e007a50e6e145001f52991"><td class="memItemLeft" align="right" valign="top"><a id="a5d8e7431f6e007a50e6e145001f52991" name="a5d8e7431f6e007a50e6e145001f52991"></a>
+std::chrono::high_resolution_clock::time_point&#160;</td><td class="memItemRight" valign="bottom"><b>start_</b> {}</td></tr>
+<tr class="separator:a5d8e7431f6e007a50e6e145001f52991"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="af347d2f2ac19fd6e63450deb6757fa56" name="af347d2f2ac19fd6e63450deb6757fa56"></a>
@@ -322,8 +325,8 @@ template&lt;typename DataSoA &gt; </div>
 
 </div>
 </div>
-<a id="a099e0f0b287b3a82102b60db758dbfde" name="a099e0f0b287b3a82102b60db758dbfde"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a099e0f0b287b3a82102b60db758dbfde">&#9670;&#160;</a></span>loadDB()</h2>
+<a id="af559397bbf2e4f3bf18a40bbb07cf420" name="af559397bbf2e4f3bf18a40bbb07cf420"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af559397bbf2e4f3bf18a40bbb07cf420">&#9670;&#160;</a></span>loadDB()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -344,7 +347,7 @@ template&lt;typename DataSoA &gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
