@@ -34,8 +34,7 @@ namespace ws = beast::websocket;
 namespace net = boost::asio;
 using tcp = boost::asio::ip::tcp;
 
-std::string default_host = "127.0.0.1";
-std::string default_port = "5679";
+const std::string default_host = "127.0.0.1";
 
 template<typename T, std::size_t N> class CircularBuffer
 {
@@ -107,17 +106,17 @@ class FrequencyTimer
 };
 
 
-void run_test()
+void run_test(const std::string &replay_path, const std::string &port)
 {
     net::io_context ioc;
     tcp::resolver resolver{ ioc };
     ws::stream<tcp::socket> ws_instance{ ioc };
 
-    auto const results = resolver.resolve(default_host, default_port);
+    auto const results = resolver.resolve(default_host, port);
 
     auto endpoint = net::connect(ws_instance.next_layer(), results);
 
-    const std::string host = default_host + ":" + default_port;
+    const std::string host = default_host + ":" + port;
     ws_instance.set_option(ws::stream_base::decorator([](ws::request_type &req) {
         req.set(http::field::user_agent, std::string(BOOST_BEAST_VERSION_STRING) + "test client");
     }));
@@ -168,8 +167,6 @@ void run_test()
         }
     }
 
-    const std::string replay_path =
-        "/home/bryce/SC2/replays/4.9.2/00004e179daa5a5bafeef22c01bc84408f70052a7e056df5c63800aed85099e9.SC2Replay";
     SC2APIProtocol::ResponseReplayInfo replay_info;
     {
         SC2APIProtocol::Request req;
@@ -283,14 +280,18 @@ int main(int argc, char *argv[])
     cxxopts::Options cliParser("Protobuf Test", "Barebones test to see how fast sc2 can run");
     // clang-format off
     cliParser.add_options()
-        ("p,port", "Port to listen on the game", cxxopts::value<uint32_t>()->default_value(default_port));
+        ("r,replay", "Path to replay file", cxxopts::value<std::string>())
+        ("g,game", "Path to game executable", cxxopts::value<std::string>())
+        ("p,port", "Port to listen on the game", cxxopts::value<uint32_t>()->default_value("5679"));
     // clang-format on
     const auto args = cliParser.parse(argc, argv);
-    default_port = std::to_string(args["port"].as<uint32_t>());
+    const auto default_port = std::to_string(args["port"].as<uint32_t>());
+    const auto game_path = args["game"].as<std::string>();
+    const auto replay_path = args["replay"].as<std::string>();
 
     // Can't be const because of execve
     std::vector<std::string> cli_args = {
-        "/home/bryce/SC2/game/4.9.2/Versions/Base74741/SC2_x64",
+        game_path,
         "-listen",
         default_host,
         "-port",
@@ -324,7 +325,7 @@ int main(int argc, char *argv[])
     std::this_thread::sleep_for(5s);// Wait a bit to connect
 
     const auto start = std::chrono::high_resolution_clock::now();
-    run_test();
+    run_test(replay_path, default_port);
     const auto duration = std::chrono::high_resolution_clock::now() - start;
 
     fmt::println("Finished Replay, took {}", std::chrono::duration_cast<std::chrono::duration<float>>(duration));
