@@ -2,7 +2,7 @@
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: check-symlinks
       - id: destroyed-symlinks
@@ -19,23 +19,23 @@ repos:
       - id: detect-private-key
       - id: debug-statements
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.2
+    rev: v2.2.6
     hooks:
       - id: codespell
         args:
           - --skip=*.ipynb
           - -L=strat
   - repo: https://github.com/python/black
-    rev: 23.1.0
+    rev: 23.12.1
     hooks:
       - id: black
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     # Ruff version.
-    rev: "v0.0.254"
+    rev: "v0.1.13"
     hooks:
       - id: ruff
   - repo: https://github.com/pocc/pre-commit-hooks
-    rev: master
+    rev: v1.3.5
     hooks:
       - id: cppcheck
         args:
@@ -45,6 +45,7 @@ repos:
           - --suppress=missingIncludeSystem
           - --suppress=unusedFunction
           - --suppress=missingInclude
+          - --suppress=passedByValue
   - repo: https://github.com/cheshirekow/cmake-format-precommit
     rev: v0.6.13
     hooks:
