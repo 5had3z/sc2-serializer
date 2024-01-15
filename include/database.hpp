@@ -210,7 +210,7 @@ template<HasDBInterface EntryType> class ReplayDatabase
 
         // Get the current endPos of the file
         std::ofstream dbStream(dbPath_, std::ios::binary | std::ios::ate | std::ios::in);
-        entryPtr_.push_back(dbStream.tellp());
+        const auto previousEnd = dbStream.tellp();
 
         // Write compressed data to the end of the file
         try {
@@ -229,20 +229,27 @@ template<HasDBInterface EntryType> class ReplayDatabase
             return false;
         }
 
-        // Go to the db index and write new entry
-        const std::size_t nEntries = entryPtr_.size();
+        // Caclulate offset of start of db entry
         dbStream.seekp(0, std::ios::beg);
-        dbStream.write(reinterpret_cast<const char *>(&nEntries), sizeof(std::size_t));
+        entryPtr_.emplace_back(previousEnd - dbStream.tellp());
+
         // Write Offset (index) is nEntries - 1 + sizeof(nEntries)
-        dbStream.seekp((nEntries - 1) * sizeof(std::streampos) + sizeof(std::size_t), std::ios::beg);
-        dbStream.write(reinterpret_cast<const char *>(&entryPtr_.back()), sizeof(std::streampos));
+        const std::size_t nEntries = entryPtr_.size();
+        constexpr auto elementSize = sizeof(decltype(entryPtr_)::value_type);
+        dbStream.seekp((nEntries - 1) * elementSize + sizeof(std::size_t), std::ios::beg);
+        dbStream.write(reinterpret_cast<const char *>(&entryPtr_.back()), elementSize);
+
+        // Write Number of Elements in LUT last to confirm the update
+        dbStream.seekp(0, std::ios::beg);
+        dbStream.write(reinterpret_cast<const char *>(&nEntries), sizeof(nEntries));
+
+        // Check bad-ness
         if (dbStream.bad()) {
             SPDLOG_LOGGER_ERROR(gLoggerDB, "Error Writing Db Offset Entry");
             return false;
         }
 
         SPDLOG_LOGGER_INFO(gLoggerDB, "Saved Replay: {}, PlayerID: {}", data.getReplayHash(), data.getPlayerId());
-
         return true;
     }
 
@@ -391,7 +398,7 @@ template<HasDBInterface EntryType> class ReplayDatabase
 
         // Open database and seek to desired position
         std::ifstream dbStream(dbPath_, std::ios::binary);
-        dbStream.seekg(entryPtr_[index]);
+        dbStream.seekg(entryPtr_[index], std::ios::beg);
 
         bio::filtering_istream filterStream{};
         filterStream.push(bio::zlib_decompressor());
@@ -423,7 +430,7 @@ template<HasDBInterface EntryType> class ReplayDatabase
     /**
      * @brief Look up table for database entries
      */
-    std::vector<std::streampos> entryPtr_{};
+    std::vector<std::int64_t> entryPtr_{};
 };
 
 
