@@ -235,7 +235,7 @@ template<HasDBInterface EntryType> class ReplayDatabase
 
         // Write Offset (index) is nEntries - 1 + sizeof(nEntries)
         const std::size_t nEntries = entryPtr_.size();
-        constexpr auto elementSize = sizeof(decltype(entryPtr_)::value_type);
+        constexpr auto elementSize = sizeof(std::ranges::range_value_t<decltype(entryPtr_)>);
         dbStream.seekp((nEntries - 1) * elementSize + sizeof(std::size_t), std::ios::beg);
         dbStream.write(reinterpret_cast<const char *>(&entryPtr_.back()), elementSize);
 

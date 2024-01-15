@@ -3,6 +3,7 @@
 
 #include "serialize.hpp"
 
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 
