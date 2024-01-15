@@ -62,7 +62,9 @@ if(MSVC)
     URL
     "https://github.com/boostorg/boost/releases/download/boost-1.83.0/boost-1.83.0.zip"
     OPTIONS
-    "BOOST_IOSTREAMS_ENABLE_ZLIB")
+    "BOOST_INCLUDE_LIBRARIES iostreams\\\\;pfr"
+    "BOOST_IOSTREAMS_ENABLE_ZLIB"
+    )
 
 else()
   cpmaddpackage(
@@ -113,8 +115,8 @@ if(SC2_CONVERTER)
            sc2lib
            sc2utils
            spdlog::spdlog
-           boost_pfr
            TBB::tbb
+           Boost::pfr
            Boost::iostreams)
 
   target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS})
@@ -151,8 +153,8 @@ if(SC2_CONVERTER)
   target_link_libraries(
     sc2_merger
     PUBLIC spdlog::spdlog
-           boost_pfr
            cxxopts
+           Boost::pfr
            Boost::iostreams)
 
   # Copy version getter to build folder
@@ -201,7 +203,7 @@ if(SC2_PY_READER)
   target_link_libraries(
     _sc2_replay_reader
     PUBLIC spdlog::spdlog
-           boost_pfr
+           Boost::pfr
            Boost::iostreams
            yaml-cpp)
   target_compile_options(_sc2_replay_reader PUBLIC ${_COMPILE_OPTIONS})
@@ -258,7 +260,7 @@ if(SC2_CONVERTER AND OpenCV_FOUND)
            sc2utils
            cxxopts
            spdlog::spdlog
-           boost_pfr
+           Boost::pfr
            opencv_core
            opencv_imgcodecs)
   target_include_directories(game_exp SYSTEM PRIVATE include 3rdparty/s2client-api/include

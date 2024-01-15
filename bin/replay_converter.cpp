@@ -21,14 +21,15 @@
 #include <optional>
 #include <ranges>
 
+// Observer must be included before Windows.h since it #define's max/min which fucks with std::ranges::{min|max}
+#include "observer.hpp"
+
 #if defined(_WIN32)
 #include <WinSock2.h>
 #include <Windows.h>
 #elif defined(__linux__)
 #include <unistd.h>
 #endif
-
-#include "observer.hpp"
 
 namespace fs = std::filesystem;
 using namespace std::string_literals;

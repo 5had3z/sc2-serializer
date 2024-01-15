@@ -175,7 +175,8 @@ template<IsSoAType UnitSoAT>
 {
     // Create outer dimension with the maximum game step index
     std::vector<std::vector<typename UnitSoAT::struct_type>> replayUnits;
-    replayUnits.resize(std::ranges::max(flattenedUnits.indicies) + 1);
+    const std::size_t maxStepIdx = std::ranges::max(flattenedUnits.indicies);
+    replayUnits.resize(maxStepIdx + 1ull);
 
     // Copy units to correct timestep
     const auto &indicies = flattenedUnits.indicies;

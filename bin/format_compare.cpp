@@ -32,7 +32,7 @@ template<typename T> void writeData(T data, std::filesystem::path outPath, bool 
     namespace bio = boost::iostreams;
     bio::filtering_ostream filterStream{};
     filterStream.push(bio::zlib_compressor(bio::zlib::best_compression));
-    filterStream.push(bio::file_sink(outPath, mode));
+    filterStream.push(bio::file_sink(outPath.string(), mode));
     cvt::serialize(data, filterStream);
     if (filterStream.bad()) { fmt::print("Error Serializing Data to {}\n", outPath.string()); }
     filterStream.flush();
@@ -44,7 +44,7 @@ template<typename T> [[nodiscard]] auto readData(std::filesystem::path readPath)
     namespace bio = boost::iostreams;
     bio::filtering_istream filterStream{};
     filterStream.push(bio::zlib_decompressor());
-    filterStream.push(bio::file_source(readPath, std::ios::binary));
+    filterStream.push(bio::file_source(readPath.string(), std::ios::binary));
     T data;
     cvt::deserialize(data, filterStream);
     filterStream.reset();
