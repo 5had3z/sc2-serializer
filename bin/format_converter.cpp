@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
 
     fs::path destPath = cliOpts["output"].as<std::string>();
     if (fs::is_directory(destPath)) {
-        destPath.replace_filename(sourcePath.filename());
+        destPath /= sourcePath.filename();
     }
     else if (!fs::exists(destPath.parent_path())) {
         fmt::print("ERROR: Path to destination doesn't exist: {}\n", destPath.parent_path().string());
