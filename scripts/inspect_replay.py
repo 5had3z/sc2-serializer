@@ -73,6 +73,8 @@ def test_parseable(db: ReplayDatabase, parser: ReplayParser):
     for idx in range(db.size()):
         replay_data = db.getEntry(idx)
         parser.parse_replay(replay_data)
+        print(f"Done {idx+1} of {db.size()}", end="\r")
+    print("\nOk")
 
 
 @app.command()
@@ -110,7 +112,6 @@ def inspect(
 
     if command is SubCommand.test_parseable:
         test_parseable(db, parser)
-        print("Ok")
 
     elif command is SubCommand.scatter_units:
         outfolder.mkdir(exist_ok=True)
