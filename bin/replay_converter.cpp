@@ -128,7 +128,7 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::tuple<std:
         PyObject *sysPath = PySys_GetObject("path");
         PyList_Append(sysPath, (PyUnicode_FromString(getExecutablePath().c_str())));
 
-        pName = PyUnicode_DecodeFSDefault("getReplayVersion");
+        pName = PyUnicode_DecodeFSDefault("replay_version");
         pModule = PyImport_Import(pName);
         Py_XDECREF(pName);
         if (PyErr_Occurred()) {
@@ -137,7 +137,7 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::tuple<std:
         }
 
         if (pModule) {
-            pFunction = PyObject_GetAttrString(pModule, "run_file");
+            pFunction = PyObject_GetAttrString(pModule, "get_replay_file_version_info");
 
             if (PyCallable_Check(pFunction)) {
                 pArgs = PyTuple_Pack(1, PyUnicode_DecodeFSDefault(replayPath.string().c_str()));
