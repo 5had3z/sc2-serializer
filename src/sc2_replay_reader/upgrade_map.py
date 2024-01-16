@@ -152,7 +152,13 @@ class GameUpgradeInfo:
     @classmethod
     def from_upgrades(cls, upgrades: dict[str, int]):
         """Create from Upgrade Name to ActionID Dict"""
-        _zerg = {upgrades[p]: p for p in _gen_zerg()}
+        # Some versions AnabolicSynthesis, idk, just warn user
+        _zerg = {}
+        for p in _gen_zerg():
+            if p in upgrades:
+                _zerg[upgrades[p]] = p
+            else:
+                print(f"Upgrades missing: {p}")
         _terran = {upgrades[p]: p for p in _gen_terran()}
         _protoss = {upgrades[p]: p for p in _gen_protoss()}
         return cls(_protoss, _terran, _zerg)
