@@ -2,6 +2,19 @@
 """
 Use PySC2 and run over each game version in a folder and write out
 information about different upgrades.
+
+PySC2 doesn't recognise properly that a Version object is passed to it,
+and falsely rejects good version requests, hence a small change in 
+pysc2.run_configs.lib.RunConfig where the init checks if version is an
+instance of Version as shown below.
+
+class RunConfig(object):
+  def __init__(self, ......)
+    ....
+    if not isinstance(version, Version):
+      self.version = self._get_version(version)
+    else:
+      self.version = version
 """
 import os
 import platform
@@ -17,6 +30,7 @@ from pysc2.env import sc2_env
 from pysc2.lib.actions import FUNCTIONS
 from pysc2.run_configs.lib import Version
 from pysc2.lib.remote_controller import ConnectError
+from pysc2.lib.sc_process import SC2LaunchError
 from s2clientprotocol import sc2api_pb2 as sc_pb
 from s2clientprotocol.data_pb2 import AbilityData, UpgradeData
 
@@ -256,7 +270,7 @@ def main(unused_argv):
         print(f"Gathering info from {version}")
         try:
             game_infos.append(get_game_info(get_game_instance(version)))
-        except (ConnectError, ValueError) as e:
+        except (ConnectError, SC2LaunchError) as e:
             print(f"Faled to run {version} with error {e}")
         print(f"Finished {idx} of {len(versions)}")
 
