@@ -15,13 +15,7 @@ from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from typing_extensions import Annotated
 
-from sc2_replay_reader import (
-    GAME_INFO_FILE,
-    ReplayDatabase,
-    ReplayParser,
-    ReplayDatabaseNoUnits,
-    ReplayDatabaseNoUnitsMiniMap,
-)
+from sc2_replay_reader import GAME_INFO_FILE, ReplayDataAllDatabase, ReplayDataAllParser
 from sc2_replay_reader.unit_features import NeutralUnit, NeutralUnitOH, Unit, UnitOH
 
 app = typer.Typer()
@@ -41,7 +35,7 @@ def make_minimap_video(image_sequence: Sequence, fname: Path):
     writer.release()
 
 
-def make_units_video(parser: ReplayParser, fname: Path):
+def make_units_video(parser: ReplayDataAllParser, fname: Path):
     img_w = 1920
     img_h = 1080
     writer = cv2.VideoWriter(
@@ -75,7 +69,7 @@ def make_units_video(parser: ReplayParser, fname: Path):
     writer.release()
 
 
-def test_parseable(db: ReplayDatabase, parser: ReplayParser):
+def test_parseable(db: ReplayDataAllDatabase, parser: ReplayDataAllParser):
     """Try parse db at index with parser"""
     start = time.time()
     for idx in range(db.size()):
@@ -88,7 +82,7 @@ def test_parseable(db: ReplayDatabase, parser: ReplayParser):
 @app.command()
 def count(folder: Annotated[Path, typer.Option(help="Folder to count replays")]):
     """Count number of replays in a set of shards"""
-    db = ReplayDatabase()
+    db = ReplayDataAllDatabase()
     total = 0
     for file in folder.iterdir():
         if file.suffix == ".SC2Replays":
@@ -115,8 +109,8 @@ def inspect(
     / "workspace",
 ):
     """"""
-    db = ReplayDatabase(file)
-    parser = ReplayParser(GAME_INFO_FILE)
+    db = ReplayDataAllDatabase(file)
+    parser = ReplayDataAllParser(GAME_INFO_FILE)
 
     if command is SubCommand.test_parseable:
         test_parseable(db, parser)

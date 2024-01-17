@@ -32,6 +32,33 @@ template<typename T> void bindImage(py::module &m, const std::string &name)
         });
 }
 
+template<typename T> void bindReplayDataInterfaces(py::module &m, const std::string &name)
+{
+    py::class_<T>(m, name.c_str()).def_readwrite("header", &T::header).def_readwrite("data", &T::data);
+
+    const auto dbName = name + "Database";
+    py::class_<cvt::ReplayDatabase<T>>(m, dbName.c_str())
+        .def(py::init<>())
+        .def(py::init<const std::filesystem::path &>(), py::arg("dbPath"))
+        .def("open", &cvt::ReplayDatabase<T>::open, py::arg("dbPath"))
+        .def("isFull", &cvt::ReplayDatabase<T>::isFull)
+        .def("size", &cvt::ReplayDatabase<T>::size)
+        .def("getEntry", &cvt::ReplayDatabase<T>::getEntry, py::arg("index"))
+        .def("getHeader", &cvt::ReplayDatabase<T>::getHeader, py::arg("index"))
+        .def("getHashIdEntry", &cvt::ReplayDatabase<T>::getHashId, py::arg("index"));
+
+    const auto parserName = name + "Parser";
+    py::class_<cvt::ReplayParser<T>>(m, parserName.c_str())
+        .def(py::init<const std::filesystem::path &>(), py::arg("info_path"))
+        .def("sample", &cvt::ReplayParser<T>::sample, py::arg("time_idx"), py::arg("unit_alliance") = false)
+        .def("parse_replay", &cvt::ReplayParser<T>::parseReplay, py::arg("replay_data"))
+        .def("size", &cvt::ReplayParser<T>::size)
+        .def("empty", &cvt::ReplayParser<T>::empty)
+        .def_property_readonly("data", &cvt::ReplayParser<T>::data, py::return_value_policy::reference_internal)
+        .def_property_readonly("info", &cvt::ReplayParser<T>::info, py::return_value_policy::reference_internal);
+}
+
+
 // Specialization for bool image which doesn't have native buffer support
 template<typename T>
     requires std::is_same_v<T, bool>
@@ -46,8 +73,8 @@ void bindImage(py::module &m, const std::string &name)
         });
 }
 
-template <typename T>
-cvt::ReplayDatabase<T> create_replay_database_impl(const std::filesystem::path& db_path) {
+template<typename T> cvt::ReplayDatabase<T> create_replay_database_impl(const std::filesystem::path &db_path)
+{
     return cvt::ReplayDatabase<T>(db_path);
 }
 
@@ -116,6 +143,7 @@ void bindEnums(py::module &m)
 PYBIND11_MODULE(_sc2_replay_reader, m)
 {
     m.doc() = "pbdoc(Python bindings for Starcraft II database reader)pbdoc";
+    m.attr("__version__") = "0.0.1";
 
     bindEnums(m);
 
@@ -360,72 +388,36 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readwrite("mapHeight", &cvt::ReplayInfo::mapHeight)
         .def_readwrite("heightMap", &cvt::ReplayInfo::heightMap);
 
-    py::class_<cvt::ReplayData2SoANoUnitsMiniMap>(m, "ReplayData2SoANoUnitsMiniMap")
-        .def_readwrite("header", &cvt::ReplayData2SoANoUnitsMiniMap::header)
-        .def_readwrite("data", &cvt::ReplayData2SoANoUnitsMiniMap::data);
+    bindReplayDataInterfaces<cvt::ReplayData2SoANoUnitsMiniMap>(m, "ReplayDataScalarOnly");
 
-    py::class_<cvt::ReplayData2SoANoUnits>(m, "ReplayData2SoANoUnits")
-        .def_readwrite("header", &cvt::ReplayData2SoANoUnits::header)
-        .def_readwrite("data", &cvt::ReplayData2SoANoUnits::data);
+    bindReplayDataInterfaces<cvt::ReplayData2SoANoUnits>(m, "ReplayDataNoUnits");
 
-    py::class_<cvt::ReplayData2SoA>(m, "ReplayData2SoA")
-        .def_readwrite("header", &cvt::ReplayData2SoA::header)
-        .def_readwrite("data", &cvt::ReplayData2SoA::data);
-
-    py::class_<cvt::ReplayDatabase<cvt::ReplayData2SoANoUnitsMiniMap>>(m, "ReplayDatabaseNoUnitsMiniMap")
-        .def(py::init<>())
-        .def(py::init<const std::filesystem::path &>(), py::arg("dbPath"))
-        .def("open", &cvt::ReplayDatabase<cvt::ReplayData2SoANoUnitsMiniMap>::open, py::arg("dbPath"))
-        .def("isFull", &cvt::ReplayDatabase<cvt::ReplayData2SoANoUnitsMiniMap>::isFull)
-        .def("size", &cvt::ReplayDatabase<cvt::ReplayData2SoANoUnitsMiniMap>::size)
-        .def("getEntry", &cvt::ReplayDatabase<cvt::ReplayData2SoANoUnitsMiniMap>::getEntry, py::arg("index"))
-        .def("getHeader", &cvt::ReplayDatabase<cvt::ReplayData2SoANoUnitsMiniMap>::getHeader, py::arg("index"))
-        .def("getHashIdEntry", &cvt::ReplayDatabase<cvt::ReplayData2SoANoUnitsMiniMap>::getHashId, py::arg("index"));
-
-    py::class_<cvt::ReplayDatabase<cvt::ReplayData2SoANoUnits>>(m, "ReplayDatabaseNoUnits")
-        .def(py::init<>())
-        .def(py::init<const std::filesystem::path &>(), py::arg("dbPath"))
-        .def("open", &cvt::ReplayDatabase<cvt::ReplayData2SoANoUnits>::open, py::arg("dbPath"))
-        .def("isFull", &cvt::ReplayDatabase<cvt::ReplayData2SoANoUnits>::isFull)
-        .def("size", &cvt::ReplayDatabase<cvt::ReplayData2SoANoUnits>::size)
-        .def("getEntry", &cvt::ReplayDatabase<cvt::ReplayData2SoANoUnits>::getEntry, py::arg("index"))
-        .def("getHeader", &cvt::ReplayDatabase<cvt::ReplayData2SoANoUnits>::getHeader, py::arg("index"))
-        .def("getHashIdEntry", &cvt::ReplayDatabase<cvt::ReplayData2SoANoUnits>::getHashId, py::arg("index"));
-
-    // Expose ReplayDatabase class
-    using ReplayDataType = cvt::ReplayData2SoA;
-    py::class_<cvt::ReplayDatabase<ReplayDataType>>(m, "ReplayDatabase")
-        .def(py::init<>())
-        .def(py::init<const std::filesystem::path &>(), py::arg("dbPath"))
-        .def("open", &cvt::ReplayDatabase<ReplayDataType>::open, py::arg("dbPath"))
-        .def("isFull", &cvt::ReplayDatabase<ReplayDataType>::isFull)
-        .def("size", &cvt::ReplayDatabase<ReplayDataType>::size)
-        .def("getEntry", &cvt::ReplayDatabase<ReplayDataType>::getEntry, py::arg("index"))
-        .def("getHeader", &cvt::ReplayDatabase<ReplayDataType>::getHeader, py::arg("index"))
-        .def("getHashIdEntry", &cvt::ReplayDatabase<ReplayDataType>::getHashId, py::arg("index"));
-
-    py::class_<cvt::ReplayParser>(m, "ReplayParser")
-        .def(py::init<const std::filesystem::path &>(), py::arg("dataPath"))
-        .def("sample", &cvt::ReplayParser::sample, py::arg("timeIdx"), py::arg("unit_alliance") = false)
-        .def("parse_replay", &cvt::ReplayParser::parseReplay, py::arg("replayData"))
-        .def("size", &cvt::ReplayParser::size)
-        .def("empty", &cvt::ReplayParser::empty)
-        .def_property_readonly("data", &cvt::ReplayParser::data, py::return_value_policy::reference_internal)
-        .def_property_readonly("info", &cvt::ReplayParser::info, py::return_value_policy::reference_internal);
+    bindReplayDataInterfaces<cvt::ReplayData2SoA>(m, "ReplayDataAll");
 
     m.def("setReplayDBLoggingLevel", &cvt::setReplayDBLoggingLevel, py::arg("lvl"));
-    m.def("createDatabase", [](const std::filesystem::path& db_path, const bool parseMiniMap = true, const bool parseUnits = true) -> std::variant<cvt::ReplayDatabase<cvt::ReplayData2SoANoUnitsMiniMap>, cvt::ReplayDatabase<cvt::ReplayData2SoANoUnits>, cvt::ReplayDatabase<cvt::ReplayData2SoA>> {
-        if (!parseMiniMap && !parseUnits) {
-            return create_replay_database_impl<cvt::ReplayData2SoANoUnitsMiniMap>(db_path);
-        } else if (parseMiniMap && !parseUnits) {
-            return create_replay_database_impl<cvt::ReplayData2SoANoUnits>(db_path);
-        } else if (parseMiniMap && parseUnits) {
-            return create_replay_database_impl<cvt::ReplayData2SoA>(db_path);
-        } else {
-            throw std::invalid_argument("Invalid replay data type");
-        }
-    }, py::arg("db_path"), py::arg("parseMiniMap") = true, py::arg("parseUnits") = true);
+    m.def(
+        "createDatabase",
+        [](const std::filesystem::path &db_path,
+            const bool parseMiniMap = true,
+            const bool parseUnits = true) -> std::variant<cvt::ReplayDatabase<cvt::ReplayData2SoANoUnitsMiniMap>,
+                                              cvt::ReplayDatabase<cvt::ReplayData2SoANoUnits>,
+                                              cvt::ReplayDatabase<cvt::ReplayData2SoA>> {
+            if (!parseMiniMap && !parseUnits) {
+                return create_replay_database_impl<cvt::ReplayData2SoANoUnitsMiniMap>(db_path);
+            } else if (parseMiniMap && !parseUnits) {
+                return create_replay_database_impl<cvt::ReplayData2SoANoUnits>(db_path);
+            } else if (parseMiniMap && parseUnits) {
+                return create_replay_database_impl<cvt::ReplayData2SoA>(db_path);
+            } else {
+                throw std::invalid_argument("Invalid replay data type");
+            }
+        },
+        py::arg("db_path"),
+        py::arg("parseMiniMap") = true,
+        py::arg("parseUnits") = true);
 
-
-    m.attr("__version__") = "0.0.1";
+    // m.def("getParser",
+    //     [](const py::str &name) -> std::variant<cvt::ReplayParser<cvt::ReplayData2SoANoUnitsMiniMap>,
+    //                                 cvt::ReplayParser<cvt::ReplayData2SoANoUnits>,
+    //                                 cvt::ReplayParser<cvt::ReplayData2SoA>> {});
 }

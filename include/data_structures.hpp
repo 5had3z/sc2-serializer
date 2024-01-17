@@ -648,8 +648,36 @@ template<typename T> auto enumToOneHot(Action::TargetType e) noexcept -> std::ve
     return detail::enumToOneHot_helper<T>(e, vals);
 }
 
+
+// ----------------------------------------------
+// Step Data Types
+//-----------------------------------------------
+
+
+template<typename T>
+concept HasScalarData = requires { requires std::same_as<typename T::has_scalar_data, std::true_type>; };
+
+template<typename T>
+concept HasMinimapData = requires { requires std::same_as<typename T::has_minimap_data, std::true_type>; };
+
+template<typename T>
+concept HasUnitData = requires { requires std::same_as<typename T::has_unit_data, std::true_type>; };
+
+template<typename T, typename... U>
+concept IsAnyOf = (std::same_as<T, U> || ...);
+
+template<typename T>
+concept HasActionData = requires(T) {
+    {
+        T::actions
+    } -> IsAnyOf<std::vector<std::vector<Action>>, std::vector<Action>>;
+};
+
+
 struct StepDataNoUnitsMiniMap
 {
+    using has_scalar_data = std::true_type;
+
     std::uint32_t gameStep{};
     std::uint16_t minearals{};
     std::uint16_t vespene{};
@@ -661,9 +689,13 @@ struct StepDataNoUnitsMiniMap
     [[nodiscard]] auto operator==(const StepDataNoUnitsMiniMap &other) const noexcept -> bool = default;
 };
 
+static_assert(HasScalarData<StepDataNoUnitsMiniMap>);
 
 struct StepDataNoUnits
 {
+    using has_scalar_data = std::true_type;
+    using has_minimap_data = std::true_type;
+
     std::uint32_t gameStep{};
     std::uint16_t minearals{};
     std::uint16_t vespene{};
@@ -681,8 +713,14 @@ struct StepDataNoUnits
     [[nodiscard]] auto operator==(const StepDataNoUnits &other) const noexcept -> bool = default;
 };
 
+static_assert(HasScalarData<StepDataNoUnits> && HasMinimapData<StepDataNoUnits>);
+
 struct StepData
 {
+    using has_scalar_data = std::true_type;
+    using has_minimap_data = std::true_type;
+    using has_unit_data = std::true_type;
+
     std::uint32_t gameStep{};
     std::uint16_t minearals{};
     std::uint16_t vespene{};
@@ -703,10 +741,15 @@ struct StepData
     [[nodiscard]] auto operator==(const StepData &other) const noexcept -> bool = default;
 };
 
+static_assert(HasScalarData<StepData> && HasMinimapData<StepData> && HasUnitData<StepData>);
 
-struct StepDataSoANoUnitsMiniMap {
+
+struct StepDataSoANoUnitsMiniMap
+{
+    using has_scalar_data = std::true_type;
 
     using struct_type = StepDataNoUnitsMiniMap;
+
     std::vector<std::uint32_t> gameStep{};
     std::vector<std::uint16_t> minearals{};
     std::vector<std::uint16_t> vespene{};
@@ -731,7 +774,12 @@ struct StepDataSoANoUnitsMiniMap {
     }
 };
 
-struct StepDataSoANoUnits {
+static_assert(HasScalarData<StepDataSoANoUnitsMiniMap> && IsSoAType<StepDataSoANoUnitsMiniMap>);
+
+struct StepDataSoANoUnits
+{
+    using has_scalar_data = std::true_type;
+    using has_minimap_data = std::true_type;
 
     using struct_type = StepDataNoUnits;
     std::vector<std::uint32_t> gameStep{};
@@ -770,10 +818,14 @@ struct StepDataSoANoUnits {
     }
 };
 
-
+static_assert(HasScalarData<StepDataSoANoUnits> && HasMinimapData<StepDataSoANoUnits> && IsSoAType<StepDataSoANoUnits>);
 
 struct StepDataSoA
 {
+    using has_scalar_data = std::true_type;
+    using has_minimap_data = std::true_type;
+    using has_unit_data = std::true_type;
+
     using struct_type = StepData;
     std::vector<std::uint32_t> gameStep{};
     std::vector<std::uint16_t> minearals{};
@@ -817,9 +869,8 @@ struct StepDataSoA
     }
 };
 
-static_assert(IsSoAType<StepDataSoA>);
-static_assert(IsSoAType<StepDataSoANoUnits>);
-static_assert(IsSoAType<StepDataSoANoUnitsMiniMap>);
+static_assert(
+    HasScalarData<StepDataSoA> && HasMinimapData<StepDataSoA> && HasUnitData<StepDataSoA> && IsSoAType<StepDataSoA>);
 
 
 template<std::ranges::range Range>

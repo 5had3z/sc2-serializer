@@ -63,8 +63,7 @@ if(MSVC)
     "https://github.com/boostorg/boost/releases/download/boost-1.83.0/boost-1.83.0.zip"
     OPTIONS
     "BOOST_INCLUDE_LIBRARIES iostreams\\\\;pfr"
-    "BOOST_IOSTREAMS_ENABLE_ZLIB"
-    )
+    "BOOST_IOSTREAMS_ENABLE_ZLIB")
 
 else()
   cpmaddpackage(
@@ -197,8 +196,7 @@ if(SC2_PY_READER)
     _sc2_replay_reader
     src/database.cpp
     src/bindings.cpp
-    src/py_tech_state.cpp
-    src/py_replay_parser.cpp)
+    src/py_tech_state.cpp)
   target_compile_features(_sc2_replay_reader PUBLIC cxx_std_23)
   target_link_libraries(
     _sc2_replay_reader
