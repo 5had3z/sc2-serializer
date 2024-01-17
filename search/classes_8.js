@@ -6,8 +6,7 @@ var searchData=
   ['replaydatasoa_3',['ReplayDataSoA',['../da/d56/structcvt_1_1_replay_data_so_a.html',1,'cvt']]],
   ['replaydatatemplate_4',['ReplayDataTemplate',['../d4/d5b/structcvt_1_1_replay_data_template.html',1,'cvt']]],
   ['replaydatatemplatesoa_5',['ReplayDataTemplateSoA',['../df/dd2/structcvt_1_1_replay_data_template_so_a.html',1,'cvt']]],
-  ['replaydatatemplatesoa_3c_20stepdatasoa_20_3e_6',['ReplayDataTemplateSoA&lt; StepDataSoA &gt;',['../df/dd2/structcvt_1_1_replay_data_template_so_a.html',1,'cvt']]],
-  ['replayinfo_7',['ReplayInfo',['../db/df5/structcvt_1_1_replay_info.html',1,'cvt']]],
-  ['replayparser_8',['ReplayParser',['../db/d4a/classcvt_1_1_replay_parser.html',1,'cvt']]],
-  ['resourceobs_9',['ResourceObs',['../d0/da0/structcvt_1_1_resource_obs.html',1,'cvt']]]
+  ['replayinfo_6',['ReplayInfo',['../db/df5/structcvt_1_1_replay_info.html',1,'cvt']]],
+  ['replayparser_7',['ReplayParser',['../db/d4a/classcvt_1_1_replay_parser.html',1,'cvt']]],
+  ['resourceobs_8',['ResourceObs',['../d0/da0/structcvt_1_1_resource_obs.html',1,'cvt']]]
 ];
