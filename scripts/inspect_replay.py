@@ -3,6 +3,7 @@
 Explore SC2Replays data with python API
 """
 # ruff: noqa
+import time
 from enum import Enum
 from pathlib import Path
 from typing import Sequence
@@ -10,12 +11,18 @@ from typing import Sequence
 import cv2
 import numpy as np
 import typer
-from typing_extensions import Annotated
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg
+from typing_extensions import Annotated
 
-from sc2_replay_reader import ReplayDatabase, ReplayParser, GAME_INFO_FILE
-from sc2_replay_reader.unit_features import Unit, UnitOH, NeutralUnit, NeutralUnitOH
+from sc2_replay_reader import (
+    GAME_INFO_FILE,
+    ReplayDatabase,
+    ReplayParser,
+    ReplayDatabaseNoUnits,
+    ReplayDatabaseNoUnitsMiniMap,
+)
+from sc2_replay_reader.unit_features import NeutralUnit, NeutralUnitOH, Unit, UnitOH
 
 app = typer.Typer()
 
@@ -70,11 +77,12 @@ def make_units_video(parser: ReplayParser, fname: Path):
 
 def test_parseable(db: ReplayDatabase, parser: ReplayParser):
     """Try parse db at index with parser"""
+    start = time.time()
     for idx in range(db.size()):
         replay_data = db.getEntry(idx)
         parser.parse_replay(replay_data)
         print(f"Done {idx+1} of {db.size()}", end="\r")
-    print("\nOk")
+    print(f"\nFinished parsing, took {time.time() - start}s")
 
 
 @app.command()
