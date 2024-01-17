@@ -48,20 +48,17 @@ int main(int argc, char *argv[])
     fs::path sourcePath = cliOpts["input"].as<std::string>();
 
     const auto *tmp = std::getenv("POD_NAME");
-    std::optional<std::string> podIndex;
     if (tmp == nullptr) {
         SPDLOG_INFO("POD_NAME not in ENV, not appending index suffix");
     } else {
-        std::string_view s(tmp);
+        const std::string_view s(tmp);
         // Extract the substring from the last delimiter to the end
-        podIndex = s.substr(s.find_last_of('-') + 1);
-
-        SPDLOG_INFO("POD_NAME found, using index suffix: {}", podIndex.value());
-
-        sourcePath /= "db_" + podIndex.value() + ".SC2Replays";
+        const std::string podIndex(s.substr(s.find_last_of('-') + 1));
+        SPDLOG_INFO("POD_NAME found, using index suffix: {}", podIndex);
+        sourcePath.replace_filename(sourcePath.stem().string() + podIndex + sourcePath.extension().string());
     }
 
-    if (!fs::exists(sourcePath)) {
+    if (!fs::is_regular_file(sourcePath)) {
         fmt::print("ERROR: Source Database doesn't exist: {}\n", sourcePath.string());
         return -1;
     }
@@ -84,20 +81,19 @@ int main(int argc, char *argv[])
     if (!fs::exists(hashStepFile)) { fmt::print("ERROR: Hash-Step file doesn't exist: {}\n", hashStepFile.string()); }
     const auto hash_steps = read_hash_steps_file(hashStepFile);
 
-    auto already_converted = dest.getHashes();
+    const auto already_converted = dest.getHashes();
     const auto print_modulo = source.size() / 10;
     for (std::size_t idx = 0; idx < source.size(); ++idx) {
-
         cvt::ReplayDataSoA old_data;
         try {
+            const auto [old_hash, old_id] = source.getHashId(idx);
+            const auto old_hashid = old_hash + std::to_string(old_id);
+            if (already_converted.contains(old_hashid)) { continue; }
             old_data = source.getEntry(idx);
-        } catch (const std::bad_alloc &e) {
-            fmt::print("Skipping as failed to read...\n");
+        } catch (const std::bad_alloc &err) {
+            SPDLOG_ERROR("Skipping index {}, due to read failure", idx);
             continue;
         }
-
-        const auto old_hash = old_data.replayHash + std::to_string(old_data.playerId);
-        if (already_converted.contains(old_hash)) { continue; }
         cvt::ReplayData2SoA new_data;
         auto &header = new_data.header;
         header.durationSteps = hash_steps.at(old_data.replayHash);
