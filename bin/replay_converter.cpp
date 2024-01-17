@@ -21,14 +21,15 @@
 #include <optional>
 #include <ranges>
 
+// Observer must be included before Windows.h since it #define's max/min which fucks with std::ranges::{min|max}
+#include "observer.hpp"
+
 #if defined(_WIN32)
 #include <WinSock2.h>
 #include <Windows.h>
 #elif defined(__linux__)
 #include <unistd.h>
 #endif
-
-#include "observer.hpp"
 
 namespace fs = std::filesystem;
 using namespace std::string_literals;
@@ -77,7 +78,7 @@ auto getReplaysFromFile(const std::string &partitionFile) noexcept -> std::vecto
  * @param folder Folder that contains replays
  * @return Vector of Hash Strings
  */
-auto getReplaysFromFolder(const std::string_view folder) noexcept -> std::vector<std::string>
+auto getReplaysFromFolder(std::string_view folder) noexcept -> std::vector<std::string>
 {
     SPDLOG_INFO("Searching replays in {}", folder);
     std::vector<std::string> replays;
@@ -127,7 +128,7 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::tuple<std:
         PyObject *sysPath = PySys_GetObject("path");
         PyList_Append(sysPath, (PyUnicode_FromString(getExecutablePath().c_str())));
 
-        pName = PyUnicode_DecodeFSDefault("getReplayVersion");
+        pName = PyUnicode_DecodeFSDefault("replay_version");
         pModule = PyImport_Import(pName);
         Py_XDECREF(pName);
         if (PyErr_Occurred()) {
@@ -136,7 +137,7 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::tuple<std:
         }
 
         if (pModule) {
-            pFunction = PyObject_GetAttrString(pModule, "run_file");
+            pFunction = PyObject_GetAttrString(pModule, "get_replay_file_version_info");
 
             if (PyCallable_Check(pFunction)) {
                 pArgs = PyTuple_Pack(1, PyUnicode_DecodeFSDefault(replayPath.string().c_str()));
@@ -349,7 +350,7 @@ auto main(int argc, char *argv[]) -> int
         "SC2 Replay Converter", "Convert SC2 Replays into a database which can be sampled for machine learning");
     // clang-format off
     cliParser.add_options()
-      ("r,replays", "path to folder of replays", cxxopts::value<std::string>())
+      ("r,replays", "path to folder of replays or replay file", cxxopts::value<std::string>())
       ("p,partition", "partition file to select a subset of replays from the folder", cxxopts::value<std::string>())
       ("o,output", "output filename for replay database", cxxopts::value<std::string>())
       ("c,converter", "type of converter to use [action|full|strided]", cxxopts::value<std::string>())
@@ -466,8 +467,10 @@ auto main(int argc, char *argv[]) -> int
             }
             SPDLOG_INFO("Using partition file: {}", partitionFile);
             return getReplaysFromFile(partitionFile);
-        } else {
+        } else if (fs::is_directory(replayFolder)) {
             return getReplaysFromFolder(replayFolder);
+        } else {// Is a single replay file
+            return std::vector{ replayFolder };
         }
     }();
 

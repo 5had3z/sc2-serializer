@@ -187,7 +187,8 @@ template<IsSoAType UnitSoAT>
 {
     // Create outer dimension with the maximum game step index
     std::vector<std::vector<typename UnitSoAT::struct_type>> replayUnits;
-    replayUnits.resize(std::ranges::max(flattenedUnits.indices) + 1);
+    const std::size_t maxStepIdx = std::ranges::max(flattenedUnits.indices);
+    replayUnits.resize(maxStepIdx + 1ull);
 
     // Copy units to correct timestep
     const auto &indices = flattenedUnits.indices;
@@ -341,7 +342,7 @@ template<IsSoAType UnitSoAT>
     // Iterator impl of chunk-by
     auto start = unitStepFlatten.begin();
     auto end = unitStepFlatten.begin();
-    for (; end != unitStepFlatten.end(); ++end) {
+    for (; end != std::prev(unitStepFlatten.end()); ++end) {
         // Check if we're at the end the end of our chunk
         const auto next = std::next(end, 1);
         if (end->first + 1 != next->first) {

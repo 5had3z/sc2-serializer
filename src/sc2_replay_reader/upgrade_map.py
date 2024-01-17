@@ -151,10 +151,21 @@ class GameUpgradeInfo:
 
     @classmethod
     def from_upgrades(cls, upgrades: dict[str, int]):
-        """Create from Upgrade Name to ActionID Dict"""
-        _zerg = {upgrades[p]: p for p in _gen_zerg()}
-        _terran = {upgrades[p]: p for p in _gen_terran()}
-        _protoss = {upgrades[p]: p for p in _gen_protoss()}
+        """Create from Upgrade Name to ActionID Dict, some versions are missing actions"""
+
+        def _func(gen_fn):
+            """Create mapping and warn when missing item"""
+            tmp = {}
+            for p in gen_fn():
+                if p in upgrades:
+                    tmp[upgrades[p]] = p
+                else:
+                    print(f"Upgrade missing: {p}")
+            return tmp
+
+        _zerg = _func(_gen_zerg)
+        _terran = _func(_gen_terran)
+        _protoss = _func(_gen_protoss)
         return cls(_protoss, _terran, _zerg)
 
 

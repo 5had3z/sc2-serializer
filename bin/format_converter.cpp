@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     // clang-format on
     const auto cliOpts = cliParser.parse(argc, argv);
 
-    if (cliOpts.count("help")){
+    if (cliOpts.count("help")) {
         fmt::print("{}\n", cliParser.help());
         return 0;
     }
@@ -69,9 +69,8 @@ int main(int argc, char *argv[])
 
     fs::path destPath = cliOpts["output"].as<std::string>();
     if (fs::is_directory(destPath)) {
-        destPath.replace_filename(sourcePath.filename());
-    }
-    else if (!fs::exists(destPath.parent_path())) {
+        destPath /= sourcePath.filename();
+    } else if (!fs::exists(destPath.parent_path())) {
         fmt::print("ERROR: Path to destination doesn't exist: {}\n", destPath.parent_path().string());
         return -1;
     }
@@ -82,9 +81,7 @@ int main(int argc, char *argv[])
     cvt::ReplayDatabase<cvt::ReplayData2SoA> dest(destPath);
 
     const fs::path hashStepFile = cliOpts["steps-file"].as<std::string>();
-    if (!fs::exists(hashStepFile)) {
-        fmt::print("ERROR: Hash-Step file doesn't exist: {}\n", hashStepFile.string());
-    }
+    if (!fs::exists(hashStepFile)) { fmt::print("ERROR: Hash-Step file doesn't exist: {}\n", hashStepFile.string()); }
     const auto hash_steps = read_hash_steps_file(hashStepFile);
 
     auto already_converted = dest.getHashes();
@@ -100,11 +97,9 @@ int main(int argc, char *argv[])
         }
 
         const auto old_hash = old_data.replayHash + std::to_string(old_data.playerId);
-        if (already_converted.contains(old_hash)) {
-            continue;
-        }
+        if (already_converted.contains(old_hash)) { continue; }
         cvt::ReplayData2SoA new_data;
-        auto& header = new_data.header;
+        auto &header = new_data.header;
         header.durationSteps = hash_steps.at(old_data.replayHash);
         header.replayHash = old_data.replayHash;
         header.gameVersion = old_data.gameVersion;
@@ -117,9 +112,9 @@ int main(int argc, char *argv[])
         header.mapHeight = old_data.mapHeight;
         header.heightMap = old_data.heightMap;
 
-        auto& stepData = new_data.data;
+        auto &stepData = new_data.data;
         stepData.gameStep = old_data.gameStep;
-        stepData.minearals= old_data.minearals;
+        stepData.minearals = old_data.minearals;
         stepData.vespene = old_data.vespene;
         stepData.popMax = old_data.popMax;
         stepData.popArmy = old_data.popArmy;
@@ -136,9 +131,7 @@ int main(int argc, char *argv[])
         stepData.neutralUnits = old_data.neutralUnits;
 
         dest.addEntry(new_data);
-        if (idx % print_modulo == 0) {
-            fmt::print("Converted {} of {} Replays\n", idx + 1, source.size());
-        }
+        if (idx % print_modulo == 0) { fmt::print("Converted {} of {} Replays\n", idx + 1, source.size()); }
     }
     fmt::print("DONE - Converted {} of {} Replays\n", dest.size(), source.size());
 

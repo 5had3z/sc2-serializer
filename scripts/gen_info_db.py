@@ -2,21 +2,37 @@
 """
 Use PySC2 and run over each game version in a folder and write out
 information about different upgrades.
+
+PySC2 doesn't recognise properly that a Version object is passed to it,
+and falsely rejects good version requests, hence a small change in 
+pysc2.run_configs.lib.RunConfig where the init checks if version is an
+instance of Version as shown below.
+
+class RunConfig(object):
+  def __init__(self, ......)
+    ....
+    if not isinstance(version, Version):
+      self.version = self._get_version(version)
+    else:
+      self.version = version
 """
 import os
-from dataclasses import dataclass, field, asdict
+import platform
+from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Iterable, Mapping
 
-from absl import flags
-from absl import app
+import pysc2.run_configs.platforms as SC2Platform
 import yaml
+from absl import app, flags
 from pysc2 import maps
 from pysc2.env import sc2_env
 from pysc2.lib.actions import FUNCTIONS
-from pysc2.run_configs.platforms import Linux as SC2Linux
+from pysc2.run_configs.lib import Version
+from pysc2.lib.remote_controller import ConnectError
+from pysc2.lib.sc_process import SC2LaunchError
 from s2clientprotocol import sc2api_pb2 as sc_pb
-from s2clientprotocol.data_pb2 import UpgradeData, AbilityData
+from s2clientprotocol.data_pb2 import AbilityData, UpgradeData
 
 
 @dataclass
@@ -153,20 +169,29 @@ def parse_units(valid_units):
     return units
 
 
-def get_game_info(version: str) -> GameInfo:
+def get_game_instance(version: Version) -> SC2Platform.LocalBase:
+    """Return instance of a game session"""
+    if platform.system() == "Windows":
+        return SC2Platform.Windows(version)
+    if platform.system() == "Linux":
+        return SC2Platform.Linux(version)
+    raise KeyError(f"Unidentified platform: {platform.system()}")
+
+
+def get_game_info(game: SC2Platform.LocalBase) -> GameInfo:
     """Return dataclass that contains game information"""
-    game = SC2Linux(version=version)
     create = make_creation_msg(game)
     interface = make_interface_opts()
     join = sc_pb.RequestJoinGame(
         options=interface, race=sc2_env.Race["protoss"], player_name="Mike Hunt"
     )
 
-    vinfo = game.version
-    game_info = GameInfo(f"{vinfo.game_version}.{vinfo.build_version}")
     with game.start(want_rgb=False, full_screen=False) as controller:
+        assert controller is not None
         controller.create_game(create)
         controller.join_game(join)
+        resp = controller.ping()
+        game_info = GameInfo(resp.game_version)
         game_data = controller.data()
         game_info.units = parse_units(
             (
@@ -192,10 +217,30 @@ def get_game_info(version: str) -> GameInfo:
     return game_info
 
 
+def get_versions_from_folder(path: Path) -> list[Version]:
+    """Get version list from folder of builds"""
+    return [
+        Version("latest", int(folder.name[len("base") :]), None, None)
+        for folder in path.glob("Base*")
+    ]
+
+
+def get_versions_from_file(path: Path) -> list[Version]:
+    """Get version list from csv with game,data,build"""
+    versions: list[Version] = []
+    with open(path, "r", encoding="utf-8") as f:
+        f.readline()  # Skip header
+        while line := f.readline():
+            game, data, build = line.split(",")
+            versions.append(Version(game, int(build), data, None))
+    return versions
+
+
 FLAGS = flags.FLAGS
-flags.DEFINE_string("root", "", "")
-flags.DEFINE_string("output", "", "")
-flags.DEFINE_spaceseplist("versions", [""], "")
+flags.DEFINE_string("root", "", "Root folder of SC2")
+flags.DEFINE_string("output", "", "Path to output yaml to write data")
+flags.DEFINE_boolean("versions_folder", False, "use game 'Versions' folder")
+flags.DEFINE_string("versions_file", "", "file containing versions to invoke")
 
 
 def main(unused_argv):
@@ -206,16 +251,30 @@ def main(unused_argv):
     output = Path(FLAGS.output)
 
     assert output.parent.exists(), f"Output directory doesn't exist: {output.parent}"
-    assert output.suffix == ".yaml", "Output must be a yaml file"
+    assert output.suffix == ".yaml", f"Output must be a yaml file, got {output}"
 
-    versions = FLAGS.versions if FLAGS.versions else [p.name for p in root.iterdir()]
+    os.environ["SC2PATH"] = str(root)
+
+    assert not (
+        FLAGS.versions_folder and FLAGS.versions_file
+    ), "Need to use 'versions_folder' OR 'versions_file', not both"
+    if FLAGS.versions_folder:
+        versions = get_versions_from_folder(root / "Versions")
+    elif FLAGS.versions_file:
+        versions = get_versions_from_file(FLAGS.versions_file)
+    else:
+        raise RuntimeError("Must use 'versions_folder' or 'versions_file'")
 
     game_infos: list[GameInfo] = []
     for idx, version in enumerate(versions, 1):
-        print(f"CONVERTING {version}")
-        os.environ["SC2PATH"] = str(root / version)
-        game_infos.append(get_game_info(version))
-        print(f"Finished {idx} of {len(versions)} game versions")
+        print(f"Gathering info from {version}")
+        try:
+            game_infos.append(get_game_info(get_game_instance(version)))
+        except (ConnectError, SC2LaunchError) as e:
+            print(f"Faled to run {version} with error {e}")
+        print(f"Finished {idx} of {len(versions)}")
+
+    print(f"Was able to gather {len(game_infos)} of {len(versions)} game versions")
 
     with open(output, "w", encoding="utf-8") as f:
         yaml.dump([asdict(g) for g in game_infos], f)

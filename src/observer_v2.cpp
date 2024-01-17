@@ -40,6 +40,7 @@ template<> void BaseConverter<ReplayData2SoA>::OnGameStart()
 
     // Preallocate Step Data with Maximum Game Loops
     replayData_.data.reserve(replayInfo.duration_gameloops);
+    start_ = std::chrono::high_resolution_clock::now();
 }
 
 template<> void BaseConverter<ReplayData2SoA>::OnGameEnd()
@@ -49,6 +50,9 @@ template<> void BaseConverter<ReplayData2SoA>::OnGameEnd()
         SPDLOG_ERROR("Not writing replay with bad SC2 AppState: {}", static_cast<int>(this->Control()->GetAppState()));
         return;
     }
+    const auto duration =
+        std::chrono::duration_cast<std::chrono::duration<float>>(std::chrono::high_resolution_clock::now() - start_);
+    SPDLOG_INFO("Replay ended, conversion duration: {:.1f}s", duration.count());
     // Transform SoA to AoS and Write to database
     writeSuccess_ = database_.addEntry(AoStoSoA<ReplayData2SoA::struct_type, ReplayData2SoA>(replayData_));
 }

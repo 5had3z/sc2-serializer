@@ -1,84 +1,78 @@
-import io
-import json
-import mpyq
 from pathlib import Path
+
 import typer
 from typing_extensions import Annotated
+from sc2_replay_reader.replay_version import get_replay_file_version_info
 
 app = typer.Typer()
 
 
-def replay_data(replay_path: str):
-    """Return the replay data given a path to the replay."""
-    with open(replay_path, "rb") as f:
-        return f.read()
+def get_versions_in_tree(root: Path):
+    """
+    Recurisvely query all the sc2 replays in a directory and return a set of all versions present
+    Also returns a mapping from unique versions to a replay with that version.
+    """
+    version_file_map: dict[tuple, Path] = {}
 
+    replay_files = list(root.rglob("*SC2Replay"))
+    for idx, file in enumerate(replay_files):
+        try:
+            version_info = get_replay_file_version_info(file)
+            if any(v is None for v in version_info):
+                version_info = None
+        except (KeyError, ValueError):
+            version_info = None
 
-def get_replay_version(replay_data):
-    replay_io = io.BytesIO()
-    replay_io.write(replay_data)
-    replay_io.seek(0)
-    archive = mpyq.MPQArchive(replay_io).extract()
-    metadata = json.loads(archive[b"replay.gamemetadata.json"].decode("utf-8"))
-    game_version = ".".join(metadata["GameVersion"].split(".")[:-1])
-    data_version = metadata.get("DataVersion")  # Only in replays version 4.1+.
-    build_version = str(metadata["BaseBuild"][4:])
+        if version_info is not None:
+            version_file_map[version_info] = file
 
-    return game_version, data_version, build_version
+        print(f"Done {idx} of {len(replay_files)}", end="\r")
 
-
-def get_all_versions(replay_data):
-    try:
-        replay_io = io.BytesIO()
-        replay_io.write(replay_data)
-        replay_io.seek(0)
-        archive = mpyq.MPQArchive(replay_io).extract()
-        metadata = json.loads(archive[b"replay.gamemetadata.json"].decode("utf-8"))
-        game_version = ".".join(metadata["GameVersion"].split(".")[:-1])
-        data_version = metadata.get("DataVersion")  # Only in replays version 4.1+.
-        build_version = int(metadata["BaseBuild"][4:])
-
-        if game_version is None or data_version is None or build_version is None:
-            return None
-
-        return game_version, data_version, build_version
-    except KeyError:
-        return None
-    except ValueError:
-        return None
-
-
-def run_file(file_path: str):
-    return get_replay_version(replay_data(file_path))
+    return version_file_map
 
 
 @app.command()
-def main(
-    replay_paths: Annotated[Path, typer.Option()],
-    game_paths: Annotated[Path, typer.Option()],
+def compare_replays_and_game(
+    replays: Annotated[Path, typer.Option()], game: Annotated[Path, typer.Option()]
 ):
-    all_versions = set()
+    """Compare versions of replays with versions of the game verision currently present"""
+    assert game.name == "Versions", f"Should point to the Versions folder, got {game}"
+    current_bases = {folder.name[len("base") :] for folder in game.glob("Base*")}
+    print("Game Build Versions: \n", current_bases)
+    version_file_map = get_versions_in_tree(replays)
 
-    current_bases = set(game_paths.glob("*"))
+    missing_versions = {
+        k: v for k, v in version_file_map.items() if k[2] not in current_bases
+    }
 
-    games = []
-    missing_versions = []
-    for i in replay_paths.rglob("*.SC2Replay"):
-        versions = get_all_versions(replay_data(i))
-        if versions is not None:
-            if str(versions[2]) not in current_bases:
-                missing_versions.append([i, *versions])
-                current_bases.append(str(versions[2]))
+    def sort_key(x: tuple[str]):
+        """Split and accumulate game version"""
+        a, b, c = x[0].split(".")
+        return int(a) * 1e4 + int(b) * 1e2 + int(c)
 
-            if versions not in all_versions:
-                games.append([i, *versions])
-
-            all_versions.add((versions))
     print(
-        "Missing versions: \n"
-        + "\n".join(map(str, sorted(missing_versions, key=lambda x: x[0])))
+        "Missing Build Versions: \n"
+        + "\n".join(map(str, sorted(missing_versions, key=sort_key)))
     )
-    print("All versions: \n" + "\n".join(map(str, sorted(games, key=lambda x: x[0]))))
+    print(
+        "All Game Versions: \n"
+        + "\n".join(map(str, sorted(version_file_map.keys(), key=sort_key)))
+    )
+
+
+@app.command()
+def write_replay_versions(
+    replays: Annotated[Path, typer.Option()],
+    output: Annotated[Path, typer.Option()],
+):
+    """Write all the game,data,build versions found in folder of replays to a csv"""
+    assert output.suffix == ".csv", f"Output should be a .csv file, got {output.suffix}"
+    version_file_map = get_versions_in_tree(replays)
+
+    with open(output, "w", encoding="utf-8") as out:
+        out.write("game,data,build\n")
+        for version in version_file_map:
+            out.write(f"{','.join(version)}\n")
 
 
 if __name__ == "__main__":

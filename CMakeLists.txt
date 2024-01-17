@@ -62,7 +62,9 @@ if(MSVC)
     URL
     "https://github.com/boostorg/boost/releases/download/boost-1.83.0/boost-1.83.0.zip"
     OPTIONS
-    "BOOST_IOSTREAMS_ENABLE_ZLIB")
+    "BOOST_INCLUDE_LIBRARIES iostreams\\\\;pfr"
+    "BOOST_IOSTREAMS_ENABLE_ZLIB"
+    )
 
 else()
   cpmaddpackage(
@@ -113,8 +115,8 @@ if(SC2_CONVERTER)
            sc2lib
            sc2utils
            spdlog::spdlog
-           boost_pfr
            TBB::tbb
+           Boost::pfr
            Boost::iostreams)
 
   target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS})
@@ -151,15 +153,15 @@ if(SC2_CONVERTER)
   target_link_libraries(
     sc2_merger
     PUBLIC spdlog::spdlog
-           boost_pfr
            cxxopts
+           Boost::pfr
            Boost::iostreams)
 
   # Copy version getter to build folder
   add_custom_command(
     TARGET replay_converter
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/src/getReplayVersion.py
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/src/sc2_replay_reader/replay_version.py
             $<TARGET_FILE_DIR:replay_converter>)
 
   if(MSVC)
@@ -201,7 +203,7 @@ if(SC2_PY_READER)
   target_link_libraries(
     _sc2_replay_reader
     PUBLIC spdlog::spdlog
-           boost_pfr
+           Boost::pfr
            Boost::iostreams
            yaml-cpp)
   target_compile_options(_sc2_replay_reader PUBLIC ${_COMPILE_OPTIONS})
@@ -258,7 +260,7 @@ if(SC2_CONVERTER AND OpenCV_FOUND)
            sc2utils
            cxxopts
            spdlog::spdlog
-           boost_pfr
+           Boost::pfr
            opencv_core
            opencv_imgcodecs)
   target_include_directories(game_exp SYSTEM PRIVATE include 3rdparty/s2client-api/include
@@ -278,4 +280,9 @@ if(SC2_CONVERTER)
   target_compile_features(format_converter PUBLIC cxx_std_23)
   target_compile_options(format_converter PUBLIC ${_COMPILE_OPTIONS})
   target_link_libraries(format_converter PUBLIC replay_converter cxxopts)
+
+  add_executable(fix_lut bin/fix_lut.cpp)
+  target_compile_features(fix_lut PUBLIC cxx_std_23)
+  target_compile_options(fix_lut PUBLIC ${_COMPILE_OPTIONS})
+  target_link_libraries(fix_lut PUBLIC replay_converter cxxopts)
 endif()

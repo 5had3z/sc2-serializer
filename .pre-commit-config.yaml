@@ -45,7 +45,10 @@ repos:
           - --suppress=missingIncludeSystem
           - --suppress=unusedFunction
           - --suppress=missingInclude
+          - --suppress=passedByValue
+          - --suppress=unassignedVariable # Fails to recognise some structured bindings
   - repo: https://github.com/cheshirekow/cmake-format-precommit
     rev: v0.6.13
     hooks:
       - id: cmake-format
+        additional_dependencies: [pyyaml>=5.1]

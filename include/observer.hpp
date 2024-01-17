@@ -15,9 +15,7 @@ namespace cvt {
 struct ResourceObs
 {
     UID id;// Original ID
-    // cppcheck-suppress unusedStructMember
     Point3f pos;// Point on map
-    // cppcheck-suppress unusedStructMember
     int qty;// Last observation
 };
 
@@ -29,7 +27,7 @@ template<typename DataSoA> class BaseConverter : public sc2::ReplayObserver
      * @param path The path to the database file.
      * @return True if the database was loaded successfully, false otherwise.
      */
-    auto loadDB(const std::filesystem::path &path) noexcept -> bool
+    auto loadDB(const std::filesystem::path &path) -> bool
     {
         auto result = database_.open(path);
         if (result) { knownHashes_ = database_.getHashes(); }
@@ -196,6 +194,7 @@ template<typename DataSoA> class BaseConverter : public sc2::ReplayObserver
     bool mapDynHasLogged_{ false };
     bool mapHeightHasLogged_{ false };
     bool writeSuccess_{ false };
+    std::chrono::high_resolution_clock::time_point start_{};
 };
 
 /**
@@ -232,7 +231,7 @@ template<typename DataSoA> class StridedConverter : public BaseConverter<DataSoA
      * @brief Set the sampling stride
      * @param stride stride to set between 1 and 10'000
      */
-    void SetStride(std::size_t stride) noexcept
+    void SetStride(std::size_t stride)
     {
         if (stride == 0 || stride > 10'000) {
             throw std::logic_error(fmt::format("SetStride doesn't satisfy 0 < {} < 10'000", stride));
@@ -262,7 +261,6 @@ template<typename DataSoA> class StridedConverter : public BaseConverter<DataSoA
      */
     void OnStep() final;
 
-    // cppcheck-suppress unusedStructMember
     std::size_t stride_{ 0 };
 };
 
