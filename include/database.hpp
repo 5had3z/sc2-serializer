@@ -92,6 +92,66 @@ template<> struct DatabaseInterface<ReplayDataSoA>
     }
 };
 
+template<> struct DatabaseInterface<ReplayData2SoANoUnitsMiniMap>
+{
+    static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>
+    {
+        ReplayInfo header;
+        deserialize(header, dbStream);
+        return std::make_pair(header.replayHash, header.playerId);
+    }
+
+    static auto getHeaderImpl(std::istream &dbStream) -> ReplayInfo
+    {
+        ReplayInfo result;
+        deserialize(result, dbStream);
+        return result;
+    }
+
+    static auto getEntryImpl(std::istream &dbStream) -> ReplayData2SoANoUnitsMiniMap
+    {
+        ReplayData2SoANoUnitsMiniMap result;
+        deserialize(result, dbStream);
+        return result;
+    }
+
+    static auto addEntryImpl(const ReplayData2SoANoUnitsMiniMap &d, std::ostream &dbStream) noexcept -> bool
+    {
+        serialize(d.header, dbStream);
+        return true;
+    }
+};
+
+template<> struct DatabaseInterface<ReplayData2SoANoUnits>
+{
+    static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>
+    {
+        ReplayInfo header;
+        deserialize(header, dbStream);
+        return std::make_pair(header.replayHash, header.playerId);
+    }
+
+    static auto getHeaderImpl(std::istream &dbStream) -> ReplayInfo
+    {
+        ReplayInfo result;
+        deserialize(result, dbStream);
+        return result;
+    }
+
+    static auto getEntryImpl(std::istream &dbStream) -> ReplayData2SoANoUnits
+    {
+        ReplayData2SoANoUnits result;
+        deserialize(result, dbStream);
+        return result;
+    }
+
+    static auto addEntryImpl(const ReplayData2SoANoUnits &d, std::ostream &dbStream) noexcept -> bool
+    {
+        serialize(d, dbStream);
+        return true;
+    }
+};
+
 template<> struct DatabaseInterface<ReplayData2SoA>
 {
     static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>
@@ -229,7 +289,7 @@ template<HasDBInterface EntryType> class ReplayDatabase
             return false;
         }
 
-        // Caclulate offset of start of db entry
+        // Calculate offset of start of db entry
         dbStream.seekp(0, std::ios::beg);
         entryPtr_.emplace_back(previousEnd - dbStream.tellp());
 

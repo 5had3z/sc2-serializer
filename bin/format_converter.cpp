@@ -37,15 +37,27 @@ int main(int argc, char *argv[])
         ("o,output", "Destination database, if folder then use source filename", cxxopts::value<std::string>())
         ("steps-file", "Contains hash-gamestep pairs", cxxopts::value<std::string>())
         ("h,help", "This help");
-    // clang-format on 
+    // clang-format on
     const auto cliOpts = cliParser.parse(argc, argv);
 
-    if (cliOpts.count("help")){
+    if (cliOpts.count("help")) {
         fmt::print("{}\n", cliParser.help());
         return 0;
     }
 
-    const fs::path sourcePath = cliOpts["input"].as<std::string>();
+    fs::path sourcePath = cliOpts["input"].as<std::string>();
+
+    const auto *tmp = std::getenv("POD_NAME");
+    if (tmp == nullptr) {
+        SPDLOG_INFO("POD_NAME not in ENV, not appending index suffix");
+    } else {
+        const std::string_view s(tmp);
+        // Extract the substring from the last delimiter to the end
+        const std::string podIndex(s.substr(s.find_last_of('-') + 1));
+        SPDLOG_INFO("POD_NAME found, using index suffix: {}", podIndex);
+        sourcePath.replace_filename(sourcePath.stem().string() + podIndex + sourcePath.extension().string());
+    }
+
     if (!fs::is_regular_file(sourcePath)) {
         fmt::print("ERROR: Source Database doesn't exist: {}\n", sourcePath.string());
         return -1;
@@ -55,8 +67,7 @@ int main(int argc, char *argv[])
     fs::path destPath = cliOpts["output"].as<std::string>();
     if (fs::is_directory(destPath)) {
         destPath /= sourcePath.filename();
-    }
-    else if (!fs::exists(destPath.parent_path())) {
+    } else if (!fs::exists(destPath.parent_path())) {
         fmt::print("ERROR: Path to destination doesn't exist: {}\n", destPath.parent_path().string());
         return -1;
     }
@@ -67,22 +78,24 @@ int main(int argc, char *argv[])
     cvt::ReplayDatabase<cvt::ReplayData2SoA> dest(destPath);
 
     const fs::path hashStepFile = cliOpts["steps-file"].as<std::string>();
-    if (!fs::exists(hashStepFile)) {
-        fmt::print("ERROR: Hash-Step file doesn't exist: {}\n", hashStepFile.string());
-    }
+    if (!fs::exists(hashStepFile)) { fmt::print("ERROR: Hash-Step file doesn't exist: {}\n", hashStepFile.string()); }
     const auto hash_steps = read_hash_steps_file(hashStepFile);
 
     const auto already_converted = dest.getHashes();
     const auto print_modulo = source.size() / 10;
     for (std::size_t idx = 0; idx < source.size(); ++idx) {
-        const auto [old_hash, old_id] = source.getHashId(idx);
-        const auto old_hashid = old_hash + std::to_string(old_id);
-        if (already_converted.contains(old_hashid)) {
+        cvt::ReplayDataSoA old_data;
+        try {
+            const auto [old_hash, old_id] = source.getHashId(idx);
+            const auto old_hashid = old_hash + std::to_string(old_id);
+            if (already_converted.contains(old_hashid)) { continue; }
+            old_data = source.getEntry(idx);
+        } catch (const std::bad_alloc &err) {
+            SPDLOG_ERROR("Skipping index {}, due to read failure", idx);
             continue;
         }
-        const auto old_data = source.getEntry(idx);
         cvt::ReplayData2SoA new_data;
-        auto& header = new_data.header;
+        auto &header = new_data.header;
         header.durationSteps = hash_steps.at(old_data.replayHash);
         header.replayHash = old_data.replayHash;
         header.gameVersion = old_data.gameVersion;
@@ -95,9 +108,9 @@ int main(int argc, char *argv[])
         header.mapHeight = old_data.mapHeight;
         header.heightMap = old_data.heightMap;
 
-        auto& stepData = new_data.data;
+        auto &stepData = new_data.data;
         stepData.gameStep = old_data.gameStep;
-        stepData.minearals= old_data.minearals;
+        stepData.minearals = old_data.minearals;
         stepData.vespene = old_data.vespene;
         stepData.popMax = old_data.popMax;
         stepData.popArmy = old_data.popArmy;
@@ -114,9 +127,7 @@ int main(int argc, char *argv[])
         stepData.neutralUnits = old_data.neutralUnits;
 
         dest.addEntry(new_data);
-        if (idx % print_modulo == 0) {
-            fmt::print("Converted {} of {} Replays\n", idx + 1, source.size());
-        }
+        if (idx % print_modulo == 0) { fmt::print("Converted {} of {} Replays\n", idx + 1, source.size()); }
     }
     fmt::print("DONE - Converted {} of {} Replays\n", dest.size(), source.size());
 
