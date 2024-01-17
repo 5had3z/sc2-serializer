@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     }
 
     const fs::path sourcePath = cliOpts["input"].as<std::string>();
-    if (!fs::exists(sourcePath)) {
+    if (!fs::is_regular_file(sourcePath)) {
         fmt::print("ERROR: Source Database doesn't exist: {}\n", sourcePath.string());
         return -1;
     }
@@ -72,14 +72,15 @@ int main(int argc, char *argv[])
     }
     const auto hash_steps = read_hash_steps_file(hashStepFile);
 
-    auto already_converted = dest.getHashes();
+    const auto already_converted = dest.getHashes();
     const auto print_modulo = source.size() / 10;
     for (std::size_t idx = 0; idx < source.size(); ++idx) {
-        const auto old_data = source.getEntry(idx);
-        const auto old_hash = old_data.replayHash + std::to_string(old_data.playerId);
-        if (already_converted.contains(old_hash)) {
+        const auto [old_hash, old_id] = source.getHashId(idx);
+        const auto old_hashid = old_hash + std::to_string(old_id);
+        if (already_converted.contains(old_hashid)) {
             continue;
         }
+        const auto old_data = source.getEntry(idx);
         cvt::ReplayData2SoA new_data;
         auto& header = new_data.header;
         header.durationSteps = hash_steps.at(old_data.replayHash);
