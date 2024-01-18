@@ -39,8 +39,8 @@ void UpgradeTiming::loadInfo()
         throw std::runtime_error(fmt::format("Data file does not exist: {}", dataFile_.string()));
     }
     YAML::Node root = YAML::LoadFile(dataFile_.string());
-    auto node = std::find_if(
-        root.begin(), root.end(), [&](const YAML::Node &n) { return n["version"].as<std::string>() == gameVersion_; });
+    auto node =
+        std::ranges::find_if(root, [&](const YAML::Node &n) { return n["version"].as<std::string>() == gameVersion_; });
     if (node == root.end()) {
         throw std::runtime_error(fmt::format("Game Version {} not in data file {}", gameVersion_, dataFile_.string()));
     }
@@ -58,11 +58,17 @@ void UpgradeTiming::setRace(Race race) noexcept { currentRace_ = race; }
 
 auto UpgradeTiming::getValidIds() const -> const std::set<int> &
 {
+    if (!raceResearch.contains(gameVersion_)) {
+        throw std::out_of_range{ fmt::format("Missing game version {} from raceResearch", gameVersion_) };
+    }
     return raceResearch.at(gameVersion_).at(currentRace_);
 }
 
 auto UpgradeTiming::getValidRemap() const -> const std::unordered_map<int, std::array<int, 3>> &
 {
+    if (!raceResearchReID.contains(gameVersion_)) {
+        throw std::out_of_range{ fmt::format("Missing game version {} from raceResearchReID", gameVersion_) };
+    }
     return raceResearchReID.at(gameVersion_).at(currentRace_);
 }
 
@@ -87,18 +93,28 @@ void UpgradeTiming::setActions(const std::vector<std::vector<Action>> &actionsRe
     for (std::size_t idx = 0; idx < actionsReplay.size(); ++idx) {
         const auto &actionsStep = actionsReplay[idx];
         for (auto &&action : actionsStep) {
+            // First check if the ability is in the normal upgrade actions
             const auto abilityPtr = raceUpgradeIds.find(action.ability_id);
             if (abilityPtr != raceUpgradeIds.end()) {
                 std::size_t upgradeIdx = std::distance(raceUpgradeIds.begin(), abilityPtr);
+                if (!id2delay_.contains(action.ability_id)) {
+                    throw std::out_of_range{ fmt::format("Ability id {} not in id2delay table", action.ability_id) };
+                }
                 upgradeTimes_[upgradeIdx] = timeIdxs[idx] + id2delay_.at(action.ability_id);
                 continue;
             }
+
+            // Then check if it is in the leveled upgrade actions
             const auto remapPtr = raceUpgradeRemap.find(action.ability_id);
             if (remapPtr != raceUpgradeRemap.end()) {
                 // The first ability_id in the remapping that is maxTime is the lowest level unresearched
                 for (auto &&remapAbilityId : remapPtr->second) {
                     std::size_t upgradeIdx = std::distance(raceUpgradeIds.begin(), raceUpgradeIds.find(remapAbilityId));
                     if (upgradeTimes_[upgradeIdx] == maxTime) {
+                        if (!id2delay_.contains(remapAbilityId)) {
+                            throw std::out_of_range{ fmt::format(
+                                "Ability id {} not in id2delay table", remapAbilityId) };
+                        }
                         upgradeTimes_[upgradeIdx] = timeIdxs[idx] + id2delay_.at(remapAbilityId);
                         break;
                     }

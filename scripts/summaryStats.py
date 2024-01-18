@@ -6,15 +6,15 @@ from torch.utils.data import Dataset
 from utils import upper_bound
 from sc2_replay_reader import (
     GAME_INFO_FILE,
-    ReplayDatabase,
-    ReplayParser,
+    ReplayDataAllDatabase,
+    ReplayDataAllParser,
     setReplayDBLoggingLevel,
     spdlog_lvl,
 )
 
 SQL_TYPES = Literal["INTEGER", "FLOAT", "TEXT", "BOOLEAN"]
 ENUM_KEYS = {"playerRace", "playerResult"}
-LambdaFunctionType = Callable[[ReplayParser], float | int]
+LambdaFunctionType = Callable[[ReplayDataAllParser], float | int]
 
 
 class SC2Replay(Dataset):
@@ -26,8 +26,8 @@ class SC2Replay(Dataset):
     ) -> None:
         super().__init__()
         self.features = features
-        self.db_handle = ReplayDatabase()
-        self.parser = ReplayParser(GAME_INFO_FILE)
+        self.db_handle = ReplayDataAllDatabase()
+        self.parser = ReplayDataAllParser(GAME_INFO_FILE)
         self.lambda_columns = lambda_columns
 
         setReplayDBLoggingLevel(spdlog_lvl.warn)
@@ -56,26 +56,31 @@ class SC2Replay(Dataset):
         file_index = upper_bound(self._accumulated_replays, index)
         self.db_handle.open(self.replays[file_index])
         db_index = index - int(self._accumulated_replays[file_index].item())
-        assert (  # This should hold if calculation checks out
-            db_index < self.db_handle.size()
-        ), f"{db_index} exceeds {self.db_handle.size()}"
 
         try:
-            self.parser.parse_replay(self.db_handle.getEntry(db_index))
+            replay_data = self.db_handle.getEntry(db_index)
         except MemoryError:
             data = {
                 "partition": str(self.replays[file_index].name),
                 "idx": db_index,
                 "read_success": False,
+                "parse_success": False,
             }
             try:
-                hash, id = self.db_handle.getHashIdEntry(db_index)
-                data["playerId"] = id
-                data["replayHash"] = hash
+                hash_, id_ = self.db_handle.getHashIdEntry(db_index)
+                data["playerId"] = id_
+                data["replayHash"] = hash_
             except MemoryError:
                 pass
 
             return data
+
+        try:
+            self.parser.parse_replay(replay_data)
+        except (IndexError, RuntimeError):
+            parse_success = False
+        else:
+            parse_success = True
 
         data = {p: getattr(self.parser.info, p, None) for p in self.features}
         data = {k: int(v) if k in ENUM_KEYS else v for k, v in data.items()}
@@ -87,6 +92,7 @@ class SC2Replay(Dataset):
             "partition": str(self.replays[file_index].name),
             "idx": db_index,
             "read_success": True,
+            "parse_success": parse_success,
             **data,
         }
 
