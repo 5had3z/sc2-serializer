@@ -191,15 +191,15 @@ struct MinimapFeatureFlags
         return std::distance(keys.begin(), it);
     }
 
-    constexpr void set() noexcept { flags.set(); }
+    void set() noexcept { flags.set(); }
 
-    constexpr void set(std::string_view key, bool value = true) { flags.set(getOffset(key), value); }
+    void set(std::string_view key, bool value = true) { flags.set(getOffset(key), value); }
 
-    constexpr auto test(std::string_view key) const -> bool { return flags.test(getOffset(key)); }
+    auto test(std::string_view key) const -> bool { return flags.test(getOffset(key)); }
 
-    constexpr auto count() const noexcept -> std::size_t { return flags.count(); }
+    auto count() const noexcept -> std::size_t { return flags.count(); }
 
-    constexpr void reset() noexcept { flags.reset(); }
+    void reset() noexcept { flags.reset(); }
 };
 
 // Convenience wrapper around ReplayDataSOA to return map of features at each timestep
