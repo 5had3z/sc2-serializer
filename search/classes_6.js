@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['neutralunit_0',['NeutralUnit',['../de/dea/structcvt_1_1_neutral_unit.html',1,'cvt']]],
-  ['neutralunitsoa_1',['NeutralUnitSoA',['../d9/da4/structcvt_1_1_neutral_unit_so_a.html',1,'cvt']]]
+  ['minimapfeatureflags_0',['MinimapFeatureFlags',['../d7/de4/structcvt_1_1_minimap_feature_flags.html',1,'cvt']]]
 ];

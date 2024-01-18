@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['maxentries_0',['maxEntries',['../da/da1/classcvt_1_1_replay_database.html#ab6df6a4e6818d3704c0f10a88cde7959',1,'cvt::ReplayDatabase']]]
+  ['maxentries_0',['maxEntries',['../da/da1/classcvt_1_1_replay_database.html#ab6df6a4e6818d3704c0f10a88cde7959',1,'cvt::ReplayDatabase']]],
+  ['minimapfeatureflags_1',['MinimapFeatureFlags',['../d7/de4/structcvt_1_1_minimap_feature_flags.html',1,'cvt']]]
 ];
