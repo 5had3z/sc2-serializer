@@ -8,7 +8,7 @@ from sc2_replay_reader import (
     GAME_INFO_FILE,
     ReplayDataAllDatabase,
     ReplayDataAllParser,
-    setReplayDBLoggingLevel,
+    set_replay_database_logger_level,
     spdlog_lvl,
 )
 
@@ -30,7 +30,7 @@ class SC2Replay(Dataset):
         self.parser = ReplayDataAllParser(GAME_INFO_FILE)
         self.lambda_columns = lambda_columns
 
-        setReplayDBLoggingLevel(spdlog_lvl.warn)
+        set_replay_database_logger_level(spdlog_lvl.warn)
 
         if basepath.is_file():
             self.replays = [basepath]

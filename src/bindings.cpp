@@ -77,12 +77,6 @@ template<typename T> void bindReplayDataInterfaces(py::module &m, const std::str
         .def_property_readonly("info", &cvt::ReplayParser<T>::info, py::return_value_policy::reference_internal);
 }
 
-template<typename T> cvt::ReplayDatabase<T> create_replay_database_impl(const std::filesystem::path &db_path)
-{
-    return cvt::ReplayDatabase<T>(db_path);
-}
-
-
 void bindEnums(py::module &m)
 {
     // Expose Enum
@@ -398,30 +392,5 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
 
     bindReplayDataInterfaces<cvt::ReplayData2SoA>(m, "ReplayDataAll");
 
-    m.def("setReplayDBLoggingLevel", &cvt::setReplayDBLoggingLevel, py::arg("lvl"));
-    m.def(
-        "createDatabase",
-        [](const std::filesystem::path &db_path,
-            const bool parseMiniMap = true,
-            const bool parseUnits = true) -> std::variant<cvt::ReplayDatabase<cvt::ReplayData2SoANoUnitsMiniMap>,
-                                              cvt::ReplayDatabase<cvt::ReplayData2SoANoUnits>,
-                                              cvt::ReplayDatabase<cvt::ReplayData2SoA>> {
-            if (!parseMiniMap && !parseUnits) {
-                return create_replay_database_impl<cvt::ReplayData2SoANoUnitsMiniMap>(db_path);
-            } else if (parseMiniMap && !parseUnits) {
-                return create_replay_database_impl<cvt::ReplayData2SoANoUnits>(db_path);
-            } else if (parseMiniMap && parseUnits) {
-                return create_replay_database_impl<cvt::ReplayData2SoA>(db_path);
-            } else {
-                throw std::invalid_argument("Invalid replay data type");
-            }
-        },
-        py::arg("db_path"),
-        py::arg("parseMiniMap") = true,
-        py::arg("parseUnits") = true);
-
-    // m.def("getParser",
-    //     [](const py::str &name) -> std::variant<cvt::ReplayParser<cvt::ReplayData2SoANoUnitsMiniMap>,
-    //                                 cvt::ReplayParser<cvt::ReplayData2SoANoUnits>,
-    //                                 cvt::ReplayParser<cvt::ReplayData2SoA>> {});
+    m.def("set_replay_database_logger_level", &cvt::setReplayDBLoggingLevel, py::arg("lvl"));
 }
