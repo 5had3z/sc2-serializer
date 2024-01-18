@@ -15,6 +15,9 @@ namespace py = pybind11;
 template<typename T> void bindImage(py::module &m, const std::string &name)
 {
     py::class_<cvt::Image<T>>(m, name.c_str(), py::buffer_protocol())
+        .def_property_readonly("empty", &cvt::Image<T>::empty)
+        .def_property_readonly("nbytes", &cvt::Image<T>::size)
+        .def_property_readonly("nelem", &cvt::Image<T>::nelem)
         .def_property_readonly("shape", [](const cvt::Image<T> &img) { return py::make_tuple(img._h, img._w); })
         .def_property_readonly("data",
             [](const cvt::Image<T> &img) {
@@ -29,6 +32,21 @@ template<typename T> void bindImage(py::module &m, const std::string &name)
                 2,
                 { img._h, img._w },
                 { sizeof(T) * img._h, sizeof(T) });
+        });
+}
+
+// Specialization for bool image which doesn't have native buffer support
+template<> void bindImage<bool>(py::module &m, const std::string &name)
+{
+    py::class_<cvt::Image<bool>>(m, name.c_str())
+        .def_property_readonly("empty", &cvt::Image<bool>::empty)
+        .def_property_readonly("nbytes", &cvt::Image<bool>::size)
+        .def_property_readonly("nelem", &cvt::Image<bool>::nelem)
+        .def_property_readonly("shape", [](const cvt::Image<bool> &img) { return py::make_tuple(img._h, img._w); })
+        .def_property_readonly("data", [](const cvt::Image<bool> &img) {
+            py::array_t<std::uint8_t> out({ img._h, img._w });
+            unpackBoolImage<std::uint8_t>(img, out.mutable_data());
+            return out;
         });
 }
 
@@ -57,21 +75,6 @@ template<typename T> void bindReplayDataInterfaces(py::module &m, const std::str
         .def("setMinimapFeatures", &cvt::ReplayParser<T>::setMinimapFeatures)
         .def_property_readonly("data", &cvt::ReplayParser<T>::data, py::return_value_policy::reference_internal)
         .def_property_readonly("info", &cvt::ReplayParser<T>::info, py::return_value_policy::reference_internal);
-}
-
-
-// Specialization for bool image which doesn't have native buffer support
-template<typename T>
-    requires std::is_same_v<T, bool>
-void bindImage(py::module &m, const std::string &name)
-{
-    py::class_<cvt::Image<bool>>(m, name.c_str())
-        .def_property_readonly("shape", [](const cvt::Image<T> &img) { return py::make_tuple(img._h, img._w); })
-        .def_property_readonly("data", [](const cvt::Image<bool> &img) {
-            py::array_t<std::uint8_t> out({ img._h, img._w });
-            unpackBoolImage<std::uint8_t>(img, out.mutable_data());
-            return out;
-        });
 }
 
 template<typename T> cvt::ReplayDatabase<T> create_replay_database_impl(const std::filesystem::path &db_path)

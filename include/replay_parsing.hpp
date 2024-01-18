@@ -244,7 +244,7 @@ template<typename ReplayDataType> class ReplayParser
     }
 
     // Returns a python dictionary containing features from that timestep
-    [[nodiscard]] auto sample(std::size_t timeIdx, bool unit_alliance = false) const noexcept -> py::dict
+    [[nodiscard]] auto sample(std::size_t timeIdx, bool unit_alliance = false) const -> py::dict
     {
         using feature_t = float;
         using step_data_t = typename ReplayDataType::step_type;
@@ -395,19 +395,21 @@ auto createMinimapFeatures(const ReplayDataType &replay,
     }
 
     if (includedLayers.test("visibility")) {
-        if (replay.data.visibility.empty()) {
+        if (replay.data.visibility[timeIdx].empty()) {
             throw std::runtime_error{ "Tried to get visibility data but it was empty" };
         }
         dataPtr = std::ranges::transform(replay.data.visibility[timeIdx].as_span(), dataPtr, Caster<T>()).out;
     }
 
     if (includedLayers.test("creep")) {
-        if (replay.data.creep.empty()) { throw std::runtime_error{ "Tried to get creep data but it was empty" }; }
+        if (replay.data.creep[timeIdx].empty()) {
+            throw std::runtime_error{ "Tried to get creep data but it was empty" };
+        }
         dataPtr = unpackBoolImage<T>(replay.data.creep[timeIdx], dataPtr);
     }
 
     if (includedLayers.test("player_relative")) {
-        if (replay.data.player_relative.empty()) {
+        if (replay.data.player_relative[timeIdx].empty()) {
             throw std::runtime_error{ "Tried to get player_relative data but it was empty" };
         }
         if (expandPlayerRel) {
@@ -418,19 +420,23 @@ auto createMinimapFeatures(const ReplayDataType &replay,
     }
 
     if (includedLayers.test("alerts")) {
-        if (replay.data.alerts.empty()) { throw std::runtime_error{ "Tried to get alerts data but it was empty" }; }
+        if (replay.data.alerts[timeIdx].empty()) {
+            throw std::runtime_error{ "Tried to get alerts data but it was empty" };
+        }
         dataPtr = std::ranges::transform(replay.data.alerts[timeIdx].as_span(), dataPtr, Caster<T>()).out;
     }
 
     if (includedLayers.test("buildable")) {
-        if (replay.data.buildable.empty()) {
+        if (replay.data.buildable[timeIdx].empty()) {
             throw std::runtime_error{ "Tried to get buildable data but it was empty" };
         }
         dataPtr = unpackBoolImage<T>(replay.data.buildable[timeIdx], dataPtr);
     }
 
     if (includedLayers.test("pathable")) {
-        if (replay.data.pathable.empty()) { throw std::runtime_error{ "Tried to get pathable data but it was empty" }; }
+        if (replay.data.pathable[timeIdx].empty()) {
+            throw std::runtime_error{ "Tried to get pathable data but it was empty" };
+        }
         dataPtr = unpackBoolImage<T>(replay.data.pathable[timeIdx], dataPtr);
     }
 
