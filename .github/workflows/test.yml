@@ -69,4 +69,4 @@ jobs:
         run: pip install .
 
       - name: Check the python imports
-        run: python -c "import sc2_replay_reader; db = sc2_replay_reader.ReplayDatabase()"
+        run: python -c "import sc2_replay_reader; db = sc2_replay_reader.ReplayDataAllDatabase()"
