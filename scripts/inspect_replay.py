@@ -15,7 +15,12 @@ from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 from typing_extensions import Annotated
 
-from sc2_replay_reader import GAME_INFO_FILE, ReplayDataAllDatabase, ReplayDataAllParser
+from sc2_replay_reader import (
+    get_database_and_parser,
+    ReplayDatabase,
+    ReplayParser,
+    ReplayDataAllDatabase,
+)
 from sc2_replay_reader.unit_features import NeutralUnit, NeutralUnitOH, Unit, UnitOH
 
 app = typer.Typer()
@@ -35,7 +40,7 @@ def make_minimap_video(image_sequence: Sequence, fname: Path):
     writer.release()
 
 
-def make_units_video(parser: ReplayDataAllParser, fname: Path):
+def make_units_video(parser: ReplayParser, fname: Path):
     img_w = 1920
     img_h = 1080
     writer = cv2.VideoWriter(
@@ -69,9 +74,10 @@ def make_units_video(parser: ReplayDataAllParser, fname: Path):
     writer.release()
 
 
-def test_parseable(db: ReplayDataAllDatabase, parser: ReplayDataAllParser):
+def test_parseable(db: ReplayDatabase, parser: ReplayParser):
     """Try parse db at index with parser"""
     start = time.time()
+    parser.setMinimapFeatures(["player_relative", "visibility", "creep"])
     for idx in range(db.size()):
         replay_data = db.getEntry(idx)
         parser.parse_replay(replay_data)
@@ -110,8 +116,8 @@ def inspect(
     / "workspace",
 ):
     """"""
-    db = ReplayDataAllDatabase(file)
-    parser = ReplayDataAllParser(GAME_INFO_FILE)
+    db, parser = get_database_and_parser(parse_units=True, parse_minimaps=True)
+    db.open(file)
 
     if command is SubCommand.test_parseable:
         test_parseable(db, parser)

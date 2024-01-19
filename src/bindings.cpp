@@ -7,6 +7,7 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/stl/filesystem.h>
+#include <spdlog/fmt/ranges.h>
 
 #include <optional>
 
@@ -160,7 +161,8 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
                 1,
                 { 3 },
                 { sizeof(float) });
-        });
+        })
+        .def("__repr__", [](const cvt::Point3f &p) { return fmt::format("Point3f(x={}, y={}, z={})", p.x, p.y, p.z); });
 
     py::class_<cvt::Point2d>(m, "Point2d", py::buffer_protocol())
         .def(py::init<>())
@@ -173,7 +175,8 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
                 1,
                 { 2 },
                 { sizeof(int) });
-        });
+        })
+        .def("__repr__", [](const cvt::Point2d &p) { return fmt::format("Point2d(x={}, y={})", p.x, p.y); });
 
     py::class_<cvt::Action>(m, "Action")
         .def(py::init<>())
@@ -187,16 +190,34 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
                 return action.target_type == cvt::Action::TargetType::Position ? std::optional{ action.target.point }
                                                                                : std::nullopt;
             })
-        .def_property_readonly("target_other", [](const cvt::Action &action) -> std::optional<cvt::UID> {
-            return action.target_type == cvt::Action::TargetType::OtherUnit ? std::optional{ action.target.other }
-                                                                            : std::nullopt;
+        .def_property_readonly("target_other",
+            [](const cvt::Action &action) -> std::optional<cvt::UID> {
+                return action.target_type == cvt::Action::TargetType::OtherUnit ? std::optional{ action.target.other }
+                                                                                : std::nullopt;
+            })
+        .def("__repr__", [](const cvt::Action &a) {
+            std::string ret = fmt::format(
+                "Action(unit_ids={}, ability_id={}, target_type={}, ", a.unit_ids, a.ability_id, a.target_type);
+            if (a.target_type == cvt::Action::TargetType::Position) {
+                ret += fmt::format("target_point={})", a.target.point);
+            } else {
+                ret += fmt::format("target_other={})", a.target.other);
+            }
+            return ret;
         });
 
     py::class_<cvt::UnitOrder>(m, "UnitOrder")
         .def_readwrite("ability_id", &cvt::UnitOrder::ability_id)
         .def_readwrite("tgtId", &cvt::UnitOrder::tgtId)
         .def_readwrite("target_pos", &cvt::UnitOrder::target_pos)
-        .def_readwrite("progress", &cvt::UnitOrder::progress);
+        .def_readwrite("progress", &cvt::UnitOrder::progress)
+        .def("__repr__", [](const cvt::UnitOrder &x) {
+            return fmt::format("UnitOrder(ability_id={}, tgtId={}, target_pos={}, progress={})",
+                x.ability_id,
+                x.tgtId,
+                x.target_pos,
+                x.progress);
+        });
 
     py::class_<cvt::Score>(m, "Score")
         .def(py::init<>())
@@ -384,7 +405,22 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readwrite("playerAPM", &cvt::ReplayInfo::playerAPM)
         .def_readwrite("mapWidth", &cvt::ReplayInfo::mapWidth)
         .def_readwrite("mapHeight", &cvt::ReplayInfo::mapHeight)
-        .def_readwrite("heightMap", &cvt::ReplayInfo::heightMap);
+        .def_readwrite("heightMap", &cvt::ReplayInfo::heightMap)
+        .def("__repr__", [](const cvt::ReplayInfo &info) {
+            return fmt::format(
+                "ReplayInfo(replayHash={}, gameVersion={}, playerId={}, durationSteps={}, playerRace={}, "
+                "playerResult={}, playerMMR={}, playerAPM={}, mapWidth={}, mapHeight={}, heightMap=array([]))",
+                info.replayHash,
+                info.gameVersion,
+                info.playerId,
+                info.durationSteps,
+                info.playerRace,
+                info.playerResult,
+                info.playerMMR,
+                info.playerAPM,
+                info.mapWidth,
+                info.mapHeight);
+        });
 
     bindReplayDataInterfaces<cvt::ReplayData2SoANoUnitsMiniMap>(m, "ReplayDataScalarOnly");
 
