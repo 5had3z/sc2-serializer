@@ -139,15 +139,20 @@ def main(
             for i in all_attributes
         },
     }
+    if replay is not None:
+        dataset = SC2Replay(Path(replay), set(features.keys()), lambda_columns)
+        conn, cursor = make_database(
+            workspace / f"{name}.db", additional_columns, features, lambda_columns
+        )
 
-    if "POD_NAME" in os.environ:
+    elif "POD_NAME" in os.environ:
         number = os.environ["POD_NAME"].split("-")[-1]
         dataset = SC2Replay(
             Path(os.environ["DATAPATH"]) / f"db_{number}.SC2Replays",
             set(features.keys()),
             lambda_columns,
         )
-        db_file = workspace / f"gamedata_{number}.db"
+        db_file = workspace / f"{name}_{number}.db"
         if db_file.is_file():
             file_size_bytes = db_file.stat().st_size
 
@@ -159,7 +164,7 @@ def main(
                 return
 
         conn, cursor = make_database(
-            workspace / f"gamedata_{number}.db",
+            workspace / f"{name}_{number}.db",
             additional_columns,
             features,
             lambda_columns,
@@ -170,7 +175,7 @@ def main(
             Path(os.environ["DATAPATH"]), set(features.keys()), lambda_columns
         )
         conn, cursor = make_database(
-            workspace / "gamedata.db", additional_columns, features, lambda_columns
+            workspace / f"{name}.db", additional_columns, features, lambda_columns
         )
 
     batch_size = 50
