@@ -16,10 +16,13 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 from typing_extensions import Annotated
 
 from sc2_replay_reader import (
-    get_database_and_parser,
-    ReplayDatabase,
-    ReplayParser,
     ReplayDataAllDatabase,
+    ReplayDatabase,
+    ReplayDataScalarOnlyDatabase,
+    ReplayParser,
+    get_database_and_parser,
+    set_replay_database_logger_level,
+    spdlog_lvl,
 )
 from sc2_replay_reader.unit_features import NeutralUnit, NeutralUnitOH, Unit, UnitOH
 
@@ -84,6 +87,34 @@ def test_parseable(db: ReplayDatabase, parser: ReplayParser):
         _res = parser.sample(100)
         print(f"Done {idx+1} of {db.size()}", end="\r")
     print(f"\nFinished parsing, took {time.time() - start}s")
+
+
+@app.command()
+def check_first_step(path: Path, threshold: int = 224):
+    """Check the first recorded gameStep of a replay and warn when its over a threshold"""
+    set_replay_database_logger_level(spdlog_lvl.warn)
+    db = ReplayDataScalarOnlyDatabase()
+    if path.is_file():
+        replays = [path]
+    else:
+        replays = list(path.glob("*.SC2Replays"))
+
+    count_bad = 0
+
+    for replay in replays:
+        db.open(replay)
+        for idx in range(db.size()):
+            sample = db.getEntry(idx)
+            first_step = sample.data.gameStep[0]
+            if first_step > threshold:
+                replayHash = sample.header.replayHash
+                playerId = sample.header.playerId
+                print(
+                    f"high initial gamestep {first_step} in {replayHash=}, {playerId=}"
+                )
+                count_bad += 1
+
+    print(f"Final count of bad replays: {count_bad}")
 
 
 @app.command()
