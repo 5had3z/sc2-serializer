@@ -23,6 +23,7 @@ struct ReplayInfo
 
 template<typename StepDataType> struct ReplayDataTemplate
 {
+    using step_type = StepDataType;
     ReplayInfo header;
     std::vector<StepDataType> data;
 
@@ -35,6 +36,7 @@ template<typename StepDataType> struct ReplayDataTemplate
 template<IsSoAType StepDataSoAType> struct ReplayDataTemplateSoA
 {
     using struct_type = ReplayDataTemplate<typename StepDataSoAType::struct_type>;
+    using step_type = StepDataSoAType;
     ReplayInfo header;
     StepDataSoAType data;
 

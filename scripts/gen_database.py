@@ -24,7 +24,12 @@ def custom_collate(batch):
         return torch.utils.data.dataloader.default_collate(batch)
 
     first_read_success = next((item for item in batch if item.get("read_success")))
-    extra_keys = set(first_read_success.keys()) - {"partition", "idx", "read_success"}
+    extra_keys = set(first_read_success.keys()) - {
+        "partition",
+        "idx",
+        "read_success",
+        "parse_success",
+    }
 
     # Create a dictionary with zero tensors for extra_keys
     empty_batch = {key: 0 for key in extra_keys}
@@ -94,7 +99,7 @@ def create_individual(
 
 @app.command()
 def main(
-    workspace: Annotated[Path, typer.Option()] = Path("."),
+    workspace: Annotated[Path, typer.Option()] = Path().cwd(),
     workers: Annotated[int, typer.Option()] = 0,
     name: Annotated[str, typer.Option()] = "gamedata",
     replay: Annotated[Optional[Path], typer.Option()] = None,
@@ -113,6 +118,7 @@ def main(
         "partition": "TEXT",
         "idx": "INTEGER",
         "read_success": "BOOLEAN",
+        "parse_success": "BOOLEAN",
     }
 
     all_attributes = [

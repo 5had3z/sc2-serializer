@@ -667,11 +667,8 @@ template<typename T, typename... U>
 concept IsAnyOf = (std::same_as<T, U> || ...);
 
 template<typename T>
-concept HasActionData = requires(T) {
-    {
-        T::actions
-    } -> IsAnyOf<std::vector<std::vector<Action>>, std::vector<Action>>;
-};
+concept HasActionData =
+    requires(T t) { requires IsAnyOf<decltype(t.actions), std::vector<std::vector<Action>>, std::vector<Action>>; };
 
 
 struct StepDataNoUnitsMiniMap

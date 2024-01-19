@@ -8,6 +8,7 @@
 #include <spdlog/spdlog.h>
 
 #include <algorithm>
+#include <array>
 #include <bitset>
 #include <filesystem>
 #include <set>
@@ -173,40 +174,33 @@ struct Caster
     [[nodiscard]] auto operator()(auto a) const noexcept -> B { return static_cast<B>(a); }
 };
 
-/**
- * @brief Create Stacked Features Image from Minimap Data (C, H, W) in the order
- *        HeightMap, Visibility, Creep, Alerts, Buildable, Pathable, PlayerRelative
- * @tparam T Underlying type of returned image
- * @param data Replay data
- * @param timeIdx Time index to sample from
- * @param expandPlayerRel Expand the Player Relative to four 1-hot channels (see cvt::Alliance)
- * @return Returns (C,H,W) Image of Type T
- */
-template<typename T>
-    requires std::is_arithmetic_v<T>
-auto createMinimapFeatures(const ReplayData2SoA &replay, std::size_t timeIdx, bool expandPlayerRel = true)
-    -> py::array_t<T>
-{
-    const std::size_t nChannels = expandPlayerRel ? 10 : 7;
-    py::array_t<T> featureMap({ nChannels,
-        static_cast<std::size_t>(replay.header.heightMap._h),
-        static_cast<std::size_t>(replay.header.heightMap._w) });
-    std::span outData(featureMap.mutable_data(), featureMap.size());
-    auto dataPtr = outData.begin();
-    dataPtr = std::ranges::transform(replay.header.heightMap.as_span(), dataPtr, Caster<T>()).out;
-    dataPtr = std::ranges::transform(replay.data.visibility[timeIdx].as_span(), dataPtr, Caster<T>()).out;
-    dataPtr = unpackBoolImage<T>(replay.data.creep[timeIdx], dataPtr);
-    dataPtr = std::ranges::transform(replay.data.alerts[timeIdx].as_span(), dataPtr, Caster<T>()).out;
-    dataPtr = unpackBoolImage<T>(replay.data.buildable[timeIdx], dataPtr);
-    dataPtr = unpackBoolImage<T>(replay.data.pathable[timeIdx], dataPtr);
-    if (expandPlayerRel) {
-        dataPtr = expandPlayerRelative<T>(replay.data.player_relative[timeIdx], dataPtr);
-    } else {
-        dataPtr = std::ranges::transform(replay.data.player_relative[timeIdx].as_span(), dataPtr, Caster<T>()).out;
-    }
-    return featureMap;
-}
 
+struct MinimapFeatureFlags
+{
+    inline static const std::array
+        keys = { "heightMap", "visibility", "creep", "player_relative", "alerts", "buildable", "pathable" };
+
+    std::bitset<keys.size()> flags = std::bitset<keys.size()>().set();
+
+    constexpr auto getOffset(std::string_view key) const -> std::size_t
+    {
+        auto it = std::ranges::find(keys, key);
+        if (it == keys.end()) {
+            throw std::out_of_range{ fmt::format("Minimap feature key \"{}\" doesn't exist", key) };
+        }
+        return std::distance(keys.begin(), it);
+    }
+
+    void set() noexcept { flags.set(); }
+
+    void set(std::string_view key, bool value = true) { flags.set(getOffset(key), value); }
+
+    auto test(std::string_view key) const -> bool { return flags.test(getOffset(key)); }
+
+    auto count() const noexcept -> std::size_t { return flags.count(); }
+
+    void reset() noexcept { flags.reset(); }
+};
 
 // Convenience wrapper around ReplayDataSOA to return map of features at each timestep
 template<typename ReplayDataType> class ReplayParser
@@ -232,13 +226,31 @@ template<typename ReplayDataType> class ReplayParser
         }
     }
 
+    /**
+     * @brief Set the minimap features to stack and emit from the parser, if an empty list is given then all flags are
+     * simply cleared/reset, if a single special key "all" is given then all flags are set.
+     * @param features list of features to set, must be a member of cvt::MinimapFeatureFlags::keys or single key "all"
+     */
+    void setMinimapFeatures(const std::vector<std::string> &features)
+    {
+        // If only "all" key is in list of features then set all and return
+        if (features.size() == 1 && features.front() == "all") {
+            minimapFeatureFlags_.set();
+            return;
+        }
+
+        minimapFeatureFlags_.reset();
+        for (auto &&feature : features) { minimapFeatureFlags_.set(feature); }
+    }
+
     // Returns a python dictionary containing features from that timestep
-    [[nodiscard]] auto sample(std::size_t timeIdx, bool unit_alliance = false) const noexcept -> py::dict
+    [[nodiscard]] auto sample(std::size_t timeIdx, bool unit_alliance = false) const -> py::dict
     {
         using feature_t = float;
+        using step_data_t = typename ReplayDataType::step_type;
         py::dict result;
 
-        if constexpr (HasUnitData<ReplayDataType>) {
+        if constexpr (HasUnitData<step_data_t>) {
             // Process Units into feature vectors, maybe in inner dictionary separated by alliance
             if (unit_alliance) {
                 result["units"] = transformUnitsByAlliance<feature_t>(replayData_.data.units[timeIdx]);
@@ -246,6 +258,8 @@ template<typename ReplayDataType> class ReplayParser
                 result["units"] = transformUnits<feature_t>(replayData_.data.units[timeIdx]);
             }
             result["neutral_units"] = transformUnits<feature_t>(replayData_.data.neutralUnits[timeIdx]);
+            static_assert(
+                HasActionData<decltype(replayData_.data)> && "If unit data is present, so should action data");
         }
 
         if constexpr (HasActionData<decltype(replayData_.data)>) {
@@ -258,14 +272,17 @@ template<typename ReplayDataType> class ReplayParser
             result["upgrade_state"] = upgrade_.getState<feature_t>(timeIdx);
         }
 
-        if constexpr (HasMinimapData<ReplayDataType>) {
+        if constexpr (HasMinimapData<step_data_t>) {
             // Create feature image or minimap and feature vector of game state scalars (score, vespene, pop army etc.)
-            result["minimap_features"] = createMinimapFeatures<feature_t>(replayData_, timeIdx);
+            result["minimap_features"] = createMinimapFeatures<feature_t>(replayData_, timeIdx, minimapFeatureFlags_);
         }
 
-        if constexpr (HasScalarData<ReplayDataType>) {
+        if constexpr (HasScalarData<step_data_t>) {
             result["scalar_features"] = createScalarFeatures<feature_t>(replayData_.data, timeIdx);
         }
+
+        static_assert((HasScalarData<step_data_t> || HasMinimapData<step_data_t> || HasUnitData<step_data_t>
+                       || HasActionData<decltype(replayData_.data)>)&&"At least one data type should be present");
 
         return result;
     }
@@ -284,6 +301,8 @@ template<typename ReplayDataType> class ReplayParser
   private:
     UpgradeTiming upgrade_;
     ReplayDataType replayData_{};
+
+    MinimapFeatureFlags minimapFeatureFlags_{};// Enable all by default
 };
 
 
@@ -343,6 +362,85 @@ auto createScalarFeatures(const StepDataType &data, std::size_t timeIdx) -> py::
     py::array_t<T> array({ static_cast<py::ssize_t>(feats.size()) });
     std::ranges::copy(feats, array.mutable_data());
     return array;
+}
+
+/**
+ * @brief Create Stacked Features Image from Minimap Data (C, H, W) in the order
+ *        HeightMap, Visibility, Creep, Alerts, Buildable, Pathable, PlayerRelative
+ * @tparam T Underlying type of returned image
+ * @param data Replay data
+ * @param timeIdx Time index to sample from
+ * @param expandPlayerRel Expand the Player Relative to four 1-hot channels (see cvt::Alliance)
+ * @return Returns (C,H,W) Image of Type T
+ */
+template<typename T, typename ReplayDataType>
+    requires std::is_arithmetic_v<T>
+auto createMinimapFeatures(const ReplayDataType &replay,
+    std::size_t timeIdx,
+    MinimapFeatureFlags includedLayers,
+    bool expandPlayerRel = true) -> py::array_t<T>
+{
+    const std::size_t nChannels = includedLayers.count() + (expandPlayerRel ? 3 : 0);
+    py::array_t<T> featureMap({ nChannels,
+        static_cast<std::size_t>(replay.header.heightMap._h),
+        static_cast<std::size_t>(replay.header.heightMap._w) });
+    std::span outData(featureMap.mutable_data(), featureMap.size());
+    auto dataPtr = outData.begin();
+
+    if (includedLayers.test("heightMap")) {
+        if (replay.header.heightMap.empty()) {
+            throw std::runtime_error{ "Tried to get heightMap data but it was empty" };
+        }
+        dataPtr = std::ranges::transform(replay.header.heightMap.as_span(), dataPtr, Caster<T>()).out;
+    }
+
+    if (includedLayers.test("visibility")) {
+        if (replay.data.visibility[timeIdx].empty()) {
+            throw std::runtime_error{ "Tried to get visibility data but it was empty" };
+        }
+        dataPtr = std::ranges::transform(replay.data.visibility[timeIdx].as_span(), dataPtr, Caster<T>()).out;
+    }
+
+    if (includedLayers.test("creep")) {
+        if (replay.data.creep[timeIdx].empty()) {
+            throw std::runtime_error{ "Tried to get creep data but it was empty" };
+        }
+        dataPtr = unpackBoolImage<T>(replay.data.creep[timeIdx], dataPtr);
+    }
+
+    if (includedLayers.test("player_relative")) {
+        if (replay.data.player_relative[timeIdx].empty()) {
+            throw std::runtime_error{ "Tried to get player_relative data but it was empty" };
+        }
+        if (expandPlayerRel) {
+            dataPtr = expandPlayerRelative<T>(replay.data.player_relative[timeIdx], dataPtr);
+        } else {
+            dataPtr = std::ranges::transform(replay.data.player_relative[timeIdx].as_span(), dataPtr, Caster<T>()).out;
+        }
+    }
+
+    if (includedLayers.test("alerts")) {
+        if (replay.data.alerts[timeIdx].empty()) {
+            throw std::runtime_error{ "Tried to get alerts data but it was empty" };
+        }
+        dataPtr = std::ranges::transform(replay.data.alerts[timeIdx].as_span(), dataPtr, Caster<T>()).out;
+    }
+
+    if (includedLayers.test("buildable")) {
+        if (replay.data.buildable[timeIdx].empty()) {
+            throw std::runtime_error{ "Tried to get buildable data but it was empty" };
+        }
+        dataPtr = unpackBoolImage<T>(replay.data.buildable[timeIdx], dataPtr);
+    }
+
+    if (includedLayers.test("pathable")) {
+        if (replay.data.pathable[timeIdx].empty()) {
+            throw std::runtime_error{ "Tried to get pathable data but it was empty" };
+        }
+        dataPtr = unpackBoolImage<T>(replay.data.pathable[timeIdx], dataPtr);
+    }
+
+    return featureMap;
 }
 
 }// namespace cvt

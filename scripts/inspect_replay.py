@@ -75,6 +75,7 @@ def test_parseable(db: ReplayDataAllDatabase, parser: ReplayDataAllParser):
     for idx in range(db.size()):
         replay_data = db.getEntry(idx)
         parser.parse_replay(replay_data)
+        _res = parser.sample(100)
         print(f"Done {idx+1} of {db.size()}", end="\r")
     print(f"\nFinished parsing, took {time.time() - start}s")
 
