@@ -1,7 +1,7 @@
 import os
 import sqlite3
 from pathlib import Path
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Tuple, Optional
 
 import torch
 import typer
@@ -18,9 +18,8 @@ app = typer.Typer()
 def custom_collate(batch):
     # No read success in entire batch
     if not any(item["read_success"] for item in batch):
-        raise RuntimeError(
-            f"Nothing successful in entire batch of length {len(batch)}, try making it larger"
-        )
+        return torch.utils.data.dataloader.default_collate(batch)
+
     if all(item["read_success"] for item in batch):
         return torch.utils.data.dataloader.default_collate(batch)
 
@@ -86,9 +85,24 @@ def add_to_database(cursor: sqlite3.Cursor, data_dict: Dict[str, Any]):
 
 
 @app.command()
+def create_individual(
+    workspace: Annotated[Path, typer.Option()] = Path("."),
+    workers: Annotated[int, typer.Option()] = 0,
+):
+    for p in Path(os.environ["DATAPATH"]).glob("*.SC2Replays"):
+        try:
+            main(workspace=workspace, workers=workers, name=p.name, replay=p)
+        except Exception as e:
+            print(e)
+            print(f"failed, {p.name}")
+
+
+@app.command()
 def main(
     workspace: Annotated[Path, typer.Option()] = Path().cwd(),
     workers: Annotated[int, typer.Option()] = 0,
+    name: Annotated[str, typer.Option()] = "gamedata",
+    replay: Annotated[Optional[Path], typer.Option()] = None,
 ):
     features: Dict[str, SQL_TYPES] = {
         "replayHash": "TEXT",
@@ -125,15 +139,20 @@ def main(
             for i in all_attributes
         },
     }
+    if replay is not None:
+        dataset = SC2Replay(Path(replay), set(features.keys()), lambda_columns)
+        conn, cursor = make_database(
+            workspace / f"{name}.db", additional_columns, features, lambda_columns
+        )
 
-    if "POD_NAME" in os.environ:
+    elif "POD_NAME" in os.environ:
         number = os.environ["POD_NAME"].split("-")[-1]
         dataset = SC2Replay(
             Path(os.environ["DATAPATH"]) / f"db_{number}.SC2Replays",
             set(features.keys()),
             lambda_columns,
         )
-        db_file = workspace / f"gamedata_{number}.db"
+        db_file = workspace / f"{name}_{number}.db"
         if db_file.is_file():
             file_size_bytes = db_file.stat().st_size
 
@@ -145,7 +164,7 @@ def main(
                 return
 
         conn, cursor = make_database(
-            workspace / f"gamedata_{number}.db",
+            workspace / f"{name}_{number}.db",
             additional_columns,
             features,
             lambda_columns,
@@ -156,7 +175,7 @@ def main(
             Path(os.environ["DATAPATH"]), set(features.keys()), lambda_columns
         )
         conn, cursor = make_database(
-            workspace / "gamedata.db", additional_columns, features, lambda_columns
+            workspace / f"{name}.db", additional_columns, features, lambda_columns
         )
 
     batch_size = 50
