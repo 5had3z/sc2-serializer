@@ -1,7 +1,7 @@
 import os
 import sqlite3
 from pathlib import Path
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Tuple, Optional
 
 import torch
 import typer
@@ -18,9 +18,8 @@ app = typer.Typer()
 def custom_collate(batch):
     # No read success in entire batch
     if not any(item["read_success"] for item in batch):
-        raise RuntimeError(
-            f"Nothing successful in entire batch of length {len(batch)}, try making it larger"
-        )
+        return torch.utils.data.dataloader.default_collate(batch)
+
     if all(item["read_success"] for item in batch):
         return torch.utils.data.dataloader.default_collate(batch)
 
@@ -81,9 +80,24 @@ def add_to_database(cursor: sqlite3.Cursor, data_dict: Dict[str, Any]):
 
 
 @app.command()
+def create_individual(
+    workspace: Annotated[Path, typer.Option()] = Path("."),
+    workers: Annotated[int, typer.Option()] = 0,
+):
+    for p in Path(os.environ["DATAPATH"]).glob("*.SC2Replays"):
+        try:
+            main(workspace=workspace, workers=workers, name=p.name, replay=p)
+        except Exception as e:
+            print(e)
+            print(f"failed, {p.name}")
+
+
+@app.command()
 def main(
     workspace: Annotated[Path, typer.Option()] = Path("."),
     workers: Annotated[int, typer.Option()] = 0,
+    name: Annotated[str, typer.Option()] = "gamedata",
+    replay: Annotated[Optional[Path], typer.Option()] = None,
 ):
     features: Dict[str, SQL_TYPES] = {
         "replayHash": "TEXT",

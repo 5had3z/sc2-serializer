@@ -6,15 +6,15 @@ from torch.utils.data import Dataset
 from utils import upper_bound
 from sc2_replay_reader import (
     GAME_INFO_FILE,
-    ReplayDatabase,
-    ReplayParser,
+    ReplayDataAllDatabase,
+    ReplayDataAllParser,
     setReplayDBLoggingLevel,
     spdlog_lvl,
 )
 
 SQL_TYPES = Literal["INTEGER", "FLOAT", "TEXT", "BOOLEAN"]
 ENUM_KEYS = {"playerRace", "playerResult"}
-LambdaFunctionType = Callable[[ReplayParser], float | int]
+LambdaFunctionType = Callable[[ReplayDataAllParser], float | int]
 
 
 class SC2Replay(Dataset):
@@ -26,8 +26,8 @@ class SC2Replay(Dataset):
     ) -> None:
         super().__init__()
         self.features = features
-        self.db_handle = ReplayDatabase()
-        self.parser = ReplayParser(GAME_INFO_FILE)
+        self.db_handle = ReplayDataAllDatabase()
+        self.parser = ReplayDataAllParser(GAME_INFO_FILE)
         self.lambda_columns = lambda_columns
 
         setReplayDBLoggingLevel(spdlog_lvl.warn)
