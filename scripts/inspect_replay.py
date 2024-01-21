@@ -109,8 +109,9 @@ def check_first_step(path: Path, threshold: int = 224):
             if first_step > threshold:
                 replayHash = sample.header.replayHash
                 playerId = sample.header.playerId
+                filename = replay.stem
                 print(
-                    f"high initial gamestep {first_step} in {replayHash=}, {playerId=}"
+                    f"high initial gamestep {first_step} in {replayHash=}, {playerId=}, {filename=}"
                 )
                 count_bad += 1
 
