@@ -243,8 +243,8 @@ template<HasDBInterface EntryType> class ReplayDatabase
     ReplayDatabase() {}
 
     /**
-     * @brief Constructs a ReplayDatabase and create or load from db path.
-     * @param dbPath The path to the database.
+     * @brief Open a replay database (creates new or loads existing) with the given path
+     * @param dbPath The path to the database to open.
      */
     explicit ReplayDatabase(const std::filesystem::path &dbPath) noexcept { this->open(dbPath); }
 
@@ -362,32 +362,60 @@ template<HasDBInterface EntryType> class ReplayDatabase
      * @param dbPath The path to the replay database.
      * @return True if the database was successfully opened, false otherwise.
      */
-    [[maybe_unused]] auto open(std::filesystem::path dbPath) noexcept -> bool
+    [[maybe_unused]] auto open(std::filesystem::path dbPath) -> bool
     {
         namespace fs = std::filesystem;
         if (dbPath.string().empty()) {
-            SPDLOG_LOGGER_ERROR(gLoggerDB, "Path to database not set");
+            SPDLOG_LOGGER_ERROR(gLoggerDB, "Empty path given to ReplayDatabase::open");
             return false;
         }
 
         dbPath_ = std::move(dbPath);
-        bool ok;
         if (fs::exists(dbPath_)) {
-            ok = this->loadIndexTable();
-            if (ok) {
-                SPDLOG_LOGGER_INFO(gLoggerDB, "Loaded Existing Database {}", dbPath_.string());
-            } else {
-                SPDLOG_LOGGER_ERROR(gLoggerDB, "Failed to Load Existing Database {}", dbPath_.string());
-            }
+            return this->loadIndexTable();
         } else {
-            ok = this->createNewDatabaseFile();
-            if (ok) {
-                SPDLOG_LOGGER_INFO(gLoggerDB, "Created New Database: {}", dbPath_.string());
-            } else {
-                SPDLOG_LOGGER_ERROR(gLoggerDB, "Failed to Create New Database: {}", dbPath_.string());
-            }
+            return this->createNewDatabaseFile();
         }
-        return ok;
+    }
+
+    /**
+     * @brief Create new database at specified path
+     * @param dbPath path to create database at
+     * @return false if there's an error such as database already existing at the path
+     */
+    [[maybe_unused]] auto create(std::filesystem::path path) -> bool
+    {
+        namespace fs = std::filesystem;
+        if (path.string().empty()) {
+            SPDLOG_LOGGER_ERROR(gLoggerDB, "Empty path given to ReplayDatabase::create");
+            return false;
+        }
+        if (fs::exists(path)) {
+            SPDLOG_LOGGER_ERROR(gLoggerDB, "Database already exists at path: {}", path.string());
+            return false;
+        }
+        dbPath_ = std::move(path);
+        return this->createNewDatabaseFile();
+    }
+
+    /**
+     * @brief Load existing database at specified path
+     * @param path path to load database from
+     * @return false if there's an error and a failure to load an existing database
+     */
+    [[maybe_unused]] auto load(std::filesystem::path path) -> bool
+    {
+        namespace fs = std::filesystem;
+        if (path.string().empty()) {
+            SPDLOG_LOGGER_ERROR(gLoggerDB, "Empty path given to ReplayDatabase::load");
+            return false;
+        }
+        if (!fs::exists(path)) {
+            SPDLOG_LOGGER_ERROR(gLoggerDB, "Database does not exist at path: {}", path.string());
+            return false;
+        }
+        dbPath_ = std::move(path);
+        return this->loadIndexTable();
     }
 
     /**
@@ -403,7 +431,7 @@ template<HasDBInterface EntryType> class ReplayDatabase
     [[nodiscard]] auto isFull() const noexcept -> bool { return entryPtr_.size() >= maxEntries; }
 
     /**
-     * @brief Get the path of the database instance
+     * @brief Get the current path of the database instance
      * @return path to database
      */
     [[nodiscard]] auto path() const noexcept -> const std::filesystem::path & { return dbPath_; }
@@ -413,18 +441,25 @@ template<HasDBInterface EntryType> class ReplayDatabase
      * @brief Loads the entryPtr_ look up table from an existing database on disk.
      * @return true if the replay database is successfully loaded, false otherwise.
      */
-    [[maybe_unused]] auto loadIndexTable() noexcept -> bool
+    [[maybe_unused]] auto loadIndexTable() -> bool
     {
         std::ifstream dbStream(dbPath_, std::ios::binary);
         deserialize(entryPtr_, dbStream);
-        return !dbStream.bad();
+
+        const bool ok = !dbStream.bad();
+        if (ok) {
+            SPDLOG_LOGGER_INFO(gLoggerDB, "Loaded Existing Database Table {}", dbPath_.string());
+        } else {
+            SPDLOG_LOGGER_ERROR(gLoggerDB, "Failed to Load Existing Database Table {}", dbPath_.string());
+        }
+        return ok;
     }
 
     /**
      * @brief Creates a new empty database.
      * @return true if the database was successfully created, false otherwise.
      */
-    [[maybe_unused]] auto createNewDatabaseFile() noexcept -> bool
+    [[maybe_unused]] auto createNewDatabaseFile() -> bool
     {
         entryPtr_.clear();// Clear existing LUT data
 
@@ -438,7 +473,14 @@ template<HasDBInterface EntryType> class ReplayDatabase
         // Write chunks
         std::ofstream dbStream(dbPath_, std::ios::binary);
         for (std::size_t i = 0; i < nChunks; ++i) { dbStream.write(zeros.data(), sizeof(zeros)); }
-        return !dbStream.bad();
+
+        const bool ok = !dbStream.bad();
+        if (ok) {
+            SPDLOG_LOGGER_INFO(gLoggerDB, "Created New Database: {}", dbPath_.string());
+        } else {
+            SPDLOG_LOGGER_ERROR(gLoggerDB, "Failed to Create New Database: {}", dbPath_.string());
+        }
+        return ok;
     }
 
     /**

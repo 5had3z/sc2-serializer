@@ -60,8 +60,11 @@ template<typename T> void bindReplayDataInterfaces(py::module &m, const std::str
         .def(py::init<>())
         .def(py::init<const std::filesystem::path &>(), py::arg("dbPath"))
         .def("open", &cvt::ReplayDatabase<T>::open, py::arg("dbPath"))
+        .def("create", &cvt::ReplayDatabase<T>::create, py::arg("dbPath"))
+        .def("load", &cvt::ReplayDatabase<T>::load, py::arg("dbPath"))
         .def("isFull", &cvt::ReplayDatabase<T>::isFull)
         .def("size", &cvt::ReplayDatabase<T>::size)
+        .def("addEntry", &cvt::ReplayDatabase<T>::addEntry, py::arg("data"))
         .def("getEntry", &cvt::ReplayDatabase<T>::getEntry, py::arg("index"))
         .def("getHeader", &cvt::ReplayDatabase<T>::getHeader, py::arg("index"))
         .def("getHashIdEntry", &cvt::ReplayDatabase<T>::getHashId, py::arg("index"));
