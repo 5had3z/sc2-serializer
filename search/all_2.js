@@ -9,11 +9,12 @@ var searchData=
   ['copydynamicmapdata_6',['copyDynamicMapData',['../d8/d39/classcvt_1_1_base_converter.html#abb21fddaf287c6326a382742ff0c6b48',1,'cvt::BaseConverter']]],
   ['copyheightmapdata_7',['copyHeightMapData',['../d8/d39/classcvt_1_1_base_converter.html#a38220220f6118eca99b00dffd365694d',1,'cvt::BaseConverter']]],
   ['copyunitdata_8',['copyUnitData',['../d8/d39/classcvt_1_1_base_converter.html#a5890750fad39e6c5efee013f0ab6a6c5',1,'cvt::BaseConverter']]],
-  ['cvt_3a_3ahasactiondata_9',['HasActionData',['../dd/d86/conceptcvt_1_1_has_action_data.html',1,'cvt']]],
-  ['cvt_3a_3ahasdbinterface_10',['HasDBInterface',['../d8/d23/conceptcvt_1_1_has_d_b_interface.html',1,'cvt']]],
-  ['cvt_3a_3ahasminimapdata_11',['HasMinimapData',['../d1/d6b/conceptcvt_1_1_has_minimap_data.html',1,'cvt']]],
-  ['cvt_3a_3ahasscalardata_12',['HasScalarData',['../d2/dd8/conceptcvt_1_1_has_scalar_data.html',1,'cvt']]],
-  ['cvt_3a_3ahasunitdata_13',['HasUnitData',['../d9/d08/conceptcvt_1_1_has_unit_data.html',1,'cvt']]],
-  ['cvt_3a_3aisanyof_14',['IsAnyOf',['../d8/d16/conceptcvt_1_1_is_any_of.html',1,'cvt']]],
-  ['cvt_3a_3aissoatype_15',['IsSoAType',['../d2/d65/conceptcvt_1_1_is_so_a_type.html',1,'cvt']]]
+  ['create_9',['create',['../da/da1/classcvt_1_1_replay_database.html#a8c5c709b4ecb12354057a79035a763b0',1,'cvt::ReplayDatabase']]],
+  ['cvt_3a_3ahasactiondata_10',['HasActionData',['../dd/d86/conceptcvt_1_1_has_action_data.html',1,'cvt']]],
+  ['cvt_3a_3ahasdbinterface_11',['HasDBInterface',['../d8/d23/conceptcvt_1_1_has_d_b_interface.html',1,'cvt']]],
+  ['cvt_3a_3ahasminimapdata_12',['HasMinimapData',['../d1/d6b/conceptcvt_1_1_has_minimap_data.html',1,'cvt']]],
+  ['cvt_3a_3ahasscalardata_13',['HasScalarData',['../d2/dd8/conceptcvt_1_1_has_scalar_data.html',1,'cvt']]],
+  ['cvt_3a_3ahasunitdata_14',['HasUnitData',['../d9/d08/conceptcvt_1_1_has_unit_data.html',1,'cvt']]],
+  ['cvt_3a_3aisanyof_15',['IsAnyOf',['../d8/d16/conceptcvt_1_1_is_any_of.html',1,'cvt']]],
+  ['cvt_3a_3aissoatype_16',['IsSoAType',['../d2/d65/conceptcvt_1_1_is_so_a_type.html',1,'cvt']]]
 ];
