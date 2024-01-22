@@ -239,6 +239,16 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::tuple<std:
 }
 #endif
 
+/**
+ * @brief Run over a vector of replay hashes that are contained in a replay folder and convert them.
+ * @tparam T Underlying replay data type of conversion engine
+ * @param replayFolder folder that contains the .SC2Replays listed in replayHashes
+ * @param replayHashes vector of replay hashes to convert, this should only be the stem of the file path (no extension)
+ * @param gamePath path to the "Versions" folder of the game directory
+ * @param converter pointer to conversion engine instance, must be initialized outside and not be null
+ * @param badFile optional file to log bad replays encountered
+ * @param port port to run the game api server at
+ */
 template<typename T>
 void loopReplayFiles(const fs::path &replayFolder,
     const std::vector<std::string> &replayHashes,
@@ -368,12 +378,12 @@ auto main(int argc, char *argv[]) -> int
         return 0;
     }
 
-    const auto replayFolder = cliOpts["replays"].as<std::string>();
-    if (!std::filesystem::exists(replayFolder)) {
-        SPDLOG_ERROR("Replay folder doesn't exist: {}", replayFolder);
+    const auto replayPath = cliOpts["replays"].as<std::string>();
+    if (!std::filesystem::exists(replayPath)) {
+        SPDLOG_ERROR("Replay path doesn't exist: {}", replayPath);
         return -1;
     }
-    SPDLOG_INFO("Found replay folder: {}", replayFolder);
+    SPDLOG_INFO("Found replay path: {}", replayPath);
 
     const auto gamePath = cliOpts["game"].as<std::string>();
     if (!std::filesystem::exists(gamePath)) {
@@ -467,10 +477,10 @@ auto main(int argc, char *argv[]) -> int
             }
             SPDLOG_INFO("Using partition file: {}", partitionFile);
             return getReplaysFromFile(partitionFile);
-        } else if (fs::is_directory(replayFolder)) {
-            return getReplaysFromFolder(replayFolder);
+        } else if (fs::is_directory(replayPath)) {
+            return getReplaysFromFolder(replayPath);
         } else {// Is a single replay file
-            return std::vector{ replayFolder };
+            return std::vector{ fs::path(replayPath).stem().string() };
         }
     }();
 
@@ -479,6 +489,8 @@ auto main(int argc, char *argv[]) -> int
         return -1;
     }
 
+    // Check if the replayPath argument is a 'single' file, hence the replayFolder folder is the parent
+    const auto replayFolder = fs::is_directory(replayPath) ? fs::path(replayPath) : fs::path(replayPath).parent_path();
     loopReplayFiles(replayFolder, replayFiles, gamePath, converter.get(), badFile, cliOpts["port"].as<int>());
 
     return 0;
