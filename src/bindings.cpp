@@ -67,7 +67,8 @@ template<typename T> void bindReplayDataInterfaces(py::module &m, const std::str
         .def("addEntry", &cvt::ReplayDatabase<T>::addEntry, py::arg("data"))
         .def("getEntry", &cvt::ReplayDatabase<T>::getEntry, py::arg("index"))
         .def("getHeader", &cvt::ReplayDatabase<T>::getHeader, py::arg("index"))
-        .def("getHashIdEntry", &cvt::ReplayDatabase<T>::getHashId, py::arg("index"));
+        .def("getHashIdEntry", &cvt::ReplayDatabase<T>::getHashId, py::arg("index"))
+        .def_property_readonly("path", &cvt::ReplayDatabase<T>::path);
 
     const auto parserName = name + "Parser";
     py::class_<cvt::ReplayParser<T>>(m, parserName.c_str())
