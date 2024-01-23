@@ -41,7 +41,8 @@ class SC2Replay(Dataset):
         replays_per_file = torch.empty([len(self.replays) + 1], dtype=torch.int)
         replays_per_file[0] = 0
         for idx, replay in enumerate(self.replays, start=1):
-            self.db_handle.open(replay)
+            if not self.db_handle.load(replay):
+                raise FileNotFoundError
             replays_per_file[idx] = self.db_handle.size()
 
         self._accumulated_replays = torch.cumsum(replays_per_file, 0)
@@ -54,7 +55,8 @@ class SC2Replay(Dataset):
     # @profile
     def __getitem__(self, index: int):
         file_index = upper_bound(self._accumulated_replays, index)
-        self.db_handle.open(self.replays[file_index])
+        if not self.db_handle.load(self.replays[file_index]):
+            raise FileNotFoundError
         db_index = index - int(self._accumulated_replays[file_index].item())
 
         try:
