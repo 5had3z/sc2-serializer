@@ -45,9 +45,12 @@ COPY --from=zlib-ng-builder /opt/zlib-ng/build/libz.so.1.3.0.zlib-ng /opt/zlib-n
 ENV LD_PRELOAD=/opt/zlib-ng/libz.so.1.3.0.zlib-ng
 
 WORKDIR /app
-COPY --from=builder /app/build/sc2_converter sc2_converter
-COPY --from=builder /app/build/sc2_merger sc2_merger
-COPY --from=builder /app/build/getReplayVersion.py getReplayVersion.py
+COPY --from=builder \
+    /app/build/sc2_converter \
+    /app/build/sc2_merger \
+    /app/build/format_converter \
+    /app/build/replay_version.py \
+    /app/
 
 ENTRYPOINT [ "./sc2_converter" ]
 CMD [ "-h" ]

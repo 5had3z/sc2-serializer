@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
         ("i,input", "Source database to convert from", cxxopts::value<std::string>())
         ("o,output", "Destination database, if folder then use source filename", cxxopts::value<std::string>())
         ("steps-file", "Contains hash-gamestep pairs", cxxopts::value<std::string>())
+        ("offset", "Offset to apply to partition index", cxxopts::value<int>())
         ("h,help", "This help");
     // clang-format on
     const auto cliOpts = cliParser.parse(argc, argv);
@@ -53,9 +54,10 @@ int main(int argc, char *argv[])
     } else {
         const std::string_view s(tmp);
         // Extract the substring from the last delimiter to the end
-        const std::string podIndex(s.substr(s.find_last_of('-') + 1));
-        SPDLOG_INFO("POD_NAME found, using index suffix: {}", podIndex);
-        sourcePath.replace_filename(sourcePath.stem().string() + podIndex + sourcePath.extension().string());
+        std::string podIndex(s.substr(s.find_last_of('-') + 1));
+        SPDLOG_INFO("POD_NAME: {}, using index suffix: {}", s, podIndex);
+        if (cliOpts["offset"].count()) { podIndex = std::to_string(std::stoi(podIndex) + cliOpts["offset"].as<int>()); }
+        sourcePath.replace_filename(sourcePath.stem().string() + "_" + podIndex + ".SC2Replays");
     }
 
     if (!fs::is_regular_file(sourcePath)) {
