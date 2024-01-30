@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
         return -1;
     }
     cvt::ReplayDatabase<cvt::ReplayDataSoA> source;
-    source.load(sourcePath);
+    if (!source.load(sourcePath)) { return -1; }
 
     fs::path destPath = cliOpts["output"].as<std::string>();
     if (fs::is_directory(destPath)) {
