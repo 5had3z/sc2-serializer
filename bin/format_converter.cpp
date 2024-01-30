@@ -96,9 +96,6 @@ int main(int argc, char *argv[])
         } catch (const std::bad_alloc &err) {
             SPDLOG_ERROR("Skipping index {}, due to read failure", idx);
             continue;
-        } catch (const std::bad_array_new_length &err) {
-            SPDLOG_ERROR("Skipping index {}, due to read failure", idx);
-            continue;
         }
         cvt::ReplayData2SoA new_data;
         auto &header = new_data.header;
