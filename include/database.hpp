@@ -38,7 +38,7 @@ template<typename T> struct DatabaseInterface
 
     [[nodiscard]] static auto getHeaderImpl(std::istream &dbStream) -> ReplayInfo;
 
-    [[nodiscard]] static auto getEntryImpl(std::istream &dbStream) noexcept -> T;
+    [[nodiscard]] static auto getEntryImpl(std::istream &dbStream) -> T;
 
     [[maybe_unused]] static auto addEntryImpl(const T &d, std::ostream &dbStream) noexcept -> bool;
 };
@@ -78,7 +78,7 @@ template<> struct DatabaseInterface<ReplayDataSoA>
         return result;
     }
 
-    static auto getEntryImpl(std::istream &dbStream) noexcept -> ReplayDataSoA
+    static auto getEntryImpl(std::istream &dbStream) -> ReplayDataSoA
     {
         ReplayDataSoA result;
         deserialize(result, dbStream);
@@ -168,7 +168,7 @@ template<> struct DatabaseInterface<ReplayData2SoA>
         return result;
     }
 
-    static auto getEntryImpl(std::istream &dbStream) noexcept -> ReplayData2SoA
+    static auto getEntryImpl(std::istream &dbStream) -> ReplayData2SoA
     {
         ReplayData2SoA result;
         deserialize(result.header, dbStream);
