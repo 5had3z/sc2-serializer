@@ -64,7 +64,8 @@ int main(int argc, char *argv[])
         fmt::print("ERROR: Source Database doesn't exist: {}\n", sourcePath.string());
         return -1;
     }
-    cvt::ReplayDatabase<cvt::ReplayDataSoA> source(sourcePath);
+    cvt::ReplayDatabase<cvt::ReplayDataSoA> source;
+    source.load(sourcePath);
 
     fs::path destPath = cliOpts["output"].as<std::string>();
     if (fs::is_directory(destPath)) {
