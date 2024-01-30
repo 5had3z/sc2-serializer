@@ -28,9 +28,9 @@ from absl import app, flags
 from pysc2 import maps
 from pysc2.env import sc2_env
 from pysc2.lib.actions import FUNCTIONS
-from pysc2.run_configs.lib import Version
 from pysc2.lib.remote_controller import ConnectError
 from pysc2.lib.sc_process import SC2LaunchError
+from pysc2.run_configs.lib import Version
 from s2clientprotocol import sc2api_pb2 as sc_pb
 from s2clientprotocol.data_pb2 import AbilityData, UpgradeData
 

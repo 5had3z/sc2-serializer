@@ -1,9 +1,10 @@
 from pathlib import Path
-from typing import Callable, Dict, Literal, Tuple
+from typing import Callable, Literal
 
 import torch
+from torch import Tensor
 from torch.utils.data import Dataset
-from utils import upper_bound
+
 from sc2_replay_reader import (
     GAME_INFO_FILE,
     ReplayDataAllDatabase,
@@ -17,12 +18,19 @@ ENUM_KEYS = {"playerRace", "playerResult"}
 LambdaFunctionType = Callable[[ReplayDataAllParser], float | int]
 
 
+def upper_bound(x: Tensor, value: float) -> int:
+    """
+    Find the index of the last element which is less or equal to value
+    """
+    return int(torch.argwhere(torch.le(x, value))[-1].item())
+
+
 class SC2Replay(Dataset):
     def __init__(
         self,
         basepath: Path,
         features: set[str],
-        lambda_columns: Dict[str, Tuple[SQL_TYPES, LambdaFunctionType]],
+        lambda_columns: dict[str, tuple[SQL_TYPES, LambdaFunctionType]],
     ) -> None:
         super().__init__()
         self.features = features

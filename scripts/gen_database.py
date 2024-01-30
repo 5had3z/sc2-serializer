@@ -1,16 +1,15 @@
 import os
 import sqlite3
 from pathlib import Path
-from typing import Any, Dict, Tuple, Optional
+from typing import Annotated, Any, Optional
 
 import torch
 import typer
+from summaryStats import SQL_TYPES, LambdaFunctionType, SC2Replay
 from torch.utils.data import DataLoader
 from tqdm import tqdm
-from typing_extensions import Annotated
 
 from sc2_replay_reader import Score
-from summaryStats import SQL_TYPES, LambdaFunctionType, SC2Replay
 
 app = typer.Typer()
 
@@ -42,9 +41,9 @@ def custom_collate(batch):
 
 def make_database(
     path: Path,
-    additional_columns: Dict[str, SQL_TYPES],
-    features: Dict[str, SQL_TYPES],
-    lambda_columns: Dict[str, Tuple[SQL_TYPES, LambdaFunctionType]],
+    additional_columns: dict[str, SQL_TYPES],
+    features: dict[str, SQL_TYPES],
+    lambda_columns: dict[str, tuple[SQL_TYPES, LambdaFunctionType]],
 ):
     if path.exists():
         os.remove(path)
@@ -72,7 +71,7 @@ def close_database(conn: sqlite3.Connection):
     conn.close()
 
 
-def add_to_database(cursor: sqlite3.Cursor, data_dict: Dict[str, Any]):
+def add_to_database(cursor: sqlite3.Cursor, data_dict: dict[str, Any]):
     columns = ", ".join(data_dict.keys())
     placeholders = ", ".join("?" for _ in data_dict.values())
 
@@ -104,7 +103,7 @@ def main(
     name: Annotated[str, typer.Option()] = "gamedata",
     replay: Annotated[Optional[Path], typer.Option()] = None,
 ):
-    features: Dict[str, SQL_TYPES] = {
+    features: dict[str, SQL_TYPES] = {
         "replayHash": "TEXT",
         "gameVersion": "TEXT",
         "playerId": "INTEGER",
@@ -114,7 +113,7 @@ def main(
         "playerAPM": "INTEGER",
     }
     # Manually include additional columns
-    additional_columns: Dict[str, SQL_TYPES] = {
+    additional_columns: dict[str, SQL_TYPES] = {
         "partition": "TEXT",
         "idx": "INTEGER",
         "read_success": "BOOLEAN",
@@ -128,7 +127,7 @@ def main(
         if "__" not in attr
     ]
 
-    lambda_columns: Dict[str, Tuple[SQL_TYPES, LambdaFunctionType]] = {
+    lambda_columns: dict[str, tuple[SQL_TYPES, LambdaFunctionType]] = {
         "max_units": ("TEXT", lambda y: max(len(x) for x in y.data.units)),
         "game_length": ("INTEGER", lambda y: (y.data.gameStep[-1])),
         **{

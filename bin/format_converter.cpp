@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
     if (!fs::exists(hashStepFile)) { fmt::print("ERROR: Hash-Step file doesn't exist: {}\n", hashStepFile.string()); }
     const auto hash_steps = read_hash_steps_file(hashStepFile);
 
-    const auto already_converted = dest.getHashes();
+    auto already_converted = dest.getHashes();
     const auto print_modulo = source.size() / 10;
     for (std::size_t idx = 0; idx < source.size(); ++idx) {
         cvt::ReplayDataSoA old_data;
@@ -128,6 +128,8 @@ int main(int argc, char *argv[])
 
         dest.addEntry(new_data);
         if (idx % print_modulo == 0) { fmt::print("Converted {} of {} Replays\n", idx + 1, source.size()); }
+        // Add into already_converted to filter out potential duplates from the original dataset
+        already_converted.insert(header.replayHash + std::to_string(header.playerId));
     }
     fmt::print("DONE - Converted {} of {} Replays\n", dest.size(), source.size());
 

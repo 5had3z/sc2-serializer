@@ -6,14 +6,13 @@ Explore SC2Replays data with python API
 import time
 from enum import Enum
 from pathlib import Path
-from typing import Sequence
+from typing import Annotated, Sequence
 
 import cv2
 import numpy as np
 import typer
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg
-from typing_extensions import Annotated
 
 from sc2_replay_reader import (
     ReplayDataAllDatabase,

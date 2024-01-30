@@ -1,7 +1,8 @@
 from pathlib import Path
+from typing import Annotated
 
 import typer
-from typing_extensions import Annotated
+
 from sc2_replay_reader.replay_version import get_replay_file_version_info
 
 app = typer.Typer()

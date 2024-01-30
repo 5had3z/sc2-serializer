@@ -3,10 +3,10 @@
 Script that creates the partition files
 for running conversions in parallel.
 """
-from pathlib import Path
 from dataclasses import dataclass, field
-from typing_extensions import Annotated
-from typing import List
+from pathlib import Path
+from typing import Annotated
+
 import typer
 
 app = typer.Typer()
@@ -20,7 +20,7 @@ class ReplayFile:
 
 @dataclass
 class Partition:
-    files: List[ReplayFile] = field(default_factory=list)
+    files: list[ReplayFile] = field(default_factory=list)
     size: int = 0
 
     def append(self, file: ReplayFile):

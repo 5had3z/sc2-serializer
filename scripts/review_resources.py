@@ -4,11 +4,11 @@ Analyse how the resources in the map change over time.
 """
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Annotated
 
 import numpy as np
 import typer
 from matplotlib import pyplot as plt
-from typing_extensions import Annotated
 
 import sc2_replay_reader
 
