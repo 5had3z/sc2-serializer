@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import shutil
 import sqlite3
@@ -155,9 +156,9 @@ class SC2Replay(Dataset):
 
 
 # Function to merge databases
-def merge_databases(source_db, target_db, table_name):
+def merge_databases(source: Path, target: Path, table_name: str):
     # Connect to the source database
-    source_conn = sqlite3.connect(source_db)
+    source_conn = sqlite3.connect(source)
     source_cursor = source_conn.cursor()
 
     # Get column names from the source database
@@ -165,7 +166,7 @@ def merge_databases(source_db, target_db, table_name):
     columns = [column[1] for column in source_cursor.fetchall()]
 
     # Connect to the target database and create the table if it doesn't exist
-    target_conn = sqlite3.connect(target_db)
+    target_conn = sqlite3.connect(target)
     target_cursor = target_conn.cursor()
 
     # Generate the INSERT statement dynamically based on the columns
@@ -194,18 +195,23 @@ def merge_databases(source_db, target_db, table_name):
 
 
 @app.command()
-def merge(directory: Path, target: Path):
+def merge(folder: Path, target: Path):
     """Merge all databases in diretory to target"""
     # Assuming the table name is the same in all databases
     table_name = "game_data"
 
+    assert (
+        folder != target.parent
+    ), "Target should not be in directory of files to parse"
+    assert folder.is_dir(), f"{folder} is not a folder"
+
     # Loop through all databases in the directory
-    for idx, source_database in enumerate(directory.glob("*.db")):
-        if idx == 0:
-            shutil.copyfile(source_database, target)
+    for idx, source in enumerate(folder.glob("*.db")):
+        if idx == 0 and not target.exists():
+            shutil.copyfile(source, target)
             continue
         # Merge the databases
-        merge_databases(source_database, target, table_name)
+        merge_databases(source, target, table_name)
 
 
 def custom_collate(batch):
@@ -277,7 +283,10 @@ def create_individual(
     workspace: Annotated[Path, typer.Option()] = Path("."),
     workers: Annotated[int, typer.Option()] = 0,
 ):
-    """Create sql databases for each individual replay database"""
+    """
+    Create sql databases for each individual replay database.
+    Replay database(s) are gathered from environment variable DATAPATH.
+    """
     replay_files = list(Path(os.environ["DATAPATH"]).glob("*.SC2Replays"))
     for p in replay_files:
         try:
@@ -307,7 +316,7 @@ def make_kubernetes(workspace: Path, name: str, pod_offset: int):
         LAMBDA_COLUMNS,
     )
     db_file = workspace / f"{name}_{number}.db"
-    if db_file.is_file():
+    if db_file.exists():
         file_size_bytes = db_file.stat().st_size
 
         # Convert bytes to megabytes
@@ -315,7 +324,7 @@ def make_kubernetes(workspace: Path, name: str, pod_offset: int):
         print(f"Found existing file: {db_file} with size {file_size_mb}MB")
         if file_size_mb > 1:
             print("skipping file which exists....")
-            return
+            exit()
 
     conn = make_database(db_file, ADDITIONAL_COLUMNS, FEATURES, LAMBDA_COLUMNS)
     return dataset, conn
@@ -328,7 +337,10 @@ def create(
     name: Annotated[str, typer.Option()] = "gamedata",
     pod_offset: Annotated[int, typer.Option(help="Apply offset to k8s pod index")] = 0,
 ):
-    """Standard creation function to create sql database from dataloader"""
+    """
+    Standard creation function to create sql database from dataloader
+    Replay database(s) are gathered from environment variable DATAPATH
+    """
     if "POD_NAME" in os.environ:
         dataset, conn = make_kubernetes(workspace, name, pod_offset)
     else:
