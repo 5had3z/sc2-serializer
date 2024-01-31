@@ -278,12 +278,13 @@ def create_individual(
     workers: Annotated[int, typer.Option()] = 0,
 ):
     """Create sql databases for each individual replay database"""
-    for p in Path(os.environ["DATAPATH"]).glob("*.SC2Replays"):
+    replay_files = list(Path(os.environ["DATAPATH"]).glob("*.SC2Replays"))
+    for p in replay_files:
         try:
-            create(workspace=workspace, workers=workers, name=p.name, replay=p)
+            os.environ["DATAPATH"] = str(p)  # Override DATAPATH with individual file
+            create(workspace=workspace, workers=workers, name=p.name)
         except Exception as e:
-            print(e)
-            print(f"failed, {p.name}")
+            print(f"Failed Replay {p.name} with exception: {e}")
 
 
 def make_standard(workspace: Path, name: str):
