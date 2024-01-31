@@ -102,6 +102,7 @@ def main(
     workers: Annotated[int, typer.Option()] = 0,
     name: Annotated[str, typer.Option()] = "gamedata",
     replay: Annotated[Optional[Path], typer.Option()] = None,
+    pod_offset: Annotated[int, typer.Option(help="Apply offset to k8s pod index")] = 0,
 ):
     features: dict[str, SQL_TYPES] = {
         "replayHash": "TEXT",
@@ -145,7 +146,7 @@ def main(
         )
 
     elif "POD_NAME" in os.environ:
-        number = os.environ["POD_NAME"].split("-")[-1]
+        number = int(os.environ["POD_NAME"].split("-")[-1]) + pod_offset
         dataset = SC2Replay(
             Path(os.environ["DATAPATH"]) / f"db_{number}.SC2Replays",
             set(features.keys()),
