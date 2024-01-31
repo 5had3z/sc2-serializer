@@ -9,7 +9,6 @@ import torch
 import typer
 from torch import Tensor
 from torch.utils.data import DataLoader, Dataset
-from torch.utils.data._utils.collate import default_collate
 from sc2_replay_reader import (
     Score,
     GAME_INFO_FILE,
@@ -214,31 +213,6 @@ def merge(folder: Path, target: Path):
         merge_databases(source, target, table_name)
 
 
-def custom_collate(batch):
-    # No read success in entire batch
-    if not any(item["read_success"] for item in batch):
-        return default_collate(batch)
-
-    if all(item["read_success"] for item in batch):
-        return default_collate(batch)
-
-    first_read_success = next((item for item in batch if item.get("read_success")))
-    extra_keys = set(first_read_success.keys()) - {
-        "partition",
-        "idx",
-        "read_success",
-        "parse_success",
-    }
-
-    # Create a dictionary with zero tensors for extra_keys
-    empty_batch = {key: 0 for key in extra_keys}
-    data_batch = [
-        {**empty_batch, **data} if not data["read_success"] else data for data in batch
-    ]
-
-    return default_collate(data_batch)
-
-
 def make_database(
     path: Path,
     additional_columns: dict[str, SQL_TYPES],
@@ -346,26 +320,20 @@ def create(
     else:
         dataset, conn = make_standard(workspace, name)
 
-    dataloader = DataLoader(
-        dataset, num_workers=workers, batch_size=32, collate_fn=custom_collate
-    )
+    dataloader = DataLoader(dataset, num_workers=workers, batch_size=1)
 
     cursor = conn.cursor()
-    for idx, d in typer.progressbar(enumerate(dataloader), length=len(dataloader)):
-        keys = d.keys()
-        for index in range(len(d["partition"])):
-            converted_d = {}
-            for key in keys:
-                value = d[key]
-                if isinstance(value, Tensor):
-                    converted_d[key] = value[index].item()
-                elif isinstance(value, list):
-                    converted_d[key] = value[index]
 
+    with typer.progressbar(dataloader, length=len(dataloader)) as bar:
+        for sample in bar:
+            sample: dict[str, Any]
+            converted_d = {
+                k: v.item() if isinstance(v, Tensor) else v[0]
+                for k, v in sample.items()
+            }
             add_to_database(cursor, converted_d)
-
-        if idx % 5 == 0:
-            conn.commit()
+            if bar.pos % 100 == 0:
+                conn.commit()
 
     cursor.close()
     conn.commit()
