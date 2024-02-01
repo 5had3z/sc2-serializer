@@ -51,6 +51,8 @@ ALL_ATTRIBUTES = [
 LAMBDA_COLUMNS: dict[str, tuple[SQL_TYPES, LambdaFunctionType]] = {
     "max_units": ("TEXT", lambda y: max(len(x) for x in y.data.units)),
     "game_length": ("INTEGER", lambda y: (y.data.gameStep[-1])),
+    "number_game_step": ("INTEGER", lambda y: len(y.data.gameStep)),
+    "initial_game_step": ("INTEGER", lambda y: y.data.gameStep[0]),
     **{
         f"final_{i}": (
             "FLOAT",
@@ -195,7 +197,7 @@ def merge_databases(source: Path, target: Path, table_name: str):
 
 @app.command()
 def merge(folder: Path, target: Path):
-    """Merge all databases in diretory to target"""
+    """Merge all databases in directory to target"""
     # Assuming the table name is the same in all databases
     table_name = "game_data"
 
