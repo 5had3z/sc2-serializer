@@ -10,7 +10,7 @@ app = typer.Typer()
 
 def get_versions_in_tree(root: Path):
     """
-    Recurisvely query all the sc2 replays in a directory and return a set of all versions present
+    Recursively query all the sc2 replays in a directory and return a set of all versions present
     Also returns a mapping from unique versions to a replay with that version.
     """
     version_file_map: dict[tuple, Path] = {}

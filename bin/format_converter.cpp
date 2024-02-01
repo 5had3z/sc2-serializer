@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
 
         dest.addEntry(new_data);
         if (idx % print_modulo == 0) { fmt::print("Converted {} of {} Replays\n", idx + 1, source.size()); }
-        // Add into already_converted to filter out potential duplates from the original dataset
+        // Add into already_converted to filter out potential duplicates from the original dataset
         already_converted.insert(header.replayHash + std::to_string(header.playerId));
     }
     fmt::print("DONE - Converted {} of {} Replays\n", dest.size(), source.size());

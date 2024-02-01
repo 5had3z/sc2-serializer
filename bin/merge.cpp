@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
             return -1;
         }
         cvt::ReplayDatabase<ReplayDataType> partDb(sourceDb);
-        auto ok = mergeDb(replayDb, partDb, knownHashes);
+        ok = mergeDb(replayDb, partDb, knownHashes);
     } else {
         SPDLOG_ERROR("--file or --folder must be specified to read from");
         return -1;
