@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     // clang-format off
     cliParser.add_options()
         ("i,input", "Database to convert std::streampos to std::int32_t", cxxopts::value<std::string>())
-        ("o,output", "Output path if operation is not inplace, if output is a folder then the desination will have same filename as input", cxxopts::value<std::string>())
+        ("o,output", "Output path if operation is not inplace, if output is a folder then the destination will have same filename as input", cxxopts::value<std::string>())
         ("inplace", "Modify the original database rather than making a copy", cxxopts::value<bool>()->default_value("true"))
         ("h,help", "This Help", cxxopts::value<bool>());
     // clang-format on

@@ -90,7 +90,7 @@ If you install in editable mode, you won't get the auto-gen stubs, you can add t
 pybind11-stubgen _sc2_replay_reader --module-path build/_sc2_replay_reader.cpython-310-x86_64-linux-gnu.so -o src/sc2_replay_reader
 ```
 
-It is also faster to iterate while developing by installing in editable mode, removing pip's compiled version `src/sc2_replay_reader/_sc2_replay_reader.cpython-310-x86_64-linux-gnu.so` and sybolically linking to `build/_sc2_replay_reader.cpython-310-x86_64-linux-gnu.so` instead for incremental builds. You will have manually update the stub with the previously mentioned script however if api changes are made.
+It is also faster to iterate while developing by installing in editable mode, removing pip's compiled version `src/sc2_replay_reader/_sc2_replay_reader.cpython-310-x86_64-linux-gnu.so` and symbolically linking to `build/_sc2_replay_reader.cpython-310-x86_64-linux-gnu.so` instead for incremental builds. You will have manually update the stub with the previously mentioned script however if api changes are made.
 
 ## Generating SQL Database
 

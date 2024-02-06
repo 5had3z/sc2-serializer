@@ -437,6 +437,7 @@ auto createMinimapFeatures(const ReplayDataType &replay,
         if (replay.data.pathable[timeIdx].empty()) {
             throw std::runtime_error{ "Tried to get pathable data but it was empty" };
         }
+        //cppcheck-suppress unreadVariable
         dataPtr = unpackBoolImage<T>(replay.data.pathable[timeIdx], dataPtr);
     }
 

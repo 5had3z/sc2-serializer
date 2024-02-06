@@ -123,7 +123,7 @@ void implWriteUnitT(const std::vector<std::vector<UnitT>> &unitData, const fs::p
         std::ranges::stable_sort(unitFlatten, [](const UnitT &a, const UnitT &b) { return a.id < b.id; });
         writeData(cvt::AoStoSoA(unitFlatten), outDir / fmt::format("{}_sorted_sofa.bin", prefix));
     }
-    // Structure-of-Flattened-Arrays Index Varaints
+    // Structure-of-Flattened-Arrays Index Variants
     {
         writeData(cvt::flattenAndSortUnits<UnitSoAT>(unitData), outDir / fmt::format("{}_sorted_sofa1.bin", prefix));
         writeData(cvt::flattenAndSortUnits2<UnitSoAT>(unitData), outDir / fmt::format("{}_sorted_sofa2.bin", prefix));
@@ -134,7 +134,7 @@ void implWriteUnitT(const std::vector<std::vector<UnitT>> &unitData, const fs::p
 /**
  * @brief Write unit data with different structural methods
  * @param data Replay data to write
- * @param outDir direcory to write unit binary data
+ * @param outDir directory to write unit binary data
  */
 void writeUnitStructures(const cvt::ReplayDataSoA &data, const fs::path &outDir)
 {
@@ -161,7 +161,7 @@ void implBenchmarkUnit(const std::vector<std::vector<UnitT>> &unitData, bench_ti
     writeData(unitData, tempFile, false);
     {
         const auto begin = clk::now();
-        auto tmp = readData<std::vector<std::vector<UnitT>>>(tempFile);
+        readData<std::vector<std::vector<UnitT>>>(tempFile);
         timing.readAoS.emplace_back(clk::now() - begin);
     }
 
@@ -235,7 +235,6 @@ void benchmarkUnitFormatting(const cvt::ReplayDataSoA &data)
 int main(int argc, char *argv[])
 {
     cxxopts::Options cliParser("SC2 Format Comparison",
-        "Reads replay database and re-writes units and neutralUnit informaiton to disk in different structural "
         "formats");
     // clang-format off
     cliParser.add_options()
