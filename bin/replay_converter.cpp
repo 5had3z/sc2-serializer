@@ -33,6 +33,7 @@
 
 namespace fs = std::filesystem;
 using namespace std::string_literals;
+using clk = std::chrono::high_resolution_clock;
 
 /**
  * @brief Add known bad replays from file to converter's knownHashes
@@ -247,6 +248,7 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::tuple<std:
  * @param gamePath path to the "Versions" folder of the game directory
  * @param converter pointer to conversion engine instance, must be initialized outside and not be null
  * @param badFile optional file to log bad replays encountered
+ * @param perfPath optional file to log time taken to convert a replay
  * @param port port to run the game api server at
  */
 template<typename T>
@@ -255,6 +257,7 @@ void loopReplayFiles(const fs::path &replayFolder,
     const std::string &gamePath,
     cvt::BaseConverter<T> *converter,
     std::optional<fs::path> badFile,
+    std::optional<fs::path> perfPath,
     int port)
 {
     auto make_coordinator = [&]() {
@@ -321,8 +324,14 @@ void loopReplayFiles(const fs::path &replayFolder,
                 converter->setReplayInfo(replayHash, playerId);
                 coordinator->SetReplayPath(replayPath.string());
                 coordinator->SetReplayPerspective(playerId);
+                auto startTime = clk::now();
                 // Run Replay
                 while (coordinator->Update()) {}
+                auto durationSec = std::chrono::duration_cast<std::chrono::duration<float>>(clk::now() - startTime);
+                if (perfPath.has_value()) {
+                    std::ofstream perfFile(perfPath.value(), std::ios::app);
+                    perfFile << fmt::format("{},p{},{}\n", replayPath.string(), playerId, durationSec.count());
+                }
             };
 
             constexpr std::size_t maxRetry = 3;
@@ -369,6 +378,7 @@ auto main(int argc, char *argv[]) -> int
       ("b,badfile", "file that contains a known set of bad replays", cxxopts::value<std::string>())
       ("offset", "Offset to apply to partition index", cxxopts::value<int>())
       ("port", "port for serving the game", cxxopts::value<int>()->default_value("9168"))
+      ("perflog", "log to file the time taken to convert a file", cxxopts::value<std::string>())
       ("h,help", "This help");
     // clang-format on
     const auto cliOpts = cliParser.parse(argc, argv);
@@ -489,9 +499,12 @@ auto main(int argc, char *argv[]) -> int
         return -1;
     }
 
+    std::optional<fs::path> perfPath;
+    if (cliOpts.count("perflog")) { perfPath = cliOpts["perflog"].as<std::string>(); }
+
     // Check if the replayPath argument is a 'single' file, hence the replayFolder folder is the parent
     const auto replayFolder = fs::is_directory(replayPath) ? fs::path(replayPath) : fs::path(replayPath).parent_path();
-    loopReplayFiles(replayFolder, replayFiles, gamePath, converter.get(), badFile, cliOpts["port"].as<int>());
+    loopReplayFiles(replayFolder, replayFiles, gamePath, converter.get(), badFile, perfPath, cliOpts["port"].as<int>());
 
     return 0;
 }

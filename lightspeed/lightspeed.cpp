@@ -106,7 +106,7 @@ class FrequencyTimer
 };
 
 
-void run_test(const std::string &replay_path, const std::string &port)
+void run_test(const std::string &replay_path, const std::string &port, std::uint32_t playerId)
 {
     net::io_context ioc;
     tcp::resolver resolver{ ioc };
@@ -187,7 +187,7 @@ void run_test(const std::string &replay_path, const std::string &port)
         SC2APIProtocol::Request request;
         auto startRequestReplay = request.mutable_start_replay();
         startRequestReplay->set_replay_path(replay_path);
-        startRequestReplay->set_observed_player_id(1);
+        startRequestReplay->set_observed_player_id(playerId);
         startRequestReplay->set_realtime(false);
 
         auto replayOpts = startRequestReplay->mutable_options();
@@ -282,7 +282,8 @@ int main(int argc, char *argv[])
     cliParser.add_options()
         ("r,replay", "Path to replay file", cxxopts::value<std::string>())
         ("g,game", "Path to game executable", cxxopts::value<std::string>())
-        ("p,port", "Port to listen on the game", cxxopts::value<uint32_t>()->default_value("5679"));
+        ("p,port", "Port to listen on the game", cxxopts::value<uint32_t>()->default_value("5679"))
+        ("perflog", "Log file for replay time taken", cxxopts::value<std::string>());
     // clang-format on
     const auto args = cliParser.parse(argc, argv);
     const auto default_port = std::to_string(args["port"].as<uint32_t>());
@@ -302,8 +303,6 @@ int main(int argc, char *argv[])
         "256",
         "-windowheight",
         "256",
-        // "-dataVersion",
-        // "",
     };
 
     std::vector<char *> char_args;
@@ -324,11 +323,17 @@ int main(int argc, char *argv[])
 
     std::this_thread::sleep_for(5s);// Wait a bit to connect
 
-    const auto start = std::chrono::high_resolution_clock::now();
-    run_test(replay_path, default_port);
-    const auto duration = std::chrono::high_resolution_clock::now() - start;
-
-    fmt::println("Finished Replay, took {}", std::chrono::duration_cast<std::chrono::duration<float>>(duration));
+    for (std::uint32_t playerId = 1; playerId < 3; ++playerId) {
+        const auto start = std::chrono::high_resolution_clock::now();
+        run_test(replay_path, default_port, playerId);
+        const auto duration =
+            std::chrono::duration_cast<std::chrono::duration<float>>(std::chrono::high_resolution_clock::now() - start);
+        fmt::println("Finished Replay, P{} took {}", playerId, duration);
+        if (args.count("perflog")) {
+            std::ofstream logFile(args["perflog"].as<std::string>(), std::ios::app);
+            logFile << fmt::format("{},p{},{}\n", replay_path, playerId, duration.count());
+        }
+    }
 
     if (kill(process_id, SIGTERM) == -1) { fmt::println("Couldn't end process"); }
     int status = 0;
