@@ -99,20 +99,24 @@ def check_first_step(path: Path, threshold: int = 224):
         replays = list(path.glob("*.SC2Replays"))
 
     count_bad = 0
-
-    for replay in replays:
-        db.open(replay)
-        for idx in range(db.size()):
-            sample = db.getEntry(idx)
-            first_step = sample.data.gameStep[0]
-            if first_step > threshold:
-                replayHash = sample.header.replayHash
-                playerId = sample.header.playerId
-                filename = replay.stem
-                print(
-                    f"high initial gamestep {first_step} in {replayHash=}, {playerId=}, {filename=}"
-                )
-                count_bad += 1
+    total_replays = 0
+    with typer.progressbar(replays, length=len(replays)) as pbar:
+        replay: Path
+        for replay in pbar:
+            if not db.load(replay):
+                raise FileNotFoundError("???")
+            for idx in range(db.size()):
+                sample = db.getEntry(idx)
+                first_step = sample.data.gameStep[0]
+                if first_step > threshold:
+                    replayHash = sample.header.replayHash
+                    playerId = sample.header.playerId
+                    filename = replay.stem
+                    print(
+                        f"high initial gamestep {first_step} in {replayHash=}, {playerId=}, {filename=}"
+                    )
+                    count_bad += 1
+            total_replays += db.size()
 
     print(f"Final count of bad replays: {count_bad}")
 
