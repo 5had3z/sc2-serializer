@@ -102,6 +102,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ace870b8744fc74b36a8228045cb24e52" id="r_ace870b8744fc74b36a8228045cb24e52"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#ace870b8744fc74b36a8228045cb24e52">SetStride</a> (std::size_t stride)</td></tr>
 <tr class="memdesc:ace870b8744fc74b36a8228045cb24e52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the sampling stride.  <br /></td></tr>
 <tr class="separator:ace870b8744fc74b36a8228045cb24e52"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a882c66eb686d4d695d336363866c461b" id="r_a882c66eb686d4d695d336363866c461b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a882c66eb686d4d695d336363866c461b">SetActionSaving</a> (bool should_save) noexcept</td></tr>
+<tr class="memdesc:a882c66eb686d4d695d336363866c461b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set whether gamesteps with actions should be saved.  <br /></td></tr>
+<tr class="separator:a882c66eb686d4d695d336363866c461b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af26e02ffae96f902d6eb789c3211eb83" id="r_af26e02ffae96f902d6eb789c3211eb83"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#af26e02ffae96f902d6eb789c3211eb83">ActionsAreSaved</a> () const noexcept -&gt; bool</td></tr>
+<tr class="memdesc:af26e02ffae96f902d6eb789c3211eb83"><td class="mdescLeft">&#160;</td><td class="mdescRight">Query if actions are being saved.  <br /></td></tr>
+<tr class="separator:af26e02ffae96f902d6eb789c3211eb83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a096cf3cf734d26a6d8b7014d2f83cfec" id="r_a096cf3cf734d26a6d8b7014d2f83cfec"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a096cf3cf734d26a6d8b7014d2f83cfec">GetStride</a> () const noexcept -&gt; std::size_t</td></tr>
 <tr class="memdesc:a096cf3cf734d26a6d8b7014d2f83cfec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the currently set stride.  <br /></td></tr>
 <tr class="separator:a096cf3cf734d26a6d8b7014d2f83cfec"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -205,6 +211,36 @@ std::chrono::high_resolution_clock::time_point&#160;</td><td class="memItemRight
 <div class="textblock"><div class="compoundTemplParams">template&lt;typename DataSoA&gt;<br />
 class cvt::StridedConverter&lt; DataSoA &gt;</div><p>Convert and serialize at a particular stride (i.e. every 10 steps) </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="af26e02ffae96f902d6eb789c3211eb83" name="af26e02ffae96f902d6eb789c3211eb83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af26e02ffae96f902d6eb789c3211eb83">&#9670;&#160;</a></span>ActionsAreSaved()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DataSoA &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../d5/db8/classcvt_1_1_strided_converter.html">cvt::StridedConverter</a>&lt; DataSoA &gt;::ActionsAreSaved </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const -&gt; bool </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Query if actions are being saved. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if actions are being saved </dd></dl>
+
+</div>
+</div>
 <a id="a096cf3cf734d26a6d8b7014d2f83cfec" name="a096cf3cf734d26a6d8b7014d2f83cfec"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a096cf3cf734d26a6d8b7014d2f83cfec">&#9670;&#160;</a></span>GetStride()</h2>
 
@@ -232,6 +268,41 @@ template&lt;typename DataSoA &gt; </div>
 
 <p>Get the currently set stride. </p>
 <dl class="section return"><dt>Returns</dt><dd>Currently set stride </dd></dl>
+
+</div>
+</div>
+<a id="a882c66eb686d4d695d336363866c461b" name="a882c66eb686d4d695d336363866c461b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a882c66eb686d4d695d336363866c461b">&#9670;&#160;</a></span>SetActionSaving()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename DataSoA &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d5/db8/classcvt_1_1_strided_converter.html">cvt::StridedConverter</a>&lt; DataSoA &gt;::SetActionSaving </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>should_save</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set whether gamesteps with actions should be saved. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">should_save</td><td>true if actions are saved </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

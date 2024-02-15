@@ -377,6 +377,28 @@
 </dd></dl>
 
 <dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt16StridedConverter15SetActionSavingEb">
+<span id="_CPPv3N3cvt16StridedConverter15SetActionSavingEb"></span><span id="_CPPv2N3cvt16StridedConverter15SetActionSavingEb"></span><span id="cvt::StridedConverter::SetActionSaving__b"></span><span class="target" id="d5/db8/classcvt_1_1_strided_converter_1a882c66eb686d4d695d336363866c461b"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SetActionSaving</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">should_save</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt16StridedConverter15SetActionSavingEb" title="Link to this definition"></a><br /></dt>
+<dd><p>Set whether gamesteps with actions should be saved. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>should_save</strong> – true if actions are saved </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt16StridedConverter15ActionsAreSavedEv">
+<span id="_CPPv3NK3cvt16StridedConverter15ActionsAreSavedEv"></span><span id="_CPPv2NK3cvt16StridedConverter15ActionsAreSavedEv"></span><span id="cvt::StridedConverter::ActionsAreSavedC"></span><span class="target" id="d5/db8/classcvt_1_1_strided_converter_1af26e02ffae96f902d6eb789c3211eb83"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ActionsAreSaved</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><a class="headerlink" href="#_CPPv4NK3cvt16StridedConverter15ActionsAreSavedEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Query if actions are being saved. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if actions are being saved </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK3cvt16StridedConverter9GetStrideEv">
 <span id="_CPPv3NK3cvt16StridedConverter9GetStrideEv"></span><span id="_CPPv2NK3cvt16StridedConverter9GetStrideEv"></span><span id="cvt::StridedConverter::GetStrideC"></span><span class="target" id="d5/db8/classcvt_1_1_strided_converter_1a096cf3cf734d26a6d8b7014d2f83cfec"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GetStride</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><a class="headerlink" href="#_CPPv4NK3cvt16StridedConverter9GetStrideEv" title="Link to this definition"></a><br /></dt>
 <dd><p>Get the currently set stride. </p>
@@ -408,6 +430,11 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt16StridedConverter7stride_E">
 <span id="_CPPv3N3cvt16StridedConverter7stride_E"></span><span id="_CPPv2N3cvt16StridedConverter7stride_E"></span><span id="cvt::StridedConverter::stride___std::s"></span><span class="target" id="d5/db8/classcvt_1_1_strided_converter_1a97117a14704bd04cd7e5458349c05e33"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stride_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt16StridedConverter7stride_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt16StridedConverter12saveActions_E">
+<span id="_CPPv3N3cvt16StridedConverter12saveActions_E"></span><span id="_CPPv2N3cvt16StridedConverter12saveActions_E"></span><span id="cvt::StridedConverter::saveActions___b"></span><span class="target" id="d5/db8/classcvt_1_1_strided_converter_1a8d547c1619b39a110b055395521dfd45"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">saveActions_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="k"><span class="pre">false</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt16StridedConverter12saveActions_E" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 </div>
