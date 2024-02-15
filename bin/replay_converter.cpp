@@ -374,6 +374,7 @@ auto main(int argc, char *argv[]) -> int
       ("o,output", "output filename for replay database", cxxopts::value<std::string>())
       ("c,converter", "type of converter to use [action|full|strided]", cxxopts::value<std::string>())
       ("s,stride", "stride for the strided converter", cxxopts::value<std::size_t>())
+      ("save-actions", "strided converter will also save timestep with action", cxxopts::value<bool>())
       ("g,game", "path to game executable", cxxopts::value<std::string>())
       ("b,badfile", "file that contains a known set of bad replays", cxxopts::value<std::string>())
       ("offset", "Offset to apply to partition index", cxxopts::value<int>())
@@ -442,6 +443,8 @@ auto main(int argc, char *argv[]) -> int
                 return nullptr;
             }
             converter->SetStride(cliOpts["stride"].as<std::size_t>());
+            converter->SetActionSaving(cliOpts["save-actions"].count());
+            if (converter->ActionsAreSaved()) { SPDLOG_INFO("Strided Converter is Saving Actions"); }
             return converter;
         }
         SPDLOG_ERROR("Got invalid --converter='{}', require [full|action|strided]", cvtType);

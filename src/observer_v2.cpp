@@ -176,7 +176,9 @@ template<> void StridedConverter<ReplayData2SoA>::OnStep()
 {
     // Check if a logging step
     const auto gameStep = this->Observation()->GetGameLoop();
-    if (gameStep % stride_ != 0) { return; }
+    bool shouldRecord = gameStep % stride_ == 0;
+    shouldRecord |= !this->Observation()->GetRawActions().empty() && saveActions_;
+    if (!shouldRecord) { return; }
 
     // "Initialize" next item
     replayData_.data.resize(replayData_.data.size() + 1);

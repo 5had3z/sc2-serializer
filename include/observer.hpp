@@ -239,6 +239,17 @@ template<typename DataSoA> class StridedConverter : public BaseConverter<DataSoA
         stride_ = stride;
     }
 
+    /**
+     * @brief Set whether gamesteps with actions should be saved
+     * @param should_save true if actions are saved
+     */
+    void SetActionSaving(bool should_save) noexcept { saveActions_ = should_save; }
+
+    /**
+     * @brief Query if actions are being saved
+     * @return True if actions are being saved
+     */
+    auto ActionsAreSaved() const noexcept -> bool { return saveActions_; }
 
     /**
      * @brief Get the currently set stride
@@ -262,6 +273,7 @@ template<typename DataSoA> class StridedConverter : public BaseConverter<DataSoA
     void OnStep() final;
 
     std::size_t stride_{ 0 };
+    bool saveActions_{ false };
 };
 
 }// namespace cvt
