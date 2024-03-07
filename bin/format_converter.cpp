@@ -1,6 +1,8 @@
 #include <cxxopts.hpp>
 #include <spdlog/fmt/fmt.h>
 
+#include "data_structures/replay_all.hpp"
+#include "data_structures/replay_old.hpp"
 #include "database.hpp"
 
 #include <filesystem>

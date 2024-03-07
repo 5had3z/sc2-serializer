@@ -1,3 +1,7 @@
+#include "data_structures/replay_all.hpp"
+#include "data_structures/replay_minimaps.hpp"
+#include "data_structures/replay_old.hpp"
+#include "data_structures/replay_scalars.hpp"
 #include "database.hpp"
 #include "replay_parsing.hpp"
 

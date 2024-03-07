@@ -4,10 +4,11 @@
 #include <sc2api/sc2_score.h>
 #include <spdlog/spdlog.h>
 
-#include "data_structures.hpp"
+#include "data_structures/units.hpp"
 #include "generated_info.hpp"
 
 #include <execution>
+#include <ranges>
 
 namespace cvt {
 

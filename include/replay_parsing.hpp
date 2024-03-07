@@ -1,6 +1,7 @@
 #pragma once
 
-#include "replay_structures.hpp"
+#include "data_structures/replay_interface.hpp"
+#include "data_structures/units.hpp"
 
 #include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
@@ -11,6 +12,7 @@
 #include <array>
 #include <bitset>
 #include <filesystem>
+#include <ranges>
 #include <set>
 #include <span>
 #include <type_traits>
@@ -437,7 +439,6 @@ auto createMinimapFeatures(const ReplayDataType &replay,
         if (replay.data.pathable[timeIdx].empty()) {
             throw std::runtime_error{ "Tried to get pathable data but it was empty" };
         }
-        //cppcheck-suppress unreadVariable
         dataPtr = unpackBoolImage<T>(replay.data.pathable[timeIdx], dataPtr);
     }
 

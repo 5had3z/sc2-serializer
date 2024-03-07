@@ -1,4 +1,10 @@
-#include "replay_structures.hpp"
+/**
+ * @brief Specialisation implementations for AoS<->SoA for structures to prevent redefinition errors if it were in the
+ * header files.
+ */
+
+#include "data_structures/replay_all.hpp"
+#include "data_structures/replay_old.hpp"
 
 namespace cvt {
 
@@ -75,4 +81,5 @@ template<> auto SoAtoAoS(const ReplayData2SoA &soa) noexcept -> ReplayData2
     aos.data = SoAtoAoS(soa.data);
     return aos;
 }
+
 }// namespace cvt

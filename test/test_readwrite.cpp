@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <spdlog/spdlog.h>
 
-#include "replay_structures.hpp"
+#include "data_structures/replay_old.hpp"
 #include "serialize.hpp"
 
 #include <filesystem>

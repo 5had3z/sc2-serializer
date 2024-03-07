@@ -1,3 +1,4 @@
+#include "data_structures/replay_old.hpp"
 #include "database.hpp"
 
 #include <boost/iostreams/device/file.hpp>

@@ -46,6 +46,7 @@ repos:
           - --suppress=unusedFunction
           - --suppress=missingInclude
           - --suppress=passedByValue
+          - --suppress=unreadVariable
           - --suppress=unassignedVariable # Fails to recognise some structured bindings
   - repo: https://github.com/cheshirekow/cmake-format-precommit
     rev: v0.6.13

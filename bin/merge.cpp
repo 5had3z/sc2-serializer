@@ -1,3 +1,4 @@
+#include "data_structures/replay_all.hpp"
 #include "database.hpp"
 
 #include <cxxopts.hpp>
@@ -8,6 +9,7 @@
 #include <ranges>
 
 namespace fs = std::filesystem;
+using ReplayDataType = cvt::ReplayData2SoA;
 
 enum class Stratergy { Replace, Append, Merge };
 
@@ -60,7 +62,7 @@ auto mergeDb(cvt::ReplayDatabase<T> &target,
             SPDLOG_WARN("Skipping existing replay {},{}", hash, id);
             continue;
         }
-        const cvt::ReplayData2SoA replayData = source.getEntry(idx);
+        const ReplayDataType replayData = source.getEntry(idx);
         if (replayData.data.gameStep[0] > 1000) {
             SPDLOG_WARN("Skipping replay {},{} with initial step {}", hash, id, replayData.data.gameStep[0]);
             continue;
@@ -127,8 +129,6 @@ int main(int argc, char *argv[])
         return Stratergy::Append;// Shouldn't get here
     }();
     fmt::print("Strat: {}", static_cast<int>(strat));
-
-    using ReplayDataType = cvt::ReplayData2SoA;
 
     cvt::ReplayDatabase<ReplayDataType> replayDb{};
     std::unordered_set<std::string> knownHashes{};

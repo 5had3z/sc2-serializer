@@ -2,6 +2,7 @@
  * @brief Version 1 of the observer and replay data structure based on ReplayDataSoA
  */
 
+#include "data_structures/replay_old.hpp"
 #include "observer.hpp"
 #include "observer_utils.hpp"
 #include "serialize.hpp"

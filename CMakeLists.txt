@@ -106,7 +106,7 @@ if(SC2_CONVERTER)
     src/observer_utils.cpp
     src/observer_v1.cpp
     src/observer_v2.cpp
-    src/replay_structures.cpp)
+    src/array_struct_impl.cpp)
   target_compile_features(replay_converter PUBLIC cxx_std_23)
   target_link_libraries(
     replay_converter

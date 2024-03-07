@@ -3,6 +3,7 @@
 #include <sc2api/sc2_api.h>
 #include <spdlog/spdlog.h>
 
+#include "data_structures/units.hpp"
 #include "database.hpp"
 #include "generated_info.hpp"
 

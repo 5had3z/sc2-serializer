@@ -1,12 +1,17 @@
+// External
 #include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
 #include <cxxopts.hpp>
-#include <database.hpp>
-#include <serialize.hpp>
 #include <spdlog/fmt/bundled/chrono.h>
 #include <spdlog/fmt/bundled/ranges.h>
 #include <spdlog/fmt/fmt.h>
+
+// Internal
+#include <data_structures/replay_all.hpp>
+#include <data_structures/replay_old.hpp>
+#include <database.hpp>
+#include <serialize.hpp>
 
 #include <chrono>
 #include <concepts>
@@ -234,8 +239,7 @@ void benchmarkUnitFormatting(const cvt::ReplayDataSoA &data)
 
 int main(int argc, char *argv[])
 {
-    cxxopts::Options cliParser("SC2 Format Comparison",
-        "formats");
+    cxxopts::Options cliParser("SC2 Format Comparison", "formats");
     // clang-format off
     cliParser.add_options()
         ("i,input", "Database to Read", cxxopts::value<std::string>())

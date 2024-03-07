@@ -22,6 +22,7 @@
 #include <ranges>
 
 // Observer must be included before Windows.h since it #define's max/min which fucks with std::ranges::{min|max}
+#include "data_structures/replay_all.hpp"
 #include "observer.hpp"
 
 #if defined(_WIN32)
