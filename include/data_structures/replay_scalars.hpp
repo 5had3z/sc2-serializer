@@ -56,11 +56,11 @@ struct StepDataSoANoUnitsMiniMap
 
 static_assert(HasScalarData<StepDataSoANoUnitsMiniMap> && IsSoAType<StepDataSoANoUnitsMiniMap>);
 
-using ReplayData2NoUnitsMiniMap = ReplayDataTemplate<StepDataNoUnitsMiniMap>;
-using ReplayData2SoANoUnitsMiniMap = ReplayDataTemplateSoA<StepDataSoANoUnitsMiniMap>;
-static_assert(std::same_as<ReplayData2SoANoUnitsMiniMap::struct_type, ReplayData2NoUnitsMiniMap>);
+using ReplayDataNoUnitsMiniMap = ReplayDataTemplate<StepDataNoUnitsMiniMap>;
+using ReplayDataSoANoUnitsMiniMap = ReplayDataTemplateSoA<StepDataSoANoUnitsMiniMap>;
+static_assert(std::same_as<ReplayDataSoANoUnitsMiniMap::struct_type, ReplayDataNoUnitsMiniMap>);
 
-template<> struct DatabaseInterface<ReplayData2SoANoUnitsMiniMap>
+template<> struct DatabaseInterface<ReplayDataSoANoUnitsMiniMap>
 {
     static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>
     {
@@ -76,14 +76,14 @@ template<> struct DatabaseInterface<ReplayData2SoANoUnitsMiniMap>
         return result;
     }
 
-    static auto getEntryImpl(std::istream &dbStream) -> ReplayData2SoANoUnitsMiniMap
+    static auto getEntryImpl(std::istream &dbStream) -> ReplayDataSoANoUnitsMiniMap
     {
-        ReplayData2SoANoUnitsMiniMap result;
+        ReplayDataSoANoUnitsMiniMap result;
         deserialize(result, dbStream);
         return result;
     }
 
-    static auto addEntryImpl(const ReplayData2SoANoUnitsMiniMap &d, std::ostream &dbStream) noexcept -> bool
+    static auto addEntryImpl(const ReplayDataSoANoUnitsMiniMap &d, std::ostream &dbStream) noexcept -> bool
     {
         serialize(d.header, dbStream);
         return true;

@@ -2,13 +2,16 @@
 #include <spdlog/fmt/fmt.h>
 
 #include "data_structures/replay_all.hpp"
-#include "data_structures/replay_old.hpp"
+#include "data_structures/replay_minimaps.hpp"
 #include "database.hpp"
 
 #include <filesystem>
 #include <ranges>
 
 namespace fs = std::filesystem;
+
+using SrcFormat = cvt::ReplayDataSoA;
+using DstFormat = cvt::ReplayDataSoANoUnits;
 
 [[nodiscard]] auto read_hash_steps_file(const fs::path &path) noexcept -> std::unordered_map<std::string, std::uint32_t>
 {
@@ -32,7 +35,8 @@ int main(int argc, char *argv[])
 {
     cxxopts::Options cliParser("SC2 Replay Database Format Conversion",
         "Converts one serialized format to another, significantly faster than resimulating replays if all information "
-        "for the target format is available in the original source format.");
+        "for the target format is available in the original source format. This is probably overkill for simple "
+        "conversions that could be written in python instead.");
     // clang-format off
     cliParser.add_options()
         ("i,input", "Source database to convert from", cxxopts::value<std::string>())
@@ -66,7 +70,7 @@ int main(int argc, char *argv[])
         fmt::print("ERROR: Source Database doesn't exist: {}\n", sourcePath.string());
         return -1;
     }
-    cvt::ReplayDatabase<cvt::ReplayDataSoA> source;
+    cvt::ReplayDatabase<SrcFormat> source;
     if (!source.load(sourcePath)) { return -1; }
 
     fs::path destPath = cliOpts["output"].as<std::string>();
@@ -80,7 +84,7 @@ int main(int argc, char *argv[])
         fmt::print("ERROR: Source and Destination path match!: {}", sourcePath.string());
         return -1;
     }
-    cvt::ReplayDatabase<cvt::ReplayData2SoA> dest(destPath);
+    cvt::ReplayDatabase<DstFormat> dest(destPath);
 
     const fs::path hashStepFile = cliOpts["steps-file"].as<std::string>();
     if (!fs::exists(hashStepFile)) { fmt::print("ERROR: Hash-Step file doesn't exist: {}\n", hashStepFile.string()); }
@@ -89,52 +93,39 @@ int main(int argc, char *argv[])
     auto already_converted = dest.getHashes();
     const auto print_modulo = source.size() / 10;
     for (std::size_t idx = 0; idx < source.size(); ++idx) {
-        cvt::ReplayDataSoA old_data;
+        SrcFormat oldReplayData;
         try {
             const auto [old_hash, old_id] = source.getHashId(idx);
             const auto old_hashid = old_hash + std::to_string(old_id);
             if (already_converted.contains(old_hashid)) { continue; }
-            old_data = source.getEntry(idx);
+            oldReplayData = source.getEntry(idx);
         } catch (const std::bad_alloc &err) {
             SPDLOG_ERROR("Skipping index {}, due to read failure", idx);
             continue;
         }
-        cvt::ReplayData2SoA new_data;
-        auto &header = new_data.header;
-        header.durationSteps = hash_steps.at(old_data.replayHash);
-        header.replayHash = old_data.replayHash;
-        header.gameVersion = old_data.gameVersion;
-        header.playerId = old_data.playerId;
-        header.playerRace = old_data.playerRace;
-        header.playerResult = old_data.playerResult;
-        header.playerMMR = old_data.playerMMR;
-        header.playerAPM = old_data.playerAPM;
-        header.mapWidth = old_data.mapWidth;
-        header.mapHeight = old_data.mapHeight;
-        header.heightMap = old_data.heightMap;
+        DstFormat newReplayData;
+        newReplayData.header = oldReplayData.header;
 
-        auto &stepData = new_data.data;
-        stepData.gameStep = old_data.gameStep;
-        stepData.minearals = old_data.minearals;
-        stepData.vespene = old_data.vespene;
-        stepData.popMax = old_data.popMax;
-        stepData.popArmy = old_data.popArmy;
-        stepData.popWorkers = old_data.popWorkers;
-        stepData.score = old_data.score;
-        stepData.visibility = old_data.visibility;
-        stepData.creep = old_data.creep;
-        stepData.player_relative = old_data.player_relative;
-        stepData.alerts = old_data.alerts;
-        stepData.buildable = old_data.buildable;
-        stepData.pathable = old_data.pathable;
-        stepData.actions = old_data.actions;
-        stepData.units = old_data.units;
-        stepData.neutralUnits = old_data.neutralUnits;
+        auto &newStepData = newReplayData.data;
+        const auto &oldStepData = oldReplayData.data;
+        newStepData.gameStep = oldStepData.gameStep;
+        newStepData.minearals = oldStepData.minearals;
+        newStepData.vespene = oldStepData.vespene;
+        newStepData.popMax = oldStepData.popMax;
+        newStepData.popArmy = oldStepData.popArmy;
+        newStepData.popWorkers = oldStepData.popWorkers;
+        newStepData.score = oldStepData.score;
+        newStepData.visibility = oldStepData.visibility;
+        newStepData.creep = oldStepData.creep;
+        newStepData.player_relative = oldStepData.player_relative;
+        newStepData.alerts = oldStepData.alerts;
+        newStepData.buildable = oldStepData.buildable;
+        newStepData.pathable = oldStepData.pathable;
 
-        dest.addEntry(new_data);
+        dest.addEntry(newReplayData);
         if (idx % print_modulo == 0) { fmt::print("Converted {} of {} Replays\n", idx + 1, source.size()); }
         // Add into already_converted to filter out potential duplicates from the original dataset
-        already_converted.insert(header.replayHash + std::to_string(header.playerId));
+        already_converted.insert(newReplayData.header.replayHash + std::to_string(newReplayData.header.playerId));
     }
     fmt::print("DONE - Converted {} of {} Replays\n", dest.size(), source.size());
 

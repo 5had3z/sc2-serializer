@@ -1,15 +1,15 @@
 /**
- * @brief Version 2 of the observer and replay data structure based on ReplayData2
+ * @brief Version 2 of the observer and replay data structure based on ReplayData
  */
 
-#include "data_structures/replay_all.hpp"
 #include "observer.hpp"
+#include "data_structures/replay_all.hpp"
 #include "observer_utils.hpp"
 #include "serialize.hpp"
 
 namespace cvt {
 
-template<> void BaseConverter<ReplayData2SoA>::clear() noexcept
+template<> void BaseConverter<ReplayDataSoA>::clear() noexcept
 {
     replayData_.data.clear();
     replayData_.header.heightMap.clear();
@@ -20,7 +20,7 @@ template<> void BaseConverter<ReplayData2SoA>::clear() noexcept
     writeSuccess_ = false;
 }
 
-template<> void BaseConverter<ReplayData2SoA>::OnGameStart()
+template<> void BaseConverter<ReplayDataSoA>::OnGameStart()
 {
     this->clear();
     const auto replayInfo = this->ReplayControl()->GetReplayInfo();
@@ -44,7 +44,7 @@ template<> void BaseConverter<ReplayData2SoA>::OnGameStart()
     start_ = std::chrono::high_resolution_clock::now();
 }
 
-template<> void BaseConverter<ReplayData2SoA>::OnGameEnd()
+template<> void BaseConverter<ReplayDataSoA>::OnGameEnd()
 {
     // Don't save replay if its cooked
     if (this->Control()->GetAppState() != sc2::AppState::normal) {
@@ -55,10 +55,10 @@ template<> void BaseConverter<ReplayData2SoA>::OnGameEnd()
         std::chrono::duration_cast<std::chrono::duration<float>>(std::chrono::high_resolution_clock::now() - start_);
     SPDLOG_INFO("Replay ended, conversion duration: {:.1f}s", duration.count());
     // Transform SoA to AoS and Write to database
-    writeSuccess_ = database_.addEntry(AoStoSoA<ReplayData2SoA::struct_type, ReplayData2SoA>(replayData_));
+    writeSuccess_ = database_.addEntry(AoStoSoA<ReplayDataSoA::struct_type, ReplayDataSoA>(replayData_));
 }
 
-template<> void BaseConverter<ReplayData2SoA>::copyHeightMapData() noexcept
+template<> void BaseConverter<ReplayDataSoA>::copyHeightMapData() noexcept
 {
     const auto *rawObs = this->Observation()->GetRawObservation();
     const auto &minimapFeats = rawObs->feature_layer_data().minimap_renders();
@@ -71,7 +71,7 @@ template<> void BaseConverter<ReplayData2SoA>::copyHeightMapData() noexcept
 }
 
 
-template<> void BaseConverter<ReplayData2SoA>::copyUnitData() noexcept
+template<> void BaseConverter<ReplayDataSoA>::copyUnitData() noexcept
 {
     const auto unitData = this->Observation()->GetUnits();
     auto &units = replayData_.data.back().units;
@@ -87,7 +87,7 @@ template<> void BaseConverter<ReplayData2SoA>::copyUnitData() noexcept
     this->updateResourceObs(neutralUnits);
 }
 
-template<> void BaseConverter<ReplayData2SoA>::copyActionData() noexcept
+template<> void BaseConverter<ReplayDataSoA>::copyActionData() noexcept
 {
     const auto actionData = this->Observation()->GetRawActions();
     auto &actions = replayData_.data.back().actions;
@@ -95,7 +95,7 @@ template<> void BaseConverter<ReplayData2SoA>::copyActionData() noexcept
     ::cvt::copyActionData(std::back_inserter(actions), actionData);
 }
 
-template<> void BaseConverter<ReplayData2SoA>::copyDynamicMapData() noexcept
+template<> void BaseConverter<ReplayDataSoA>::copyDynamicMapData() noexcept
 {
     const auto *rawObs = this->Observation()->GetRawObservation();
     const auto &minimapFeats = rawObs->feature_layer_data().minimap_renders();
@@ -123,7 +123,7 @@ template<> void BaseConverter<ReplayData2SoA>::copyDynamicMapData() noexcept
     if (minimapFeats.has_pathable()) { copyMapData(step.pathable, minimapFeats.pathable()); }
 }
 
-template<> void BaseConverter<ReplayData2SoA>::copyCommonData() noexcept
+template<> void BaseConverter<ReplayDataSoA>::copyCommonData() noexcept
 {
     // Logging performance
     static FrequencyTimer timer("Converter", std::chrono::seconds(30));
@@ -145,7 +145,7 @@ template<> void BaseConverter<ReplayData2SoA>::copyCommonData() noexcept
     currentStep.score = convertScore(&score);
 }
 
-template<> void FullConverter<ReplayData2SoA>::OnStep()
+template<> void FullConverter<ReplayDataSoA>::OnStep()
 {
     // "Initialize" next item
     replayData_.data.resize(replayData_.data.size() + 1);
@@ -156,7 +156,7 @@ template<> void FullConverter<ReplayData2SoA>::OnStep()
     this->copyDynamicMapData();
 }
 
-template<> void ActionConverter<ReplayData2SoA>::OnStep()
+template<> void ActionConverter<ReplayDataSoA>::OnStep()
 {
     // Need to have at least one buffer
     if (replayData_.data.empty()) { replayData_.data.resize(1); }
@@ -173,7 +173,7 @@ template<> void ActionConverter<ReplayData2SoA>::OnStep()
     this->copyDynamicMapData();
 }
 
-template<> void StridedConverter<ReplayData2SoA>::OnStep()
+template<> void StridedConverter<ReplayDataSoA>::OnStep()
 {
     // Check if a logging step
     const auto gameStep = this->Observation()->GetGameLoop();

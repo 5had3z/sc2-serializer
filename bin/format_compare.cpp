@@ -9,7 +9,6 @@
 
 // Internal
 #include <data_structures/replay_all.hpp>
-#include <data_structures/replay_old.hpp>
 #include <database.hpp>
 #include <serialize.hpp>
 
@@ -29,7 +28,7 @@ namespace fs = std::filesystem;
  * @param outPath filepath to write
  * @param append should append to file, default = true
  */
-template<typename T> void writeData(T data, std::filesystem::path outPath, bool append = true)
+template<typename T> void writeData(T data, const std::filesystem::path &outPath, bool append = true)
 {
     auto mode = std::ios::binary;
     if (append) { mode |= std::ios::app; }
@@ -44,7 +43,7 @@ template<typename T> void writeData(T data, std::filesystem::path outPath, bool 
     filterStream.reset();
 }
 
-template<typename T> [[nodiscard]] auto readData(std::filesystem::path readPath) -> T
+template<typename T> [[nodiscard]] auto readData(const std::filesystem::path &readPath) -> T
 {
     namespace bio = boost::iostreams;
     bio::filtering_istream filterStream{};
@@ -61,7 +60,7 @@ template<typename T> [[nodiscard]] auto readData(std::filesystem::path readPath)
  * @param data replay data to be written to file
  * @param outDir directory to write each component.bin
  */
-void writeComponents(const cvt::ReplayDataSoA &data, const fs::path &outDir)
+void writeComponents(const cvt::StepDataSoA &data, const fs::path &outDir)
 {
     writeData(data.gameStep, outDir / "gameStep.bin");
     writeData(data.minearals, outDir / "minerals.bin");
@@ -131,8 +130,7 @@ void implWriteUnitT(const std::vector<std::vector<UnitT>> &unitData, const fs::p
     // Structure-of-Flattened-Arrays Index Variants
     {
         writeData(cvt::flattenAndSortUnits<UnitSoAT>(unitData), outDir / fmt::format("{}_sorted_sofa1.bin", prefix));
-        writeData(cvt::flattenAndSortUnits2<UnitSoAT>(unitData), outDir / fmt::format("{}_sorted_sofa2.bin", prefix));
-        writeData(cvt::flattenAndSortUnits3<UnitSoAT>(unitData), outDir / fmt::format("{}_sorted_sofa3.bin", prefix));
+        writeData(cvt::flattenAndSortUnits2<UnitSoAT>(unitData), outDir / fmt::format("{}_sorted_sofa3.bin", prefix));
     }
 }
 
@@ -141,7 +139,7 @@ void implWriteUnitT(const std::vector<std::vector<UnitT>> &unitData, const fs::p
  * @param data Replay data to write
  * @param outDir directory to write unit binary data
  */
-void writeUnitStructures(const cvt::ReplayDataSoA &data, const fs::path &outDir)
+void writeUnitStructures(const cvt::StepDataSoA &data, const fs::path &outDir)
 {
     implWriteUnitT<cvt::Unit, cvt::UnitSoA>(data.units, outDir, "units");
     implWriteUnitT<cvt::NeutralUnit, cvt::NeutralUnitSoA>(data.neutralUnits, outDir, "neutralUnits");
@@ -166,18 +164,18 @@ void implBenchmarkUnit(const std::vector<std::vector<UnitT>> &unitData, bench_ti
     writeData(unitData, tempFile, false);
     {
         const auto begin = clk::now();
-        readData<std::vector<std::vector<UnitT>>>(tempFile);
+        const auto ignore = readData<std::vector<std::vector<UnitT>>>(tempFile);
         timing.readAoS.emplace_back(clk::now() - begin);
     }
 
-    const auto flatten = cvt::flattenAndSortUnits3<UnitSoAT>(unitData);
+    const auto flatten = cvt::flattenAndSortUnits2<UnitSoAT>(unitData);
     writeData(flatten, tempFile, false);
     {
         auto begin = clk::now();
-        const auto tmp = readData<cvt::FlattenedUnits3<UnitSoAT>>(tempFile);
+        const auto tmp = readData<cvt::FlattenedUnits2<UnitSoAT>>(tempFile);
         timing.readSoA.emplace_back(clk::now() - begin);
         begin = clk::now();
-        const auto recovered = cvt::recoverFlattenedSortedUnits3<UnitSoAT>(tmp);
+        const auto recovered = cvt::recoverFlattenedSortedUnits2<UnitSoAT>(tmp);
         timing.recover.emplace_back(clk::now() - begin);
     }
 
@@ -231,7 +229,7 @@ void printStats(const bench_timing &timing, std::string_view prefix)
         total_var);
 }
 
-void benchmarkUnitFormatting(const cvt::ReplayDataSoA &data)
+void benchmarkUnitFormatting(const cvt::StepDataSoA &data)
 {
     implBenchmarkUnit<cvt::Unit, cvt::UnitSoA>(data.units, timingUnits);
     implBenchmarkUnit<cvt::NeutralUnit, cvt::NeutralUnitSoA>(data.neutralUnits, timingNeutralUnits);
@@ -285,10 +283,10 @@ int main(int argc, char *argv[])
     const cvt::ReplayDatabase<cvt::ReplayDataSoA> database(databasePath);
     for (std::size_t idx = 0; idx < database.size(); ++idx) {
         const auto replayData = database.getEntry(idx);
-        if (unitFlag) { writeUnitStructures(replayData, writeFolder); }
-        if (compFlag) { writeComponents(replayData, writeFolder); }
+        if (unitFlag) { writeUnitStructures(replayData.data, writeFolder); }
+        if (compFlag) { writeComponents(replayData.data, writeFolder); }
         if (metaFlag) { writeReplayStructures(replayData, writeFolder); }
-        if (benchFlag) { benchmarkUnitFormatting(replayData); }
+        if (benchFlag) { benchmarkUnitFormatting(replayData.data); }
         fmt::print("Completed {} of {} Replays\n", idx + 1, database.size());
     }
 

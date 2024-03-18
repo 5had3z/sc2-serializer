@@ -9,7 +9,7 @@
 #include <ranges>
 
 namespace fs = std::filesystem;
-using ReplayDataType = cvt::ReplayData2SoA;
+using ReplayDataType = cvt::ReplayDataSoA;
 
 enum class Stratergy { Replace, Append, Merge };
 

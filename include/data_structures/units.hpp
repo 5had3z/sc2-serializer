@@ -407,9 +407,15 @@ template<IsSoAType UnitSoAT>
 
 
 // -----------------------------------------------------------------
-// FLATTENING VERSION 2
-// THIS METHOD ASSUMES UNIT IDS AND THEIR OBSERVATION IS CONTIGUOUS, BUT THIS DOES NOT HOLD
+// FLATTENING VERSION 3
 // -----------------------------------------------------------------
+
+
+struct IotaRange
+{
+    std::uint32_t start;
+    std::uint32_t num;
+};
 
 /**
  * @brief Flattened units in SoA form with associated step index
@@ -418,12 +424,12 @@ template<IsSoAType UnitSoAT>
 template<typename UnitSoAT> struct FlattenedUnits2
 {
     UnitSoAT units;
-    std::vector<std::uint32_t> indices;
+    std::vector<IotaRange> step_count;
     std::uint32_t max_step;
 };
 
 template<IsSoAType UnitSoAT>
-[[nodiscard, deprecated("Assumptions made with this method don't hold")]] auto flattenAndSortUnits2(
+[[nodiscard]] auto flattenAndSortUnits2(
     const std::vector<std::vector<typename UnitSoAT::struct_type>> &replayUnits) noexcept -> FlattenedUnits2<UnitSoAT>
 {
     using UnitT = UnitSoAT::struct_type;
@@ -442,101 +448,10 @@ template<IsSoAType UnitSoAT>
     FlattenedUnits2<UnitSoAT> result;
     result.max_step = replayUnits.size();
     result.units = cvt::AoStoSoA(std::views::values(unitStepFlatten));
-
-    // Create accompanying first step seen for reconstruction
-
-    // Views impl
-    // for (auto &&same_unit_view : std::views::chunk_by(unitStepFlatten,
-    //          [](const UnitStepT &prev, const UnitStepT &next) { return prev.second.id == next.second.id; })) {
-    //     result.indices.emplace_back(same_unit_view.front().first);
-    // }
-
-    // Iterator impl of chunk-by
-    auto start = unitStepFlatten.begin();
-    for (auto end = unitStepFlatten.begin(); end != unitStepFlatten.end(); ++end) {
-        // Check if we've passed the end of our chunk
-        if (start->second.id != end->second.id) {
-            result.indices.emplace_back(start->first);
-            start = end;// set start to next chunk
-        }
+    if (unitStepFlatten.empty()) {
+        result.step_count.clear();
+        return result;
     }
-    result.indices.emplace_back(start->first);// Handle last chunk
-
-    return result;
-}
-
-template<IsSoAType UnitSoAT>
-[[nodiscard, deprecated("Assumptions made with this method don't hold")]] auto recoverFlattenedSortedUnits2(
-    const FlattenedUnits2<UnitSoAT> &flattenedUnits) noexcept
-    -> std::vector<std::vector<typename UnitSoAT::struct_type>>
-{
-    // Create outer dimension with the maximum game step index
-    std::vector<std::vector<typename UnitSoAT::struct_type>> replayUnits;
-    replayUnits.resize(flattenedUnits.max_step);
-
-    // Copy units to correct timestep
-    const std::size_t num_units = flattenedUnits.units.id.size();
-    auto base = flattenedUnits.indices.begin();
-    std::size_t offset = 0;
-    const auto &unit_ids = flattenedUnits.units.id;
-    auto unit_id = unit_ids[0];
-    for (std::size_t unit_idx = 0; unit_idx < num_units; ++unit_idx) {
-        replayUnits[*base + offset].emplace_back(flattenedUnits.units[unit_idx]);
-        // Increment the base and reset the offset if there is a new unit next
-        const auto next_id = unit_ids[unit_idx + 1];
-        if (unit_idx < num_units - 1 && unit_id != next_id) {
-            base++;
-            offset = 0;
-            unit_id = next_id;
-        } else {
-            offset++;
-        }
-    }
-    return replayUnits;
-}
-
-// -----------------------------------------------------------------
-// FLATTENING VERSION 3
-// -----------------------------------------------------------------
-
-
-struct IotaRange
-{
-    std::uint32_t start;
-    std::uint32_t num;
-};
-
-/**
- * @brief Flattened units in SoA form with associated step index
- * @tparam UnitSoAT Type of flattened unit
- */
-template<typename UnitSoAT> struct FlattenedUnits3
-{
-    UnitSoAT units;
-    std::vector<IotaRange> step_count;
-    std::uint32_t max_step;
-};
-
-template<IsSoAType UnitSoAT>
-[[nodiscard]] auto flattenAndSortUnits3(
-    const std::vector<std::vector<typename UnitSoAT::struct_type>> &replayUnits) noexcept -> FlattenedUnits3<UnitSoAT>
-{
-    using UnitT = UnitSoAT::struct_type;
-    using UnitStepT = std::pair<std::uint32_t, UnitT>;
-    std::vector<UnitStepT> unitStepFlatten;
-    for (std::size_t idx = 0; idx < replayUnits.size(); ++idx) {
-        std::ranges::transform(
-            replayUnits[idx], std::back_inserter(unitStepFlatten), [=](UnitT u) { return std::make_pair(idx, u); });
-    }
-
-    // Significantly better compressibility when sorted by unit (and implicitly time)
-    std::ranges::stable_sort(
-        unitStepFlatten, [](const UnitStepT &a, const UnitStepT &b) { return a.second.id < b.second.id; });
-
-    // Create flattened SoA
-    FlattenedUnits3<UnitSoAT> result;
-    result.max_step = replayUnits.size();
-    result.units = cvt::AoStoSoA(std::views::values(unitStepFlatten));
 
     // Create accompanying first step seen for reconstruction
     // std::vector<IotaRange> test;
@@ -564,7 +479,7 @@ template<IsSoAType UnitSoAT>
 }
 
 template<IsSoAType UnitSoAT>
-[[nodiscard]] auto recoverFlattenedSortedUnits3(const FlattenedUnits3<UnitSoAT> &flattenedUnits) noexcept
+[[nodiscard]] auto recoverFlattenedSortedUnits2(const FlattenedUnits2<UnitSoAT> &flattenedUnits) noexcept
     -> std::vector<std::vector<typename UnitSoAT::struct_type>>
 {
     // Create outer dimension with the maximum game step index
@@ -589,4 +504,4 @@ template<IsSoAType UnitSoAT>
     return replayUnits;
 }
 
-}
+}// namespace cvt
