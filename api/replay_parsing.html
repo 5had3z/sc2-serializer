@@ -317,12 +317,45 @@
 <dd></dd></dl>
 
 <dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser25setPlayerMinimapExpansionEb">
+<span id="_CPPv3N3cvt12ReplayParser25setPlayerMinimapExpansionEb"></span><span id="_CPPv2N3cvt12ReplayParser25setPlayerMinimapExpansionEb"></span><span id="cvt::ReplayParser::setPlayerMinimapExpansion__b"></span><span class="target" id="db/d4a/classcvt_1_1_replay_parser_1a2966c4b90913213e8b829cab75b0df96"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setPlayerMinimapExpansion</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">flag</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser25setPlayerMinimapExpansionEb" title="Link to this definition"></a><br /></dt>
+<dd><p>Set whether to expand player_relative to one hot encoding or keep as enum values. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>flag</strong> – true will expand player_relaitive </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser25getPlayerMinimapExpansionEv">
+<span id="_CPPv3NK3cvt12ReplayParser25getPlayerMinimapExpansionEv"></span><span id="_CPPv2NK3cvt12ReplayParser25getPlayerMinimapExpansionEv"></span><span id="cvt::ReplayParser::getPlayerMinimapExpansionC"></span><span class="target" id="db/d4a/classcvt_1_1_replay_parser_1acdd9304b1574c920f99f81202eb70ef0"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getPlayerMinimapExpansion</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser25getPlayerMinimapExpansionEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Get if the player_relative expansion flag has been set. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>if true then player_relative is expanded from enum to one-hot </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser18setMinimapFeaturesERKNSt6vectorINSt6stringEEE">
 <span id="_CPPv3N3cvt12ReplayParser18setMinimapFeaturesERKNSt6vectorINSt6stringEEE"></span><span id="_CPPv2N3cvt12ReplayParser18setMinimapFeaturesERKNSt6vectorINSt6stringEEE"></span><span id="cvt::ReplayParser::setMinimapFeatures__std::vector:ss:CR"></span><span class="target" id="db/d4a/classcvt_1_1_replay_parser_1a8dfd86ce72356cd302ff628c0683b8ff"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setMinimapFeatures</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">features</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser18setMinimapFeaturesERKNSt6vectorINSt6stringEEE" title="Link to this definition"></a><br /></dt>
 <dd><p>Set the minimap features to stack and emit from the parser, if an empty list is given then all flags are simply cleared/reset, if a single special key “all” is given then all flags are set. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>features</strong> – list of features to set, must be a member of cvt::MinimapFeatureFlags::keys or single key “all” </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser18getMinimapFeaturesEv">
+<span id="_CPPv3NK3cvt12ReplayParser18getMinimapFeaturesEv"></span><span id="_CPPv2NK3cvt12ReplayParser18getMinimapFeaturesEv"></span><span id="cvt::ReplayParser::getMinimapFeaturesC"></span><span class="target" id="db/d4a/classcvt_1_1_replay_parser_1a68a9e73756a66ebd17cba748c2abf285"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getMinimapFeatures</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">py</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">list</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser18getMinimapFeaturesEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Get the names of the minimap features of the currently set bits. If expandPlayerRelative is set then this will replace […, player_relative, …] with […, self, ally, neutral, enemy, …]. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>py::list of strings of the currently enabled features </p>
 </dd>
 </dl>
 </dd></dl>
@@ -368,6 +401,11 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser20minimapFeatureFlags_E">
 <span id="_CPPv3N3cvt12ReplayParser20minimapFeatureFlags_E"></span><span id="_CPPv2N3cvt12ReplayParser20minimapFeatureFlags_E"></span><span id="cvt::ReplayParser::minimapFeatureFlags___MinimapFeatureFlags"></span><span class="target" id="db/d4a/classcvt_1_1_replay_parser_1adfa86127bf00bf681fd13a0f5580ebe4"></span><a class="reference internal" href="#_CPPv4N3cvt19MinimapFeatureFlagsE" title="cvt::MinimapFeatureFlags"><span class="n"><span class="pre">MinimapFeatureFlags</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">minimapFeatureFlags_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser20minimapFeatureFlags_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser21expandPlayerRelative_E">
+<span id="_CPPv3N3cvt12ReplayParser21expandPlayerRelative_E"></span><span id="_CPPv2N3cvt12ReplayParser21expandPlayerRelative_E"></span><span id="cvt::ReplayParser::expandPlayerRelative___b"></span><span class="target" id="db/d4a/classcvt_1_1_replay_parser_1ad5c18211be61c71317223ba46b19264b"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">expandPlayerRelative_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="k"><span class="pre">true</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser21expandPlayerRelative_E" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 </div>

@@ -91,9 +91,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a17d837fab0f99035dac2ea274d7537c2" id="r_a17d837fab0f99035dac2ea274d7537c2"><td class="memItemLeft" align="right" valign="top"><a id="a17d837fab0f99035dac2ea274d7537c2" name="a17d837fab0f99035dac2ea274d7537c2"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>parseReplay</b> (ReplayDataType replayData)</td></tr>
 <tr class="separator:a17d837fab0f99035dac2ea274d7537c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2966c4b90913213e8b829cab75b0df96" id="r_a2966c4b90913213e8b829cab75b0df96"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2966c4b90913213e8b829cab75b0df96">setPlayerMinimapExpansion</a> (bool flag) noexcept</td></tr>
+<tr class="memdesc:a2966c4b90913213e8b829cab75b0df96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set whether to expand player_relative to one hot encoding or keep as enum values.  <br /></td></tr>
+<tr class="separator:a2966c4b90913213e8b829cab75b0df96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acdd9304b1574c920f99f81202eb70ef0" id="r_acdd9304b1574c920f99f81202eb70ef0"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#acdd9304b1574c920f99f81202eb70ef0">getPlayerMinimapExpansion</a> () const noexcept -&gt; bool</td></tr>
+<tr class="memdesc:acdd9304b1574c920f99f81202eb70ef0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get if the player_relative expansion flag has been set.  <br /></td></tr>
+<tr class="separator:acdd9304b1574c920f99f81202eb70ef0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8dfd86ce72356cd302ff628c0683b8ff" id="r_a8dfd86ce72356cd302ff628c0683b8ff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8dfd86ce72356cd302ff628c0683b8ff">setMinimapFeatures</a> (const std::vector&lt; std::string &gt; &amp;features)</td></tr>
 <tr class="memdesc:a8dfd86ce72356cd302ff628c0683b8ff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the minimap features to stack and emit from the parser, if an empty list is given then all flags are simply cleared/reset, if a single special key "all" is given then all flags are set.  <br /></td></tr>
 <tr class="separator:a8dfd86ce72356cd302ff628c0683b8ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a68a9e73756a66ebd17cba748c2abf285" id="r_a68a9e73756a66ebd17cba748c2abf285"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a68a9e73756a66ebd17cba748c2abf285">getMinimapFeatures</a> () const noexcept -&gt; py::list</td></tr>
+<tr class="memdesc:a68a9e73756a66ebd17cba748c2abf285"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the names of the minimap features of the currently set bits. If expandPlayerRelative is set then this will replace [..., player_relative, ...] with [..., self, ally, neutral, enemy, ...].  <br /></td></tr>
+<tr class="separator:a68a9e73756a66ebd17cba748c2abf285"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4a74bee74e01640b2a7cbf78b1eb6797" id="r_a4a74bee74e01640b2a7cbf78b1eb6797"><td class="memItemLeft" align="right" valign="top"><a id="a4a74bee74e01640b2a7cbf78b1eb6797" name="a4a74bee74e01640b2a7cbf78b1eb6797"></a>
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>sample</b> (std::size_t timeIdx, bool unit_alliance=false) const -&gt; py::dict</td></tr>
 <tr class="separator:a4a74bee74e01640b2a7cbf78b1eb6797"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -111,6 +120,67 @@ auto&#160;</td><td class="memItemRight" valign="bottom"><b>info</b> () const noe
 <tr class="separator:aa23108edf3140794d2466ef3cf5f3cff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a68a9e73756a66ebd17cba748c2abf285" name="a68a9e73756a66ebd17cba748c2abf285"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68a9e73756a66ebd17cba748c2abf285">&#9670;&#160;</a></span>getMinimapFeatures()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ReplayDataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../db/d4a/classcvt_1_1_replay_parser.html">cvt::ReplayParser</a>&lt; ReplayDataType &gt;::getMinimapFeatures </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const -&gt; py::list
+    </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the names of the minimap features of the currently set bits. If expandPlayerRelative is set then this will replace [..., player_relative, ...] with [..., self, ally, neutral, enemy, ...]. </p>
+<dl class="section return"><dt>Returns</dt><dd>py::list of strings of the currently enabled features </dd></dl>
+
+</div>
+</div>
+<a id="acdd9304b1574c920f99f81202eb70ef0" name="acdd9304b1574c920f99f81202eb70ef0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acdd9304b1574c920f99f81202eb70ef0">&#9670;&#160;</a></span>getPlayerMinimapExpansion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ReplayDataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../db/d4a/classcvt_1_1_replay_parser.html">cvt::ReplayParser</a>&lt; ReplayDataType &gt;::getPlayerMinimapExpansion </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"></span></td><td>)</td>
+          <td> const -&gt; bool </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get if the player_relative expansion flag has been set. </p>
+<dl class="section return"><dt>Returns</dt><dd>if true then player_relative is expanded from enum to one-hot </dd></dl>
+
+</div>
+</div>
 <a id="a8dfd86ce72356cd302ff628c0683b8ff" name="a8dfd86ce72356cd302ff628c0683b8ff"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8dfd86ce72356cd302ff628c0683b8ff">&#9670;&#160;</a></span>setMinimapFeatures()</h2>
 
@@ -140,6 +210,41 @@ template&lt;typename ReplayDataType &gt; </div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">features</td><td>list of features to set, must be a member of cvt::MinimapFeatureFlags::keys or single key "all" </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2966c4b90913213e8b829cab75b0df96" name="a2966c4b90913213e8b829cab75b0df96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2966c4b90913213e8b829cab75b0df96">&#9670;&#160;</a></span>setPlayerMinimapExpansion()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ReplayDataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../db/d4a/classcvt_1_1_replay_parser.html">cvt::ReplayParser</a>&lt; ReplayDataType &gt;::setPlayerMinimapExpansion </td>
+          <td>(</td>
+          <td class="paramtype">bool</td>          <td class="paramname"><span class="paramname"><em>flag</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set whether to expand player_relative to one hot encoding or keep as enum values. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">flag</td><td>true will expand player_relaitive </td></tr>
   </table>
   </dd>
 </dl>
