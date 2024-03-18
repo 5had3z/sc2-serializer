@@ -229,6 +229,18 @@ template<typename ReplayDataType> class ReplayParser
     }
 
     /**
+     * @brief Set whether to expand player_relative to one hot encoding or keep as enum values
+     * @param flag true will expand player_relaitive
+     */
+    void setPlayerMinimapExpansion(bool flag) noexcept { expandPlayerRelative_ = flag; }
+
+    /**
+     * @brief Get if the player_relative expansion flag has been set
+     * @return if true then player_relative is expanded from enum to one-hot
+     */
+    [[nodiscard]] auto getPlayerMinimapExpansion() const noexcept -> bool { return expandPlayerRelative_; }
+
+    /**
      * @brief Set the minimap features to stack and emit from the parser, if an empty list is given then all flags are
      * simply cleared/reset, if a single special key "all" is given then all flags are set.
      * @param features list of features to set, must be a member of cvt::MinimapFeatureFlags::keys or single key "all"
@@ -243,6 +255,27 @@ template<typename ReplayDataType> class ReplayParser
 
         minimapFeatureFlags_.reset();
         for (auto &&feature : features) { minimapFeatureFlags_.set(feature); }
+    }
+
+    /**
+     * @brief Get the names of the minimap features of the currently set bits. If expandPlayerRelative is set
+     *        then this will replace [..., player_relative, ...] with [..., self, ally, neutral, enemy, ...]
+     * @return py::list of strings of the currently enabled features
+     */
+    [[nodiscard]] auto getMinimapFeatures() const noexcept -> py::list
+    {
+        py::list ret;
+        for (const auto &feat : minimapFeatureFlags_.keys) {
+            if (feat == "player_relative" && minimapFeatureFlags_.test(feat)) {
+                ret.append("self");
+                ret.append("ally");
+                ret.append("neutral");
+                ret.append("enemy");
+            } else if (minimapFeatureFlags_.test(feat)) {
+                ret.append(std::string(feat));
+            }
+        }
+        return ret;
     }
 
     // Returns a python dictionary containing features from that timestep
@@ -276,7 +309,8 @@ template<typename ReplayDataType> class ReplayParser
 
         if constexpr (HasMinimapData<step_data_t>) {
             // Create feature image or minimap and feature vector of game state scalars (score, vespene, pop army etc.)
-            result["minimap_features"] = createMinimapFeatures<feature_t>(replayData_, timeIdx, minimapFeatureFlags_);
+            result["minimap_features"] =
+                createMinimapFeatures<feature_t>(replayData_, timeIdx, minimapFeatureFlags_, expandPlayerRelative_);
         }
 
         if constexpr (HasScalarData<step_data_t>) {
@@ -305,6 +339,7 @@ template<typename ReplayDataType> class ReplayParser
     ReplayDataType replayData_{};
 
     MinimapFeatureFlags minimapFeatureFlags_{};// Enable all by default
+    bool expandPlayerRelative_{ true };// Expand onehot by default
 };
 
 

@@ -81,7 +81,10 @@ template<typename T> void bindReplayDataInterfaces(py::module &m, const std::str
         .def("parse_replay", &cvt::ReplayParser<T>::parseReplay, py::arg("replay_data"))
         .def("size", &cvt::ReplayParser<T>::size)
         .def("empty", &cvt::ReplayParser<T>::empty)
-        .def("setMinimapFeatures", &cvt::ReplayParser<T>::setMinimapFeatures)
+        .def("setPlayerMinimapExpansion", &cvt::ReplayParser<T>::setPlayerMinimapExpansion, py::arg("flag"))
+        .def("getPlayerMinimapExpansion", &cvt::ReplayParser<T>::getPlayerMinimapExpansion)
+        .def("setMinimapFeatures", &cvt::ReplayParser<T>::setMinimapFeatures, py::arg("features"))
+        .def("getMinimapFeatures", &cvt::ReplayParser<T>::getMinimapFeatures)
         .def_property_readonly("data", &cvt::ReplayParser<T>::data, py::return_value_policy::reference_internal)
         .def_property_readonly("info", &cvt::ReplayParser<T>::info, py::return_value_policy::reference_internal);
 }
