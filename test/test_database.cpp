@@ -22,7 +22,7 @@ template<typename T> struct HashID
 };
 
 template<typename UnitT>
-auto UnitSetEquality(const std::vector<UnitT> &expectedUnits, const std::vector<UnitT> &actualUnits) -> bool
+void UnitSetEquality(const std::vector<UnitT> &expectedUnits, const std::vector<UnitT> &actualUnits)
 {
     using UnitSet = std::unordered_set<UnitT, HashID<UnitT>>;
     const UnitSet expectedSet(expectedUnits.begin(), expectedUnits.end());
@@ -35,17 +35,16 @@ auto UnitSetEquality(const std::vector<UnitT> &expectedUnits, const std::vector<
     for (const auto &elem : actualSet) {
         if (!expectedSet.contains(elem)) { extras.insert(elem); }
     }
-    if (missing != extras) { fmt::format("Failed got {} missing and {} extras", missing.size(), extras.size()); }
-    return missing.empty() && extras.empty();
+    ASSERT_EQ(missing, extras) << fmt::format(
+        "Failed Unit Set Comparison got {} missing and {} extras", missing.size(), extras.size());
 }
 
 template<typename UnitT>
-auto UnitSetEqualityVec(const std::vector<std::vector<UnitT>> &expectedReplay,
+void UnitSetEqualityVec(const std::vector<std::vector<UnitT>> &expectedReplay,
     const std::vector<std::vector<UnitT>> &actualReplay)
 {
-    for (auto &&[idx, expectedUnits, actualUnits] :
-        std::views::zip(std::views::iota(0), expectedReplay, actualReplay)) {
-        ASSERT_EQ(UnitSetEquality(expectedUnits, actualUnits), true) << fmt::format("Failed check at timestep {}", idx);
+    for (auto &&[expectedUnits, actualUnits] : std::views::zip(expectedReplay, actualReplay)) {
+        UnitSetEquality(expectedUnits, actualUnits);
     }
 }
 
@@ -178,17 +177,24 @@ TEST_F(DatabaseTest, CreateDB)
     fs::remove(tempPath);
 }
 
-void test_replay_eq(const cvt::ReplayDataSoA &a, const cvt::ReplayDataSoA &b)
+void testReplayEquality(const cvt::ReplayDataSoA &a, const cvt::ReplayDataSoA &b)
 {
     ASSERT_EQ(a.header, b.header);
     for (int idx = 0; idx < a.data.gameStep.size(); ++idx) {
-        const auto a_ = a.data[idx];
-        const auto b_ = b.data[idx];
+        auto a_ = a.data[idx];
+        auto b_ = b.data[idx];
         if (a_ != b_) {
-            bool ok = true;
-            if (a_.units != b_.units) { ok &= UnitSetEquality(a_.units, b_.units); }
-            if (a_.neutralUnits != b_.neutralUnits) { ok &= UnitSetEquality(a_.neutralUnits, b_.neutralUnits); }
-            if (!ok) { ASSERT_EQ(a_, b_) << fmt::format("Failed at step {}", idx); }
+            if (a_.units != b_.units) {
+                UnitSetEquality(a_.units, b_.units);
+                a_.units.clear();
+                b_.units.clear();
+            }
+            if (a_.neutralUnits != b_.neutralUnits) {
+                UnitSetEquality(a_.neutralUnits, b_.neutralUnits);
+                a_.neutralUnits.clear();
+                b_.neutralUnits.clear();
+            }
+            ASSERT_EQ(a_, b_) << fmt::format("Failed at step {}", idx);
         }
     }
 }
@@ -196,8 +202,8 @@ void test_replay_eq(const cvt::ReplayDataSoA &a, const cvt::ReplayDataSoA &b)
 TEST_F(DatabaseTest, ReadDB)
 {
     ASSERT_EQ(replayDb_.size(), 2);
-    test_replay_eq(replayDb_.getEntry(0), createReplay(1));
-    test_replay_eq(replayDb_.getEntry(1), createReplay(123));
+    testReplayEquality(replayDb_.getEntry(0), createReplay(1));
+    testReplayEquality(replayDb_.getEntry(1), createReplay(123));
     ASSERT_NE(replayDb_.getEntry(1), createReplay(120));
 }
 
