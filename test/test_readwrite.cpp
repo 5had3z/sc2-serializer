@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <spdlog/spdlog.h>
 
-#include "data_structures/replay_old.hpp"
+#include "data_structures/replay_all.hpp"
 #include "serialize.hpp"
 
 #include <filesystem>
@@ -17,20 +17,20 @@ class ReplayDataTest : public testing::Test
         spdlog::set_level(spdlog::level::warn);
 
         // Make some random action data
-        replay_.stepData.resize(1);
+        replay_.data.resize(1);
         for (int i = 0; i < 3; ++i) {
             cvt::Action action = { .unit_ids = { 1, 2, 3 },
                 .ability_id = 6,
                 .target_type = cvt::Action::TargetType::OtherUnit,
                 .target = cvt::Action::Target(static_cast<cvt::UID>(3)) };
-            replay_.stepData[0].actions.emplace_back(std::move(action));
+            replay_.data[0].actions.emplace_back(std::move(action));
         }
         for (int i = 0; i < 3; ++i) {
             cvt::Action action = { .unit_ids = { 1, static_cast<cvt::UID>(i) },
                 .ability_id = 1,
                 .target_type = cvt::Action::TargetType::Position,
                 .target = cvt::Action::Target(cvt::Point2d(i, 2)) };
-            replay_.stepData[0].actions.emplace_back(std::move(action));
+            replay_.data[0].actions.emplace_back(std::move(action));
         }
 
         // Make some random unit data
@@ -41,20 +41,20 @@ class ReplayDataTest : public testing::Test
                 .shield = 4,
                 .energy = 5.f * i,
                 .pos = { 1.1f, 2.2f * i, 3.3f } };
-            replay_.stepData[0].units.emplace_back(std::move(unit));
+            replay_.data[0].units.emplace_back(std::move(unit));
         }
 
         // Duplicate entry
-        replay_.stepData.push_back(replay_.stepData.back());
+        replay_.data.push_back(replay_.data.back());
         // Change one thing about action and unit
-        replay_.stepData.back().actions.back().ability_id += 10;
-        replay_.stepData.back().units.back().energy += 123;
+        replay_.data.back().actions.back().ability_id += 10;
+        replay_.data.back().units.back().energy += 123;
 
         // Add some "image" data, let it overflow and wrap
         cvt::Image<std::uint8_t> heightMap;
         heightMap.resize(256, 256);
         std::iota(heightMap.data(), heightMap.data() + heightMap.nelem(), 1);
-        replay_.heightMap = std::move(heightMap);
+        replay_.header.heightMap = std::move(heightMap);
     }
 
     void TearDown() override
@@ -69,7 +69,7 @@ class ReplayDataTest : public testing::Test
 
 TEST_F(ReplayDataTest, ReadWriteOneUnit)
 {
-    cvt::Unit writeUnit = replay_.stepData[0].units.front();
+    cvt::Unit writeUnit = replay_.data[0].units.front();
     {
         std::ofstream out_stream(testFilename_, std::ios::binary);
         cvt::serialize(writeUnit, out_stream);
@@ -85,7 +85,7 @@ TEST_F(ReplayDataTest, ReadWriteOneUnit)
 
 TEST_F(ReplayDataTest, ReadWriteManyUnit)
 {
-    std::vector<cvt::Unit> writeUnits = replay_.stepData.front().units;
+    std::vector<cvt::Unit> writeUnits = replay_.data.front().units;
     ASSERT_EQ(writeUnits.empty(), false);// Not empty units
     {
         std::ofstream out_stream(testFilename_, std::ios::binary);
@@ -105,7 +105,7 @@ TEST_F(ReplayDataTest, ReadWriteManyUnit)
 
 TEST_F(ReplayDataTest, ReadWriteOneAction)
 {
-    cvt::Action writeAction = replay_.stepData.front().actions.front();
+    cvt::Action writeAction = replay_.data.front().actions.front();
     {
         std::ofstream out_stream(testFilename_, std::ios::binary);
         cvt::serialize(writeAction, out_stream);
@@ -121,7 +121,7 @@ TEST_F(ReplayDataTest, ReadWriteOneAction)
 
 TEST_F(ReplayDataTest, ReadWriteManyAction)
 {
-    std::vector<cvt::Action> writeActions = replay_.stepData.front().actions;
+    std::vector<cvt::Action> writeActions = replay_.data.front().actions;
     ASSERT_EQ(writeActions.empty(), false);// not empty actions
     {
         std::ofstream out_stream(testFilename_, std::ios::binary);
@@ -142,7 +142,7 @@ TEST_F(ReplayDataTest, ReadWriteManyAction)
 
 TEST_F(ReplayDataTest, ReadWriteOneStep)
 {
-    cvt::StepData writeStep = replay_.stepData.front();
+    cvt::StepData writeStep = replay_.data.front();
     {
         std::ofstream out_stream(testFilename_, std::ios::binary);
         cvt::serialize(writeStep, out_stream);
@@ -158,7 +158,7 @@ TEST_F(ReplayDataTest, ReadWriteOneStep)
 
 TEST_F(ReplayDataTest, ReadWriteManyStep)
 {
-    std::vector<cvt::StepData> writeSteps = replay_.stepData;
+    std::vector<cvt::StepData> writeSteps = replay_.data;
     ASSERT_EQ(writeSteps.empty(), false);
     {
         std::ofstream out_stream(testFilename_, std::ios::binary);

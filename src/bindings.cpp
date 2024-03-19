@@ -1,6 +1,5 @@
 #include "data_structures/replay_all.hpp"
 #include "data_structures/replay_minimaps.hpp"
-#include "data_structures/replay_old.hpp"
 #include "data_structures/replay_scalars.hpp"
 #include "database.hpp"
 #include "replay_parsing.hpp"
@@ -326,35 +325,6 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
             py::kw_only(),
             py::arg("onehot_enum") = false);
 
-    // Expose ReplayDataSoA structure
-    py::class_<cvt::ReplayDataSoA>(m, "ReplayDataSoA")
-        .def_readwrite("heightMap", &cvt::ReplayDataSoA::heightMap)
-        .def_readwrite("replayHash", &cvt::ReplayDataSoA::replayHash)
-        .def_readwrite("gameVersion", &cvt::ReplayDataSoA::gameVersion)
-        .def_readwrite("playerId", &cvt::ReplayDataSoA::playerId)
-        .def_readwrite("playerRace", &cvt::ReplayDataSoA::playerRace)
-        .def_readwrite("playerResult", &cvt::ReplayDataSoA::playerResult)
-        .def_readwrite("playerMMR", &cvt::ReplayDataSoA::playerMMR)
-        .def_readwrite("playerAPM", &cvt::ReplayDataSoA::playerAPM)
-        .def_readwrite("mapWidth", &cvt::ReplayDataSoA::mapWidth)
-        .def_readwrite("mapHeight", &cvt::ReplayDataSoA::mapHeight)
-        .def_readwrite("gameStep", &cvt::ReplayDataSoA::gameStep)
-        .def_readwrite("minerals", &cvt::ReplayDataSoA::minearals)
-        .def_readwrite("vespene", &cvt::ReplayDataSoA::vespene)
-        .def_readwrite("popMax", &cvt::ReplayDataSoA::popMax)
-        .def_readwrite("popArmy", &cvt::ReplayDataSoA::popArmy)
-        .def_readwrite("popWorkers", &cvt::ReplayDataSoA::popWorkers)
-        .def_readwrite("score", &cvt::ReplayDataSoA::score)
-        .def_readwrite("visibility", &cvt::ReplayDataSoA::visibility)
-        .def_readwrite("creep", &cvt::ReplayDataSoA::creep)
-        .def_readwrite("player_relative", &cvt::ReplayDataSoA::player_relative)
-        .def_readwrite("alerts", &cvt::ReplayDataSoA::alerts)
-        .def_readwrite("buildable", &cvt::ReplayDataSoA::buildable)
-        .def_readwrite("pathable", &cvt::ReplayDataSoA::pathable)
-        .def_readwrite("actions", &cvt::ReplayDataSoA::actions)
-        .def_readwrite("units", &cvt::ReplayDataSoA::units)
-        .def_readwrite("neutralUnits", &cvt::ReplayDataSoA::neutralUnits);
-
     py::class_<cvt::StepDataSoANoUnitsMiniMap>(m, "StepDataSoANoUnitsMiniMap")
         .def(py::self == py::self)
         .def(py::self != py::self)
@@ -433,11 +403,11 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
                 info.mapHeight);
         });
 
-    bindReplayDataInterfaces<cvt::ReplayData2SoANoUnitsMiniMap>(m, "ReplayDataScalarOnly");
+    bindReplayDataInterfaces<cvt::ReplayDataSoANoUnitsMiniMap>(m, "ReplayDataScalarOnly");
 
-    bindReplayDataInterfaces<cvt::ReplayData2SoANoUnits>(m, "ReplayDataNoUnits");
+    bindReplayDataInterfaces<cvt::ReplayDataSoANoUnits>(m, "ReplayDataNoUnits");
 
-    bindReplayDataInterfaces<cvt::ReplayData2SoA>(m, "ReplayDataAll");
+    bindReplayDataInterfaces<cvt::ReplayDataSoA>(m, "ReplayDataAll");
 
     m.def("set_replay_database_logger_level", &cvt::setReplayDBLoggingLevel, py::arg("lvl"));
 }

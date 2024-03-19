@@ -88,9 +88,9 @@ struct StepDataSoA
 static_assert(
     HasScalarData<StepDataSoA> && HasMinimapData<StepDataSoA> && HasUnitData<StepDataSoA> && IsSoAType<StepDataSoA>);
 
-using ReplayData2 = ReplayDataTemplate<StepData>;
-using ReplayData2SoA = ReplayDataTemplateSoA<StepDataSoA>;
-static_assert(std::same_as<ReplayData2SoA::struct_type, ReplayData2>);
+using ReplayData = ReplayDataTemplate<StepData>;
+using ReplayDataSoA = ReplayDataTemplateSoA<StepDataSoA>;
+static_assert(std::same_as<ReplayDataSoA::struct_type, ReplayData>);
 
 template<std::ranges::range Range>
     requires std::same_as<std::ranges::range_value_t<Range>, StepData>
@@ -122,7 +122,7 @@ auto AoStoSoA(Range &&aos) noexcept -> StepDataSoA
     return soa;
 }
 
-template<> struct DatabaseInterface<ReplayData2SoA>
+template<> struct DatabaseInterface<ReplayDataSoA>
 {
     static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>
     {
@@ -138,9 +138,9 @@ template<> struct DatabaseInterface<ReplayData2SoA>
         return result;
     }
 
-    static auto getEntryImpl(std::istream &dbStream) -> ReplayData2SoA
+    static auto getEntryImpl(std::istream &dbStream) -> ReplayDataSoA
     {
-        ReplayData2SoA result;
+        ReplayDataSoA result;
         deserialize(result.header, dbStream);
         deserialize(result.data.gameStep, dbStream);
         deserialize(result.data.minearals, dbStream);
@@ -157,19 +157,19 @@ template<> struct DatabaseInterface<ReplayData2SoA>
         deserialize(result.data.pathable, dbStream);
         deserialize(result.data.actions, dbStream);
         {
-            FlattenedUnits3<UnitSoA> units;
+            FlattenedUnits2<UnitSoA> units;
             deserialize(units, dbStream);
-            result.data.units = recoverFlattenedSortedUnits3(units);
+            result.data.units = recoverFlattenedSortedUnits2(units);
         }
         {
-            FlattenedUnits3<NeutralUnitSoA> units;
+            FlattenedUnits2<NeutralUnitSoA> units;
             deserialize(units, dbStream);
-            result.data.neutralUnits = recoverFlattenedSortedUnits3(units);
+            result.data.neutralUnits = recoverFlattenedSortedUnits2(units);
         }
         return result;
     }
 
-    static auto addEntryImpl(const ReplayData2SoA &d, std::ostream &dbStream) noexcept -> bool
+    static auto addEntryImpl(const ReplayDataSoA &d, std::ostream &dbStream) noexcept -> bool
     {
         serialize(d.header, dbStream);
         serialize(d.data.gameStep, dbStream);
@@ -186,8 +186,8 @@ template<> struct DatabaseInterface<ReplayData2SoA>
         serialize(d.data.buildable, dbStream);
         serialize(d.data.pathable, dbStream);
         serialize(d.data.actions, dbStream);
-        serialize(flattenAndSortUnits3<UnitSoA>(d.data.units), dbStream);
-        serialize(flattenAndSortUnits3<NeutralUnitSoA>(d.data.neutralUnits), dbStream);
+        serialize(flattenAndSortUnits2<UnitSoA>(d.data.units), dbStream);
+        serialize(flattenAndSortUnits2<NeutralUnitSoA>(d.data.neutralUnits), dbStream);
         return true;
     }
 };

@@ -433,7 +433,7 @@ auto main(int argc, char *argv[]) -> int
         }
     }
 
-    using ReplayDataType = cvt::ReplayData2SoA;
+    using ReplayDataType = cvt::ReplayDataSoA;
     auto converter = [&](const std::string &cvtType) -> std::unique_ptr<cvt::BaseConverter<ReplayDataType>> {
         if (cvtType == "full") { return std::make_unique<cvt::FullConverter<ReplayDataType>>(); }
         if (cvtType == "action") { return std::make_unique<cvt::ActionConverter<ReplayDataType>>(); }
