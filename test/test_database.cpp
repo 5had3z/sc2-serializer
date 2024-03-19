@@ -12,6 +12,43 @@
 
 namespace fs = std::filesystem;
 
+/**
+ * @brief Hash based on Unit ID
+ * @tparam T Unit Type
+ */
+template<typename T> struct HashID
+{
+    [[nodiscard]] constexpr auto operator()(const T &data) const noexcept -> std::size_t { return data.id; }
+};
+
+template<typename UnitT>
+auto UnitSetEquality(const std::vector<UnitT> &expectedUnits, const std::vector<UnitT> &actualUnits) -> bool
+{
+    using UnitSet = std::unordered_set<UnitT, HashID<UnitT>>;
+    const UnitSet expectedSet(expectedUnits.begin(), expectedUnits.end());
+    const UnitSet actualSet(actualUnits.begin(), actualUnits.end());
+    UnitSet missing;
+    for (const auto &elem : expectedSet) {
+        if (!actualSet.contains(elem)) { missing.insert(elem); }
+    }
+    UnitSet extras;
+    for (const auto &elem : actualSet) {
+        if (!expectedSet.contains(elem)) { extras.insert(elem); }
+    }
+    if (missing != extras) { fmt::format("Failed got {} missing and {} extras", missing.size(), extras.size()); }
+    return missing.empty() && extras.empty();
+}
+
+template<typename UnitT>
+auto UnitSetEqualityVec(const std::vector<std::vector<UnitT>> &expectedReplay,
+    const std::vector<std::vector<UnitT>> &actualReplay)
+{
+    for (auto &&[idx, expectedUnits, actualUnits] :
+        std::views::zip(std::views::iota(0), expectedReplay, actualReplay)) {
+        ASSERT_EQ(UnitSetEquality(expectedUnits, actualUnits), true) << fmt::format("Failed check at timestep {}", idx);
+    }
+}
+
 auto createReplay(int seed) -> cvt::ReplayDataSoA
 {
     cvt::ReplayData replay_;
@@ -148,8 +185,10 @@ void test_replay_eq(const cvt::ReplayDataSoA &a, const cvt::ReplayDataSoA &b)
         const auto a_ = a.data[idx];
         const auto b_ = b.data[idx];
         if (a_ != b_) {
-            ASSERT_EQ(a_, b_) << fmt::format("Failed at step {}", idx);
-            //
+            bool ok = true;
+            if (a_.units != b_.units) { ok &= UnitSetEquality(a_.units, b_.units); }
+            if (a_.neutralUnits != b_.neutralUnits) { ok &= UnitSetEquality(a_.neutralUnits, b_.neutralUnits); }
+            if (!ok) { ASSERT_EQ(a_, b_) << fmt::format("Failed at step {}", idx); }
         }
     }
 }
@@ -181,37 +220,6 @@ template<typename Sink> void AbslStringify(Sink &sink, NeutralUnit unit)
 }// namespace cvt
 
 
-/**
- * @brief Hash based on Unit ID
- * @tparam T Unit Type
- */
-template<typename T> struct HashID
-{
-    [[nodiscard]] constexpr auto operator()(const T &data) const noexcept -> std::size_t { return data.id; }
-};
-
-template<typename UnitT>
-auto fuzzyEquality(const std::vector<std::vector<UnitT>> &expectedReplay,
-    const std::vector<std::vector<UnitT>> &actualReplay)
-{
-    using UnitSet = std::unordered_set<UnitT, HashID<UnitT>>;
-    for (auto &&[idx, expectedUnits, actualUnits] :
-        std::views::zip(std::views::iota(0), expectedReplay, actualReplay)) {
-        const UnitSet expectedSet(expectedUnits.begin(), expectedUnits.end());
-        const UnitSet actualSet(actualUnits.begin(), actualUnits.end());
-        UnitSet missing;
-        for (const auto &elem : expectedSet) {
-            if (!actualSet.contains(elem)) { missing.insert(elem); }
-        }
-        UnitSet extras;
-        for (const auto &elem : actualSet) {
-            if (!expectedSet.contains(elem)) { extras.insert(elem); }
-        }
-        ASSERT_EQ(missing, extras) << fmt::format(
-            "Failed at step {}, got {} missing and {} extras", idx, missing.size(), extras.size());
-    }
-}
-
 TEST(UnitSoA, DISABLED_ConversionToAndFrom)
 {
     auto dbPath = std::getenv("SC2_TEST_DB");
@@ -221,12 +229,12 @@ TEST(UnitSoA, DISABLED_ConversionToAndFrom)
     {
         const auto flattened = cvt::flattenAndSortUnits<cvt::UnitSoA>(replayData.data.units);
         const auto recovered = cvt::recoverFlattenedSortedUnits<cvt::UnitSoA>(flattened);
-        fuzzyEquality(replayData.data.units, recovered);
+        UnitSetEqualityVec(replayData.data.units, recovered);
     }
     {
         const auto flattened = cvt::flattenAndSortUnits<cvt::NeutralUnitSoA>(replayData.data.neutralUnits);
         const auto recovered = cvt::recoverFlattenedSortedUnits<cvt::NeutralUnitSoA>(flattened);
-        fuzzyEquality(replayData.data.neutralUnits, recovered);
+        UnitSetEqualityVec(replayData.data.neutralUnits, recovered);
     }
 }
 
@@ -239,11 +247,11 @@ TEST(UnitSoA, DISABLED_ConversionToAndFrom2)
     {
         const auto flattened = cvt::flattenAndSortUnits2<cvt::UnitSoA>(replayData.data.units);
         const auto recovered = cvt::recoverFlattenedSortedUnits2<cvt::UnitSoA>(flattened);
-        fuzzyEquality(replayData.data.units, recovered);
+        UnitSetEqualityVec(replayData.data.units, recovered);
     }
     {
         const auto flattened = cvt::flattenAndSortUnits2<cvt::NeutralUnitSoA>(replayData.data.neutralUnits);
         const auto recovered = cvt::recoverFlattenedSortedUnits2<cvt::NeutralUnitSoA>(flattened);
-        fuzzyEquality(replayData.data.neutralUnits, recovered);
+        UnitSetEqualityVec(replayData.data.neutralUnits, recovered);
     }
 }
