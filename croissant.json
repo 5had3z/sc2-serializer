@@ -1,0 +1,69 @@
+{
+  "@context": {
+    "@language": "en",
+    "@vocab": "https://schema.org/",
+    "citeAs": "cr:citeAs",
+    "column": "cr:column",
+    "conformsTo": "dct:conformsTo",
+    "cr": "http://mlcommons.org/croissant/",
+    "rai": "http://mlcommons.org/croissant/RAI/",
+    "data": {
+      "@id": "cr:data",
+      "@type": "@json"
+    },
+    "dataType": {
+      "@id": "cr:dataType",
+      "@type": "@vocab"
+    },
+    "dct": "http://purl.org/dc/terms/",
+    "examples": {
+      "@id": "cr:examples",
+      "@type": "@json"
+    },
+    "extract": "cr:extract",
+    "field": "cr:field",
+    "fileProperty": "cr:fileProperty",
+    "fileObject": "cr:fileObject",
+    "fileSet": "cr:fileSet",
+    "format": "cr:format",
+    "includes": "cr:includes",
+    "isLiveDataset": "cr:isLiveDataset",
+    "jsonPath": "cr:jsonPath",
+    "key": "cr:key",
+    "md5": "cr:md5",
+    "parentField": "cr:parentField",
+    "path": "cr:path",
+    "recordSet": "cr:recordSet",
+    "references": "cr:references",
+    "regex": "cr:regex",
+    "repeated": "cr:repeated",
+    "replace": "cr:replace",
+    "sc": "https://schema.org/",
+    "separator": "cr:separator",
+    "source": "cr:source",
+    "subField": "cr:subField",
+    "transform": "cr:transform"
+  },
+  "@type": "sc:Dataset",
+  "name": "Starcraft Dataset",
+  "description": "Starcraft Tournaments",
+  "conformsTo": "http://mlcommons.org/croissant/1.0",
+  "url": "https://mlcommons.org",
+  "distribution": [
+    {
+      "@type": "cr:FileObject",
+      "@id": "zip_with_csv",
+      "name": "zip_with_csv",
+      "contentUrl": "https://bridges.monash.edu/ndownloader/articles/25865566/versions/1",
+      "encodingFormat": "application/zip",
+      "sha256": "409b80b15f540661197ae22b78cda2f5cd71f336379f5c9cd1a6b4fc6abe74bd"
+    },
+    {
+      "@type": "cr:FileSet",
+      "@id": "files",
+      "name": "files",
+      "encodingFormat": "text/plain",
+      "includes": "*.SC2Replays"
+    }
+  ]
+}
