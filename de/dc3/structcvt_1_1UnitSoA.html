@@ -75,6 +75,11 @@ $(function() {
 <div class="title">cvt::UnitSoA Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>SoA representation of a collection of StarCraft II units.  
+ <a href="../../de/dc3/structcvt_1_1UnitSoA.html#details">More...</a></p>
+
+<p><code>#include &lt;units.hpp&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -87,8 +92,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a99ce4312fd5b2e239f95063110784ee1"><td class="memItemLeft" align="right" valign="top"><a id="a99ce4312fd5b2e239f95063110784ee1"></a>
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../de/dc3/structcvt_1_1UnitSoA.html">UnitSoA</a> &amp;other) const noexcept -&gt; bool=default</td></tr>
 <tr class="separator:a99ce4312fd5b2e239f95063110784ee1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac97c30b88329d0f4b9d428a1239f2dd0"><td class="memItemLeft" align="right" valign="top"><a id="ac97c30b88329d0f4b9d428a1239f2dd0"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (std::size_t idx) const noexcept -&gt; <a class="el" href="../../d4/d9b/structcvt_1_1Unit.html">Unit</a></td></tr>
+<tr class="memitem:ac97c30b88329d0f4b9d428a1239f2dd0"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/dc3/structcvt_1_1UnitSoA.html#ac97c30b88329d0f4b9d428a1239f2dd0">operator[]</a> (std::size_t idx) const noexcept -&gt; <a class="el" href="../../d4/d9b/structcvt_1_1Unit.html">Unit</a></td></tr>
+<tr class="memdesc:ac97c30b88329d0f4b9d428a1239f2dd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gather unit data at index.  <a href="../../de/dc3/structcvt_1_1UnitSoA.html#ac97c30b88329d0f4b9d428a1239f2dd0">More...</a><br /></td></tr>
 <tr class="separator:ac97c30b88329d0f4b9d428a1239f2dd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -193,6 +198,45 @@ std::vector&lt; float &gt;&#160;</td><td class="memItemRight" valign="bottom"><b
 std::vector&lt; AddOn &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>add_on_tag</b> {}</td></tr>
 <tr class="separator:adca629695d7018ea54946bf126907793"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>SoA representation of a collection of StarCraft II units. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="ac97c30b88329d0f4b9d428a1239f2dd0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac97c30b88329d0f4b9d428a1239f2dd0">&#9670;&nbsp;</a></span>operator[]()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cvt::UnitSoA::operator[] </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>idx</em></td><td>)</td>
+          <td> const -&gt; <a class="el" href="../../d4/d9b/structcvt_1_1Unit.html">Unit</a>
+    </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gather unit data at index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">idx</td><td>index in SoA to gather data from </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="../../d4/d9b/structcvt_1_1Unit.html" title="Basic StarCraft II Unit Data.">Unit</a> </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/home/runner/work/sc2-serializer/sc2-serializer/include/data_structures/units.hpp</li>
 </ul>

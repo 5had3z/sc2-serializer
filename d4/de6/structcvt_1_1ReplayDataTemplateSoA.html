@@ -75,6 +75,11 @@ $(function() {
 <div class="title">cvt::ReplayDataTemplateSoA&lt; StepDataSoAType &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Structure that contains <a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html" title="General information about the replay.">ReplayInfo</a> and replay data stored as a Structure-of-Arrays.  
+ <a href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#details">More...</a></p>
+
+<p><code>#include &lt;replay_interface.hpp&gt;</code></p>
 <div class="dynheader">
 Collaboration diagram for cvt::ReplayDataTemplateSoA&lt; StepDataSoAType &gt;:</div>
 <div class="dyncontent">
@@ -83,43 +88,254 @@ Collaboration diagram for cvt::ReplayDataTemplateSoA&lt; StepDataSoAType &gt;:</
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ada185f07c364ead2c79f34a9d67c101c"><td class="memItemLeft" align="right" valign="top"><a id="ada185f07c364ead2c79f34a9d67c101c"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>struct_type</b> = <a class="el" href="../../df/d79/structcvt_1_1ReplayDataTemplate.html">ReplayDataTemplate</a>&lt; typename StepDataSoAType::struct_type &gt;</td></tr>
-<tr class="separator:ada185f07c364ead2c79f34a9d67c101c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae565a4e2da36c04f21fa8bde63bdfe30"><td class="memItemLeft" align="right" valign="top"><a id="ae565a4e2da36c04f21fa8bde63bdfe30"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>step_type</b> = StepDataSoAType</td></tr>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#ae565a4e2da36c04f21fa8bde63bdfe30">step_type</a> = StepDataSoAType</td></tr>
+<tr class="memdesc:ae565a4e2da36c04f21fa8bde63bdfe30"><td class="mdescLeft">&#160;</td><td class="mdescRight">type of replay data <br /></td></tr>
 <tr class="separator:ae565a4e2da36c04f21fa8bde63bdfe30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada185f07c364ead2c79f34a9d67c101c"><td class="memItemLeft" align="right" valign="top"><a id="ada185f07c364ead2c79f34a9d67c101c"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#ada185f07c364ead2c79f34a9d67c101c">struct_type</a> = <a class="el" href="../../df/d79/structcvt_1_1ReplayDataTemplate.html">ReplayDataTemplate</a>&lt; typename StepDataSoAType::struct_type &gt;</td></tr>
+<tr class="memdesc:ada185f07c364ead2c79f34a9d67c101c"><td class="mdescLeft">&#160;</td><td class="mdescRight">AoS equivalent struct type. <br /></td></tr>
+<tr class="separator:ada185f07c364ead2c79f34a9d67c101c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6936ace2d5902c7a25eb0eefdb278a96"><td class="memItemLeft" align="right" valign="top"><a id="a6936ace2d5902c7a25eb0eefdb278a96"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html">ReplayDataTemplateSoA</a> &amp;other) const noexcept -&gt; bool</td></tr>
+<tr class="memitem:a6936ace2d5902c7a25eb0eefdb278a96"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a6936ace2d5902c7a25eb0eefdb278a96">operator==</a> (const <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html">ReplayDataTemplateSoA</a> &amp;other) const noexcept -&gt; bool</td></tr>
+<tr class="memdesc:a6936ace2d5902c7a25eb0eefdb278a96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check equality between replays.  <a href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a6936ace2d5902c7a25eb0eefdb278a96">More...</a><br /></td></tr>
 <tr class="separator:a6936ace2d5902c7a25eb0eefdb278a96"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c9a019cc37639134400d02e71f6cfa3"><td class="memItemLeft" align="right" valign="top"><a id="a4c9a019cc37639134400d02e71f6cfa3"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>getReplayHash</b> () noexcept -&gt; std::string &amp;</td></tr>
+<tr class="memitem:a4c9a019cc37639134400d02e71f6cfa3"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a4c9a019cc37639134400d02e71f6cfa3">getReplayHash</a> () noexcept -&gt; std::string &amp;</td></tr>
+<tr class="memdesc:a4c9a019cc37639134400d02e71f6cfa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the unique hash ID of the replay.  <a href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a4c9a019cc37639134400d02e71f6cfa3">More...</a><br /></td></tr>
 <tr class="separator:a4c9a019cc37639134400d02e71f6cfa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1d0cf1c30820735cd8ab32086d69f56"><td class="memItemLeft" align="right" valign="top"><a id="af1d0cf1c30820735cd8ab32086d69f56"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>getReplayHash</b> () const noexcept -&gt; const std::string &amp;</td></tr>
+<tr class="memitem:af1d0cf1c30820735cd8ab32086d69f56"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#af1d0cf1c30820735cd8ab32086d69f56">getReplayHash</a> () const noexcept -&gt; const std::string &amp;</td></tr>
+<tr class="memdesc:af1d0cf1c30820735cd8ab32086d69f56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the unique hash ID of the replay.  <a href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#af1d0cf1c30820735cd8ab32086d69f56">More...</a><br /></td></tr>
 <tr class="separator:af1d0cf1c30820735cd8ab32086d69f56"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a25f833052cf6f8961d45f152550582ba"><td class="memItemLeft" align="right" valign="top"><a id="a25f833052cf6f8961d45f152550582ba"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>getPlayerId</b> () noexcept -&gt; std::uint32_t &amp;</td></tr>
+<tr class="memitem:a25f833052cf6f8961d45f152550582ba"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a25f833052cf6f8961d45f152550582ba">getPlayerId</a> () noexcept -&gt; std::uint32_t &amp;</td></tr>
+<tr class="memdesc:a25f833052cf6f8961d45f152550582ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the player perspective Id of the replay.  <a href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a25f833052cf6f8961d45f152550582ba">More...</a><br /></td></tr>
 <tr class="separator:a25f833052cf6f8961d45f152550582ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a798e1bccbd1705c31210a1514a2128f3"><td class="memItemLeft" align="right" valign="top"><a id="a798e1bccbd1705c31210a1514a2128f3"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>getPlayerId</b> () const noexcept -&gt; std::uint32_t</td></tr>
+<tr class="memitem:a798e1bccbd1705c31210a1514a2128f3"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a798e1bccbd1705c31210a1514a2128f3">getPlayerId</a> () const noexcept -&gt; std::uint32_t</td></tr>
+<tr class="memdesc:a798e1bccbd1705c31210a1514a2128f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the player perspective Id of the replay.  <a href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a798e1bccbd1705c31210a1514a2128f3">More...</a><br /></td></tr>
 <tr class="separator:a798e1bccbd1705c31210a1514a2128f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30446f66700b2b3ff742343a2a9aaea0"><td class="memItemLeft" align="right" valign="top"><a id="a30446f66700b2b3ff742343a2a9aaea0"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (std::size_t idx) const noexcept -&gt; StepDataSoAType::struct_type</td></tr>
+<tr class="memitem:a30446f66700b2b3ff742343a2a9aaea0"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a30446f66700b2b3ff742343a2a9aaea0">operator[]</a> (std::size_t idx) const noexcept -&gt; StepDataSoAType::struct_type</td></tr>
+<tr class="memdesc:a30446f66700b2b3ff742343a2a9aaea0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gather the step data from struct of arrays at a point in time.  <a href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a30446f66700b2b3ff742343a2a9aaea0">More...</a><br /></td></tr>
 <tr class="separator:a30446f66700b2b3ff742343a2a9aaea0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ad4259bba7f2245778efba01c0efa40ed"><td class="memItemLeft" align="right" valign="top"><a id="ad4259bba7f2245778efba01c0efa40ed"></a>
-<a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html">ReplayInfo</a>&#160;</td><td class="memItemRight" valign="bottom"><b>header</b></td></tr>
+<a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html">ReplayInfo</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#ad4259bba7f2245778efba01c0efa40ed">header</a></td></tr>
+<tr class="memdesc:ad4259bba7f2245778efba01c0efa40ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replay metadata. <br /></td></tr>
 <tr class="separator:ad4259bba7f2245778efba01c0efa40ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adc9a384dd3c726e8ae44dc02f41cf767"><td class="memItemLeft" align="right" valign="top"><a id="adc9a384dd3c726e8ae44dc02f41cf767"></a>
-StepDataSoAType&#160;</td><td class="memItemRight" valign="bottom"><b>data</b></td></tr>
+StepDataSoAType&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#adc9a384dd3c726e8ae44dc02f41cf767">data</a></td></tr>
+<tr class="memdesc:adc9a384dd3c726e8ae44dc02f41cf767"><td class="mdescLeft">&#160;</td><td class="mdescRight">Observation data from each sample step in time in SoA form. <br /></td></tr>
 <tr class="separator:adc9a384dd3c726e8ae44dc02f41cf767"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><h3>template&lt;IsSoAType StepDataSoAType&gt;<br />
+struct cvt::ReplayDataTemplateSoA&lt; StepDataSoAType &gt;</h3>
+
+<p>Structure that contains <a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html" title="General information about the replay.">ReplayInfo</a> and replay data stored as a Structure-of-Arrays. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">StepDataSoAType</td><td>structure of arrays type of replay data </td></tr>
+  </table>
+  </dd>
+</dl>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a798e1bccbd1705c31210a1514a2128f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a798e1bccbd1705c31210a1514a2128f3">&#9670;&nbsp;</a></span>getPlayerId() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;IsSoAType StepDataSoAType&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html">cvt::ReplayDataTemplateSoA</a>&lt; StepDataSoAType &gt;::getPlayerId </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const -&gt; std::uint32_t </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the player perspective Id of the replay. </p>
+<dl class="section return"><dt>Returns</dt><dd>Constant reference to Player Id of the replay </dd></dl>
+
+</div>
+</div>
+<a id="a25f833052cf6f8961d45f152550582ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25f833052cf6f8961d45f152550582ba">&#9670;&nbsp;</a></span>getPlayerId() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;IsSoAType StepDataSoAType&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html">cvt::ReplayDataTemplateSoA</a>&lt; StepDataSoAType &gt;::getPlayerId </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> -&gt; std::uint32_t &amp; </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the player perspective Id of the replay. </p>
+<dl class="section return"><dt>Returns</dt><dd>Mutable reference to Player Id of the replay </dd></dl>
+
+</div>
+</div>
+<a id="af1d0cf1c30820735cd8ab32086d69f56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1d0cf1c30820735cd8ab32086d69f56">&#9670;&nbsp;</a></span>getReplayHash() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;IsSoAType StepDataSoAType&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html">cvt::ReplayDataTemplateSoA</a>&lt; StepDataSoAType &gt;::getReplayHash </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const -&gt; const std::string &amp; </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the unique hash ID of the replay. </p>
+<dl class="section return"><dt>Returns</dt><dd>Constant reference to string hash of the replay </dd></dl>
+
+</div>
+</div>
+<a id="a4c9a019cc37639134400d02e71f6cfa3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c9a019cc37639134400d02e71f6cfa3">&#9670;&nbsp;</a></span>getReplayHash() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;IsSoAType StepDataSoAType&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html">cvt::ReplayDataTemplateSoA</a>&lt; StepDataSoAType &gt;::getReplayHash </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> -&gt; std::string &amp; </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the unique hash ID of the replay. </p>
+<dl class="section return"><dt>Returns</dt><dd>Mutable reference of string hash of the replay </dd></dl>
+
+</div>
+</div>
+<a id="a6936ace2d5902c7a25eb0eefdb278a96"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6936ace2d5902c7a25eb0eefdb278a96">&#9670;&nbsp;</a></span>operator==()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;IsSoAType StepDataSoAType&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html">cvt::ReplayDataTemplateSoA</a>&lt; StepDataSoAType &gt;::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html">ReplayDataTemplateSoA</a>&lt; StepDataSoAType &gt; &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td> const -&gt; bool
+    </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check equality between replays. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td>comparator </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if both replays are equal </dd></dl>
+
+</div>
+</div>
+<a id="a30446f66700b2b3ff742343a2a9aaea0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30446f66700b2b3ff742343a2a9aaea0">&#9670;&nbsp;</a></span>operator[]()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;IsSoAType StepDataSoAType&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html">cvt::ReplayDataTemplateSoA</a>&lt; StepDataSoAType &gt;::operator[] </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>idx</em></td><td>)</td>
+          <td> const -&gt; StepDataSoAType::struct_type </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gather the step data from struct of arrays at a point in time. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">idx</td><td>Index of replay to gather data </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Observation data in original struct form </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/home/runner/work/sc2-serializer/sc2-serializer/include/data_structures/replay_interface.hpp</li>
 </ul>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Serialize &mdash; C++ Sphinx Doxygen Breathe  documentation</title>
+  <title>Serialization &mdash; C++ Sphinx Doxygen Breathe  documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=fd3f3429" />
@@ -48,10 +48,10 @@
 <li class="toctree-l1"><a class="reference internal" href="../index.html">Welcome to sc2-serializer’s documentation!</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="index.html">API</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="benchmark.html">Benchmark</a></li>
-<li class="toctree-l2"><a class="reference internal" href="data.html">Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data.html">Starcraft II Data Structures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="observer.html">Observer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="replay_parsing.html">Replay Parsing</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">Serialize</a><ul>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Serialization</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#_CPPv43cvt"><code class="docutils literal notranslate"><span class="pre">cvt</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4I_NSt6ranges5rangeEEIQaaNSt6ranges16contiguous_rangeI1TEENSt23is_trivially_copyable_vINSt6ranges13range_value_tI1TEEEEEN3cvt9serializeEvRK1TRNSt7ostreamE"><code class="docutils literal notranslate"><span class="pre">cvt::serialize()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4I_NSt6ranges5rangeEEN3cvt9serializeEvRK1TRNSt7ostreamE"><code class="docutils literal notranslate"><span class="pre">cvt::serialize()</span></code></a></li>
@@ -83,7 +83,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="index.html">API</a></li>
-      <li class="breadcrumb-item active">Serialize</li>
+      <li class="breadcrumb-item active">Serialization</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/api/serializer.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -93,8 +93,9 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="serialize">
-<span id="api-serialize"></span><h1>Serialize<a class="headerlink" href="#serialize" title="Link to this heading"></a></h1>
+  <section id="serialization">
+<span id="api-serialize"></span><h1>Serialization<a class="headerlink" href="#serialization" title="Link to this heading"></a></h1>
+<p>A combination of C++20 Concepts and Requires clauses are used to automatically serialize data structures. [Boost PFR](<a class="reference external" href="https://www.boost.org/doc/libs/master/doc/html/boost_pfr.html">https://www.boost.org/doc/libs/master/doc/html/boost_pfr.html</a>) is used to iterate over data structures. Data structures must be trivially copyable or some range which can be copied element-by-element.</p>
 <dl class="cpp type">
 <dt class="sig sig-object cpp" id="_CPPv43cvt">
 <span id="_CPPv33cvt"></span><span id="_CPPv23cvt"></span><span id="cvt"></span><span class="target" id="df/d0d/namespacecvt"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cvt</span></span></span><br /></dt>

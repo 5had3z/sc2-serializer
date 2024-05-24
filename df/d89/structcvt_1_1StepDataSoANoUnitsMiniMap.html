@@ -75,6 +75,11 @@ $(function() {
 <div class="title">cvt::StepDataSoANoUnitsMiniMap Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>SoA representation of an array of <a class="el" href="../../d5/df3/structcvt_1_1StepDataNoUnitsMiniMap.html" title="Replay step data that only contains scalar data.">StepDataNoUnitsMiniMap</a>.  
+ <a href="../../df/d89/structcvt_1_1StepDataSoANoUnitsMiniMap.html#details">More...</a></p>
+
+<p><code>#include &lt;replay_scalars.hpp&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -90,8 +95,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a43dff21c7ec9064e005f3bba1b1efb0c"><td class="memItemLeft" align="right" valign="top"><a id="a43dff21c7ec9064e005f3bba1b1efb0c"></a>
 auto&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../df/d89/structcvt_1_1StepDataSoANoUnitsMiniMap.html">StepDataSoANoUnitsMiniMap</a> &amp;other) const noexcept -&gt; bool=default</td></tr>
 <tr class="separator:a43dff21c7ec9064e005f3bba1b1efb0c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a68fc5926894d88a1fcd92d026584ab55"><td class="memItemLeft" align="right" valign="top"><a id="a68fc5926894d88a1fcd92d026584ab55"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>operator[]</b> (std::size_t idx) const noexcept -&gt; <a class="el" href="../../d5/df3/structcvt_1_1StepDataNoUnitsMiniMap.html">StepDataNoUnitsMiniMap</a></td></tr>
+<tr class="memitem:a68fc5926894d88a1fcd92d026584ab55"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d89/structcvt_1_1StepDataSoANoUnitsMiniMap.html#a68fc5926894d88a1fcd92d026584ab55">operator[]</a> (std::size_t idx) const noexcept -&gt; <a class="el" href="../../d5/df3/structcvt_1_1StepDataNoUnitsMiniMap.html">StepDataNoUnitsMiniMap</a></td></tr>
+<tr class="memdesc:a68fc5926894d88a1fcd92d026584ab55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gather step data from each array to make structure of data at step.  <a href="../../df/d89/structcvt_1_1StepDataSoANoUnitsMiniMap.html#a68fc5926894d88a1fcd92d026584ab55">More...</a><br /></td></tr>
 <tr class="separator:a68fc5926894d88a1fcd92d026584ab55"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -118,6 +123,45 @@ std::vector&lt; std::uint16_t &gt;&#160;</td><td class="memItemRight" valign="bo
 std::vector&lt; <a class="el" href="../../dc/df4/structcvt_1_1Score.html">Score</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>score</b> {}</td></tr>
 <tr class="separator:a5f28ee0bba8fa7809260c883d04c0c25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>SoA representation of an array of <a class="el" href="../../d5/df3/structcvt_1_1StepDataNoUnitsMiniMap.html" title="Replay step data that only contains scalar data.">StepDataNoUnitsMiniMap</a>. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a68fc5926894d88a1fcd92d026584ab55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a68fc5926894d88a1fcd92d026584ab55">&#9670;&nbsp;</a></span>operator[]()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cvt::StepDataSoANoUnitsMiniMap::operator[] </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>idx</em></td><td>)</td>
+          <td> const -&gt; <a class="el" href="../../d5/df3/structcvt_1_1StepDataNoUnitsMiniMap.html">StepDataNoUnitsMiniMap</a>
+    </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gather step data from each array to make structure of data at step. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">idx</td><td>time index of replay to gather. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Gathered step data. </dd></dl>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>/home/runner/work/sc2-serializer/sc2-serializer/include/data_structures/replay_scalars.hpp</li>
 </ul>
