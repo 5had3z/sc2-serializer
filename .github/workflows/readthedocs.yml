@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
     - name: Requirements
-      run: apt install doxygen sphinx-doc
+      run: sudo apt-get update
+        && sudo apt-get install doxygen sphinx-doc
         && pip3 install --user sphinx-rtd-theme breathe sphinx-sitemap
     - name: Checkout repo
       uses: actions/checkout@1.0.0
