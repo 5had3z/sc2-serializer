@@ -19,10 +19,9 @@
 
 namespace cvt {
 
+UpgradeState::UpgradeState(std::filesystem::path dataFile) : dataFile_(std::move(dataFile)) {}
 
-UpgradeTiming::UpgradeTiming(std::filesystem::path dataFile) : dataFile_(std::move(dataFile)) {}
-
-void UpgradeTiming::setVersion(std::string_view version)
+void UpgradeState::setVersion(std::string_view version)
 {
     assert(version != "" && "Got empty version in setVersion");
     if (version != gameVersion_) {
@@ -31,9 +30,7 @@ void UpgradeTiming::setVersion(std::string_view version)
     }
 }
 
-// Based on game engine data, determine the times which research
-// actions are completed and thus the upgrade is active.
-void UpgradeTiming::loadInfo()
+void UpgradeState::loadInfo()
 {
     if (!std::filesystem::exists(dataFile_)) {
         throw std::runtime_error(fmt::format("Data file does not exist: {}", dataFile_.string()));
@@ -54,9 +51,9 @@ void UpgradeTiming::loadInfo()
     }
 }
 
-void UpgradeTiming::setRace(Race race) noexcept { currentRace_ = race; }
+void UpgradeState::setRace(Race race) noexcept { currentRace_ = race; }
 
-auto UpgradeTiming::getValidIds() const -> const std::set<int> &
+auto UpgradeState::getValidIds() const -> const std::set<int> &
 {
     if (!raceResearch.contains(gameVersion_)) {
         throw std::out_of_range{ fmt::format("Missing game version {} from raceResearch", gameVersion_) };
@@ -64,7 +61,7 @@ auto UpgradeTiming::getValidIds() const -> const std::set<int> &
     return raceResearch.at(gameVersion_).at(currentRace_);
 }
 
-auto UpgradeTiming::getValidRemap() const -> const std::unordered_map<int, std::array<int, 3>> &
+auto UpgradeState::getValidRemap() const -> const std::unordered_map<int, std::array<int, 3>> &
 {
     if (!raceResearchReID.contains(gameVersion_)) {
         throw std::out_of_range{ fmt::format("Missing game version {} from raceResearchReID", gameVersion_) };
@@ -73,15 +70,14 @@ auto UpgradeTiming::getValidRemap() const -> const std::unordered_map<int, std::
 }
 
 
-// Returns a vector containing the time point when the index of an upgrade is researched
-void UpgradeTiming::setActions(const std::vector<std::vector<Action>> &actionsReplay,
-    const std::vector<unsigned int> &timeIdxs)
+void UpgradeState::calculateTimes(const std::vector<std::vector<Action>> &playerActions,
+    const std::vector<unsigned int> &gameTime)
 {
     if (id2delay_.empty()) { throw std::logic_error{ "Research info to delay not loaded" }; }
     if (currentRace_ == Race::Random) { throw std::logic_error{ "No race selected" }; }
-    if (actionsReplay.size() != timeIdxs.size()) {
+    if (playerActions.size() != gameTime.size()) {
         throw std::runtime_error{ fmt::format(
-            "Actions size {}: != timeIdx size: {}", actionsReplay.size(), timeIdxs.size()) };
+            "Actions size {}: != timeIdx size: {}", playerActions.size(), gameTime.size()) };
     }
 
     const auto &raceUpgradeIds = this->getValidIds();
@@ -90,17 +86,17 @@ void UpgradeTiming::setActions(const std::vector<std::vector<Action>> &actionsRe
     constexpr auto maxTime = std::numeric_limits<std::ranges::range_value_t<decltype(upgradeTimes_)>>::max();
     std::ranges::fill(upgradeTimes_, maxTime);
 
-    for (std::size_t idx = 0; idx < actionsReplay.size(); ++idx) {
-        const auto &actionsStep = actionsReplay[idx];
+    for (std::size_t idx = 0; idx < playerActions.size(); ++idx) {
+        const auto &actionsStep = playerActions[idx];
         for (auto &&action : actionsStep) {
             // First check if the ability is in the normal upgrade actions
             const auto abilityPtr = raceUpgradeIds.find(action.ability_id);
             if (abilityPtr != raceUpgradeIds.end()) {
-                std::size_t upgradeIdx = std::distance(raceUpgradeIds.begin(), abilityPtr);
+                const std::size_t upgradeIdx = std::distance(raceUpgradeIds.begin(), abilityPtr);
                 if (!id2delay_.contains(action.ability_id)) {
                     throw std::out_of_range{ fmt::format("Ability id {} not in id2delay table", action.ability_id) };
                 }
-                upgradeTimes_[upgradeIdx] = timeIdxs[idx] + id2delay_.at(action.ability_id);
+                upgradeTimes_[upgradeIdx] = gameTime[idx] + id2delay_.at(action.ability_id);
                 continue;
             }
 
@@ -109,13 +105,14 @@ void UpgradeTiming::setActions(const std::vector<std::vector<Action>> &actionsRe
             if (remapPtr != raceUpgradeRemap.end()) {
                 // The first ability_id in the remapping that is maxTime is the lowest level unresearched
                 for (auto &&remapAbilityId : remapPtr->second) {
-                    std::size_t upgradeIdx = std::distance(raceUpgradeIds.begin(), raceUpgradeIds.find(remapAbilityId));
+                    const std::size_t upgradeIdx =
+                        std::distance(raceUpgradeIds.begin(), raceUpgradeIds.find(remapAbilityId));
                     if (upgradeTimes_[upgradeIdx] == maxTime) {
                         if (!id2delay_.contains(remapAbilityId)) {
                             throw std::out_of_range{ fmt::format(
                                 "Ability id {} not in id2delay table", remapAbilityId) };
                         }
-                        upgradeTimes_[upgradeIdx] = timeIdxs[idx] + id2delay_.at(remapAbilityId);
+                        upgradeTimes_[upgradeIdx] = gameTime[idx] + id2delay_.at(remapAbilityId);
                         break;
                     }
                 }

@@ -21,22 +21,47 @@
 namespace py = pybind11;
 
 namespace cvt {
-class UpgradeTiming
+
+/**
+ * @brief UpgradeState class loads information stored in yaml and determines the time points of the game when an
+ * upgrade is active for the player. This class can be queried with getState with a gameStep to return a one-hot
+ * encoding of the currently active upgrades.
+ */
+class UpgradeState
 {
   public:
-    // cppcheck-suppress noExplicitConstructor
-    UpgradeTiming(std::filesystem::path dataFile);
+    /**
+     * @brief Create upgrade timing instance using information based on dataFile.
+     * @param dataFile Path to the yaml containing upgrade action data for each game version and race.
+     */
+    explicit UpgradeState(std::filesystem::path dataFile);
 
-    // Set the game version
+    /**
+     * @brief Set the version of the game
+     * @param version string description of the game version i.e. 4.9.1.12345
+     */
     void setVersion(std::string_view version);
 
-    // Set the race of the player
+    /**
+     * @brief Set the race of the player
+     * @param race The race to set
+     */
     void setRace(Race race) noexcept;
 
-    // Create the expected research timings from the actions and gameStep vectors
-    void setActions(const std::vector<std::vector<Action>> &actions, const std::vector<unsigned int> &timeIdxs);
+    /**
+     * @brief Calculate and set the expected reserach completion times based on the actions and their timepoint
+     * @param playerActions Vector of actions the player has performed at each timepoint
+     * @param gameTime The timepoint in the game each action is associated with
+     */
+    void calculateTimes(const std::vector<std::vector<Action>> &playerActions,
+        const std::vector<unsigned int> &gameTime);
 
-    // Get the state of research at timeIdx, (0 false, 1 true)
+    /**
+     * @brief Get a one-hot encoding vector of the state of upgrades (0 false, 1 true)
+     * @tparam T datatype of the one-hot encoding
+     * @param timeIdx The timepoint to calculate the state of upgrades
+     * @return one-hot encoding of currently active upgrades as a py::array
+     */
     template<typename T>
         requires std::is_arithmetic_v<T>
     [[nodiscard]] auto getState(std::size_t timeIdx) const -> py::array_t<T>
@@ -47,22 +72,58 @@ class UpgradeTiming
         return state;
     }
 
-
   private:
+    /**
+     * @brief Get the set of actions ids that correspond to upgrade actions based on currentRace_ and gameVersion_
+     * @return Set of upgrade actions
+     */
     [[nodiscard]] auto getValidIds() const -> const std::set<int> &;
 
+    /**
+     * @brief Get remapping of generic tiered "upgrade" action to the distinct tiers.
+     * @return Mapping from generic tiered action id to actual tier ids.
+     */
     [[nodiscard]] auto getValidRemap() const -> const std::unordered_map<int, std::array<int, 3>> &;
 
+    /**
+     * @brief Fill out the id2delay_ mapping with the information from dataFile_ based on the currentRace_ and
+     * gameVersion_
+     */
     void loadInfo();
 
+    /**
+     * @brief Path to yaml file that contains upgrade action data from each game version and faction.
+     */
     std::filesystem::path dataFile_;
+
+    /**
+     * @brief Mapping from action/upgrade id to the time it takes to research in game steps.
+     */
     std::unordered_map<int, int> id2delay_{};
+
+    /**
+     * @brief Current race of the player.
+     */
     Race currentRace_{ Race::Random };
+
+    /**
+     * @brief The times when the upgrade is active for the player.
+     */
     std::vector<int32_t> upgradeTimes_{};
+
+    /**
+     * @brief The current version of the game.
+     */
     std::string gameVersion_{};
 };
 
-// Converts vector of units to a {n_unit, feature} array
+/**
+ * @brief Converts vector of unit structures to a {n_unit, feature} array
+ * @tparam T output data type of the array
+ * @tparam UnitT type of unit data
+ * @param units Units to convert to array
+ * @return 2D feature array of dimension {n_unit, feature}
+ */
 template<typename T, typename UnitT>
     requires std::is_arithmetic_v<T>
 [[nodiscard]] auto transformUnits(const std::vector<UnitT> &units) noexcept -> py::array_t<T>
@@ -88,7 +149,12 @@ template<typename T, typename UnitT>
     return featureArray;
 }
 
-// Do unit transformation but group them by alliance (self, ally, enemy, neutral)
+/**
+ * @brief Unit transformation and return grouped by alliance {self, ally, enemy, neutral}
+ * @tparam T output datatype of feature array
+ * @param units Vector of units to convert to feature arrays
+ * @return Dictionary mapping from alliance to feature array
+ */
 template<typename T>
     requires std::is_arithmetic_v<T>
 [[nodiscard]] auto transformUnitsByAlliance(const std::vector<Unit> &units) noexcept -> py::dict
@@ -177,13 +243,27 @@ struct Caster
 };
 
 
+/**
+ * @brief Class that maps string description of minimap feature layers to a bit flag.
+ */
 struct MinimapFeatureFlags
 {
+    /**
+     * @brief Minimap feature layers
+     */
     inline static const std::array
         keys = { "heightMap", "visibility", "creep", "player_relative", "alerts", "buildable", "pathable" };
 
+    /**
+     * @brief Layer activation bits
+     */
     std::bitset<keys.size()> flags = std::bitset<keys.size()>().set();
 
+    /**
+     * @brief Find the index of the layer in the bitset
+     * @param key Name of the layer to search
+     * @return Index in the layer array
+     */
     constexpr auto getOffset(std::string_view key) const -> std::size_t
     {
         auto it = std::ranges::find(keys, key);
@@ -193,24 +273,50 @@ struct MinimapFeatureFlags
         return std::distance(keys.begin(), it);
     }
 
+    /**
+     * @brief Set all bits
+     */
     void set() noexcept { flags.set(); }
 
+    /**
+     * @brief Set minimap layer to value
+     * @param key Name of minimap layer
+     * @param value Value to set (default: True)
+     */
     void set(std::string_view key, bool value = true) { flags.set(getOffset(key), value); }
 
+    /**
+     * @brief Get the current value of the minimap layer
+     * @param key Name of the minimap layer to test
+     * @return Current activation status
+     */
     auto test(std::string_view key) const -> bool { return flags.test(getOffset(key)); }
 
+    /**
+     * @brief Number of active minimap layers
+     * @return Number of active minimap layers
+     */
     auto count() const noexcept -> std::size_t { return flags.count(); }
 
+    /**
+     * @brief Set all minimap layers to false
+     */
     void reset() noexcept { flags.reset(); }
 };
 
-// Convenience wrapper around ReplayDataSOA to return map of features at each timestep
+/**
+ * @brief Convenience wrapper around ReplayDataSOA to return map of features at each timestep
+ * @tparam ReplayDataType Type of replay data being parsed
+ */
 template<typename ReplayDataType> class ReplayParser
 {
   public:
     explicit ReplayParser(const std::filesystem::path &dataPath) noexcept : upgrade_(dataPath) {}
 
-    // Parse replay data, ready to sample from
+    /**
+     * @brief Ingest replay data for sampling.
+     * @param replayData Replay data to parse
+     */
     void parseReplay(ReplayDataType replayData)
     {
         replayData_ = std::move(replayData);
@@ -224,7 +330,7 @@ template<typename ReplayDataType> class ReplayParser
         if constexpr (HasActionData<decltype(replayData_.data)>) {
             upgrade_.setRace(replayData_.header.playerRace);
             upgrade_.setVersion(replayData_.header.gameVersion);
-            upgrade_.setActions(replayData_.data.actions, replayData_.data.gameStep);
+            upgrade_.calculateTimes(replayData_.data.actions, replayData_.data.gameStep);
         }
     }
 
@@ -262,7 +368,7 @@ template<typename ReplayDataType> class ReplayParser
      *        then this will replace [..., player_relative, ...] with [..., self, ally, neutral, enemy, ...]
      * @return py::list of strings of the currently enabled features
      */
-    [[nodiscard]] auto getMinimapFeatures() const noexcept -> py::list
+    [[nodiscard]] auto getMinimapFeatures() const -> py::list
     {
         py::list ret;
         for (const auto &feat : minimapFeatureFlags_.keys) {
@@ -278,7 +384,12 @@ template<typename ReplayDataType> class ReplayParser
         return ret;
     }
 
-    // Returns a python dictionary containing features from that timestep
+    /**
+     * @brief Get a python dictionary containing features from that timestep
+     * @param timeIdx time index to sample
+     * @param unit_alliance Whether to group units by alliance in a dictionary (default: false)
+     * @return Dictionary containing feature data at that point in time
+     */
     [[nodiscard]] auto sample(std::size_t timeIdx, bool unit_alliance = false) const -> py::dict
     {
         using feature_t = float;
@@ -318,28 +429,59 @@ template<typename ReplayDataType> class ReplayParser
         }
 
         static_assert((HasScalarData<step_data_t> || HasMinimapData<step_data_t> || HasUnitData<step_data_t>
-                       || HasActionData<decltype(replayData_.data)>)&&"At least one data type should be present");
+                          || HasActionData<decltype(replayData_.data)>)
+                      && "At least one data type should be present");
 
         return result;
     }
 
-    // Return the number of timesteps in the replay
+    /**
+     * @brief Number of timesteps in the replay
+     * @return Number of timesteps in the replay
+     */
     [[nodiscard]] auto size() const noexcept -> std::size_t { return replayData_.data.gameStep.size(); }
 
-    // Check if parser is empty
+    /**
+     * @brief Check if the replay/parser is empty
+     * @return True if empty
+     */
     [[nodiscard]] auto empty() const noexcept -> bool { return replayData_.data.gameStep.empty(); }
 
-    // Return read-only reference to currently loaded replay data
+    /**
+     * @brief Read-only reference to the currently loaded data
+     * @return Read-only reference to the currently loaded replay data
+     */
     [[nodiscard]] auto data() const noexcept -> const auto & { return replayData_.data; }
 
+
+    /**
+     * @brief Read-only reference to the currently loaded replay header
+     * @return Read-only reference to the currently loaded replay header
+     */
     [[nodiscard]] auto info() const noexcept -> const ReplayInfo & { return replayData_.header; }
 
   private:
-    UpgradeTiming upgrade_;
+    /**
+     * @brief Upgrade timing calculator
+     */
+    UpgradeState upgrade_;
+
+
+    /**
+     * @brief Replay data
+     */
     ReplayDataType replayData_{};
 
-    MinimapFeatureFlags minimapFeatureFlags_{};// Enable all by default
-    bool expandPlayerRelative_{ true };// Expand onehot by default
+
+    /**
+     * @brief Minimap feature flags requested
+     */
+    MinimapFeatureFlags minimapFeatureFlags_{};
+
+    /**
+     * @brief Flag to expand player relative from enum to one-hot in minimap.
+     */
+    bool expandPlayerRelative_{ true };
 };
 
 

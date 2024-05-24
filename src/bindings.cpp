@@ -16,6 +16,12 @@
 
 namespace py = pybind11;
 
+/**
+ * @brief Create python bindings to minimap image
+ * @tparam T underlying datatype of the image
+ * @param m top-level pybind module
+ * @param name name of python object
+ */
 template<typename T> void bindImage(py::module &m, const std::string &name)
 {
     py::class_<cvt::Image<T>>(m, name.c_str(), py::buffer_protocol())
@@ -39,7 +45,13 @@ template<typename T> void bindImage(py::module &m, const std::string &name)
         });
 }
 
-// Specialization for bool image which doesn't have native buffer support
+
+/**
+ * @brief Specialisation of minimap binding for bool image which needs to be transformed to uint8 for numpy usage. Also
+ * removes def_buffer implementation since this can't be used.
+ * @param m top-level pybind module
+ * @param name name of python object
+ */
 template<> void bindImage<bool>(py::module &m, const std::string &name)
 {
     py::class_<cvt::Image<bool>>(m, name.c_str())
@@ -54,6 +66,12 @@ template<> void bindImage<bool>(py::module &m, const std::string &name)
         });
 }
 
+/**
+ * @brief Create python bindings for replay data struct and database.
+ * @tparam T underlying replay data struct type
+ * @param m top-level pybind module
+ * @param name name of python object
+ */
 template<typename T> void bindReplayDataInterfaces(py::module &m, const std::string &name)
 {
     py::class_<T>(m, name.c_str()).def_readwrite("header", &T::header).def_readwrite("data", &T::data);
@@ -88,6 +106,11 @@ template<typename T> void bindReplayDataInterfaces(py::module &m, const std::str
         .def_property_readonly("info", &cvt::ReplayParser<T>::info, py::return_value_policy::reference_internal);
 }
 
+
+/**
+ * @brief Bind enums from enums.hpp
+ * @param m top-level pybind module
+ */
 void bindEnums(py::module &m)
 {
     // Expose Enum

@@ -195,7 +195,7 @@ if(SC2_PY_READER)
     _sc2_replay_reader
     src/database.cpp
     src/bindings.cpp
-    src/py_tech_state.cpp)
+    src/upgrade_state.cpp)
   target_compile_features(_sc2_replay_reader PUBLIC cxx_std_23)
   target_link_libraries(
     _sc2_replay_reader
