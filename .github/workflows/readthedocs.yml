@@ -1,30 +1,22 @@
+---
 name: Docs
-
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
 jobs:
   build:
-
-    runs-on: macos-latest
-
+    runs-on: ubuntu-22.04
     steps:
     - name: Requirements
-      run: brew install doxygen
-        && brew install sphinx-doc
-        && pip3 install sphinx-rtd-theme
-        && pip3 install breathe
-        && pip3 install sphinx-sitemap
+      run: apt install doxygen sphinx-doc
+        && pip3 install --user sphinx-rtd-theme breathe sphinx-sitemap
     - name: Checkout repo
       uses: actions/checkout@1.0.0
     - name: Build docs
-      run: cd docs_sphinx
-        && make html
-        && cd _build/html
-        && touch .nojekyll
+      run: make -C docs_sphinx html
+        && touch docs_sphinx/_build/html/.nojekyll
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
