@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['progress_0',['progress',['../d2/d3c/structcvt_1_1_unit_order.html#afac732cb56dde1af1fd32c27af49f6be',1,'cvt::UnitOrder']]]
+  ['flags_228',['flags',['../db/deb/structcvt_1_1MinimapFeatureFlags.html#a0a2dd4d1851431bd7e7e34573a0ac473',1,'cvt::MinimapFeatureFlags']]]
 ];

@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['neutralunit_0',['NeutralUnit',['../de/dea/structcvt_1_1_neutral_unit.html',1,'cvt']]],
-  ['neutralunitsoa_1',['NeutralUnitSoA',['../d9/da4/structcvt_1_1_neutral_unit_so_a.html',1,'cvt']]]
+  ['load_60',['load',['../d2/dad/classcvt_1_1ReplayDatabase.html#a7eb3abbb618a5832dd856ca6fab900d6',1,'cvt::ReplayDatabase']]],
+  ['loaddb_61',['loadDB',['../d4/dc4/classcvt_1_1BaseConverter.html#af559397bbf2e4f3bf18a40bbb07cf420',1,'cvt::BaseConverter']]]
 ];

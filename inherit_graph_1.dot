@@ -1,0 +1,8 @@
+digraph "Graphical Class Hierarchy"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="cvt::Action::Target",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$df/d2a/unioncvt_1_1Action_1_1Target.html",tooltip="Target data is either a position or another Unit ID. For example the target of moving units could be ..."];
+}

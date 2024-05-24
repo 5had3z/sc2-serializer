@@ -1,11 +1,8 @@
 var searchData=
 [
-  ['reassignresourceid_0',['reassignResourceId',['../d8/d39/classcvt_1_1_base_converter.html#a8f041c5517fa98572a159405e3b94074',1,'cvt::BaseConverter']]],
-  ['replaydatabase_1',['ReplayDatabase',['../da/da1/classcvt_1_1_replay_database.html',1,'cvt::ReplayDatabase&lt; EntryType &gt;'],['../da/da1/classcvt_1_1_replay_database.html#af8615f3b0d46ddc5f6d13457f6f09f86',1,'cvt::ReplayDatabase::ReplayDatabase()'],['../da/da1/classcvt_1_1_replay_database.html#aab9153b5eabe1b31efdbf035e16143b2',1,'cvt::ReplayDatabase::ReplayDatabase(const std::filesystem::path &amp;dbPath) noexcept']]],
-  ['replaydatabase_3c_20datasoa_20_3e_2',['ReplayDatabase&lt; DataSoA &gt;',['../da/da1/classcvt_1_1_replay_database.html',1,'cvt']]],
-  ['replaydatatemplate_3',['ReplayDataTemplate',['../d4/d5b/structcvt_1_1_replay_data_template.html',1,'cvt']]],
-  ['replaydatatemplatesoa_4',['ReplayDataTemplateSoA',['../df/dd2/structcvt_1_1_replay_data_template_so_a.html',1,'cvt']]],
-  ['replayinfo_5',['ReplayInfo',['../db/df5/structcvt_1_1_replay_info.html',1,'cvt']]],
-  ['replayparser_6',['ReplayParser',['../db/d4a/classcvt_1_1_replay_parser.html',1,'cvt']]],
-  ['resourceobs_7',['ResourceObs',['../d0/da0/structcvt_1_1_resource_obs.html',1,'cvt']]]
+  ['ongameend_67',['OnGameEnd',['../d4/dc4/classcvt_1_1BaseConverter.html#a3b7164d8368b3298aeba8f70ec28effe',1,'cvt::BaseConverter']]],
+  ['ongamestart_68',['OnGameStart',['../d4/dc4/classcvt_1_1BaseConverter.html#a0153640dd6d53ec079cef40f1c08263a',1,'cvt::BaseConverter::OnGameStart()'],['../d7/d58/classcvt_1_1StridedConverter.html#aba2f60a6b05cc7f75b621ca73714948a',1,'cvt::StridedConverter::OnGameStart()']]],
+  ['open_69',['open',['../d2/dad/classcvt_1_1ReplayDatabase.html#ae904d976a213c8ee762f7e08e1b9a769',1,'cvt::ReplayDatabase']]],
+  ['operator_28_29_70',['operator()',['../d6/db9/structcvt_1_1Caster.html#a4f59d7b51bcc0ccecfe6c988672641cb',1,'cvt::Caster']]],
+  ['operator_3d_3d_71',['operator==',['../d2/d1e/structcvt_1_1Image.html#a4687e1257568f951ed4cbf0b0637642e',1,'cvt::Image::operator==()'],['../dd/d36/structcvt_1_1Action.html#af51f6e0ea06a6bd007eba89ef97388af',1,'cvt::Action::operator==()']]]
 ];

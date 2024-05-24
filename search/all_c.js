@@ -1,7 +1,6 @@
 var searchData=
 [
-  ['path_0',['path',['../da/da1/classcvt_1_1_replay_database.html#a375ef2427f25d885ab917ad77c2f07fe',1,'cvt::ReplayDatabase']]],
-  ['point2d_1',['Point2d',['../d3/d7a/structcvt_1_1_point2d.html',1,'cvt']]],
-  ['point3f_2',['Point3f',['../d5/db6/structcvt_1_1_point3f.html',1,'cvt']]],
-  ['progress_3',['progress',['../d2/d3c/structcvt_1_1_unit_order.html#afac732cb56dde1af1fd32c27af49f6be',1,'cvt::UnitOrder']]]
+  ['nelem_64',['nelem',['../d2/d1e/structcvt_1_1Image.html#a4f0f75f0eede06c8c3bb6181e4788ba0',1,'cvt::Image']]],
+  ['neutralunit_65',['NeutralUnit',['../d0/d05/structcvt_1_1NeutralUnit.html',1,'cvt']]],
+  ['neutralunitsoa_66',['NeutralUnitSoA',['../d4/d0e/structcvt_1_1NeutralUnitSoA.html',1,'cvt']]]
 ];
