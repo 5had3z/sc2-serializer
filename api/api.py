@@ -13,7 +13,7 @@ import numpy as np
 from dataclasses import dataclass
 from yeet import download_file, split_and_download
 from file_links import links, tourn_links, database as database_link
-from utils import find_closest_indicies
+from utils import find_closest_indices
 
 from enum import Enum
 
@@ -171,10 +171,10 @@ class SC2Dataset(Dataset):
         else:
             outputs_list = {k: [outputs_list[k]] for k in outputs_list}
 
-        sample_indicies = find_closest_indicies(
+        sample_indices = find_closest_indices(
             self.parser.data.gameStep, self._target_game_loops[1:]
         )
-        for idx in sample_indicies:
+        for idx in sample_indices:
             if idx == -1:
                 sample = {k: np.zeros_like(outputs_list[k][-1]) for k in outputs_list}
             else:
@@ -186,7 +186,7 @@ class SC2Dataset(Dataset):
             "win": torch.as_tensor(
                 self.parser.data.playerResult == Result.Win, dtype=torch.float32
             ),
-            "valid": torch.cat([torch.tensor([True]), sample_indicies != -1]),
+            "valid": torch.cat([torch.tensor([True]), sample_indices != -1]),
         }
         for k in outputs_list:
             outputs[k] = torch.stack([torch.as_tensor(o) for o in outputs_list[k]])

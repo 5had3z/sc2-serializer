@@ -120,9 +120,6 @@ template<typename S, typename It>
     return it;
 }
 
-// TODO: Add helper fn to check the vectorization size
-
-
 /**
  * @brief Vectorize Struct of data to vector
  * @tparam T Output arithmetic type of vector
@@ -140,12 +137,40 @@ auto vectorize(S s, bool onehotEnum = false) -> std::vector<T>
     return out;
 }
 
+/**
+ * @brief Convert AoS to SoA
+ * @tparam AoS incoming AoS type
+ * @tparam SoA outgoing SoA type
+ * @param aos input data
+ * @return transformed aos to soa
+ */
 template<typename AoS, typename SoA> [[nodiscard]] auto AoStoSoA(AoS &&aos) noexcept -> SoA;
 
+/**
+ * @brief Convert AoS to SoA
+ * @tparam AoS incoming AoS type
+ * @tparam SoA outgoing SoA type
+ * @param aos input data
+ * @return transformed aos to soa
+ */
 template<typename AoS, typename SoA> [[nodiscard]] auto AoStoSoA(const AoS &aos) noexcept -> SoA;
 
+/**
+ * @brief Convert SoA to AoS
+ * @tparam SoA incoming SoA type
+ * @tparam AoS outgoing AoS type
+ * @param soa input data
+ * @return transformed soa to aos
+ */
 template<typename SoA, typename AoS> [[nodiscard]] auto SoAtoAoS(const SoA &soa) noexcept -> AoS;
 
+/**
+ * @brief Convert SoA to AoS which is basic std::vector of the original struct_type
+ * @tparam SoA incoming SoA type
+ * @tparam AoS outgoing AoS type
+ * @param soa input data
+ * @return transformed soa to aos
+ */
 template<IsSoAType SoA> [[nodiscard]] auto SoAtoAoS(const SoA &soa) noexcept -> std::vector<typename SoA::struct_type>
 {
     std::vector<typename SoA::struct_type> aos{};
@@ -161,6 +186,9 @@ template<IsSoAType SoA> [[nodiscard]] auto SoAtoAoS(const SoA &soa) noexcept -> 
     return aos;
 }
 
+/**
+ * @brief Basic discrete 2d point
+ */
 struct Point2d
 {
     int x{ 0 };
@@ -174,6 +202,9 @@ struct Point2d
     [[nodiscard]] auto end() const noexcept -> const int * { return &y + 1; }
 };
 
+/**
+ * @brief Basic continuous 3d point
+ */
 struct Point3f
 {
     float x{ 0.f };

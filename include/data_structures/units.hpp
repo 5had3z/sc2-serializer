@@ -7,14 +7,29 @@
 
 namespace cvt {
 
+/**
+ * @brief Element in order queue for unit to follow.
+ */
 struct UnitOrder
 {
+    /**
+     * @brief ID of order to do
+     */
     int ability_id{ 0 };
-    //! Progress of the order.
+
+    /**
+     * @brief Progress of the order.
+     */
     float progress{ 0.0 };
-    //! Target unit of the order, if there is one.
+
+    /**
+     * @brief Target unit of the order, if there is one.
+     */
     UID tgtId{ 0 };
-    //! Target position of the order, if there is one.
+
+    /**
+     * @brief Target position of the order, if there is one.
+     */
     Point2d target_pos{ 0, 0 };
 
     [[nodiscard]] auto operator==(const UnitOrder &other) const noexcept -> bool = default;
@@ -30,6 +45,9 @@ struct UnitOrder
     }
 };
 
+/**
+ * @brief Basic StarCraft II Unit Data
+ */
 struct Unit
 {
     UID id{};
@@ -120,6 +138,9 @@ struct Unit
 };
 
 
+/**
+ * @brief SoA representation of a collection of StarCraft II units.
+ */
 struct UnitSoA
 {
     using struct_type = Unit;
@@ -165,6 +186,11 @@ struct UnitSoA
 
     [[nodiscard]] auto operator==(const UnitSoA &other) const noexcept -> bool = default;
 
+    /**
+     * @brief Gather unit data at index
+     * @param idx index in SoA to gather data from
+     * @return Unit
+     */
     [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> Unit
     {
         Unit unit;
@@ -205,6 +231,13 @@ struct UnitSoA
     }
 };
 
+/**
+ * @brief Convert range of units from AoS form to SoA
+ *
+ * @tparam Range type of range of collection of units
+ * @param aos data to transform to SoA
+ * @return UnitSoA representation of input
+ */
 template<std::ranges::range Range>
 auto AoStoSoA(Range &&aos) noexcept -> UnitSoA
     requires std::is_same_v<std::ranges::range_value_t<Range>, Unit>
@@ -255,10 +288,12 @@ auto AoStoSoA(Range &&aos) noexcept -> UnitSoA
 }
 
 
-// Static Neutral Units such as VespeneGeysers are missing
-// many of the common player unit properties and therefore
-// should be handled separately to save space and better
-// separate neutral entities and dynamic agents
+/**
+ * @brief Static Neutral units in the Game
+ *
+ * @note Static Neutral Units such as VespeneGeysers are missing many of the common player unit properties and therefore
+ * are handled separately to save space and better separate neutral entities and dynamic agents.
+ */
 struct NeutralUnit
 {
     UID id{};
@@ -294,6 +329,9 @@ struct NeutralUnit
     }
 };
 
+/**
+ * @brief SoA representation of a collection of Neutral Units
+ */
 struct NeutralUnitSoA
 {
     using struct_type = NeutralUnit;
@@ -325,6 +363,13 @@ struct NeutralUnitSoA
     }
 };
 
+/**
+ * @brief Convert range of neutral units from AoS form to SoA
+ *
+ * @tparam Range type of range of collection of neutral units
+ * @param aos data to transform to SoA
+ * @return NeutralUnitSoA representation of input
+ */
 template<std::ranges::range Range>
 auto AoStoSoA(Range &&aos) noexcept -> NeutralUnitSoA
     requires std::is_same_v<std::ranges::range_value_t<Range>, NeutralUnit>
@@ -361,6 +406,13 @@ template<typename UnitSoAT> struct FlattenedUnits
     std::vector<std::uint32_t> indices;
 };
 
+/**
+ * @brief First version of instance-major unit sorting, includes index with each unit as a separate vector.
+ *
+ * @tparam UnitSoAT unit structure type
+ * @param replayUnits unit data to rearrange
+ * @return FlattenedUnits<UnitSoAT> instance-major units
+ */
 template<IsSoAType UnitSoAT>
 [[nodiscard]] auto flattenAndSortUnits(
     const std::vector<std::vector<typename UnitSoAT::struct_type>> &replayUnits) noexcept -> FlattenedUnits<UnitSoAT>
@@ -388,9 +440,15 @@ template<IsSoAType UnitSoAT>
     return { unitsSoA, indices };
 }
 
+/**
+ * @brief Transform instance-major unit data back to time-major
+ * @tparam UnitSoAT
+ * @param flattenedUnits instance-major data to transform
+ * @return Unit data grouped by time
+ */
 template<IsSoAType UnitSoAT>
-[[nodiscard]] auto recoverFlattenedSortedUnits(const FlattenedUnits<UnitSoAT> &flattenedUnits) noexcept
-    -> std::vector<std::vector<typename UnitSoAT::struct_type>>
+[[nodiscard]] auto recoverFlattenedSortedUnits(
+    const FlattenedUnits<UnitSoAT> &flattenedUnits) noexcept -> std::vector<std::vector<typename UnitSoAT::struct_type>>
 {
     // Create outer dimension with the maximum game step index
     std::vector<std::vector<typename UnitSoAT::struct_type>> replayUnits;
@@ -411,6 +469,9 @@ template<IsSoAType UnitSoAT>
 // -----------------------------------------------------------------
 
 
+/**
+ * @brief Start and count parameters for IOTA
+ */
 struct IotaRange
 {
     std::uint32_t start;
@@ -428,6 +489,14 @@ template<typename UnitSoAT> struct FlattenedUnits2
     std::uint32_t max_step;
 };
 
+/**
+ * @brief Second version of instance-major unit sorting, chunks the time indices into iota-ranges rather than spelling
+ * out [1,2,3,...,N]. Saves a small amount of space, but the work is done so might as well use it.
+ *
+ * @tparam UnitSoAT unit structure type
+ * @param replayUnits unit data to rearrange
+ * @return FlattenedUnits<UnitSoAT> instance-major units
+ */
 template<IsSoAType UnitSoAT>
 [[nodiscard]] auto flattenAndSortUnits2(
     const std::vector<std::vector<typename UnitSoAT::struct_type>> &replayUnits) noexcept -> FlattenedUnits2<UnitSoAT>
@@ -478,6 +547,12 @@ template<IsSoAType UnitSoAT>
     return result;
 }
 
+/**
+ * @brief Transform v2 instance-major unit data back to time-major
+ * @tparam UnitSoAT
+ * @param flattenedUnits instance-major data to transform
+ * @return Unit data grouped by time
+ */
 template<IsSoAType UnitSoAT>
 [[nodiscard]] auto recoverFlattenedSortedUnits2(const FlattenedUnits2<UnitSoAT> &flattenedUnits) noexcept
     -> std::vector<std::vector<typename UnitSoAT::struct_type>>

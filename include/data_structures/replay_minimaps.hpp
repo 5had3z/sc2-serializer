@@ -7,6 +7,9 @@
 
 namespace cvt {
 
+/**
+ * @brief Replay step data that contains scalar data and minimap data
+ */
 struct StepDataNoUnits
 {
     using has_scalar_data = std::true_type;
@@ -31,6 +34,9 @@ struct StepDataNoUnits
 
 static_assert(HasScalarData<StepDataNoUnits> && HasMinimapData<StepDataNoUnits>);
 
+/**
+ * @brief SoA representation of an array of StepDataNoUnits
+ */
 struct StepDataSoANoUnits
 {
     using has_scalar_data = std::true_type;
@@ -53,9 +59,14 @@ struct StepDataSoANoUnits
 
     [[nodiscard]] auto operator==(const StepDataSoANoUnits &other) const noexcept -> bool = default;
 
-    [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> StepDataNoUnits
+    /**
+     * @brief Gather step data from each array to make structure of data at step.
+     * @param idx time index of replay to gather.
+     * @return Gathered step data.
+     */
+    [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> struct_type
     {
-        StepDataNoUnits stepData;
+        struct_type stepData;
         stepData.gameStep = gameStep[idx];
         stepData.minearals = minearals[idx];
         stepData.vespene = vespene[idx];
@@ -75,24 +86,34 @@ struct StepDataSoANoUnits
 
 static_assert(HasScalarData<StepDataSoANoUnits> && HasMinimapData<StepDataSoANoUnits> && IsSoAType<StepDataSoANoUnits>);
 
+/**
+ * @brief ReplayData with minimap and scalar data
+ */
 using ReplayDataNoUnits = ReplayDataTemplate<StepDataNoUnits>;
+
+/**
+ * @brief ReplayData as SoA with minimap and scalar data
+ */
 using ReplayDataSoANoUnits = ReplayDataTemplateSoA<StepDataSoANoUnits>;
+
 static_assert(std::same_as<ReplayDataSoANoUnits::struct_type, ReplayDataNoUnits>);
 
+/**
+ * @brief Database interface implementation for ReplayDataSoANoUnits
+ */
 template<> struct DatabaseInterface<ReplayDataSoANoUnits>
 {
-    static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>
-    {
-        ReplayInfo header;
-        deserialize(header, dbStream);
-        return std::make_pair(header.replayHash, header.playerId);
-    }
-
     static auto getHeaderImpl(std::istream &dbStream) -> ReplayInfo
     {
         ReplayInfo result;
         deserialize(result, dbStream);
         return result;
+    }
+
+    static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>
+    {
+        const auto replayInfo = DatabaseInterface::getHeaderImpl(dbStream);
+        return std::make_pair(replayInfo.replayHash, replayInfo.playerId);
     }
 
     static auto getEntryImpl(std::istream &dbStream) -> ReplayDataSoANoUnits

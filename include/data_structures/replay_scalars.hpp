@@ -7,6 +7,9 @@
 
 namespace cvt {
 
+/**
+ * @brief Replay step data that only contains scalar data
+ */
 struct StepDataNoUnitsMiniMap
 {
     using has_scalar_data = std::true_type;
@@ -24,6 +27,9 @@ struct StepDataNoUnitsMiniMap
 
 static_assert(HasScalarData<StepDataNoUnitsMiniMap>);
 
+/**
+ * @brief SoA representation of an array of StepDataNoUnitsMiniMap
+ */
 struct StepDataSoANoUnitsMiniMap
 {
     using has_scalar_data = std::true_type;
@@ -40,6 +46,11 @@ struct StepDataSoANoUnitsMiniMap
 
     [[nodiscard]] auto operator==(const StepDataSoANoUnitsMiniMap &other) const noexcept -> bool = default;
 
+    /**
+     * @brief Gather step data from each array to make structure of data at step.
+     * @param idx time index of replay to gather.
+     * @return Gathered step data.
+     */
     [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> StepDataNoUnitsMiniMap
     {
         StepDataNoUnitsMiniMap stepData;
@@ -56,24 +67,33 @@ struct StepDataSoANoUnitsMiniMap
 
 static_assert(HasScalarData<StepDataSoANoUnitsMiniMap> && IsSoAType<StepDataSoANoUnitsMiniMap>);
 
+/**
+ * @brief ReplayData with minimap and scalar data
+ */
 using ReplayDataNoUnitsMiniMap = ReplayDataTemplate<StepDataNoUnitsMiniMap>;
+
+/**
+ * @brief ReplayData as SoA with minimap and scalar data
+ */
 using ReplayDataSoANoUnitsMiniMap = ReplayDataTemplateSoA<StepDataSoANoUnitsMiniMap>;
 static_assert(std::same_as<ReplayDataSoANoUnitsMiniMap::struct_type, ReplayDataNoUnitsMiniMap>);
 
+/**
+ * @brief Database interface implementation for ReplayDataSoANoUnitsMiniMap
+ */
 template<> struct DatabaseInterface<ReplayDataSoANoUnitsMiniMap>
 {
-    static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>
-    {
-        ReplayInfo header;
-        deserialize(header, dbStream);
-        return std::make_pair(header.replayHash, header.playerId);
-    }
-
     static auto getHeaderImpl(std::istream &dbStream) -> ReplayInfo
     {
         ReplayInfo result;
         deserialize(result, dbStream);
         return result;
+    }
+
+    static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>
+    {
+        const auto replayInfo = DatabaseInterface::getHeaderImpl(dbStream);
+        return std::make_pair(replayInfo.replayHash, replayInfo.playerId);
     }
 
     static auto getEntryImpl(std::istream &dbStream) -> ReplayDataSoANoUnitsMiniMap

@@ -8,6 +8,9 @@
 
 namespace cvt {
 
+/**
+ * @brief Step data that contains scalar, minimap and unit data. Basically all of it.
+ */
 struct StepData
 {
     using has_scalar_data = std::true_type;
@@ -36,6 +39,9 @@ struct StepData
 
 static_assert(HasScalarData<StepData> && HasMinimapData<StepData> && HasUnitData<StepData>);
 
+/**
+ * @brief SoA representation of an array of StepData
+ */
 struct StepDataSoA
 {
     using has_scalar_data = std::true_type;
@@ -62,6 +68,11 @@ struct StepDataSoA
 
     [[nodiscard]] auto operator==(const StepDataSoA &other) const noexcept -> bool = default;
 
+    /**
+     * @brief Gather step data from each array to make structure of data at step.
+     * @param idx time index of replay to gather.
+     * @return Gathered step data.
+     */
     [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> StepData
     {
         StepData stepData;
@@ -88,10 +99,25 @@ struct StepDataSoA
 static_assert(
     HasScalarData<StepDataSoA> && HasMinimapData<StepDataSoA> && HasUnitData<StepDataSoA> && IsSoAType<StepDataSoA>);
 
+/**
+ * @brief ReplayData with only scalar data
+ */
 using ReplayData = ReplayDataTemplate<StepData>;
+
+/**
+ * @brief ReplayData as SoA with only scalar data
+ */
 using ReplayDataSoA = ReplayDataTemplateSoA<StepDataSoA>;
+
 static_assert(std::same_as<ReplayDataSoA::struct_type, ReplayData>);
 
+/**
+ * @brief Convert array-of-structures to structure-of-arrays
+ *
+ * @tparam Range range type of StepData
+ * @param aos data to transform
+ * @return StepDataSoA transposed data
+ */
 template<std::ranges::range Range>
     requires std::same_as<std::ranges::range_value_t<Range>, StepData>
 auto AoStoSoA(Range &&aos) noexcept -> StepDataSoA
@@ -122,20 +148,22 @@ auto AoStoSoA(Range &&aos) noexcept -> StepDataSoA
     return soa;
 }
 
+/**
+ * @brief Database interface implementation for ReplayDataSoA
+ */
 template<> struct DatabaseInterface<ReplayDataSoA>
 {
-    static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>
-    {
-        ReplayInfo header;
-        deserialize(header, dbStream);
-        return std::make_pair(header.replayHash, header.playerId);
-    }
-
     static auto getHeaderImpl(std::istream &dbStream) -> ReplayInfo
     {
         ReplayInfo result;
         deserialize(result, dbStream);
         return result;
+    }
+
+    static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>
+    {
+        const auto replayInfo = DatabaseInterface::getHeaderImpl(dbStream);
+        return std::make_pair(replayInfo.replayHash, replayInfo.playerId);
     }
 
     static auto getEntryImpl(std::istream &dbStream) -> ReplayDataSoA

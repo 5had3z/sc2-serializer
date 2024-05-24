@@ -9,12 +9,28 @@
 // Enum things
 namespace cvt {
 
-// Converts an enum value to a one-hot encoding
+/**
+ * @brief Converts an enum value to a one-hot encoding
+ * @tparam E enum type to convert
+ * @tparam T element type of output vector
+ * @param e enum to convert
+ * @return one-hot encoding of enum
+ */
 template<typename E, typename T>
     requires std::is_enum_v<E>
 auto enumToOneHot(E e) noexcept -> std::vector<T>;
 
 namespace detail {
+
+
+    /**
+     * @brief Enum conversion helper that takes an enum value and an array of all possible enum values, finds the index
+     * where the enum appears and returns that index.
+     * @tparam T value type of output vector
+     * @param enumVal enum to convert
+     * @param enumValues array of all possible enum values
+     * @return vector one-hot encoding of the enum.
+     */
     template<typename T>
     auto enumToOneHot_helper(auto enumVal, const std::ranges::range auto &enumValues) -> std::vector<T>
     {
@@ -27,6 +43,12 @@ namespace detail {
 
 enum class Alliance : char { Self = 1, Ally = 2, Neutral = 3, Enemy = 4 };
 
+/**
+ * @brief Convert alliance value to one-hot encoding
+ * @tparam T output value type
+ * @param e enum to convert
+ * @return one-hot encoding
+ */
 template<typename T> auto enumToOneHot(Alliance e) noexcept -> std::vector<T>
 {
     constexpr std::array vals = std::array{ Alliance::Self, Alliance::Ally, Alliance::Neutral, Alliance::Enemy };
@@ -36,6 +58,12 @@ template<typename T> auto enumToOneHot(Alliance e) noexcept -> std::vector<T>
 
 enum class CloakState : char { Unknown = 0, Cloaked = 1, Detected = 2, UnCloaked = 3, Allied = 4 };
 
+/**
+ * @brief Convert cloak state value to one-hot encoding
+ * @tparam T output value type
+ * @param e enum to convert
+ * @return one-hot encoding
+ */
 template<typename T> auto enumToOneHot(CloakState e) noexcept -> std::vector<T>
 {
     constexpr std::array vals = {
@@ -47,6 +75,12 @@ template<typename T> auto enumToOneHot(CloakState e) noexcept -> std::vector<T>
 
 enum class Visibility : char { Visible = 1, Snapshot = 2, Hidden = 3 };
 
+/**
+ * @brief Convert visibility value to one-hot encoding
+ * @tparam T output value type
+ * @param e enum to convert
+ * @return one-hot encoding
+ */
 template<typename T> auto enumToOneHot(Visibility e) noexcept -> std::vector<T>
 {
     constexpr std::array vals = { Visibility::Visible, Visibility::Snapshot, Visibility::Hidden };
@@ -56,6 +90,12 @@ template<typename T> auto enumToOneHot(Visibility e) noexcept -> std::vector<T>
 
 enum class AddOn : char { None = 0, Reactor = 1, TechLab = 2 };
 
+/**
+ * @brief Convert addon value to one-hot encoding
+ * @tparam T output value type
+ * @param e enum to convert
+ * @return one-hot encoding
+ */
 template<typename T> auto enumToOneHot(AddOn e) noexcept -> std::vector<T>
 {
     constexpr std::array vals = { AddOn::None, AddOn::Reactor, AddOn::TechLab };
@@ -65,6 +105,12 @@ template<typename T> auto enumToOneHot(AddOn e) noexcept -> std::vector<T>
 
 enum class Race : char { Terran, Zerg, Protoss, Random };
 
+/**
+ * @brief Convert race value to one-hot encoding
+ * @tparam T output value type
+ * @param e enum to convert
+ * @return one-hot encoding
+ */
 template<typename T> auto enumToOneHot(Race e) noexcept -> std::vector<T>
 {
     constexpr std::array vals = { Race::Terran, Race::Zerg, Race::Protoss, Race::Random };
@@ -74,6 +120,12 @@ template<typename T> auto enumToOneHot(Race e) noexcept -> std::vector<T>
 
 enum class Result : char { Win, Loss, Tie, Undecided };
 
+/**
+ * @brief Convert result value to one-hot encoding
+ * @tparam T output value type
+ * @param e enum to convert
+ * @return one-hot encoding
+ */
 template<typename T> auto enumToOneHot(Result e) noexcept -> std::vector<T>
 {
     constexpr std::array vals = { Result::Win, Result::Loss, Result::Tie, Result::Undecided };
@@ -85,6 +137,9 @@ template<typename T> auto enumToOneHot(Result e) noexcept -> std::vector<T>
 }// namespace cvt
 
 
+/**
+ * @brief fmt formatter specialization for alliance
+ */
 template<> struct fmt::formatter<cvt::Alliance> : formatter<string_view>
 {
     auto format(cvt::Alliance a, format_context &ctx) const
@@ -109,6 +164,9 @@ template<> struct fmt::formatter<cvt::Alliance> : formatter<string_view>
 };
 
 
+/**
+ * @brief fmt formatter specialization for cloak state
+ */
 template<> struct fmt::formatter<cvt::CloakState> : formatter<string_view>
 {
     auto format(cvt::CloakState c, format_context &ctx) const
@@ -135,6 +193,9 @@ template<> struct fmt::formatter<cvt::CloakState> : formatter<string_view>
     }
 };
 
+/**
+ * @brief fmt formatter specialization for visibility
+ */
 template<> struct fmt::formatter<cvt::Visibility> : formatter<string_view>
 {
     // auto format(cvt::Visibility v, format_context &ctx) const;
@@ -156,6 +217,9 @@ template<> struct fmt::formatter<cvt::Visibility> : formatter<string_view>
     }
 };
 
+/**
+ * @brief fmt formatter specialization for addon
+ */
 template<> struct fmt::formatter<cvt::AddOn> : formatter<string_view>
 {
     auto format(cvt::AddOn a, format_context &ctx) const
@@ -176,6 +240,9 @@ template<> struct fmt::formatter<cvt::AddOn> : formatter<string_view>
     }
 };
 
+/**
+ * @brief fmt formatter specialization for race
+ */
 template<> struct fmt::formatter<cvt::Race> : formatter<string_view>
 {
     auto format(cvt::Race r, format_context &ctx) const
@@ -199,6 +266,9 @@ template<> struct fmt::formatter<cvt::Race> : formatter<string_view>
     }
 };
 
+/**
+ * @brief fmt formatter specialization for result
+ */
 template<> struct fmt::formatter<cvt::Result> : formatter<string_view>
 {
     auto format(cvt::Result r, format_context &ctx) const
