@@ -1,3 +1,5 @@
+"""Main Python Interface to SC2 Replay Data"""
+
 from pathlib import Path
 
 from ._sc2_replay_reader import (

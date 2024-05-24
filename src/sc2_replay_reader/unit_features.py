@@ -1,3 +1,5 @@
+"""Enum helpers to index into unit feature vectors"""
+
 from enum import IntEnum, auto
 
 import sc2_replay_reader as sc2

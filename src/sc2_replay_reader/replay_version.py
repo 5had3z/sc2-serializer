@@ -1,3 +1,5 @@
+"""Use mpyq to extract version data from the replay"""
+
 import io
 import json
 

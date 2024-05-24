@@ -12,18 +12,31 @@ namespace cvt {
 
 // ------ Basic Data Structs ------
 
-typedef std::uint64_t UID;// Type that represents unique identifier in the game
+/**
+ * @brief Type that represents unique identifier in the game
+ */
+typedef std::uint64_t UID;
 
+/**
+ * @brief Concept that checks if a struct is a Struct-of-Arrays type if it has the original struct_type defined
+ */
 template<typename T>
 concept IsSoAType = requires(T x) {
     typename T::struct_type;
-    {
-        x[std::size_t{}]
-    } -> std::same_as<typename T::struct_type>;
+    { x[std::size_t{}] } -> std::same_as<typename T::struct_type>;
 };
 
 namespace detail {
 
+    /**
+     * @brief Vectorize single arithmetic element by writing to output iterator It and incrementing
+     * @tparam T Arithmetic type
+     * @tparam It Output iterator type
+     * @param d Data to vectorize
+     * @param it Output iterator
+     * @param onehotEnum flag to expand enum types to onehot
+     * @return Incremented output iterator
+     */
     template<typename T, typename It>
         requires std::is_arithmetic_v<T>
     auto vectorize_helper(T d, It it, bool onehotEnum) -> It
@@ -32,6 +45,15 @@ namespace detail {
         return it;
     }
 
+    /**
+     * @brief Vectorize range of arithmetic elements by writing to and incrementing output iterator
+     * @tparam T Range type
+     * @tparam It Output iterator type
+     * @param d Range data to vectorize
+     * @param it Output iterator
+     * @param onehotEnum flag to expand enum types to onehot
+     * @return Incremented output iterator
+     */
     template<std::ranges::range T, typename It>
         requires std::is_arithmetic_v<std::ranges::range_value_t<T>>
     auto vectorize_helper(const T &d, It it, bool onehotEnum) -> It
@@ -39,6 +61,15 @@ namespace detail {
         return std::ranges::transform(d, it, [](auto e) { return static_cast<It::container_type::value_type>(e); }).out;
     }
 
+    /**
+     * @brief Vectorize enum type and optionally expand to onehot encoding to and incrementing output iterator
+     * @tparam T Enum type
+     * @tparam It Output iterator type
+     * @param d Enum data to vectorize
+     * @param it Output iterator
+     * @param onehotEnum flag to expand enum types to onehot
+     * @return Incremented output iterator
+     */
     template<typename T, typename It>
         requires std::is_enum_v<T>
     auto vectorize_helper(T d, It it, bool onehotEnum) -> It
@@ -52,6 +83,15 @@ namespace detail {
         return it;
     }
 
+    /**
+     * @brief Vectorize struct (aggregate type) to data
+     * @tparam T Struct type
+     * @tparam It Output iterator type
+     * @param d Struct to vectorize
+     * @param it Output iterator
+     * @param onehotEnum flag to expand enum types to onehot
+     * @return Incremented output iterator
+     */
     template<typename T, typename It>
         requires std::is_aggregate_v<T> && (!std::ranges::range<T>)
     auto vectorize_helper(T d, It it, bool onehotEnum) -> It
@@ -60,10 +100,17 @@ namespace detail {
             d, [&it, onehotEnum](const auto &field) { it = detail::vectorize_helper(field, it, onehotEnum); });
         return it;
     }
-
-
 }// namespace detail
 
+/**
+ * @brief Vectorize Struct of data to mutable output iterator
+ * @tparam S struct type
+ * @tparam It output iterator type
+ * @param s Struct data to vectorize
+ * @param it Output iterator
+ * @param onehotEnum Flag to expand enum types to onehot encoding (default: false)
+ * @return Incremented output iterator
+ */
 template<typename S, typename It>
     requires std::is_aggregate_v<S> && std::is_arithmetic_v<typename It::container_type::value_type>
 [[maybe_unused]] auto vectorize(S s, It it, bool onehotEnum = false) -> It
@@ -74,6 +121,16 @@ template<typename S, typename It>
 }
 
 // TODO: Add helper fn to check the vectorization size
+
+
+/**
+ * @brief Vectorize Struct of data to vector
+ * @tparam T Output arithmetic type of vector
+ * @tparam S Struct type to vectorize
+ * @param s struct data to vectorize
+ * @param onehotEnum Flag to expand enum types to onehot encoding (default: false)
+ * @return Vectorized struct data as type T
+ */
 template<typename T, typename S>
     requires std::is_aggregate_v<S> && std::is_arithmetic_v<T>
 auto vectorize(S s, bool onehotEnum = false) -> std::vector<T>
@@ -133,8 +190,8 @@ struct Point3f
 
 
 /**
- * @brief
- * @tparam T
+ * @brief Type-erased single channel image data container
+ * @tparam T datatype of image elements
  */
 template<typename T>
     requires std::is_arithmetic_v<T>
@@ -148,12 +205,24 @@ struct Image
     int _w = 0;
     std::vector<std::byte> _data{};
 
+    /**
+     * @brief Compare equality of images
+     * @param other comparison image
+     * @return True if image data is equal
+     */
     [[nodiscard]] auto operator==(const Image &other) const noexcept -> bool = default;
 
-    // Number of elements in the image
+    /**
+     * @brief Number of elements in the image
+     * @return Number of elements in the image
+     */
     [[nodiscard]] auto nelem() const noexcept -> std::size_t { return _h * _w; }
 
-    // Resize the buffer
+    /**
+     * @brief Resize the underlying data buffer to new height and width
+     * @param height new height
+     * @param width new width
+     */
     void resize(int height, int width)
     {
         _h = height;
@@ -166,7 +235,9 @@ struct Image
         }
     }
 
-    // Clear buffer and shape
+    /**
+     * @brief Clear the data buffer and shape
+     */
     void clear() noexcept
     {
         _data.clear();
@@ -174,16 +245,30 @@ struct Image
         _w = 0;
     }
 
-    // Size in bytes of the buffer
+    /**
+     * @brief Size in bytes of the buffer
+     * @return Size in bytes of the buffer
+     */
     [[nodiscard]] auto size() const noexcept -> std::size_t { return _data.size(); }
 
-    // Uninitialized/empty buffer
+    /**
+     * @brief Check if data buffer is empty
+     * @return True if data buffer is empty
+     */
     [[nodiscard]] auto empty() const noexcept -> bool { return _data.empty(); }
 
-    // Typed pointer to the data
+
+    /**
+     * @brief Typed pointer to the data
+     * @return Typed pointer to the data
+     */
     [[nodiscard]] auto data() noexcept -> ptr_type { return reinterpret_cast<ptr_type>(_data.data()); }
 
-    // Const Typed pointer to the data
+
+    /**
+     * @brief Const Typed pointer to the data
+     * @return Const Typed pointer to the data
+     */
     [[nodiscard]] auto data() const noexcept -> const_ptr_type
     {
         return reinterpret_cast<const_ptr_type>(_data.data());
@@ -191,6 +276,7 @@ struct Image
 
     /**
      * @brief Typed modifiable view of the data, unavailable if value_type is bool
+     * @return Typed span view of the data
      */
     [[nodiscard]] auto as_span() noexcept -> std::span<value_type>
         requires(!std::same_as<value_type, bool>)
@@ -200,8 +286,9 @@ struct Image
 
     /**
      * @brief Typed const view of the data, unavailable if value_type is bool
+     * @return Typed span view of the const data
      */
-    [[nodiscard]] auto as_span() const noexcept -> const std::span<const value_type>
+    [[nodiscard]] auto as_span() const noexcept -> std::span<const value_type>
         requires(!std::same_as<value_type, bool>)
     {
         return std::span(this->data(), this->nelem());
@@ -209,6 +296,9 @@ struct Image
 };
 
 
+/**
+ * @brief All score data from the player point-of-view of StarCraft II
+ */
 struct Score
 {
     float score_float;
@@ -241,16 +331,27 @@ struct Score
 };
 
 
+/**
+ * @brief Player action in StarCraft II
+ */
 struct Action
 {
+    /**
+     * @brief Type of target for the action
+     */
     enum TargetType { Self, OtherUnit, Position };
 
-    // Use chat union and tag here because it's needed for serialization anyway
+    /**
+     * @brief Target data is either a position or another Unit ID. For example the target of moving units could be
+     * a position on the minimap, or another unit to attack.
+     */
     union Target {
         Point2d point;
         UID other;
-        // Provide a default constructor to avoid Pybind11's error
+
+        // Provide a default constructor to avoid Pybind11 error
         Target() { memset(this, 0, sizeof(Target)); }
+
         explicit Target(Point2d &&d) noexcept : point(d) {}
         explicit Target(const Point2d &d) noexcept : point(d) {}
         auto operator=(Point2d &&d) noexcept -> Target &
@@ -268,11 +369,31 @@ struct Action
         }
     };
 
+    /**
+     * @brief Units this Action has an effect on
+     */
     std::vector<UID> unit_ids{};
+
+    /**
+     * @brief Ability ID of the Action
+     */
     int ability_id{};
+
+    /**
+     * @brief Type of target this action effects
+     */
     TargetType target_type{ TargetType::Self };
+
+    /**
+     * @brief Target this effects
+     */
     Target target{};
 
+    /**
+     * @brief Check equality between two actions
+     * @param other Action to compare against
+     * @return True if equal
+     */
     [[nodiscard]] auto operator==(const Action &other) const noexcept -> bool
     {
         bool ret = true;
@@ -295,12 +416,17 @@ struct Action
     }
 };
 
+/**
+ * @brief Convert enum to onehot for target type
+ * @tparam T output data type of one-hot vector
+ * @param e Target type enumeration
+ * @return One hot encoding vector of target type
+ */
 template<typename T> auto enumToOneHot(Action::TargetType e) noexcept -> std::vector<T>
 {
     using E = Action::TargetType;
     constexpr std::array vals = { E::Self, E::OtherUnit, E::Position };
     return detail::enumToOneHot_helper<T>(e, vals);
 }
-
 
 }// namespace cvt
