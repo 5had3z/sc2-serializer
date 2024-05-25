@@ -4,4 +4,4 @@ Observer
 ========
 
 .. doxygenfile:: observer.hpp
-   :project: C++ Sphinx Doxygen Breathe
+   :project: StarCraft II Serializer

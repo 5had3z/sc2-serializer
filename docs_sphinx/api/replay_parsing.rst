@@ -4,4 +4,4 @@ Replay Parsing
 ==============
 
 .. doxygenfile:: replay_parsing.hpp
-   :project: C++ Sphinx Doxygen Breathe
+   :project: StarCraft II Serializer

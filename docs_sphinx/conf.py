@@ -20,7 +20,7 @@ subprocess.call("doxygen Doxyfile", shell=True)
 
 # -- Project information -----------------------------------------------------
 
-project = "C++ Sphinx Doxygen Breathe"
+project = "StarCraft II Serializer"
 copyright = "2020, me"
 author = "me"
 
@@ -85,6 +85,6 @@ html_static_path = ["_static"]
 
 # -- Breathe configuration -------------------------------------------------
 
-breathe_projects = {"C++ Sphinx Doxygen Breathe": "_build/xml/"}
-breathe_default_project = "C++ Sphinx Doxygen Breathe"
+breathe_projects = {"StarCraft II Serializer": "_build/xml/"}
+breathe_default_project = "StarCraft II Serializer"
 breathe_default_members = ("members", "undoc-members")
