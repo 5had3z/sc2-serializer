@@ -1,5 +1,6 @@
-# [WIP] sc2-serializer
-Alternative to generating the "100's of TB" format from alphastar unplugged.
+# sc2-serializer
+
+Starcraft II replay serialization and dataloding tool for machine learning. Serialization uses less than half the memory, runs 11% faster, and produces files 10x smaller than [AlphaStar-Unplugged](https://github.com/google-deepmind/alphastar/tree/main/alphastar/unplugged/data).
 
 ## Documentation
 
@@ -9,11 +10,26 @@ See [https://5had3z.github.io/sc2-serializer/index.html](https://5had3z.github.i
 
  - If the generated_info.hpp is out-of-date compared to info found in PySC2, re-run scripts/gen_info_header.py.
 
- - The SC2 API Zeros out the mineral and vesper resources if they are in the fog-of-war. Instead we default them to the correct value and keep track of their last observed value. We still include the visibility so it is trivial to revert back to zero'd out observations.
+ - The SC2 API zeros out mineral and vespene resources if they are in the fog-of-war. Instead we default them to the correct value and keep track of their last observed value. Visibility is still included, so it is trivial to revert back to zero'd out observations.
 
- - Strongly recommended to use [zlib-ng](https://github.com/zlib-ng/zlib-ng) with their LD_PRELOAD instructions.
+ - Strongly recommended to use [zlib-ng](https://github.com/zlib-ng/zlib-ng) with their LD_PRELOAD instructions for faster (de)serialization.
 
 ## Building C++ Observer and Tests
+
+### General
+
+To use the SCII replay observer for converting replays, you will need to initialize the 3rdparty submodule(s).
+
+```
+git submodule update --init --recursive
+```
+
+To build if you use vscode you should be able to just use the cmake extension Otherwise the CLI should be the following.
+
+```
+cmake -B build
+cmake --build build --target ALL_BUILD
+```
 
 ### Python Dependencies
 
@@ -63,20 +79,7 @@ I would not recommend Python 3.12, [dm-tree will not compile](https://github.com
 
 You will need to make sure PYTHONHOME is set correctly.
 
-This will compile both boost and zlib for you.
-
-To use the SCII replay observer, you will need to initialize the 3rdparty submodule(s).
-
-```
-git submodule update --init --recursive
-```
-
-To build if you use vscode you should be able to just use the cmake extension Otherwise the CLI should be the following.
-
-```
-cmake -B build
-cmake --build build --target ALL_BUILD
-```
+This package will compile both boost and zlib for you. If you already have these somewhere else and want to save the compilation time, you'll have to modify CMakeLists.txt yourself.
 
 ## Building Python Bindigs
 
@@ -90,13 +93,12 @@ If you install in editable mode, you won't get the auto-gen stubs, you can add t
 pybind11-stubgen _sc2_replay_reader --module-path build/_sc2_replay_reader.cpython-310-x86_64-linux-gnu.so -o src/sc2_replay_reader
 ```
 
-It is also faster to iterate while developing by installing in editable mode, removing pip's compiled version `src/sc2_replay_reader/_sc2_replay_reader.cpython-310-x86_64-linux-gnu.so` and symbolically linking to `build/_sc2_replay_reader.cpython-310-x86_64-linux-gnu.so` instead for incremental builds. You will have manually update the stub with the previously mentioned script however if api changes are made.
+It is also faster to iterate while developing by installing in editable mode, removing pip's compiled version `src/sc2_replay_reader/_sc2_replay_reader.cpython-310-x86_64-linux-gnu.so` and symbolically linking to `build/_sc2_replay_reader.cpython-310-x86_64-linux-gnu.so` instead for incremental builds. You will have manually update the stub with the previously mentioned script if api changes are made.
 
 ## Generating SQL Database
 
-To generate meta-data for all the replays, we require additional dependencies:
+To generate meta-data for all the replays, we require additional dependencies, which can be installed with:
 
-Install additional dependencies with:
 ```bash
 pip install sc2-replay-parser[database]
 ```
@@ -106,10 +108,11 @@ Set the environment variable "DATAPATH" to the directory containing "*.SC2Replay
 Run `python gen_database.py --workspace <OUTPUT_DIR> --workers=8`
 
 - <OUTPUT_DIR> is the output directory.
-- --workers sets the number of data loader workers.
+- --workers sets the number of dataloader workers.
 
 
-### Git hooks
+## Git hooks
+
 The CI will run several checks on the new code pushed to the repository. These checks can also be run locally without waiting for the CI by following the steps below:
 
 1. [install pre-commit](https://pre-commit.com/#install),

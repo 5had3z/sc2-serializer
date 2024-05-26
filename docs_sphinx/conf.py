@@ -21,8 +21,8 @@ subprocess.call("doxygen Doxyfile", shell=True)
 # -- Project information -----------------------------------------------------
 
 project = "StarCraft II Serializer"
-copyright = "2020, me"
-author = "me"
+copyright = "2020, Bryce Ferenczi"
+author = "Bryce Ferenczi, Rhys Newbury"
 
 
 # -- General configuration ---------------------------------------------------
