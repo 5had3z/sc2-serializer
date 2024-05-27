@@ -4,5 +4,6 @@ var searchData=
   ['databaseinterface_22',['DatabaseInterface',['../d1/d1c/structcvt_1_1DatabaseInterface.html',1,'cvt']]],
   ['databaseinterface_3c_20replaydatasoa_20_3e_23',['DatabaseInterface&lt; ReplayDataSoA &gt;',['../d5/db8/structcvt_1_1DatabaseInterface_3_01ReplayDataSoA_01_4.html',1,'cvt']]],
   ['databaseinterface_3c_20replaydatasoanounits_20_3e_24',['DatabaseInterface&lt; ReplayDataSoANoUnits &gt;',['../dd/ddd/structcvt_1_1DatabaseInterface_3_01ReplayDataSoANoUnits_01_4.html',1,'cvt']]],
-  ['databaseinterface_3c_20replaydatasoanounitsminimap_20_3e_25',['DatabaseInterface&lt; ReplayDataSoANoUnitsMiniMap &gt;',['../d9/df5/structcvt_1_1DatabaseInterface_3_01ReplayDataSoANoUnitsMiniMap_01_4.html',1,'cvt']]]
+  ['databaseinterface_3c_20replaydatasoanounitsminimap_20_3e_25',['DatabaseInterface&lt; ReplayDataSoANoUnitsMiniMap &gt;',['../d9/df5/structcvt_1_1DatabaseInterface_3_01ReplayDataSoANoUnitsMiniMap_01_4.html',1,'cvt']]],
+  ['deserialize_26',['deserialize',['../d1/d31/serialize_8hpp.html#ad6592e03a6eb4fc7bc351be5998e1aab',1,'cvt::deserialize(T &amp;data, std::istream &amp;stream)'],['../d1/d31/serialize_8hpp.html#a872bae057089ad04eb313ae4b8bacaf7',1,'cvt::deserialize(T &amp;data, std::istream &amp;stream)'],['../d1/d31/serialize_8hpp.html#afb26d1b4970b836ab6cc48effbabaa41',1,'cvt::deserialize(T &amp;data, std::istream &amp;stream)'],['../d1/d31/serialize_8hpp.html#affb21bec8949b5b8fde976650b77cd50',1,'cvt::deserialize(T &amp;data, std::istream &amp;stream)']]]
 ];

@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['minimapfeatureflags_149',['MinimapFeatureFlags',['../db/deb/structcvt_1_1MinimapFeatureFlags.html',1,'cvt']]]
+  ['minimapfeatureflags_153',['MinimapFeatureFlags',['../db/deb/structcvt_1_1MinimapFeatureFlags.html',1,'cvt']]]
 ];

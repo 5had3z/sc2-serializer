@@ -58,7 +58,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EIQNSt23is_trivially_copyable_vI1TEEEN3cvt9serializeEvRK1TRNSt7ostreamE"><code class="docutils literal notranslate"><span class="pre">cvt::serialize()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4I_NSt6ranges5rangeEEIQaaNSt6ranges16contiguous_rangeI1TEENSt23is_trivially_copyable_vINSt6ranges13range_value_tI1TEEEEEN3cvt11deserializeEvR1TRNSt7istreamE"><code class="docutils literal notranslate"><span class="pre">cvt::deserialize()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4I_NSt6ranges5rangeEEN3cvt11deserializeEvR1TRNSt7istreamE"><code class="docutils literal notranslate"><span class="pre">cvt::deserialize()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EIQNSt23is_trivially_copyable_vI1TEEEN3cvt11deserializeEDaR1TRNSt7istreamE"><code class="docutils literal notranslate"><span class="pre">cvt::deserialize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EIQNSt23is_trivially_copyable_vI1TEEEN3cvt11deserializeEvR1TRNSt7istreamE"><code class="docutils literal notranslate"><span class="pre">cvt::deserialize()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt13gMaxRangeSizeE"><code class="docutils literal notranslate"><span class="pre">cvt::gMaxRangeSize</span></code></a></li>
 </ul>
 </li>
@@ -96,6 +96,18 @@
   <section id="serialization">
 <span id="api-serialize"></span><h1>Serialization<a class="headerlink" href="#serialization" title="Link to this heading"></a></h1>
 <p>A combination of C++20 Concepts and Requires clauses are used to automatically serialize data structures. [Boost PFR](<a class="reference external" href="https://www.boost.org/doc/libs/master/doc/html/boost_pfr.html">https://www.boost.org/doc/libs/master/doc/html/boost_pfr.html</a>) is used to iterate over data structures. Data structures must be trivially copyable or some range which can be copied element-by-element.</p>
+<p>Generic Serialisation and Deserialisation Methods. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi (<a class="reference external" href="mailto:frenzi&#37;&#52;&#48;hotmail&#46;com&#46;au">frenzi<span>&#64;</span>hotmail<span>&#46;</span>com<span>&#46;</span>au</a>) </p>
+</dd>
+<dt><strong>Version</strong></dt><dd><p>0.1 </p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>2024-05-27</p>
+</dd>
+<dt><strong>Copyright</strong></dt><dd><p>Copyright (c) 2024 </p>
+</dd>
+</dl>
+</p>
 <dl class="cpp type">
 <dt class="sig sig-object cpp" id="_CPPv43cvt">
 <span id="_CPPv33cvt"></span><span id="_CPPv23cvt"></span><span id="cvt"></span><span class="target" id="df/d0d/namespacecvt"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cvt</span></span></span><br /></dt>
@@ -104,42 +116,138 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4I_NSt6ranges5rangeEEIQaaNSt6ranges16contiguous_rangeI1TEENSt23is_trivially_copyable_vINSt6ranges13range_value_tI1TEEEEEN3cvt9serializeEvRK1TRNSt7ostreamE">
 <span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ranges</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">range</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">requires</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ranges</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">contiguous_range</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I_NSt6ranges5rangeEEIQaaNSt6ranges16contiguous_rangeI1TEENSt23is_trivially_copyable_vINSt6ranges13range_value_tI1TEEEEEN3cvt9serializeEvRK1TRNSt7ostreamE" title="cvt::serialize::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="o"><span class="pre">&amp;&amp;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">is_trivially_copyable_v</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ranges</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">range_value_t</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I_NSt6ranges5rangeEEIQaaNSt6ranges16contiguous_rangeI1TEENSt23is_trivially_copyable_vINSt6ranges13range_value_tI1TEEEEEN3cvt9serializeEvRK1TRNSt7ostreamE" title="cvt::serialize::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d1/d31/serialize_8hpp_1afccfa42ea4a8b39d59ad3925acc4735b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">serialize</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I_NSt6ranges5rangeEEIQaaNSt6ranges16contiguous_rangeI1TEENSt23is_trivially_copyable_vINSt6ranges13range_value_tI1TEEEEEN3cvt9serializeEvRK1TRNSt7ostreamE" title="cvt::serialize::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">stream</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I_NSt6ranges5rangeEEIQaaNSt6ranges16contiguous_rangeI1TEENSt23is_trivially_copyable_vINSt6ranges13range_value_tI1TEEEEEN3cvt9serializeEvRK1TRNSt7ostreamE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Serialize range of values to an output stream where the range is contiguous and the values are trivially copyable. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – range type </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>data</strong> – data to serialise </p></li>
+<li><p><strong>stream</strong> – output stream to write data </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4I_NSt6ranges5rangeEEN3cvt9serializeEvRK1TRNSt7ostreamE">
 <span id="_CPPv3I_NSt6ranges5rangeEEN3cvt9serializeERK1TRNSt7ostreamE"></span><span id="_CPPv2I_NSt6ranges5rangeEEN3cvt9serializeERK1TRNSt7ostreamE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ranges</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">range</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d1/d31/serialize_8hpp_1a191d6048c261f56ff7663c0410ef4984"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">serialize</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I_NSt6ranges5rangeEEN3cvt9serializeEvRK1TRNSt7ostreamE" title="cvt::serialize::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">stream</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I_NSt6ranges5rangeEEN3cvt9serializeEvRK1TRNSt7ostreamE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Serialize range of values to an output stream by writing each element one-by-one. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – range type </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>data</strong> – data to serialize </p></li>
+<li><p><strong>stream</strong> – output stream to write data </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4I0EIQNSt23is_trivially_copyable_vI1TEEEN3cvt9serializeEvRK1TRNSt7ostreamE">
 <span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">requires</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">is_trivially_copyable_v</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EIQNSt23is_trivially_copyable_vI1TEEEN3cvt9serializeEvRK1TRNSt7ostreamE" title="cvt::serialize::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d1/d31/serialize_8hpp_1aeb1d646f9d23d6db7f72339a8e194cf8"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">serialize</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EIQNSt23is_trivially_copyable_vI1TEEEN3cvt9serializeEvRK1TRNSt7ostreamE" title="cvt::serialize::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">stream</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EIQNSt23is_trivially_copyable_vI1TEEEN3cvt9serializeEvRK1TRNSt7ostreamE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Serialize value to output stream. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – data type which must be trivially copyable </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>data</strong> – data to write </p></li>
+<li><p><strong>stream</strong> – output stream to write data </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
 <span class="target" id="d1/d31/serialize_8hpp_1aad042d27524104e098f1c1c7324685ce"></span><span class="sig-name descname"><span class="pre">template&lt;typename</span> <span class="pre">T&gt;</span> <span class="pre">requires</span> <span class="pre">std::is_aggregate_v&lt;</span> <span class="pre">T</span> <span class="pre">&gt;</span> <span class="pre">&amp;&amp;!std</span> <span class="pre">::is_trivially_copyable_v&lt;</span> <span class="pre">T</span> <span class="pre">&gt;</span> <span class="pre">void</span> <span class="pre">serialize</span> <span class="pre">(const</span> <span class="pre">T</span> <span class="pre">&amp;data,</span> <span class="pre">std::ostream</span> <span class="pre">&amp;stream)</span></span></dt>
-<dd></dd></dl>
+<dd><p>Serialize aggregate structure that isn’t trivially copyable element-by-element. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – data type to serialize </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>data</strong> – data to write </p></li>
+<li><p><strong>stream</strong> – output stream to write data </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4I_NSt6ranges5rangeEEIQaaNSt6ranges16contiguous_rangeI1TEENSt23is_trivially_copyable_vINSt6ranges13range_value_tI1TEEEEEN3cvt11deserializeEvR1TRNSt7istreamE">
 <span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ranges</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">range</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">requires</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ranges</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">contiguous_range</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I_NSt6ranges5rangeEEIQaaNSt6ranges16contiguous_rangeI1TEENSt23is_trivially_copyable_vINSt6ranges13range_value_tI1TEEEEEN3cvt11deserializeEvR1TRNSt7istreamE" title="cvt::deserialize::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="o"><span class="pre">&amp;&amp;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">is_trivially_copyable_v</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ranges</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">range_value_t</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I_NSt6ranges5rangeEEIQaaNSt6ranges16contiguous_rangeI1TEENSt23is_trivially_copyable_vINSt6ranges13range_value_tI1TEEEEEN3cvt11deserializeEvR1TRNSt7istreamE" title="cvt::deserialize::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d1/d31/serialize_8hpp_1ad6592e03a6eb4fc7bc351be5998e1aab"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">deserialize</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I_NSt6ranges5rangeEEIQaaNSt6ranges16contiguous_rangeI1TEENSt23is_trivially_copyable_vINSt6ranges13range_value_tI1TEEEEEN3cvt11deserializeEvR1TRNSt7istreamE" title="cvt::deserialize::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">istream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">stream</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I_NSt6ranges5rangeEEIQaaNSt6ranges16contiguous_rangeI1TEENSt23is_trivially_copyable_vINSt6ranges13range_value_tI1TEEEEEN3cvt11deserializeEvR1TRNSt7istreamE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Deserialize range of values where the range is contiguous and the value type is trivially copyable from input stream. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – range type of trivially-copyable elements </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>data</strong> – reference to output range to write data </p></li>
+<li><p><strong>stream</strong> – input stream to read data from </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4I_NSt6ranges5rangeEEN3cvt11deserializeEvR1TRNSt7istreamE">
 <span id="_CPPv3I_NSt6ranges5rangeEEN3cvt11deserializeER1TRNSt7istreamE"></span><span id="_CPPv2I_NSt6ranges5rangeEEN3cvt11deserializeER1TRNSt7istreamE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ranges</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">range</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d1/d31/serialize_8hpp_1a872bae057089ad04eb313ae4b8bacaf7"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">deserialize</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I_NSt6ranges5rangeEEN3cvt11deserializeEvR1TRNSt7istreamE" title="cvt::deserialize::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">istream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">stream</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I_NSt6ranges5rangeEEN3cvt11deserializeEvR1TRNSt7istreamE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Deserialize range of values element-by-element from input stream. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – range type </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>data</strong> – output reference to write data </p></li>
+<li><p><strong>stream</strong> – input stream to read data from </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4I0EIQNSt23is_trivially_copyable_vI1TEEEN3cvt11deserializeEDaR1TRNSt7istreamE">
-<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">requires</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">is_trivially_copyable_v</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EIQNSt23is_trivially_copyable_vI1TEEEN3cvt11deserializeEDaR1TRNSt7istreamE" title="cvt::deserialize::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d1/d31/serialize_8hpp_1a4bfce85f9bbc1560c168acb6739da8f3"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">deserialize</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EIQNSt23is_trivially_copyable_vI1TEEEN3cvt11deserializeEDaR1TRNSt7istreamE" title="cvt::deserialize::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">istream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">stream</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EIQNSt23is_trivially_copyable_vI1TEEEN3cvt11deserializeEDaR1TRNSt7istreamE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dt class="sig sig-object cpp" id="_CPPv4I0EIQNSt23is_trivially_copyable_vI1TEEEN3cvt11deserializeEvR1TRNSt7istreamE">
+<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="k"><span class="pre">requires</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">is_trivially_copyable_v</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EIQNSt23is_trivially_copyable_vI1TEEEN3cvt11deserializeEvR1TRNSt7istreamE" title="cvt::deserialize::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d1/d31/serialize_8hpp_1afb26d1b4970b836ab6cc48effbabaa41"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">deserialize</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EIQNSt23is_trivially_copyable_vI1TEEEN3cvt11deserializeEvR1TRNSt7istreamE" title="cvt::deserialize::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">istream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">stream</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EIQNSt23is_trivially_copyable_vI1TEEEN3cvt11deserializeEvR1TRNSt7istreamE" title="Link to this definition"></a><br /></dt>
+<dd><p>Deserialize trivially copyable data from input stream and write to output reference. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – output data type </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>data</strong> – output reference to write data </p></li>
+<li><p><strong>stream</strong> – input stream to deserialize </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp">
 <span class="target" id="d1/d31/serialize_8hpp_1affb21bec8949b5b8fde976650b77cd50"></span><span class="sig-name descname"><span class="pre">template&lt;typename</span> <span class="pre">T&gt;</span> <span class="pre">requires</span> <span class="pre">std::is_aggregate_v&lt;</span> <span class="pre">T</span> <span class="pre">&gt;</span> <span class="pre">&amp;&amp;!std</span> <span class="pre">::is_trivially_copyable_v&lt;</span> <span class="pre">T</span> <span class="pre">&gt;</span> <span class="pre">void</span> <span class="pre">deserialize</span> <span class="pre">(T</span> <span class="pre">&amp;data,</span> <span class="pre">std::istream</span> <span class="pre">&amp;stream)</span></span></dt>
-<dd></dd></dl>
+<dd><p>Deserialize non-trivially copyable structure element by element, writing to output reference. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – output non-trivial aggregate type type </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>data</strong> – output reference to write data </p></li>
+<li><p><strong>stream</strong> – input stream to deserialize </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
