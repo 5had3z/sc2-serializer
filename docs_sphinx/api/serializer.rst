@@ -2,6 +2,5 @@
 
 Serialization
 =============
-
 .. doxygenfile:: serialize.hpp
    :project: StarCraft II Serializer
