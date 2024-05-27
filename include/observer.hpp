@@ -1,3 +1,14 @@
+/**
+ * @file observer.hpp
+ * @author Bryce Ferenczi
+ * @brief Contains StarCraft II game observation classes. Each variant saves observations at different rates to balance
+ * between verbosity and dataset size.
+ * @version 0.1
+ * @date 2024-05-27
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
 #pragma once
 
 #include <sc2api/sc2_api.h>
@@ -13,13 +24,31 @@
 
 namespace cvt {
 
+/**
+ * @brief Vespene/Minearal resource observation
+ */
 struct ResourceObs
 {
-    UID id;// Original ID
-    Point3f pos;// Point on map
-    int qty;// Last observation
+    /**
+     * @brief Original ID
+     */
+    UID id;
+
+    /**
+     * @brief Location on map
+     */
+    Point3f pos;
+
+    /**
+     * @brief Last observation quantity
+     */
+    int qty;
 };
 
+/**
+ * @brief Base replay observer and converter that implements functions common to all the other sampling variants.
+ * @tparam DataSoA observation data structure to be observed and serialized
+ */
 template<typename DataSoA> class BaseConverter : public sc2::ReplayObserver
 {
   public:
@@ -68,6 +97,7 @@ template<typename DataSoA> class BaseConverter : public sc2::ReplayObserver
     /**
      * @brief Checks if a given hash is known in the database.
      * @param hash The hash to check.
+     * @note const std::string& used rather than std::string_view due to lack of set::contains compatibility.
      * @return True if the hash is known, false otherwise.
      */
     [[nodiscard]] auto isKnownHash(const std::string &hash) const noexcept -> bool
@@ -82,10 +112,8 @@ template<typename DataSoA> class BaseConverter : public sc2::ReplayObserver
     void addKnownHash(std::string_view hash) noexcept { knownHashes_.emplace(hash); }
 
     /**
-     * @brief Clears the BaseConverter object.
-     *
-     * This function clears the internal state of the BaseConverter object.
-     * It resets all the member variables to their default values.
+     * @brief Clears the BaseConverter object. This function clears the internal state of the BaseConverter object. It
+     * resets all the member variables to their default values.
      *
      * @note This function does not deallocate any memory.
      *
@@ -120,8 +148,8 @@ template<typename DataSoA> class BaseConverter : public sc2::ReplayObserver
     void copyCommonData() noexcept;
 
     /**
-     * @brief Reassigns the resource ID for a given NeutralUnit when it changes visibility.
-     *        It gets reassociated with an old id based on locality.
+     * @brief Reassigns the resource ID for a given NeutralUnit when it changes visibility. It gets reassociated with an
+     * old id based on locality.
      * @param unit The NeutralUnit for which the resource ID needs to be reassigned.
      * @return True if the resource ID was successfully reassigned, false otherwise.
      */
@@ -134,8 +162,8 @@ template<typename DataSoA> class BaseConverter : public sc2::ReplayObserver
             return value.pos.x == unit.pos.x && value.pos.y == unit.pos.y;
         });
         if (oldKV == resourceObs_.end()) {
-            SPDLOG_WARN(fmt::format(
-                "No matching position for unit {} (id: {}) adding new", sc2::UnitTypeToName(unit.unitType), unit.id));
+            SPDLOG_WARN(
+                "No matching position for unit {} (id: {}) adding new", sc2::UnitTypeToName(unit.unitType), unit.id);
             return false;
         } else {
             resourceObs_.emplace(unit.id, std::move(oldKV->second));
@@ -210,8 +238,7 @@ template<typename DataSoA> class FullConverter : public BaseConverter<DataSoA>
 };
 
 /**
- * @brief The alphastar dataset only saves if the player makes an
- *        action and its associated preceding observation.
+ * @brief The alphastar dataset only saves if the player makes an action and its associated preceding observation.
  */
 template<typename DataSoA> class ActionConverter : public BaseConverter<DataSoA>
 {
@@ -223,7 +250,8 @@ template<typename DataSoA> class ActionConverter : public BaseConverter<DataSoA>
 };
 
 /**
- * @brief Convert and serialize at a particular stride (i.e. every 10 steps)
+ * @brief Convert and serialize at a particular stride (i.e. every 10 steps). Also has flag which enables saving on
+ * player actions.
  */
 template<typename DataSoA> class StridedConverter : public BaseConverter<DataSoA>
 {
@@ -273,7 +301,14 @@ template<typename DataSoA> class StridedConverter : public BaseConverter<DataSoA
      */
     void OnStep() final;
 
+    /**
+     * @brief Number of replay steps between saving observations.
+     */
     std::size_t stride_{ 0 };
+
+    /**
+     * @brief Flag to also enable saving on player actions.
+     */
     bool saveActions_{ false };
 };
 

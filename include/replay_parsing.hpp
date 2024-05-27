@@ -1,3 +1,15 @@
+/**
+ * @file replay_parsing.hpp
+ * @author Bryce Ferenczi
+ * @brief Set of tools for parsing replay data into a more amenable form for machine learning. These are mainly used via
+ * their Python API.
+ * @version 0.1
+ * @date 2024-05-27
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
+
 #pragma once
 
 #include "data_structures/replay_interface.hpp"

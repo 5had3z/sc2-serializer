@@ -1,3 +1,13 @@
+/**
+ * @file enums.hpp
+ * @author Bryce Ferenczi
+ * @brief Common enums in StarCraft II and accompanying tools such as enum->string and enum->one-hot.
+ * @version 0.1
+ * @date 2024-05-27
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
 #pragma once
 
 #include <spdlog/fmt/bundled/format.h>
@@ -6,7 +16,6 @@
 #include <array>
 #include <vector>
 
-// Enum things
 namespace cvt {
 
 /**

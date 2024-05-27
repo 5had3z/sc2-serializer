@@ -1,3 +1,16 @@
+/**
+ * @file database.hpp
+ * @author Bryce Ferenczi
+ * @brief Database framework for reading and writing serialized replay data. ReplayDatabase is templated on any type
+ * which fulfills the interface concept HasDBInterface, i.e. a specialization is defined for that type to enable
+ * reading/writing the main data and any metadata associated with the replay.
+ * @version 0.1
+ * @date 2024-05-27
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
+
 #pragma once
 
 #include "data_structures/replay_interface.hpp"
@@ -23,6 +36,9 @@ namespace cvt {
  */
 void setReplayDBLoggingLevel(spdlog::level::level_enum lvl) noexcept;
 
+/**
+ * @brief static global logger
+ */
 extern std::shared_ptr<spdlog::logger> gLoggerDB;
 
 /**

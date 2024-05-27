@@ -1,3 +1,13 @@
+/**
+ * @file replay_interface.hpp
+ * @author Bryce Ferenczi
+ * @brief Common interface and utilities for replay data structures.
+ * @version 0.1
+ * @date 2024-05-27
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
 #pragma once
 
 #include "common.hpp"
@@ -48,22 +58,71 @@ concept HasActionData =
 
 
 /**
- * @brief General information about the replay.
+ * @brief General replay metadata common to all replay data structures.
  */
 struct ReplayInfo
 {
+    /**
+     * @brief Unique hash/identifier associated with a game.
+     */
     std::string replayHash{};
+
+    /**
+     * @brief Version of the game played as a string i.e. 4.9.2.12345.
+     */
     std::string gameVersion{};
+
+    /**
+     * @brief The POV Player Id, i.e. Player 1 or 2.
+     */
     std::uint32_t playerId{};
+
+    /**
+     * @brief Number of gameSteps in the replay.
+     */
     std::uint32_t durationSteps{};
+
+    /**
+     * @brief Race of the POV Player.
+     */
     Race playerRace{ Race::Random };
+
+    /**
+     * @brief Result of the POV Player.
+     */
     Result playerResult{ Result::Undecided };
+
+    /**
+     * @brief MMR of the POV Player.
+     */
     int playerMMR{};
+
+    /**
+     * @brief APM of the POV Player for this game.
+     */
     int playerAPM{};
+
+    /**
+     * @brief Map width in game units
+     */
     int mapWidth{};
+
+    /**
+     * @brief Map height in game units
+     */
     int mapHeight{};
+
+    /**
+     * @brief Image of map topography [0-255], needs to be normalized (shift+divide) to meters after the fact.
+     */
     Image<std::uint8_t> heightMap{};
 
+    /**
+     * @brief Default equality operator between two replay headers.
+     *
+     * @param other Replay to compare against.
+     * @return True if both are identical.
+     */
     [[nodiscard]] auto operator==(const ReplayInfo &other) const noexcept -> bool = default;
 };
 

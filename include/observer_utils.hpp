@@ -12,7 +12,12 @@
 
 namespace cvt {
 
-// Simple circular buffer to hold number-like things and use to perform reductions over
+/**
+ * @brief Simple circular buffer to hold number-like things and use to perform reductions over
+ *
+ * @tparam T type of data to hold in buffer.
+ * @tparam N number of elements in the buffer.
+ */
 template<typename T, std::size_t N> class CircularBuffer
 {
   public:
@@ -25,18 +30,33 @@ template<typename T, std::size_t N> class CircularBuffer
         }
     }
 
+    /**
+     * @brief Apply reduction operation such as min/max/sum on items in the buffer
+     * @tparam F invokeable with T,T->T
+     * @param init initial value to be used in reduction
+     * @param binaryOp instance of binary op to apply
+     * @return result of reduction
+     */
     template<std::invocable<T, T> F> [[nodiscard]] auto reduce(T init, F binaryOp) const noexcept -> T
     {
         if (isFull) { return std::reduce(std::execution::unseq, buffer.begin(), buffer.end(), init, binaryOp); }
         return std::reduce(std::execution::unseq, buffer.begin(), std::next(buffer.begin(), endIdx), init, binaryOp);
     }
 
+    /**
+     * @brief Number of elements in the buffer
+     * @return integer number of elements in the buffer
+     */
     [[nodiscard]] auto size() const noexcept -> std::size_t
     {
         if (isFull) { return N; }
         return endIdx;
     }
 
+    /**
+     * @brief Check if buffer is full.
+     * @return Number of elements is equal to circular buffer.
+     */
     [[nodiscard]] auto full() const noexcept -> bool { return isFull; }
 
   private:
@@ -50,11 +70,22 @@ class FrequencyTimer
   public:
     std::chrono::seconds displayPeriod;
 
+    /**
+     * @brief Construct a new Frequency Timer object with name and period to display at
+     *
+     * @param name prefix name to add before printing
+     * @param displayPeriod_ period to print the display
+     */
     // cppcheck-suppress noExplicitConstructor
     FrequencyTimer(std::string name, std::chrono::seconds displayPeriod_ = std::chrono::minutes(1))
         : timerName(std::move(name)), displayPeriod(displayPeriod_)
     {}
 
+
+    /**
+     * @brief step the frequency timer and print if time is up
+     * @param printExtra optionally print extra string as a prefix
+     */
     void step(std::optional<std::string_view> printExtra) noexcept
     {
         const auto currentTime = std::chrono::steady_clock::now();
@@ -76,9 +107,24 @@ class FrequencyTimer
     }
 
   private:
+    /**
+     * @brief Buffer to hold when previous steps occurred.
+     */
     CircularBuffer<std::chrono::duration<float>, 100> period{};
+
+    /**
+     * @brief timerName to prefix to print at each interval
+     */
     std::string timerName;
+
+    /**
+     * @brief last time this->step() was called
+     */
     std::chrono::steady_clock::time_point lastStep{};
+
+    /**
+     * @brief last time the timer printed
+     */
     std::chrono::steady_clock::time_point lastPrint{};
 };
 
@@ -141,6 +187,15 @@ template<typename T> void copyMapData(Image<T> &dest, const SC2APIProtocol::Imag
     std::memcpy(dest.data(), mapData.data().data(), dest.size());
 }
 
+/**
+ * @brief Copy `unitData` observation from SC2 to `units` and `neutralUnits` output iterators
+ *
+ * @tparam UnitIt normal unit type output iterator.
+ * @tparam NeutralUnitIt neutral unit type output iterator.
+ * @param units output iterator for normal untis.
+ * @param neutralUnits output iterator for neutral units.
+ * @param unitData incoming unit data from SC2 observation.
+ */
 template<typename UnitIt, typename NeutralUnitIt>
     requires std::same_as<typename UnitIt::container_type::value_type, Unit>
              && std::same_as<typename NeutralUnitIt::container_type::value_type, NeutralUnit>
@@ -164,6 +219,13 @@ void copyUnitData(UnitIt units, NeutralUnitIt neutralUnits, const sc2::Units &un
     });
 }
 
+/**
+ * @brief Copy incoming `actionData` from SC2 observation to `actions` output iterator.
+ *
+ * @tparam ActionIt output iterator type for actions
+ * @param actions output iterator for actions
+ * @param actionData incoming action data from player from SC2
+ */
 template<typename ActionIt>
     requires std::same_as<typename ActionIt::container_type::value_type, Action>
 void copyActionData(ActionIt actions, const sc2::RawActions &actionData)

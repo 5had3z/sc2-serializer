@@ -1,3 +1,16 @@
+/**
+ * @file units.hpp
+ * @author Bryce Ferenczi
+ * @brief Unit data structures for StarCraft II. NeutralUnits are treated specially as many properties such as buffs and
+ * cloak_state are never utilized, so we save precious bytes and make a smaller structure especially for neutral
+ * structures. This file also contains the instance-major transformation code for unit data which improves data
+ * compression and reduces file size from unit data by ~70%.
+ * @version 0.1
+ * @date 2024-05-27
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
 #pragma once
 
 #include "common.hpp"

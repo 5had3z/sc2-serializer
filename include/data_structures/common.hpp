@@ -1,3 +1,14 @@
+/**
+ * @file common.hpp
+ * @author Bryce Ferenczi
+ * @brief This is one of "those" files that just contains a few bits and bobs such as data-vectorization, action,
+ * position, image data structures etc, etc.
+ * @version 0.1
+ * @date 2024-05-27
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
 #pragma once
 
 #include "enums.hpp"

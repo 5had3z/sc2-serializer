@@ -1,6 +1,6 @@
 /**
  * @file serialize.hpp
- * @author Bryce Ferenczi (frenzi@hotmail.com.au)
+ * @author Bryce Ferenczi
  * @brief Generic Serialisation and Deserialisation Methods. A combination of C++20 Concepts and Requires clauses are
  * used to automatically determine how to (de)serialize data. [Boost
  * PFR](https://www.boost.org/doc/libs/master/doc/html/boost_pfr.html) is used to iterate over non-trivial structures.

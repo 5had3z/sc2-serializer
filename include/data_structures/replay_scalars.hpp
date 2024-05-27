@@ -1,3 +1,15 @@
+/**
+ * @file replay_scalars.hpp
+ * @author Bryce Ferenczi
+ * @brief Replay observation data that only contains scalar (score and economy) data. Is compatible with
+ * reading ReplayData and ReplayDataNoUnits as the ordering of the data is the same, we just stop reading before minimap
+ * data.
+ * @version 0.1
+ * @date 2024-05-27
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
 #pragma once
 
 #include "../serialize.hpp"

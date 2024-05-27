@@ -1,3 +1,13 @@
+/**
+ * @file replay_all.hpp
+ * @author Bryce Ferenczi
+ * @brief Replay data structure for recording and deserializing all observation data.
+ * @version 0.1
+ * @date 2024-05-27
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
 #pragma once
 
 #include "../serialize.hpp"
