@@ -74,7 +74,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Convert and serialize at a particular stride (i.e. every 10 steps)  
+<p>Convert and serialize at a particular stride (i.e. every 10 steps). Also has flag which enables saving on player actions.  
  <a href="../../d7/d58/classcvt_1_1StridedConverter.html#details">More...</a></p>
 
 <p><code>#include &lt;observer.hpp&gt;</code></p>
@@ -112,7 +112,7 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../.
 <tr class="memdesc:af559397bbf2e4f3bf18a40bbb07cf420 inherit pub_methods_classcvt_1_1BaseConverter"><td class="mdescLeft">&#160;</td><td class="mdescRight">Loads the database from the specified path.  <a href="../../d4/dc4/classcvt_1_1BaseConverter.html#af559397bbf2e4f3bf18a40bbb07cf420">More...</a><br /></td></tr>
 <tr class="separator:af559397bbf2e4f3bf18a40bbb07cf420 inherit pub_methods_classcvt_1_1BaseConverter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a72fad2ae1125761bdff88adef451f6e3 inherit pub_methods_classcvt_1_1BaseConverter"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dc4/classcvt_1_1BaseConverter.html#a72fad2ae1125761bdff88adef451f6e3">setReplayInfo</a> (std::string_view hash, std::uint32_t playerId) noexcept</td></tr>
-<tr class="memdesc:a72fad2ae1125761bdff88adef451f6e3 inherit pub_methods_classcvt_1_1BaseConverter"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the replay information for the <a class="el" href="../../d4/dc4/classcvt_1_1BaseConverter.html">BaseConverter</a>.  <a href="../../d4/dc4/classcvt_1_1BaseConverter.html#a72fad2ae1125761bdff88adef451f6e3">More...</a><br /></td></tr>
+<tr class="memdesc:a72fad2ae1125761bdff88adef451f6e3 inherit pub_methods_classcvt_1_1BaseConverter"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the replay information for the <a class="el" href="../../d4/dc4/classcvt_1_1BaseConverter.html" title="Base replay observer and converter that implements functions common to all the other sampling variant...">BaseConverter</a>.  <a href="../../d4/dc4/classcvt_1_1BaseConverter.html#a72fad2ae1125761bdff88adef451f6e3">More...</a><br /></td></tr>
 <tr class="separator:a72fad2ae1125761bdff88adef451f6e3 inherit pub_methods_classcvt_1_1BaseConverter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0153640dd6d53ec079cef40f1c08263a inherit pub_methods_classcvt_1_1BaseConverter"><td class="memItemLeft" align="right" valign="top"><a id="a0153640dd6d53ec079cef40f1c08263a"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dc4/classcvt_1_1BaseConverter.html#a0153640dd6d53ec079cef40f1c08263a">OnGameStart</a> () override</td></tr>
@@ -123,16 +123,16 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../.
 <tr class="memdesc:a3b7164d8368b3298aeba8f70ec28effe inherit pub_methods_classcvt_1_1BaseConverter"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the game has ended in a normal state and then writes replay to database. <br /></td></tr>
 <tr class="separator:a3b7164d8368b3298aeba8f70ec28effe inherit pub_methods_classcvt_1_1BaseConverter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5189d69680e9e65b6639ce13b9d2e879 inherit pub_methods_classcvt_1_1BaseConverter"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dc4/classcvt_1_1BaseConverter.html#a5189d69680e9e65b6639ce13b9d2e879">hasWritten</a> () const noexcept -&gt; bool</td></tr>
-<tr class="memdesc:a5189d69680e9e65b6639ce13b9d2e879 inherit pub_methods_classcvt_1_1BaseConverter"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the <a class="el" href="../../d4/dc4/classcvt_1_1BaseConverter.html">BaseConverter</a> has successfully written data.  <a href="../../d4/dc4/classcvt_1_1BaseConverter.html#a5189d69680e9e65b6639ce13b9d2e879">More...</a><br /></td></tr>
+<tr class="memdesc:a5189d69680e9e65b6639ce13b9d2e879 inherit pub_methods_classcvt_1_1BaseConverter"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if the <a class="el" href="../../d4/dc4/classcvt_1_1BaseConverter.html" title="Base replay observer and converter that implements functions common to all the other sampling variant...">BaseConverter</a> has successfully written data.  <a href="../../d4/dc4/classcvt_1_1BaseConverter.html#a5189d69680e9e65b6639ce13b9d2e879">More...</a><br /></td></tr>
 <tr class="separator:a5189d69680e9e65b6639ce13b9d2e879 inherit pub_methods_classcvt_1_1BaseConverter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1ef8919dcf4e759e8fcded6eda1ea75a inherit pub_methods_classcvt_1_1BaseConverter"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dc4/classcvt_1_1BaseConverter.html#a1ef8919dcf4e759e8fcded6eda1ea75a">isKnownHash</a> (const std::string &amp;hash) const noexcept -&gt; bool</td></tr>
 <tr class="memdesc:a1ef8919dcf4e759e8fcded6eda1ea75a inherit pub_methods_classcvt_1_1BaseConverter"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks if a given hash is known in the database.  <a href="../../d4/dc4/classcvt_1_1BaseConverter.html#a1ef8919dcf4e759e8fcded6eda1ea75a">More...</a><br /></td></tr>
 <tr class="separator:a1ef8919dcf4e759e8fcded6eda1ea75a inherit pub_methods_classcvt_1_1BaseConverter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af347d2f2ac19fd6e63450deb6757fa56 inherit pub_methods_classcvt_1_1BaseConverter"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dc4/classcvt_1_1BaseConverter.html#af347d2f2ac19fd6e63450deb6757fa56">addKnownHash</a> (std::string_view hash) noexcept</td></tr>
-<tr class="memdesc:af347d2f2ac19fd6e63450deb6757fa56 inherit pub_methods_classcvt_1_1BaseConverter"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a known hash to the <a class="el" href="../../d4/dc4/classcvt_1_1BaseConverter.html">BaseConverter</a>'s list of known hashes.  <a href="../../d4/dc4/classcvt_1_1BaseConverter.html#af347d2f2ac19fd6e63450deb6757fa56">More...</a><br /></td></tr>
+<tr class="memdesc:af347d2f2ac19fd6e63450deb6757fa56 inherit pub_methods_classcvt_1_1BaseConverter"><td class="mdescLeft">&#160;</td><td class="mdescRight">Adds a known hash to the <a class="el" href="../../d4/dc4/classcvt_1_1BaseConverter.html" title="Base replay observer and converter that implements functions common to all the other sampling variant...">BaseConverter</a>'s list of known hashes.  <a href="../../d4/dc4/classcvt_1_1BaseConverter.html#af347d2f2ac19fd6e63450deb6757fa56">More...</a><br /></td></tr>
 <tr class="separator:af347d2f2ac19fd6e63450deb6757fa56 inherit pub_methods_classcvt_1_1BaseConverter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a65a6f5254a80b618940e6ef59bd30644 inherit pub_methods_classcvt_1_1BaseConverter"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/dc4/classcvt_1_1BaseConverter.html#a65a6f5254a80b618940e6ef59bd30644">clear</a> () noexcept</td></tr>
-<tr class="memdesc:a65a6f5254a80b618940e6ef59bd30644 inherit pub_methods_classcvt_1_1BaseConverter"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the <a class="el" href="../../d4/dc4/classcvt_1_1BaseConverter.html">BaseConverter</a> object.  <a href="../../d4/dc4/classcvt_1_1BaseConverter.html#a65a6f5254a80b618940e6ef59bd30644">More...</a><br /></td></tr>
+<tr class="memdesc:a65a6f5254a80b618940e6ef59bd30644 inherit pub_methods_classcvt_1_1BaseConverter"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clears the <a class="el" href="../../d4/dc4/classcvt_1_1BaseConverter.html" title="Base replay observer and converter that implements functions common to all the other sampling variant...">BaseConverter</a> object. This function clears the internal state of the <a class="el" href="../../d4/dc4/classcvt_1_1BaseConverter.html" title="Base replay observer and converter that implements functions common to all the other sampling variant...">BaseConverter</a> object. It resets all the member variables to their default values.  <a href="../../d4/dc4/classcvt_1_1BaseConverter.html#a65a6f5254a80b618940e6ef59bd30644">More...</a><br /></td></tr>
 <tr class="separator:a65a6f5254a80b618940e6ef59bd30644 inherit pub_methods_classcvt_1_1BaseConverter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
@@ -179,7 +179,7 @@ template&lt;std::ranges::range R&gt; </td></tr>
 DataSoA::struct_type&#160;</td><td class="memItemRight" valign="bottom"><b>replayData_</b></td></tr>
 <tr class="separator:af52ee1829b20aee2274b87e1222971c9 inherit pro_attribs_classcvt_1_1BaseConverter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a64d16e39b6ce618fc60b0709b283ab63 inherit pro_attribs_classcvt_1_1BaseConverter"><td class="memItemLeft" align="right" valign="top"><a id="a64d16e39b6ce618fc60b0709b283ab63"></a>
-std::unordered_map&lt; UID, <a class="el" href="../../d2/d26/structcvt_1_1ResourceObs.html">ResourceObs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>resourceObs_</b></td></tr>
+std::unordered_map&lt; <a class="el" href="../../dd/d3a/common_8hpp.html#aeb92d518614d01f9ee7a343499028c02">UID</a>, <a class="el" href="../../d2/d26/structcvt_1_1ResourceObs.html">ResourceObs</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>resourceObs_</b></td></tr>
 <tr class="separator:a64d16e39b6ce618fc60b0709b283ab63 inherit pro_attribs_classcvt_1_1BaseConverter"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a52c7b933a927ed62155c95dd64225e26 inherit pro_attribs_classcvt_1_1BaseConverter"><td class="memItemLeft" align="right" valign="top"><a id="a52c7b933a927ed62155c95dd64225e26"></a>
 std::unordered_set&lt; std::string &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>knownHashes_</b> {}</td></tr>
@@ -201,7 +201,7 @@ std::chrono::high_resolution_clock::time_point&#160;</td><td class="memItemRight
 <div class="textblock"><h3>template&lt;typename DataSoA&gt;<br />
 class cvt::StridedConverter&lt; DataSoA &gt;</h3>
 
-<p>Convert and serialize at a particular stride (i.e. every 10 steps) </p>
+<p>Convert and serialize at a particular stride (i.e. every 10 steps). Also has flag which enables saving on player actions. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="af26e02ffae96f902d6eb789c3211eb83"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af26e02ffae96f902d6eb789c3211eb83">&#9670;&nbsp;</a></span>ActionsAreSaved()</h2>
@@ -336,7 +336,7 @@ template&lt;typename DataSoA &gt; </div>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/home/runner/work/sc2-serializer/sc2-serializer/include/observer.hpp</li>
+<li>/home/runner/work/sc2-serializer/sc2-serializer/include/<a class="el" href="../../d6/da0/observer_8hpp.html">observer.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

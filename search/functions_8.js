@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['nelem_217',['nelem',['../d2/d1e/structcvt_1_1Image.html#a4f0f75f0eede06c8c3bb6181e4788ba0',1,'cvt::Image']]]
+  ['load_294',['load',['../d2/dad/classcvt_1_1ReplayDatabase.html#a7eb3abbb618a5832dd856ca6fab900d6',1,'cvt::ReplayDatabase']]],
+  ['loaddb_295',['loadDB',['../d4/dc4/classcvt_1_1BaseConverter.html#af559397bbf2e4f3bf18a40bbb07cf420',1,'cvt::BaseConverter']]]
 ];

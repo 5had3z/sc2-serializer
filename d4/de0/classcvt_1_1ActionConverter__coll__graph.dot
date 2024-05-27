@@ -5,7 +5,7 @@ digraph "cvt::ActionConverter&lt; DataSoA &gt;"
   node [fontname="Helvetica",fontsize="10",shape=record];
   Node1 [label="cvt::ActionConverter\l\< DataSoA \>",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="The alphastar dataset only saves if the player makes an action and its associated preceding observati..."];
   Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node2 [label="cvt::BaseConverter\l\< DataSoA \>",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d4/dc4/classcvt_1_1BaseConverter.html",tooltip=" "];
+  Node2 [label="cvt::BaseConverter\l\< DataSoA \>",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d4/dc4/classcvt_1_1BaseConverter.html",tooltip="Base replay observer and converter that implements functions common to all the other sampling variant..."];
   Node3 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node3 [label="sc2::ReplayObserver",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
   Node4 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" database_" ,fontname="Helvetica"];

@@ -1,4 +1,8 @@
 var searchData=
 [
-  ['empty_27',['empty',['../d2/d1e/structcvt_1_1Image.html#a887200c5f97fea2077bdacd30bb35bd8',1,'cvt::Image::empty()'],['../dc/d19/classcvt_1_1ReplayParser.html#a9a536c35fd710089f00c92f2239022ee',1,'cvt::ReplayParser::empty()']]]
+  ['empty_33',['empty',['../d2/d1e/structcvt_1_1Image.html#a887200c5f97fea2077bdacd30bb35bd8',1,'cvt::Image::empty()'],['../dc/d19/classcvt_1_1ReplayParser.html#a9a536c35fd710089f00c92f2239022ee',1,'cvt::ReplayParser::empty()']]],
+  ['enums_2ehpp_34',['enums.hpp',['../dd/d93/enums_8hpp.html',1,'']]],
+  ['enumtoonehot_35',['enumToOneHot',['../dd/d3a/common_8hpp.html#a9ecb61a3a5f7f40439603496194ae514',1,'cvt::enumToOneHot(Action::TargetType e) noexcept -&gt; std::vector&lt; T &gt;'],['../dd/d93/enums_8hpp.html#a0fec701acb3e8b8676673f743cc412cc',1,'cvt::enumToOneHot(E e) noexcept -&gt; std::vector&lt; T &gt;'],['../dd/d93/enums_8hpp.html#a8c04c5dc2d1aa11b001ae3399d4b8af0',1,'cvt::enumToOneHot(Alliance e) noexcept -&gt; std::vector&lt; T &gt;'],['../dd/d93/enums_8hpp.html#a36faac5fea96fe1bdff90cf4aa79cba9',1,'cvt::enumToOneHot(CloakState e) noexcept -&gt; std::vector&lt; T &gt;'],['../dd/d93/enums_8hpp.html#a293d1200fec81cc7274abf9f262b91f5',1,'cvt::enumToOneHot(Visibility e) noexcept -&gt; std::vector&lt; T &gt;'],['../dd/d93/enums_8hpp.html#ae259736e97868d235dd5340dd53d64bd',1,'cvt::enumToOneHot(AddOn e) noexcept -&gt; std::vector&lt; T &gt;'],['../dd/d93/enums_8hpp.html#a172de9409d9dd6bddd15b961cfc1a29e',1,'cvt::enumToOneHot(Race e) noexcept -&gt; std::vector&lt; T &gt;'],['../dd/d93/enums_8hpp.html#ae058fdf2c2b94aaf89740afe7138e79b',1,'cvt::enumToOneHot(Result e) noexcept -&gt; std::vector&lt; T &gt;']]],
+  ['enumtoonehot_5fhelper_36',['enumToOneHot_helper',['../dd/d93/enums_8hpp.html#a9a035f8b192c84bee6c0ec1a266e65e3',1,'cvt::detail']]],
+  ['expandplayerrelative_37',['expandPlayerRelative',['../d5/d1d/replay__parsing_8hpp.html#a4619ded191158f3fea7670aa31ffb3b0',1,'cvt']]]
 ];

@@ -1,5 +1,9 @@
 var searchData=
 [
-  ['parsereplay_224',['parseReplay',['../dc/d19/classcvt_1_1ReplayParser.html#a17d837fab0f99035dac2ea274d7537c2',1,'cvt::ReplayParser']]],
-  ['path_225',['path',['../d2/dad/classcvt_1_1ReplayDatabase.html#a375ef2427f25d885ab917ad77c2f07fe',1,'cvt::ReplayDatabase']]]
+  ['ongameend_297',['OnGameEnd',['../d4/dc4/classcvt_1_1BaseConverter.html#a3b7164d8368b3298aeba8f70ec28effe',1,'cvt::BaseConverter']]],
+  ['ongamestart_298',['OnGameStart',['../d4/dc4/classcvt_1_1BaseConverter.html#a0153640dd6d53ec079cef40f1c08263a',1,'cvt::BaseConverter::OnGameStart()'],['../d7/d58/classcvt_1_1StridedConverter.html#aba2f60a6b05cc7f75b621ca73714948a',1,'cvt::StridedConverter::OnGameStart()']]],
+  ['open_299',['open',['../d2/dad/classcvt_1_1ReplayDatabase.html#ae904d976a213c8ee762f7e08e1b9a769',1,'cvt::ReplayDatabase']]],
+  ['operator_28_29_300',['operator()',['../d6/db9/structcvt_1_1Caster.html#a4f59d7b51bcc0ccecfe6c988672641cb',1,'cvt::Caster']]],
+  ['operator_3d_3d_301',['operator==',['../d2/d1e/structcvt_1_1Image.html#a4687e1257568f951ed4cbf0b0637642e',1,'cvt::Image::operator==()'],['../dd/d36/structcvt_1_1Action.html#af51f6e0ea06a6bd007eba89ef97388af',1,'cvt::Action::operator==()'],['../d7/dff/structcvt_1_1ReplayInfo.html#a3b1d49f8217526cf572e41bb1d301adc',1,'cvt::ReplayInfo::operator==()'],['../df/d79/structcvt_1_1ReplayDataTemplate.html#a44e6ad27a399e17ec815d74917ff1f34',1,'cvt::ReplayDataTemplate::operator==()'],['../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a6936ace2d5902c7a25eb0eefdb278a96',1,'cvt::ReplayDataTemplateSoA::operator==()']]],
+  ['operator_5b_5d_302',['operator[]',['../df/d48/structcvt_1_1StepDataSoA.html#af67b606312ba3154718dcd912eaf1efe',1,'cvt::StepDataSoA::operator[]()'],['../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a30446f66700b2b3ff742343a2a9aaea0',1,'cvt::ReplayDataTemplateSoA::operator[]()'],['../d7/d7e/structcvt_1_1StepDataSoANoUnits.html#adacf9eca90b7540446eef041d07e6003',1,'cvt::StepDataSoANoUnits::operator[]()'],['../df/d89/structcvt_1_1StepDataSoANoUnitsMiniMap.html#a68fc5926894d88a1fcd92d026584ab55',1,'cvt::StepDataSoANoUnitsMiniMap::operator[]()'],['../de/dc3/structcvt_1_1UnitSoA.html#ac97c30b88329d0f4b9d428a1239f2dd0',1,'cvt::UnitSoA::operator[]()']]]
 ];

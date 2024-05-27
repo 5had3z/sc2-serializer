@@ -75,7 +75,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>General information about the replay.  
+<p>General replay metadata common to all replay data structures.  
  <a href="../../d7/dff/structcvt_1_1ReplayInfo.html#details">More...</a></p>
 
 <p><code>#include &lt;replay_interface.hpp&gt;</code></p>
@@ -87,50 +87,97 @@ Collaboration diagram for cvt::ReplayInfo:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3b1d49f8217526cf572e41bb1d301adc"><td class="memItemLeft" align="right" valign="top"><a id="a3b1d49f8217526cf572e41bb1d301adc"></a>
-auto&#160;</td><td class="memItemRight" valign="bottom"><b>operator==</b> (const <a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html">ReplayInfo</a> &amp;other) const noexcept -&gt; bool=default</td></tr>
+<tr class="memitem:a3b1d49f8217526cf572e41bb1d301adc"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html#a3b1d49f8217526cf572e41bb1d301adc">operator==</a> (const <a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html">ReplayInfo</a> &amp;other) const noexcept -&gt; bool=default</td></tr>
+<tr class="memdesc:a3b1d49f8217526cf572e41bb1d301adc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default equality operator between two replay headers.  <a href="../../d7/dff/structcvt_1_1ReplayInfo.html#a3b1d49f8217526cf572e41bb1d301adc">More...</a><br /></td></tr>
 <tr class="separator:a3b1d49f8217526cf572e41bb1d301adc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:aff02e86328f94433192d079d1860f1d6"><td class="memItemLeft" align="right" valign="top"><a id="aff02e86328f94433192d079d1860f1d6"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>replayHash</b> {}</td></tr>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html#aff02e86328f94433192d079d1860f1d6">replayHash</a> {}</td></tr>
+<tr class="memdesc:aff02e86328f94433192d079d1860f1d6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unique hash/identifier associated with a game. <br /></td></tr>
 <tr class="separator:aff02e86328f94433192d079d1860f1d6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2cb893a55e7b2c71b28067dd657d5c9b"><td class="memItemLeft" align="right" valign="top"><a id="a2cb893a55e7b2c71b28067dd657d5c9b"></a>
-std::string&#160;</td><td class="memItemRight" valign="bottom"><b>gameVersion</b> {}</td></tr>
+std::string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html#a2cb893a55e7b2c71b28067dd657d5c9b">gameVersion</a> {}</td></tr>
+<tr class="memdesc:a2cb893a55e7b2c71b28067dd657d5c9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Version of the game played as a string i.e. 4.9.2.12345. <br /></td></tr>
 <tr class="separator:a2cb893a55e7b2c71b28067dd657d5c9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3281d691a885ad16c819e5606e5bd6ba"><td class="memItemLeft" align="right" valign="top"><a id="a3281d691a885ad16c819e5606e5bd6ba"></a>
-std::uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>playerId</b> {}</td></tr>
+std::uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html#a3281d691a885ad16c819e5606e5bd6ba">playerId</a> {}</td></tr>
+<tr class="memdesc:a3281d691a885ad16c819e5606e5bd6ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">The POV Player Id, i.e. Player 1 or 2. <br /></td></tr>
 <tr class="separator:a3281d691a885ad16c819e5606e5bd6ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a44290c39f8a08c6d62ec6a75baf62aad"><td class="memItemLeft" align="right" valign="top"><a id="a44290c39f8a08c6d62ec6a75baf62aad"></a>
-std::uint32_t&#160;</td><td class="memItemRight" valign="bottom"><b>durationSteps</b> {}</td></tr>
+std::uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html#a44290c39f8a08c6d62ec6a75baf62aad">durationSteps</a> {}</td></tr>
+<tr class="memdesc:a44290c39f8a08c6d62ec6a75baf62aad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of gameSteps in the replay. <br /></td></tr>
 <tr class="separator:a44290c39f8a08c6d62ec6a75baf62aad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3f524a73120fe4d2da6344c886a3162"><td class="memItemLeft" align="right" valign="top"><a id="ad3f524a73120fe4d2da6344c886a3162"></a>
-Race&#160;</td><td class="memItemRight" valign="bottom"><b>playerRace</b> { Race::Random }</td></tr>
+Race&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html#ad3f524a73120fe4d2da6344c886a3162">playerRace</a> { Race::Random }</td></tr>
+<tr class="memdesc:ad3f524a73120fe4d2da6344c886a3162"><td class="mdescLeft">&#160;</td><td class="mdescRight">Race of the POV Player. <br /></td></tr>
 <tr class="separator:ad3f524a73120fe4d2da6344c886a3162"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a339b2d8eaa210fd30f4debdb3640eda7"><td class="memItemLeft" align="right" valign="top"><a id="a339b2d8eaa210fd30f4debdb3640eda7"></a>
-Result&#160;</td><td class="memItemRight" valign="bottom"><b>playerResult</b> { Result::Undecided }</td></tr>
+Result&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html#a339b2d8eaa210fd30f4debdb3640eda7">playerResult</a> { Result::Undecided }</td></tr>
+<tr class="memdesc:a339b2d8eaa210fd30f4debdb3640eda7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Result of the POV Player. <br /></td></tr>
 <tr class="separator:a339b2d8eaa210fd30f4debdb3640eda7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6b19427b298771b30da0f6122a2f041"><td class="memItemLeft" align="right" valign="top"><a id="ab6b19427b298771b30da0f6122a2f041"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>playerMMR</b> {}</td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html#ab6b19427b298771b30da0f6122a2f041">playerMMR</a> {}</td></tr>
+<tr class="memdesc:ab6b19427b298771b30da0f6122a2f041"><td class="mdescLeft">&#160;</td><td class="mdescRight">MMR of the POV Player. <br /></td></tr>
 <tr class="separator:ab6b19427b298771b30da0f6122a2f041"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a577e497351752691efd00b6b214734ac"><td class="memItemLeft" align="right" valign="top"><a id="a577e497351752691efd00b6b214734ac"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>playerAPM</b> {}</td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html#a577e497351752691efd00b6b214734ac">playerAPM</a> {}</td></tr>
+<tr class="memdesc:a577e497351752691efd00b6b214734ac"><td class="mdescLeft">&#160;</td><td class="mdescRight">APM of the POV Player for this game. <br /></td></tr>
 <tr class="separator:a577e497351752691efd00b6b214734ac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4118a18270e3f00a9fc9cb9d61dfedfe"><td class="memItemLeft" align="right" valign="top"><a id="a4118a18270e3f00a9fc9cb9d61dfedfe"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>mapWidth</b> {}</td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html#a4118a18270e3f00a9fc9cb9d61dfedfe">mapWidth</a> {}</td></tr>
+<tr class="memdesc:a4118a18270e3f00a9fc9cb9d61dfedfe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map width in game units. <br /></td></tr>
 <tr class="separator:a4118a18270e3f00a9fc9cb9d61dfedfe"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0695d40ef1b059466bdcea80f3422327"><td class="memItemLeft" align="right" valign="top"><a id="a0695d40ef1b059466bdcea80f3422327"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>mapHeight</b> {}</td></tr>
+int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html#a0695d40ef1b059466bdcea80f3422327">mapHeight</a> {}</td></tr>
+<tr class="memdesc:a0695d40ef1b059466bdcea80f3422327"><td class="mdescLeft">&#160;</td><td class="mdescRight">Map height in game units. <br /></td></tr>
 <tr class="separator:a0695d40ef1b059466bdcea80f3422327"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fc64b365e50d326f84272f136556593"><td class="memItemLeft" align="right" valign="top"><a id="a6fc64b365e50d326f84272f136556593"></a>
-<a class="el" href="../../d2/d1e/structcvt_1_1Image.html">Image</a>&lt; std::uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>heightMap</b> {}</td></tr>
+<a class="el" href="../../d2/d1e/structcvt_1_1Image.html">Image</a>&lt; std::uint8_t &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html#a6fc64b365e50d326f84272f136556593">heightMap</a> {}</td></tr>
+<tr class="memdesc:a6fc64b365e50d326f84272f136556593"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../d2/d1e/structcvt_1_1Image.html" title="Type-erased single channel image data container.">Image</a> of map topography [0-255], needs to be normalized (shift+divide) to meters after the fact. <br /></td></tr>
 <tr class="separator:a6fc64b365e50d326f84272f136556593"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>General information about the replay. </p>
-</div><hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/home/runner/work/sc2-serializer/sc2-serializer/include/data_structures/replay_interface.hpp</li>
+<div class="textblock"><p>General replay metadata common to all replay data structures. </p>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a3b1d49f8217526cf572e41bb1d301adc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3b1d49f8217526cf572e41bb1d301adc">&#9670;&nbsp;</a></span>operator==()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cvt::ReplayInfo::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html">ReplayInfo</a> &amp;&#160;</td>
+          <td class="paramname"><em>other</em></td><td>)</td>
+          <td> const -&gt;  bool=default</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">default</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Default equality operator between two replay headers. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">other</td><td>Replay to compare against. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if both are identical. </dd></dl>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/home/runner/work/sc2-serializer/sc2-serializer/include/data_structures/<a class="el" href="../../d0/d04/replay__interface_8hpp.html">replay_interface.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

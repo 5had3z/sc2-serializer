@@ -164,6 +164,18 @@
 <section id="common">
 <h2>Common<a class="headerlink" href="#common" title="Link to this heading"></a></h2>
 <p>Includes common tools/structures as well as the score and action struct.</p>
+<p>This is one of “those” files that just contains a few bits and bobs such as data-vectorization, action, position, image data structures etc, etc. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi </p>
+</dd>
+<dt><strong>Version</strong></dt><dd><p>0.1 </p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>2024-05-27</p>
+</dd>
+<dt><strong>Copyright</strong></dt><dd><p>Copyright (c) 2024 </p>
+</dd>
+</dl>
+</p>
 <dl class="cpp type">
 <dt class="sig sig-object cpp" id="_CPPv43cvt">
 <span id="_CPPv33cvt"></span><span id="_CPPv23cvt"></span><span id="cvt"></span><span class="target" id="df/d0d/namespacecvt"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cvt</span></span></span><a class="headerlink" href="#_CPPv43cvt" title="Link to this definition"></a><br /></dt>
@@ -984,6 +996,18 @@ Convert SoA to AoS.</p>
 <section id="enums">
 <h2>Enums<a class="headerlink" href="#enums" title="Link to this heading"></a></h2>
 <p>Includes most of the enums used in SC2 (Outcome, Alliance, etc.)</p>
+<p>Common enums in StarCraft II and accompanying tools such as enum-&gt;string and enum-&gt;one-hot. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi </p>
+</dd>
+<dt><strong>Version</strong></dt><dd><p>0.1 </p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>2024-05-27</p>
+</dd>
+<dt><strong>Copyright</strong></dt><dd><p>Copyright (c) 2024 </p>
+</dd>
+</dl>
+</p>
 <dl class="cpp struct">
 <dt class="sig sig-object cpp" id="_CPPv4IEN3fmt9formatterIN3cvt8AllianceEEE">
 <span id="_CPPv3IEN3fmt9formatterIN3cvt8AllianceEEE"></span><span id="_CPPv2IEN3fmt9formatterIN3cvt8AllianceEEE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d5/d9a/structfmt_1_1formatter_3_01cvt_1_1Alliance_01_4"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">formatter</span></span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv43cvt" title="cvt"><span class="n"><span class="pre">cvt</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3cvt8AllianceE" title="cvt::Alliance"><span class="n"><span class="pre">Alliance</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">formatter</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">string_view</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4IEN3fmt9formatterIN3cvt8AllianceEEE" title="Link to this definition"></a><br /></dt>
@@ -1396,6 +1420,18 @@ Convert SoA to AoS.</p>
 <section id="units">
 <h2>Units<a class="headerlink" href="#units" title="Link to this heading"></a></h2>
 <p>Unit and neutral unit data structures with their AoS&lt;-&gt;SoA transforms.</p>
+<p>Unit data structures for StarCraft II. NeutralUnits are treated specially as many properties such as buffs and cloak_state are never utilized, so we save precious bytes and make a smaller structure especially for neutral structures. This file also contains the instance-major transformation code for unit data which improves data compression and reduces file size from unit data by ~70%. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi </p>
+</dd>
+<dt><strong>Version</strong></dt><dd><p>0.1 </p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>2024-05-27</p>
+</dd>
+<dt><strong>Copyright</strong></dt><dd><p>Copyright (c) 2024 </p>
+</dd>
+</dl>
+</p>
 <dl class="cpp type">
 <dt class="sig sig-object cpp">
 <span class="target" id="df/d0d/namespacecvt"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cvt</span></span></span><br /></dt>
@@ -2182,6 +2218,18 @@ Convert SoA to AoS.</p>
 <section id="interface">
 <h2>Interface<a class="headerlink" href="#interface" title="Link to this heading"></a></h2>
 <p>Interface between replay structure and database</p>
+<p>Common interface and utilities for replay data structures. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi </p>
+</dd>
+<dt><strong>Version</strong></dt><dd><p>0.1 </p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>2024-05-27</p>
+</dd>
+<dt><strong>Copyright</strong></dt><dd><p>Copyright (c) 2024 </p>
+</dd>
+</dl>
+</p>
 <dl class="cpp type">
 <dt class="sig sig-object cpp">
 <span class="target" id="df/d0d/namespacecvt"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cvt</span></span></span><br /></dt>
@@ -2262,13 +2310,22 @@ Convert SoA to AoS.</p>
 <span id="_CPPv3N3cvt10ReplayInfoE"></span><span id="_CPPv2N3cvt10ReplayInfoE"></span><span id="cvt::ReplayInfo"></span><span class="target" id="d7/dff/structcvt_1_1ReplayInfo"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayInfo</span></span></span><a class="headerlink" href="#_CPPv4N3cvt10ReplayInfoE" title="Link to this definition"></a><br /></dt>
 <dd><div class="docutils container">
 <em>#include &lt;replay_interface.hpp&gt;</em></div>
-<p>General information about the replay. </p>
+<p>General replay metadata common to all replay data structures. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4NK3cvt10ReplayInfoeqERK10ReplayInfo">
 <span id="_CPPv3NK3cvt10ReplayInfoeqERK10ReplayInfo"></span><span id="_CPPv2NK3cvt10ReplayInfoeqERK10ReplayInfo"></span><span id="cvt::ReplayInfo::eq-operator__ReplayInfoCRC"></span><span class="target" id="d7/dff/structcvt_1_1ReplayInfo_1a3b1d49f8217526cf572e41bb1d301adc"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">==</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3cvt10ReplayInfoE" title="cvt::ReplayInfo"><span class="n"><span class="pre">ReplayInfo</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4NK3cvt10ReplayInfoeqERK10ReplayInfo" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Default equality operator between two replay headers. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> – Replay to compare against. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if both are identical. </p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
@@ -2276,57 +2333,68 @@ Convert SoA to AoS.</p>
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt10ReplayInfo10replayHashE">
 <span id="_CPPv3N3cvt10ReplayInfo10replayHashE"></span><span id="_CPPv2N3cvt10ReplayInfo10replayHashE"></span><span id="cvt::ReplayInfo::replayHash__ss"></span><span class="target" id="d7/dff/structcvt_1_1ReplayInfo_1aff02e86328f94433192d079d1860f1d6"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">replayHash</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt10ReplayInfo10replayHashE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Unique hash/identifier associated with a game. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt10ReplayInfo11gameVersionE">
 <span id="_CPPv3N3cvt10ReplayInfo11gameVersionE"></span><span id="_CPPv2N3cvt10ReplayInfo11gameVersionE"></span><span id="cvt::ReplayInfo::gameVersion__ss"></span><span class="target" id="d7/dff/structcvt_1_1ReplayInfo_1a2cb893a55e7b2c71b28067dd657d5c9b"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gameVersion</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt10ReplayInfo11gameVersionE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Version of the game played as a string i.e. 4.9.2.12345. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt10ReplayInfo8playerIdE">
 <span id="_CPPv3N3cvt10ReplayInfo8playerIdE"></span><span id="_CPPv2N3cvt10ReplayInfo8playerIdE"></span><span id="cvt::ReplayInfo::playerId__std::uint32_t"></span><span class="target" id="d7/dff/structcvt_1_1ReplayInfo_1a3281d691a885ad16c819e5606e5bd6ba"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">playerId</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt10ReplayInfo8playerIdE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>The POV Player Id, i.e. Player 1 or 2. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt10ReplayInfo13durationStepsE">
 <span id="_CPPv3N3cvt10ReplayInfo13durationStepsE"></span><span id="_CPPv2N3cvt10ReplayInfo13durationStepsE"></span><span id="cvt::ReplayInfo::durationSteps__std::uint32_t"></span><span class="target" id="d7/dff/structcvt_1_1ReplayInfo_1a44290c39f8a08c6d62ec6a75baf62aad"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">durationSteps</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt10ReplayInfo13durationStepsE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Number of gameSteps in the replay. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt10ReplayInfo10playerRaceE">
 <span id="_CPPv3N3cvt10ReplayInfo10playerRaceE"></span><span id="_CPPv2N3cvt10ReplayInfo10playerRaceE"></span><span id="cvt::ReplayInfo::playerRace__Race"></span><span class="target" id="d7/dff/structcvt_1_1ReplayInfo_1ad3f524a73120fe4d2da6344c886a3162"></span><a class="reference internal" href="#_CPPv4N3cvt4RaceE" title="cvt::Race"><span class="n"><span class="pre">Race</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">playerRace</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N3cvt4RaceE" title="cvt::Race"><span class="n"><span class="pre">Race</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3cvt4Race6RandomE" title="cvt::Race::Random"><span class="n"><span class="pre">Random</span></span></a><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt10ReplayInfo10playerRaceE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Race of the POV Player. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt10ReplayInfo12playerResultE">
 <span id="_CPPv3N3cvt10ReplayInfo12playerResultE"></span><span id="_CPPv2N3cvt10ReplayInfo12playerResultE"></span><span id="cvt::ReplayInfo::playerResult__Result"></span><span class="target" id="d7/dff/structcvt_1_1ReplayInfo_1a339b2d8eaa210fd30f4debdb3640eda7"></span><a class="reference internal" href="#_CPPv4N3cvt6ResultE" title="cvt::Result"><span class="n"><span class="pre">Result</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">playerResult</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="#_CPPv4N3cvt6ResultE" title="cvt::Result"><span class="n"><span class="pre">Result</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4N3cvt6Result9UndecidedE" title="cvt::Result::Undecided"><span class="n"><span class="pre">Undecided</span></span></a><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt10ReplayInfo12playerResultE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Result of the POV Player. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt10ReplayInfo9playerMMRE">
 <span id="_CPPv3N3cvt10ReplayInfo9playerMMRE"></span><span id="_CPPv2N3cvt10ReplayInfo9playerMMRE"></span><span id="cvt::ReplayInfo::playerMMR__i"></span><span class="target" id="d7/dff/structcvt_1_1ReplayInfo_1ab6b19427b298771b30da0f6122a2f041"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">playerMMR</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt10ReplayInfo9playerMMRE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>MMR of the POV Player. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt10ReplayInfo9playerAPME">
 <span id="_CPPv3N3cvt10ReplayInfo9playerAPME"></span><span id="_CPPv2N3cvt10ReplayInfo9playerAPME"></span><span id="cvt::ReplayInfo::playerAPM__i"></span><span class="target" id="d7/dff/structcvt_1_1ReplayInfo_1a577e497351752691efd00b6b214734ac"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">playerAPM</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt10ReplayInfo9playerAPME" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>APM of the POV Player for this game. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt10ReplayInfo8mapWidthE">
 <span id="_CPPv3N3cvt10ReplayInfo8mapWidthE"></span><span id="_CPPv2N3cvt10ReplayInfo8mapWidthE"></span><span id="cvt::ReplayInfo::mapWidth__i"></span><span class="target" id="d7/dff/structcvt_1_1ReplayInfo_1a4118a18270e3f00a9fc9cb9d61dfedfe"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">mapWidth</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt10ReplayInfo8mapWidthE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Map width in game units. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt10ReplayInfo9mapHeightE">
 <span id="_CPPv3N3cvt10ReplayInfo9mapHeightE"></span><span id="_CPPv2N3cvt10ReplayInfo9mapHeightE"></span><span id="cvt::ReplayInfo::mapHeight__i"></span><span class="target" id="d7/dff/structcvt_1_1ReplayInfo_1a0695d40ef1b059466bdcea80f3422327"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">mapHeight</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt10ReplayInfo9mapHeightE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Map height in game units. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt10ReplayInfo9heightMapE">
 <span id="_CPPv3N3cvt10ReplayInfo9heightMapE"></span><span id="_CPPv2N3cvt10ReplayInfo9heightMapE"></span><span id="cvt::ReplayInfo::heightMap__Image:std::uint8_t:"></span><span class="target" id="d7/dff/structcvt_1_1ReplayInfo_1a6fc64b365e50d326f84272f136556593"></span><a class="reference internal" href="#_CPPv4I0EN3cvt5ImageE" title="cvt::Image"><span class="n"><span class="pre">Image</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">heightMap</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt10ReplayInfo9heightMapE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p><a class="reference internal" href="#d2/d1e/structcvt_1_1Image"><span class="std std-ref">Image</span></a> of map topography [0-255], needs to be normalized (shift+divide) to meters after the fact. </p>
+</dd></dl>
 
 </div>
 </dd></dl>
@@ -2640,6 +2708,18 @@ Convert SoA to AoS.</p>
 <section id="all-data">
 <h2>All Data<a class="headerlink" href="#all-data" title="Link to this heading"></a></h2>
 <p>All-data replay structure (units, minimaps, scalars).</p>
+<p>Replay data structure for recording and deserializing all observation data. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi </p>
+</dd>
+<dt><strong>Version</strong></dt><dd><p>0.1 </p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>2024-05-27</p>
+</dd>
+<dt><strong>Copyright</strong></dt><dd><p>Copyright (c) 2024 </p>
+</dd>
+</dl>
+</p>
 <dl class="cpp type">
 <dt class="sig sig-object cpp">
 <span class="target" id="df/d0d/namespacecvt"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cvt</span></span></span><br /></dt>
@@ -2968,6 +3048,18 @@ Convert SoA to AoS.</p>
 <section id="minimap-scalar-data">
 <h2>Minimap + Scalar Data<a class="headerlink" href="#minimap-scalar-data" title="Link to this heading"></a></h2>
 <p>Unit data is omitted, only minimap and scalar data is in here.</p>
+<p>Replay observation data that only contains scalar (score and economy) and minimap data. Is compatible with reading ReplayData as the ordering of the data is the same, we just stop reading before Unit data. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi </p>
+</dd>
+<dt><strong>Version</strong></dt><dd><p>0.1 </p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>2024-05-27</p>
+</dd>
+<dt><strong>Copyright</strong></dt><dd><p>Copyright (c) 2024 </p>
+</dd>
+</dl>
+</p>
 <dl class="cpp type">
 <dt class="sig sig-object cpp">
 <span class="target" id="df/d0d/namespacecvt"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cvt</span></span></span><br /></dt>
@@ -3236,6 +3328,18 @@ Convert SoA to AoS.</p>
 <section id="scalar-data">
 <h2>Scalar Data<a class="headerlink" href="#scalar-data" title="Link to this heading"></a></h2>
 <p>Only scalar data such as economics and score are here.</p>
+<p>Replay observation data that only contains scalar (score and economy) data. Is compatible with reading ReplayData and ReplayDataNoUnits as the ordering of the data is the same, we just stop reading before minimap data. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi </p>
+</dd>
+<dt><strong>Version</strong></dt><dd><p>0.1 </p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>2024-05-27</p>
+</dd>
+<dt><strong>Copyright</strong></dt><dd><p>Copyright (c) 2024 </p>
+</dd>
+</dl>
+</p>
 <dl class="cpp type">
 <dt class="sig sig-object cpp">
 <span class="target" id="df/d0d/namespacecvt"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cvt</span></span></span><br /></dt>

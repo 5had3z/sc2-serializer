@@ -77,11 +77,11 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a99e86e13a768f0195fba7308093037f9"><td class="memItemLeft" align="right" valign="top"><a id="a99e86e13a768f0195fba7308093037f9"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>FrequencyTimer</b> (std::string name, std::chrono::seconds displayPeriod_=std::chrono::minutes(1))</td></tr>
+<tr class="memitem:a99e86e13a768f0195fba7308093037f9"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d00/classcvt_1_1FrequencyTimer.html#a99e86e13a768f0195fba7308093037f9">FrequencyTimer</a> (std::string name, std::chrono::seconds displayPeriod_=std::chrono::minutes(1))</td></tr>
+<tr class="memdesc:a99e86e13a768f0195fba7308093037f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a new Frequency Timer object with name and period to display at.  <a href="../../d3/d00/classcvt_1_1FrequencyTimer.html#a99e86e13a768f0195fba7308093037f9">More...</a><br /></td></tr>
 <tr class="separator:a99e86e13a768f0195fba7308093037f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a125ef1601b2909da3925dc4d495070a4"><td class="memItemLeft" align="right" valign="top"><a id="a125ef1601b2909da3925dc4d495070a4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>step</b> (std::optional&lt; std::string_view &gt; printExtra) noexcept</td></tr>
+<tr class="memitem:a125ef1601b2909da3925dc4d495070a4"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d00/classcvt_1_1FrequencyTimer.html#a125ef1601b2909da3925dc4d495070a4">step</a> (std::optional&lt; std::string_view &gt; printExtra) noexcept</td></tr>
+<tr class="memdesc:a125ef1601b2909da3925dc4d495070a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">step the frequency timer and print if time is up  <a href="../../d3/d00/classcvt_1_1FrequencyTimer.html#a125ef1601b2909da3925dc4d495070a4">More...</a><br /></td></tr>
 <tr class="separator:a125ef1601b2909da3925dc4d495070a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
@@ -90,6 +90,87 @@ Public Attributes</h2></td></tr>
 std::chrono::seconds&#160;</td><td class="memItemRight" valign="bottom"><b>displayPeriod</b></td></tr>
 <tr class="separator:af9458ad2583a131a163f1cc69e5e3077"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a99e86e13a768f0195fba7308093037f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99e86e13a768f0195fba7308093037f9">&#9670;&nbsp;</a></span>FrequencyTimer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">cvt::FrequencyTimer::FrequencyTimer </td>
+          <td>(</td>
+          <td class="paramtype">std::string&#160;</td>
+          <td class="paramname"><em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::chrono::seconds&#160;</td>
+          <td class="paramname"><em>displayPeriod_</em> = <code>std::chrono::minutes(1)</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct a new Frequency Timer object with name and period to display at. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">name</td><td>prefix name to add before printing </td></tr>
+    <tr><td class="paramname">displayPeriod_</td><td>period to print the display </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a125ef1601b2909da3925dc4d495070a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a125ef1601b2909da3925dc4d495070a4">&#9670;&nbsp;</a></span>step()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cvt::FrequencyTimer::step </td>
+          <td>(</td>
+          <td class="paramtype">std::optional&lt; std::string_view &gt;&#160;</td>
+          <td class="paramname"><em>printExtra</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>step the frequency timer and print if time is up </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">printExtra</td><td>optionally print extra string as a prefix </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>/home/runner/work/sc2-serializer/sc2-serializer/include/observer_utils.hpp</li>
 </ul>

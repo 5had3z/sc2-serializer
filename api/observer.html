@@ -94,28 +94,46 @@
              
   <section id="observer">
 <span id="api-observer"></span><h1>Observer<a class="headerlink" href="#observer" title="Link to this heading"></a></h1>
+<p>Contains StarCraft II game observation classes. Each variant saves observations at different rates to balance between verbosity and dataset size. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi </p>
+</dd>
+<dt><strong>Version</strong></dt><dd><p>0.1 </p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>2024-05-27</p>
+</dd>
+<dt><strong>Copyright</strong></dt><dd><p>Copyright (c) 2024 </p>
+</dd>
+</dl>
+</p>
 <dl class="cpp type">
 <dt class="sig sig-object cpp" id="_CPPv43cvt">
 <span id="_CPPv33cvt"></span><span id="_CPPv23cvt"></span><span id="cvt"></span><span class="target" id="df/d0d/namespacecvt"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cvt</span></span></span><br /></dt>
 <dd><dl class="cpp struct">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt11ResourceObsE">
 <span id="_CPPv3N3cvt11ResourceObsE"></span><span id="_CPPv2N3cvt11ResourceObsE"></span><span id="cvt::ResourceObs"></span><span class="target" id="d2/d26/structcvt_1_1ResourceObs"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ResourceObs</span></span></span><a class="headerlink" href="#_CPPv4N3cvt11ResourceObsE" title="Link to this definition"></a><br /></dt>
-<dd><div class="breathe-sectiondef docutils container">
+<dd><div class="docutils container">
+<em>#include &lt;observer.hpp&gt;</em></div>
+<p>Vespene/Minearal resource observation. </p>
+<div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt11ResourceObs2idE">
 <span id="_CPPv3N3cvt11ResourceObs2idE"></span><span id="_CPPv2N3cvt11ResourceObs2idE"></span><span id="cvt::ResourceObs::id__UID"></span><span class="target" id="d2/d26/structcvt_1_1ResourceObs_1a2777e38e2c752fdf1c6e3f6ddb2ecb75"></span><a class="reference internal" href="data.html#_CPPv4N3cvt3UIDE" title="cvt::UID"><span class="n"><span class="pre">UID</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">id</span></span></span><a class="headerlink" href="#_CPPv4N3cvt11ResourceObs2idE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Original ID. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt11ResourceObs3posE">
 <span id="_CPPv3N3cvt11ResourceObs3posE"></span><span id="_CPPv2N3cvt11ResourceObs3posE"></span><span id="cvt::ResourceObs::pos__Point3f"></span><span class="target" id="d2/d26/structcvt_1_1ResourceObs_1a9204e39eb7f62bf63ab1679dc212436f"></span><a class="reference internal" href="data.html#_CPPv4N3cvt7Point3fE" title="cvt::Point3f"><span class="n"><span class="pre">Point3f</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">pos</span></span></span><a class="headerlink" href="#_CPPv4N3cvt11ResourceObs3posE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Location on map. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt11ResourceObs3qtyE">
 <span id="_CPPv3N3cvt11ResourceObs3qtyE"></span><span id="_CPPv2N3cvt11ResourceObs3qtyE"></span><span id="cvt::ResourceObs::qty__i"></span><span class="target" id="d2/d26/structcvt_1_1ResourceObs_1a51ce14147a4904774adc708a93ecd0bf"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">qty</span></span></span><a class="headerlink" href="#_CPPv4N3cvt11ResourceObs3qtyE" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Last observation quantity. </p>
+</dd></dl>
 
 </div>
 </dd></dl>
@@ -123,7 +141,15 @@
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt13BaseConverterE">
 <span id="_CPPv3I0EN3cvt13BaseConverterE"></span><span id="_CPPv2I0EN3cvt13BaseConverterE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DataSoA</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d4/dc4/classcvt_1_1BaseConverter"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">BaseConverter</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">sc2</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ReplayObserver</span></span><a class="headerlink" href="#_CPPv4I0EN3cvt13BaseConverterE" title="Link to this definition"></a><br /></dt>
-<dd><p>Subclassed by <a class="reference internal" href="#db/dba/classcvt_1_1ActionConverter"><span class="std std-ref">cvt::ActionConverter&lt; DataSoA &gt;</span></a>, <a class="reference internal" href="#d0/db6/classcvt_1_1FullConverter"><span class="std std-ref">cvt::FullConverter&lt; DataSoA &gt;</span></a>, <a class="reference internal" href="#d7/d58/classcvt_1_1StridedConverter"><span class="std std-ref">cvt::StridedConverter&lt; DataSoA &gt;</span></a></p>
+<dd><div class="docutils container">
+<em>#include &lt;observer.hpp&gt;</em></div>
+<p>Base replay observer and converter that implements functions common to all the other sampling variants. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>DataSoA</strong> – observation data structure to be observed and serialized </p>
+</dd>
+</dl>
+<p>Subclassed by <a class="reference internal" href="#db/dba/classcvt_1_1ActionConverter"><span class="std std-ref">cvt::ActionConverter&lt; DataSoA &gt;</span></a>, <a class="reference internal" href="#d0/db6/classcvt_1_1FullConverter"><span class="std std-ref">cvt::FullConverter&lt; DataSoA &gt;</span></a>, <a class="reference internal" href="#d7/d58/classcvt_1_1StridedConverter"><span class="std std-ref">cvt::StridedConverter&lt; DataSoA &gt;</span></a></p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
@@ -181,6 +207,10 @@
 <dt class="sig sig-object cpp" id="_CPPv4NK3cvt13BaseConverter11isKnownHashERKNSt6stringE">
 <span id="_CPPv3NK3cvt13BaseConverter11isKnownHashERKNSt6stringE"></span><span id="_CPPv2NK3cvt13BaseConverter11isKnownHashERKNSt6stringE"></span><span id="cvt::BaseConverter::isKnownHash__ssCRC"></span><span class="target" id="d4/dc4/classcvt_1_1BaseConverter_1a1ef8919dcf4e759e8fcded6eda1ea75a"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">isKnownHash</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">hash</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><a class="headerlink" href="#_CPPv4NK3cvt13BaseConverter11isKnownHashERKNSt6stringE" title="Link to this definition"></a><br /></dt>
 <dd><p>Checks if a given hash is known in the database. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>const std::string&amp; used rather than std::string_view due to lack of set::contains compatibility. </p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>hash</strong> – The hash to check. </p>
@@ -205,8 +235,7 @@
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt13BaseConverter5clearEv">
 <span id="_CPPv3N3cvt13BaseConverter5clearEv"></span><span id="_CPPv2N3cvt13BaseConverter5clearEv"></span><span id="cvt::BaseConverter::clear"></span><span class="target" id="d4/dc4/classcvt_1_1BaseConverter_1a65a6f5254a80b618940e6ef59bd30644"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">clear</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt13BaseConverter5clearEv" title="Link to this definition"></a><br /></dt>
-<dd><p>Clears the <a class="reference internal" href="#d4/dc4/classcvt_1_1BaseConverter"><span class="std std-ref">BaseConverter</span></a> object. </p>
-<p>This function clears the internal state of the <a class="reference internal" href="#d4/dc4/classcvt_1_1BaseConverter"><span class="std std-ref">BaseConverter</span></a> object. It resets all the member variables to their default values.</p>
+<dd><p>Clears the <a class="reference internal" href="#d4/dc4/classcvt_1_1BaseConverter"><span class="std std-ref">BaseConverter</span></a> object. This function clears the internal state of the <a class="reference internal" href="#d4/dc4/classcvt_1_1BaseConverter"><span class="std std-ref">BaseConverter</span></a> object. It resets all the member variables to their default values. </p>
 <p><div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="#d4/dc4/classcvt_1_1BaseConverter"><span class="std std-ref">BaseConverter</span></a></p>
@@ -362,7 +391,7 @@
 <span id="_CPPv3I0EN3cvt16StridedConverterE"></span><span id="_CPPv2I0EN3cvt16StridedConverterE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DataSoA</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d7/d58/classcvt_1_1StridedConverter"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">StridedConverter</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><a class="reference internal" href="data.html#_CPPv43cvt" title="cvt"><span class="n"><span class="pre">cvt</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="#_CPPv4I0EN3cvt13BaseConverterE" title="cvt::BaseConverter"><span class="n"><span class="pre">BaseConverter</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3cvt16StridedConverterE" title="cvt::StridedConverter::DataSoA"><span class="n"><span class="pre">DataSoA</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN3cvt16StridedConverterE" title="Link to this definition"></a><br /></dt>
 <dd><div class="docutils container">
 <em>#include &lt;observer.hpp&gt;</em></div>
-<p>Convert and serialize at a particular stride (i.e. every 10 steps) </p>
+<p>Convert and serialize at a particular stride (i.e. every 10 steps). Also has flag which enables saving on player actions. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
@@ -430,12 +459,14 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt16StridedConverter7stride_E">
 <span id="_CPPv3N3cvt16StridedConverter7stride_E"></span><span id="_CPPv2N3cvt16StridedConverter7stride_E"></span><span id="cvt::StridedConverter::stride___std::s"></span><span class="target" id="d7/d58/classcvt_1_1StridedConverter_1a97117a14704bd04cd7e5458349c05e33"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stride_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt16StridedConverter7stride_E" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Number of replay steps between saving observations. </p>
+</dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt16StridedConverter12saveActions_E">
 <span id="_CPPv3N3cvt16StridedConverter12saveActions_E"></span><span id="_CPPv2N3cvt16StridedConverter12saveActions_E"></span><span id="cvt::StridedConverter::saveActions___b"></span><span class="target" id="d7/d58/classcvt_1_1StridedConverter_1a8d547c1619b39a110b055395521dfd45"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">saveActions_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="k"><span class="pre">false</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt16StridedConverter12saveActions_E" title="Link to this definition"></a><br /></dt>
-<dd></dd></dl>
+<dd><p>Flag to also enable saving on player actions. </p>
+</dd></dl>
 
 </div>
 </dd></dl>

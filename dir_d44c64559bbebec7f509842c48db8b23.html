@@ -70,12 +70,26 @@ $(function() {
 <div class="title">include Directory Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+<div class="dynheader">
+Directory dependency graph for include:</div>
+<div class="dyncontent">
+<div class="center"><img src="dir_d44c64559bbebec7f509842c48db8b23_dep.png" border="0" usemap="#adir__d44c64559bbebec7f509842c48db8b23__dep" alt="/home/runner/work/sc2-serializer/sc2-serializer/include"/></div>
+</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="subdirs"></a>
 Directories</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="files"></a>
 Files</h2></td></tr>
+<tr class="memitem:df/da2/database_8hpp"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="df/da2/database_8hpp.html">database.hpp</a></td></tr>
+<tr class="memdesc:df/da2/database_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Database framework for reading and writing serialized replay data. ReplayDatabase is templated on any type which fulfills the interface concept HasDBInterface, i.e. a specialization is defined for that type to enable reading/writing the main data and any metadata associated with the replay. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:d6/da0/observer_8hpp"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="d6/da0/observer_8hpp.html">observer.hpp</a></td></tr>
+<tr class="memdesc:d6/da0/observer_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains StarCraft II game observation classes. Each variant saves observations at different rates to balance between verbosity and dataset size. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:d5/d1d/replay__parsing_8hpp"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="d5/d1d/replay__parsing_8hpp.html">replay_parsing.hpp</a></td></tr>
+<tr class="memdesc:d5/d1d/replay__parsing_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set of tools for parsing replay data into a more amenable form for machine learning. These are mainly used via their Python API. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:d1/d31/serialize_8hpp"><td class="memItemLeft" align="right" valign="top">file &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="d1/d31/serialize_8hpp.html">serialize.hpp</a></td></tr>
 <tr class="memdesc:d1/d31/serialize_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic Serialisation and Deserialisation Methods. A combination of C++20 Concepts and Requires clauses are used to automatically determine how to (de)serialize data. <a href="https://www.boost.org/doc/libs/master/doc/html/boost_pfr.html">Boost PFR</a> is used to iterate over non-trivial structures. Underlying data is ideally trivially copyable or some range which can be copied element-by-element. This will not work properly with pointer-like objects. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
