@@ -163,7 +163,6 @@
 <span id="api-data"></span><h1>Starcraft II Data Structures<a class="headerlink" href="#starcraft-ii-data-structures" title="Link to this heading"></a></h1>
 <section id="common">
 <h2>Common<a class="headerlink" href="#common" title="Link to this heading"></a></h2>
-<p>Includes common tools/structures as well as the score and action struct.</p>
 <p>This is one of “those” files that just contains a few bits and bobs such as data-vectorization, action, position, image data structures etc, etc. </p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi </p>
@@ -995,7 +994,6 @@ Convert SoA to AoS.</p>
 </section>
 <section id="enums">
 <h2>Enums<a class="headerlink" href="#enums" title="Link to this heading"></a></h2>
-<p>Includes most of the enums used in SC2 (Outcome, Alliance, etc.)</p>
 <p>Common enums in StarCraft II and accompanying tools such as enum-&gt;string and enum-&gt;one-hot. </p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi </p>
@@ -1419,7 +1417,6 @@ Convert SoA to AoS.</p>
 </section>
 <section id="units">
 <h2>Units<a class="headerlink" href="#units" title="Link to this heading"></a></h2>
-<p>Unit and neutral unit data structures with their AoS&lt;-&gt;SoA transforms.</p>
 <p>Unit data structures for StarCraft II. NeutralUnits are treated specially as many properties such as buffs and cloak_state are never utilized, so we save precious bytes and make a smaller structure especially for neutral structures. This file also contains the instance-major transformation code for unit data which improves data compression and reduces file size from unit data by ~70%. </p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi </p>
@@ -2217,7 +2214,6 @@ Convert SoA to AoS.</p>
 </section>
 <section id="interface">
 <h2>Interface<a class="headerlink" href="#interface" title="Link to this heading"></a></h2>
-<p>Interface between replay structure and database</p>
 <p>Common interface and utilities for replay data structures. </p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi </p>
@@ -2707,7 +2703,6 @@ Convert SoA to AoS.</p>
 </section>
 <section id="all-data">
 <h2>All Data<a class="headerlink" href="#all-data" title="Link to this heading"></a></h2>
-<p>All-data replay structure (units, minimaps, scalars).</p>
 <p>Replay data structure for recording and deserializing all observation data. </p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi </p>
@@ -3047,7 +3042,6 @@ Convert SoA to AoS.</p>
 </section>
 <section id="minimap-scalar-data">
 <h2>Minimap + Scalar Data<a class="headerlink" href="#minimap-scalar-data" title="Link to this heading"></a></h2>
-<p>Unit data is omitted, only minimap and scalar data is in here.</p>
 <p>Replay observation data that only contains scalar (score and economy) and minimap data. Is compatible with reading ReplayData as the ordering of the data is the same, we just stop reading before Unit data. </p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi </p>
@@ -3327,7 +3321,6 @@ Convert SoA to AoS.</p>
 </section>
 <section id="scalar-data">
 <h2>Scalar Data<a class="headerlink" href="#scalar-data" title="Link to this heading"></a></h2>
-<p>Only scalar data such as economics and score are here.</p>
 <p>Replay observation data that only contains scalar (score and economy) data. Is compatible with reading ReplayData and ReplayDataNoUnits as the ordering of the data is the same, we just stop reading before minimap data. </p>
 <p><dl class="simple">
 <dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi </p>
