@@ -9,6 +9,8 @@
 
 namespace cvt {
 
+static FrequencyTimer gTimer("Converter", std::chrono::seconds(30));
+
 template<> void BaseConverter<ReplayDataSoA>::clear() noexcept
 {
     replayData_.data.clear();
@@ -125,10 +127,6 @@ template<> void BaseConverter<ReplayDataSoA>::copyDynamicMapData() noexcept
 
 template<> void BaseConverter<ReplayDataSoA>::copyCommonData() noexcept
 {
-    // Logging performance
-    static FrequencyTimer timer("Converter", std::chrono::seconds(30));
-    timer.step(fmt::format("Step {} of {}", this->Observation()->GetGameLoop(), replayData_.header.durationSteps));
-
     // Copy static height map if not already done
     if (replayData_.header.heightMap.empty()) { this->copyHeightMapData(); }
 
@@ -147,6 +145,8 @@ template<> void BaseConverter<ReplayDataSoA>::copyCommonData() noexcept
 
 template<> void FullConverter<ReplayDataSoA>::OnStep()
 {
+    gTimer.step(fmt::format("Step {} of {}", this->Observation()->GetGameLoop(), replayData_.header.durationSteps));
+
     // "Initialize" next item
     replayData_.data.resize(replayData_.data.size() + 1);
 
@@ -158,6 +158,8 @@ template<> void FullConverter<ReplayDataSoA>::OnStep()
 
 template<> void ActionConverter<ReplayDataSoA>::OnStep()
 {
+    gTimer.step(fmt::format("Step {} of {}", this->Observation()->GetGameLoop(), replayData_.header.durationSteps));
+
     // Need to have at least one buffer
     if (replayData_.data.empty()) { replayData_.data.resize(1); }
 
@@ -175,6 +177,8 @@ template<> void ActionConverter<ReplayDataSoA>::OnStep()
 
 template<> void StridedConverter<ReplayDataSoA>::OnStep()
 {
+    gTimer.step(fmt::format("Step {} of {}", this->Observation()->GetGameLoop(), replayData_.header.durationSteps));
+
     // Check if a logging step
     const auto gameStep = this->Observation()->GetGameLoop();
     bool shouldRecord = gameStep % stride_ == 0;
