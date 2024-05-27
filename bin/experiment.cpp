@@ -221,7 +221,7 @@ class Observer : public sc2::ReplayObserver
     std::unordered_map<sc2::Tag, ResourceObs> resourceQty_;
     bool hasResourceInit{ false };
 
-    bool IgnoreReplay(const sc2::ReplayInfo &replay_info, uint32_t &player_id) final { return false; }
+    bool IgnoreReplay(const sc2::ReplayInfo &replay_info, uint32_t & /*player_id*/) final { return false; }
 };
 
 int main(int argc, char *argv[])
