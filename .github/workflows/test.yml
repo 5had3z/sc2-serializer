@@ -1,22 +1,17 @@
 name: Run Tests
-
 on: [push]
-
 jobs:
   test:
     runs-on: ubuntu-22.04
-
     strategy:
       matrix:
         cmake-version: [3.22]
         gcc-version: [13]
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           submodules: recursive
-
       - name: Set up CMake, GCC, and G++
         run: |
           sudo apt-get update
@@ -24,8 +19,7 @@ jobs:
           sudo add-apt-repository ppa:ubuntu-toolchain-r/test
           sudo apt-get update
           sudo apt-get install -y g++-${{ matrix.gcc-version }} gcc-${{ matrix.gcc-version }}
-          sudo apt-get install -y cmake ninja-build git libboost-iostreams1.74-dev libtbb-dev
-
+          sudo apt-get install -y cmake ninja-build libboost-iostreams1.74-dev libtbb-dev
       - name: Download Artifact from Previous Workflow
         uses: dawidd6/action-download-artifact@v3
         with:
@@ -35,35 +29,31 @@ jobs:
           name: build
           path: /home/runner/work/sc2-serializer/build/ # extract to build folder
         continue-on-error: true # Continue even if artifacts are not found
-
       - name: Fix python setup issues
         run: |
           sudo apt-get purge -y python3-setuptools
           curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
           python get-pip.py
           pip install --upgrade pip
-
       - name: Configure CMake
         run: |
           export CC="/usr/bin/gcc-${{ matrix.gcc-version }}"
           export CXX="/usr/bin/g++-${{ matrix.gcc-version }}"
           cmake -B /home/runner/work/sc2-serializer/build -G Ninja -DSC2_PY_READER=OFF -DSC2_TESTS=ON -DBUILD_API_EXAMPLES=OFF
-
       - name: Build and run tests
-        run: cmake --build /home/runner/work/sc2-serializer/build --parallel --config Release && /home/runner/work/sc2-serializer/build/test_database && /home/runner/work/sc2-serializer/build/test_readwrite
-
+        run: |
+          cmake --build /home/runner/work/sc2-serializer/build --parallel --config Release
+          /home/runner/work/sc2-serializer/build/test_database
+          /home/runner/work/sc2-serializer/build/test_readwrite
       - name: Archive build artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: build
           path: /home/runner/work/sc2-serializer/build
         if: success()
-
       - name: Ensure pybind11-stubgen installed
         run: pip install git+https://github.com/5had3z/pybind11-stubgen.git black
-
       - name: Run python building
         run: pip install .
-
       - name: Check the python imports
         run: python -c "import sc2_replay_reader; db = sc2_replay_reader.ReplayDataAllDatabase()"
