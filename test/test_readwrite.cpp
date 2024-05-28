@@ -1,3 +1,15 @@
+/**
+ * @file test_readwrite.cpp
+ * @author Bryce Ferenczi
+ * @brief Set of basic tests to ensure reading/writing various data structures works correctly. Also includes some tests
+ * for the auto-vectorization algorithms.
+ * @version 0.1
+ * @date 2024-05-28
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
+
 #include <gtest/gtest.h>
 #include <spdlog/spdlog.h>
 

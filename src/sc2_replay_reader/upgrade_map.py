@@ -1,4 +1,7 @@
-"""Maps from ability id to name grouped by race"""
+"""
+Maps from ability id to name grouped by race
+"""
+
 from dataclasses import dataclass, field
 from itertools import product
 from pathlib import Path

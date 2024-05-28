@@ -1,4 +1,4 @@
-"""Enum helpers to index into unit feature vectors"""
+"""Enum helpers to index into unit feature vectors by name"""
 
 from enum import IntEnum, auto
 

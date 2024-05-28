@@ -1,3 +1,14 @@
+/**
+ * @file test_database.cpp
+ * @author Bryce Ferenczi
+ * @brief Set of basic tests to ensure reading/writing to database works correctly.
+ * @version 0.1
+ * @date 2024-05-28
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
+
 #include "data_structures/replay_all.hpp"
 #include "database.hpp"
 

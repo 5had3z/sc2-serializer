@@ -1,13 +1,23 @@
-// From a sequence of actions over a replay, generate an array whici is
-// an encoding of the researched tech over the game based on when the
-// research action is requested and when it is expected to complete
-// based on the game data
-//  | -------R1Action----R1Fin ---R2Action------------R2Fin--------------
-//  | -----------|---------|---------|------------------|----------------
-//  R1 | 0000000000000000001111111111111111111111111111111111111111111111
-//  R2 | 0000000000000000000000000000000000000000000000011111111111111111
-//  ..
-//  RN | 0000000000000000000000000000000000000000000000000000000000000000
+/**
+ * @file upgrade_state.cpp
+ * @author your name (you@domain.com)
+ * @brief From a sequence of actions over a replay, generate an array which is an encoding of the researched tech over
+ * the game based on when the research action is requested and when it is expected to complete based on the game data.
+ *
+ * | -------R1Action----R1Fin ---R2Action------------R2Fin--------------
+ * | -----------|---------|---------|------------------|----------------
+ * R1 | 0000000000000000001111111111111111111111111111111111111111111111
+ * R2 | 0000000000000000000000000000000000000000000000011111111111111111
+ * ..
+ * RN | 0000000000000000000000000000000000000000000000000000000000000000
+ *
+ * @version 0.1
+ * @date 2024-05-28
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
+
 
 #include "generated_info.hpp"
 #include "replay_parsing.hpp"

@@ -1,3 +1,14 @@
+/**
+ * @file bindings.cpp
+ * @author Bryce Ferenczi
+ * @brief Python Bindings for sc2-serializer APIs.
+ * @version 0.1
+ * @date 2024-05-28
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
+
 #include "data_structures/replay_all.hpp"
 #include "data_structures/replay_minimaps.hpp"
 #include "data_structures/replay_scalars.hpp"

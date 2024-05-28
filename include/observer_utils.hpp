@@ -128,7 +128,6 @@ class FrequencyTimer
     std::chrono::steady_clock::time_point lastPrint{};
 };
 
-
 /**
  * @brief Converts an SC2 unit order to a custom UnitOrder.
  *
@@ -136,15 +135,6 @@ class FrequencyTimer
  * @return The converted UnitOrder.
  */
 [[nodiscard]] auto convertSC2UnitOrder(const sc2::UnitOrder *src) noexcept -> UnitOrder;
-
-/**
- * @brief Finds the tagged unit with the specified add-on tag in the given units.
- *
- * @param add_on_tag The tag of the add-on to search for.
- * @param units The list of units to search in.
- * @return The found AddOn unit.
- */
-[[nodiscard]] auto find_tagged_unit(const sc2::Tag add_on_tag, const sc2::Units &units) -> AddOn;
 
 /**
  * @brief Converts an SC2 unit to a custom Unit object.

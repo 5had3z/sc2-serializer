@@ -1,20 +1,26 @@
+/**
+ * @file observer_utils.cpp
+ * @author Bryce Ferenczi
+ * @brief Implementations of observer utility functions.
+ * @version 0.1
+ * @date 2024-05-28
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
+
 #include "observer_utils.hpp"
 
 namespace cvt {
 
-[[nodiscard]] auto convertSC2UnitOrder(const sc2::UnitOrder *src) noexcept -> UnitOrder
-{
-    UnitOrder dst;
-    static_assert(std::is_same_v<std::underlying_type_t<sc2::ABILITY_ID>, int>);
-    dst.ability_id = static_cast<int>(src->ability_id);
-    dst.progress = src->progress;
-    dst.tgtId = src->target_unit_tag;
-    dst.target_pos.x = src->target_pos.x;
-    dst.target_pos.y = src->target_pos.y;
-    return dst;
-}
-
-[[nodiscard]] auto find_tagged_unit(const sc2::Tag add_on_tag, const sc2::Units &units) -> AddOn
+/**
+ * @brief Finds the tagged unit with the specified add-on tag in the given units.
+ *
+ * @param add_on_tag The tag of the add-on to search for.
+ * @param units The list of units to search in.
+ * @return The found AddOn unit.
+ */
+[[nodiscard]] auto findTaggedUnit(const sc2::Tag add_on_tag, const sc2::Units &units) -> AddOn
 {
     auto same_tag = [add_on_tag](const sc2::Unit *other) { return other->tag == add_on_tag; };
     const auto it = std::ranges::find_if(units, same_tag);
@@ -39,6 +45,18 @@ namespace cvt {
 
         throw std::out_of_range(fmt::format("Invalid Add On Type, type was {}!", static_cast<int>(type)));
     }
+}
+
+[[nodiscard]] auto convertSC2UnitOrder(const sc2::UnitOrder *src) noexcept -> UnitOrder
+{
+    UnitOrder dst;
+    static_assert(std::is_same_v<std::underlying_type_t<sc2::ABILITY_ID>, int>);
+    dst.ability_id = static_cast<int>(src->ability_id);
+    dst.progress = src->progress;
+    dst.tgtId = src->target_unit_tag;
+    dst.target_pos.x = src->target_pos.x;
+    dst.target_pos.y = src->target_pos.y;
+    return dst;
 }
 
 [[nodiscard]] auto convertSC2Unit(const sc2::Unit *src, const sc2::Units &units, const bool isPassenger) -> Unit
@@ -81,7 +99,7 @@ namespace cvt {
     static_assert(std::is_same_v<std::underlying_type_t<sc2::BUFF_ID>, int>);
     if (src->buffs.size() >= 1) { dst.buff0 = static_cast<int>(src->buffs[0]); }
     if (src->buffs.size() >= 2) { dst.buff1 = static_cast<int>(src->buffs[1]); }
-    if (src->add_on_tag != 0) { dst.add_on_tag = find_tagged_unit(src->add_on_tag, units); }
+    if (src->add_on_tag != 0) { dst.add_on_tag = findTaggedUnit(src->add_on_tag, units); }
 
     return dst;
 }

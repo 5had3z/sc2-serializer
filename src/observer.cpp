@@ -1,5 +1,12 @@
 /**
+ * @file observer.cpp
+ * @author Bryce Ferenczi
  * @brief Version 2 of the observer and replay data structure based on ReplayData
+ * @version 0.1
+ * @date 2024-05-28
+ *
+ * @copyright Copyright (c) 2024
+ *
  */
 
 #include "observer.hpp"
