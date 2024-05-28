@@ -4,6 +4,7 @@ Benchmark
 =========
 
 Size and speed benchmarks are completed with a small but representative sample of 20 replays from the 4.9.2 pool.
+
 - 2a5591989f900e6aa8f91803abada291755638c9292be9d1360bed0003ff4eb6
 - e2d117e1a78f03f8ce00d7bc898977966486ecc53b441ebc017bdb8eee481aef
 - e5770833a7ca145ece0cbd2ce6ac7a512094f50613d6c8a6fbe0888b6ca3e285
