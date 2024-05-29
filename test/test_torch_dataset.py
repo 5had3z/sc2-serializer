@@ -17,6 +17,6 @@ def test_sql_example():
     sampler = SQLSampler(
         "gamedata.db", replays_path, filters, train_ratio=0.8, is_train=True
     )
-    dataset = SC2Dataset(sampler, features={"minimaps", "scalars"})
+    dataset = SC2Dataset(sampler, features=["minimaps", "scalars"])
     test_sample = dataset[0]
     assert test_sample

@@ -40,7 +40,7 @@ def find_closest_indices(options: Sequence[int], targets: Sequence[int]):
         elif prv <= targets[tgt_idx] <= nxt:
             nearest[tgt_idx] = idx
             tgt_idx += 1
-        if tgt_idx == nearest.size:
+        if tgt_idx == nearest.nelement():
             break
     return nearest
 
@@ -51,7 +51,7 @@ class SC2Dataset(Dataset):
     def __init__(
         self,
         sampler: ReplaySampler,
-        features: set[str] | None = None,
+        features: list[str] | None = None,
         timepoints: TimeRange = TimeRange(0, 30, 0.5),
     ):
         """
@@ -61,9 +61,7 @@ class SC2Dataset(Dataset):
             transform (callable, optional): Optional transform to be applied on a sample.
         """
         self.sampler = sampler
-        self.features = (
-            {"units", "minimaps", "scalars"} if features is None else features
-        )
+        self.features = ["minimaps", "scalars"] if features is None else features
         self.db_handle, self.parser = get_database_and_parser(
             parse_units="units" in self.features,
             parse_minimaps="minimaps" in self.features,
