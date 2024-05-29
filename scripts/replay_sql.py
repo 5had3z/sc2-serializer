@@ -1,19 +1,21 @@
 #!/usr/bin/env python3
+
 import os
 import shutil
 import sqlite3
 from pathlib import Path
-from typing import Annotated, Any, Literal, Callable
+from typing import Annotated, Any, Callable, Literal
 
 import torch
 import typer
 from torch import Tensor
 from torch.utils.data import DataLoader, Dataset
+
 from sc2_replay_reader import (
-    Score,
     GAME_INFO_FILE,
     ReplayDataAllDatabase,
     ReplayDataAllParser,
+    Score,
     set_replay_database_logger_level,
     spdlog_lvl,
 )
@@ -71,6 +73,8 @@ def upper_bound(x: Tensor, value: float) -> int:
 
 
 class SC2Replay(Dataset):
+    """Basic SC2 Replay Dataloader"""
+
     def __init__(
         self,
         basepath: Path,
@@ -114,7 +118,8 @@ class SC2Replay(Dataset):
 
         try:
             replay_data = self.db_handle.getEntry(db_index)
-        except MemoryError:
+            assert len(replay_data.data.popArmy) > 0, "No data in replay"
+        except (MemoryError, AssertionError):
             data = {
                 "partition": str(self.replays[file_index].name),
                 "idx": db_index,
@@ -156,8 +161,8 @@ class SC2Replay(Dataset):
             yield self[index]
 
 
-# Function to merge databases
 def merge_databases(source: Path, target: Path, table_name: str):
+    """Function to merge databases"""
     # Connect to the source database
     source_conn = sqlite3.connect(source)
     source_cursor = source_conn.cursor()
@@ -221,8 +226,11 @@ def make_database(
     features: dict[str, SQL_TYPES],
     lambda_columns: dict[str, tuple[SQL_TYPES, LambdaFunctionType]],
 ):
+    """Create database of replay metadata"""
     if path.exists():
-        os.remove(path)
+        print(f"Removing existing database to start anew: {path}")
+        path.unlink()
+
     # Connect to the SQLite database (creates a new database if it doesn't exist)
     conn = sqlite3.connect(str(path))
 
@@ -243,6 +251,7 @@ def make_database(
 
 
 def add_to_database(cursor: sqlite3.Cursor, data_dict: dict[str, Any]):
+    """Add data yielded from dataloader to database"""
     columns = ", ".join(data_dict.keys())
     placeholders = ", ".join("?" for _ in data_dict.values())
 
@@ -326,15 +335,15 @@ def create(
 
     cursor = conn.cursor()
 
-    with typer.progressbar(dataloader, length=len(dataloader)) as bar:
-        for sample in bar:
+    with typer.progressbar(dataloader, length=len(dataloader)) as pbar:
+        for sample in pbar:
             sample: dict[str, Any]
             converted_d = {
                 k: v.item() if isinstance(v, Tensor) else v[0]
                 for k, v in sample.items()
             }
             add_to_database(cursor, converted_d)
-            if bar.pos % 100 == 0:
+            if pbar.pos % 100 == 0:
                 conn.commit()
 
     cursor.close()
