@@ -3,11 +3,35 @@ from pathlib import Path
 from urllib.parse import unquote
 
 import requests
-from tqdm import tqdm
+from typer import Typer, progressbar
+
+REPLAY_PACK_URLS = [
+    "https://bridges.monash.edu/ndownloader/files/44403137",
+    "https://bridges.monash.edu/ndownloader/files/44403140",
+]
+
+REPLAY_PACK_DB_URL = "https://bridges.monash.edu/ndownloader/files/44403137"
+
+TOURNAMENT_URLS = [
+    ("https://bridges.monash.edu/ndownloader/files/444031374", 927.9),
+    ("https://bridges.monash.edu/ndownloader/files/444031371", 2300),
+    ("https://bridges.monash.edu/ndownloader/files/444031372", 1200),
+    ("https://bridges.monash.edu/ndownloader/files/444031373", 4200),
+    ("https://bridges.monash.edu/ndownloader/files/4440313745", 45),
+    ("https://bridges.monash.edu/ndownloader/files/444031375", 2300),
+    ("https://bridges.monash.edu/ndownloader/files/444031376", 1800),
+]
 
 
 def get_filename_from_url(url: str):
-    """Extract the filename to be downloaded from a url"""
+    """Extract the filename to be downloaded from a url
+
+    Args:
+        url (str): Internet url to get filename from.
+
+    Returns:
+        str: Filename of file to download
+    """
     response = requests.head(url, timeout=60)
     content_disposition = response.headers.get("Content-Disposition")
 
@@ -17,20 +41,28 @@ def get_filename_from_url(url: str):
 
 
 def download_file(url: str, destination: Path = Path().cwd()):
-    """Download file from url to destination"""
+    """Download file from url to destination.
+
+    Args:
+        url (str): Internet URL to download file
+        destination (Path, optional): path (folder) to write file. Defaults to Path().cwd().
+
+    Returns:
+        str: Filename of downloaded file
+    """
     file_name = get_filename_from_url(url)
     destination /= file_name
-    print(f"downloading {destination}")
     response = requests.get(url, stream=True, timeout=60)
 
     total_size = int(response.headers.get("content-length", 0))
     block_size = 1024  # 1 Kibibyte
 
-    with tqdm(total=total_size, unit="B", unit_scale=True) as progress_bar:
+    with progressbar(length=total_size, label=f"Downloading {destination}") as pbar:
         with open(destination, "wb") as file:
             for data in response.iter_content(block_size):
-                progress_bar.update(len(data))
                 file.write(data)
+                pbar.update(len(data))
+
     return file_name
 
 
@@ -68,7 +100,7 @@ def split_and_download(
     # If no files can be downloaded within the buffer range, download the smallest files
     if downloaded_size < (target_size - buffer_size):
         remaining_links = [
-            link for link, size in links_and_sizes if link not in used_links
+            link for link, _ in links_and_sizes if link not in used_links
         ]
         remaining_links.sort(key=lambda x: x[1])  # Sort by file size in ascending order
 
@@ -81,3 +113,16 @@ def split_and_download(
             used_links.add(link)
 
     return files
+
+
+app = Typer()
+
+
+@app.command()
+def download(split: str, path: Path):
+    """"""
+    raise NotImplementedError("TODO")
+
+
+if __name__ == "__main__":
+    app()

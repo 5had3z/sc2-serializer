@@ -432,12 +432,12 @@ template<typename ReplayDataType> class ReplayParser
 
         if constexpr (HasMinimapData<step_data_t>) {
             // Create feature image or minimap and feature vector of game state scalars (score, vespene, pop army etc.)
-            result["minimap_features"] =
+            result["minimaps"] =
                 createMinimapFeatures<feature_t>(replayData_, timeIdx, minimapFeatureFlags_, expandPlayerRelative_);
         }
 
         if constexpr (HasScalarData<step_data_t>) {
-            result["scalar_features"] = createScalarFeatures<feature_t>(replayData_.data, timeIdx);
+            result["scalars"] = createScalarFeatures<feature_t>(replayData_.data, timeIdx);
         }
 
         static_assert((HasScalarData<step_data_t> || HasMinimapData<step_data_t> || HasUnitData<step_data_t>

@@ -1,6 +1,6 @@
 /**
  * @file array_struct_impl.cpp
- * @author your name (you@domain.com)
+ * @author Bryce Ferenczi
  * @brief Specialisation implementations for AoS<->SoA for structures to prevent redefinition errors if it were in the
  * header files.
  * @version 0.1

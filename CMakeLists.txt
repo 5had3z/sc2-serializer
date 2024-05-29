@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
 
-project(sc2-cvt)
+project(sc2-serializer)
 
 if(MSVC)
   set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
@@ -36,6 +36,7 @@ cpmaddpackage(
   "CXXOPTS_BUILD_EXAMPLES NO"
   "CXXOPTS_BUILD_TESTS NO"
   "CXXOPTS_ENABLE_INSTALL NO")
+
 cpmaddpackage(
   GITHUB_REPOSITORY
   gabime/spdlog
@@ -73,6 +74,7 @@ else()
     boostorg/pfr
     GIT_TAG
     2.1.0)
+
   find_package(Boost REQUIRED COMPONENTS iostreams)
 endif()
 
@@ -81,8 +83,6 @@ if(SC2_CONVERTER)
 
   find_package(Python3 COMPONENTS Interpreter Development)
   message(STATUS "Python: version=${Python3_VERSION} interpreter=${Python3_EXECUTABLE}")
-
-  message(Python3_INCLUDE_DIRS: ${Python3_INCLUDE_DIRS})
 
   if(NOT (Python3_FOUND AND Python3_Development_FOUND))
     string(
@@ -107,6 +107,7 @@ if(SC2_CONVERTER)
     src/observer.cpp
     src/array_struct_impl.cpp)
   target_compile_features(replay_converter PUBLIC cxx_std_23)
+  target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS})
   target_link_libraries(
     replay_converter
     PUBLIC sc2api
@@ -116,9 +117,6 @@ if(SC2_CONVERTER)
            TBB::tbb
            Boost::pfr
            Boost::iostreams)
-
-  target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS})
-
   target_include_directories(
     replay_converter SYSTEM
     PUBLIC include
@@ -139,11 +137,11 @@ if(SC2_CONVERTER)
            spdlog::spdlog
            ${Python_LIBRARIES}
            Python3::Python)
+  target_include_directories(sc2_converter PUBLIC ${Python3_INCLUDE_DIRS})
 
   if(MSVC)
     target_link_directories(sc2_converter PUBLIC ${Python3_INCLUDE_DIRS}\\..\\libs)
   endif()
-  target_include_directories(sc2_converter PUBLIC ${Python3_INCLUDE_DIRS})
 
   add_executable(sc2_merger bin/merge.cpp src/database.cpp)
   target_compile_features(sc2_merger PUBLIC cxx_std_23)
@@ -185,6 +183,7 @@ if(SC2_PY_READER)
     pybind/pybind11
     VERSION
     2.11.1)
+
   cpmaddpackage(
     GITHUB_REPOSITORY
     jbeder/yaml-cpp
@@ -262,7 +261,6 @@ if(SC2_CONVERTER AND OpenCV_FOUND)
            opencv_imgcodecs)
   target_include_directories(game_exp SYSTEM PRIVATE include 3rdparty/s2client-api/include
                                                      ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated)
-
 elseif(SC2_CONVERTER)
   message("OpenCV Not Found, Not Building game_exp")
 endif()

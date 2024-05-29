@@ -1,6 +1,6 @@
 /**
  * @file upgrade_state.cpp
- * @author your name (you@domain.com)
+ * @author Bryce Ferenczi
  * @brief From a sequence of actions over a replay, generate an array which is an encoding of the researched tech over
  * the game based on when the research action is requested and when it is expected to complete based on the game data.
  *
