@@ -1,21 +1,22 @@
-import torch
-from torch.utils.data import Dataset
+import sqlite3
+from dataclasses import dataclass
+from enum import Enum
 from pathlib import Path
+
+import numpy as np
+import torch
+from download import download_file, split_and_download
+from file_links import database as database_link
+from file_links import links, tourn_links
+from torch.utils.data import Dataset
+from utils import find_closest_indices
+
 from sc2_replay_reader import (
     GAME_INFO_FILE,
     ReplayDataAllDatabase,
     ReplayDataAllParser,
     Result,
 )
-import sqlite3
-from typing import List
-import numpy as np
-from dataclasses import dataclass
-from yeet import download_file, split_and_download
-from file_links import links, tourn_links, database as database_link
-from utils import find_closest_indices
-
-from enum import Enum
 
 
 @dataclass
@@ -49,7 +50,7 @@ class SC2Dataset(Dataset):
         features: set[str] | None = None,
         database: Path = Path("sc2_dataset.db"),
         timepoints: TimeRange = TimeRange(0, 30, 0.5),
-        sql_filters: List[str] | None = None,
+        sql_filters: list[str] | None = None,
     ):
         """
         Args:
@@ -110,7 +111,7 @@ class SC2Dataset(Dataset):
         _loop_per_min = 22.4 * 60
         self._target_game_loops = (timepoints.arange() * _loop_per_min).to(torch.int)
 
-    def load_database(self, database: Path, sql_filters: List[str] | None = None):
+    def load_database(self, database: Path, sql_filters: list[str] | None = None):
         self.database = database
         self.sql_filters = sql_filters
         sql_filter_string = (
@@ -184,7 +185,7 @@ class SC2Dataset(Dataset):
 
         outputs = {
             "win": torch.as_tensor(
-                self.parser.data.playerResult == Result.Win, dtype=torch.float32
+                self.parser.info.playerResult == Result.Win, dtype=torch.float32
             ),
             "valid": torch.cat([torch.tensor([True]), sample_indices != -1]),
         }

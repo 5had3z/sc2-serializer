@@ -1,26 +1,27 @@
-import requests
-from urllib.parse import unquote
-from pathlib import Path
-from tqdm import tqdm
 import random
-from typing import List, Tuple
+from pathlib import Path
+from urllib.parse import unquote
+
+import requests
+from tqdm import tqdm
 
 
-def get_filename_from_url(url):
-    response = requests.head(url)
+def get_filename_from_url(url: str):
+    """Extract the filename to be downloaded from a url"""
+    response = requests.head(url, timeout=60)
     content_disposition = response.headers.get("Content-Disposition")
 
     if content_disposition and "filename=" in content_disposition:
         return unquote(content_disposition.split("filename=")[1].strip('"'))
-    else:
-        return url.split("/")[-1]
+    return url.split("/")[-1]
 
 
-def download_file(url, destination=Path(".")):
+def download_file(url: str, destination: Path = Path().cwd()):
+    """Download file from url to destination"""
     file_name = get_filename_from_url(url)
     destination /= file_name
     print(f"downloading {destination}")
-    response = requests.get(url, stream=True)
+    response = requests.get(url, stream=True, timeout=60)
 
     total_size = int(response.headers.get("content-length", 0))
     block_size = 1024  # 1 Kibibyte
@@ -34,10 +35,9 @@ def download_file(url, destination=Path(".")):
 
 
 def split_and_download(
-    links_and_sizes: List[Tuple[str, float]], percentage_split: float, folder: Path
+    links_and_sizes: list[tuple[str, float]], percentage_split: float, folder: Path
 ):
-    random.shuffle(links_and_sizes)
-
+    """Download files from public repository based on percentage split to destination folder"""
     total_size = sum(size for _, size in links_and_sizes)
     target_size = total_size * percentage_split
 
