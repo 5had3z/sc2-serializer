@@ -137,7 +137,10 @@ int main(int argc, char *argv[])
     if (strat == Stratergy::Merge) { knownHashes = replayDb.getHashes(); }
 
     bool ok = true;
-    if (cliOpts["folder"].count()) {
+    if (cliOpts["folder"].count() && cliOpts["file"].count()) {
+        SPDLOG_ERROR("--file or --folder should be specified exclusively");
+        return -1;
+    } else if (cliOpts["folder"].count()) {
         fs::path partsFolder = cliOpts["folder"].as<std::string>();
         if (!fs::exists(partsFolder)) {
             SPDLOG_ERROR("--folder doesn't exist: {}", partsFolder.string());

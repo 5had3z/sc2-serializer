@@ -22,4 +22,6 @@ Table of Contents
     :maxdepth: 2
 
     self
-    api/index
+    cpp_api/index
+    replay_data
+    benchmark

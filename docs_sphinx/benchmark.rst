@@ -1,9 +1,9 @@
 .. _benchmark:
 
-Benchmark
-=========
+Benchmarks
+==========
 
-Size and speed benchmarks are completed with a small but representative sample of 20 replays from the 4.9.2 pool.
+Size and speed benchmarks are completed with a small, but representative, sample of 20 replays from the 4.9.2 pack.
 
 - 2a5591989f900e6aa8f91803abada291755638c9292be9d1360bed0003ff4eb6
 - e2d117e1a78f03f8ce00d7bc898977966486ecc53b441ebc017bdb8eee481aef

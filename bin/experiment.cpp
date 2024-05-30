@@ -1,3 +1,14 @@
+/**
+ * @file experiment.cpp
+ * @author Bryce Ferenczi
+ * @brief Small program to play around and experiment with the StarCraft II Client API.
+ * @version 0.1
+ * @date 2024-05-30
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
+
 #include "generated_info.hpp"
 
 #include <cxxopts.hpp>
@@ -226,7 +237,8 @@ class Observer : public sc2::ReplayObserver
 
 int main(int argc, char *argv[])
 {
-    cxxopts::Options cliopts("SC2 Replay", "Run a folder of replays and see if it works");
+    cxxopts::Options cliopts(
+        "SC2 Replay Observing Experiment", "Program and code used to experiment with sc2client-api interface.");
     // clang-format off
     cliopts.add_options()
       ("r,replays", "path to folder of replays", cxxopts::value<std::string>())

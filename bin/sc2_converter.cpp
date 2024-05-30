@@ -370,18 +370,18 @@ auto main(int argc, char *argv[]) -> int
         "SC2 Replay Converter", "Convert SC2 Replays into a database which can be sampled for machine learning");
     // clang-format off
     cliParser.add_options()
-      ("r,replays", "path to folder of replays or replay file", cxxopts::value<std::string>())
-      ("p,partition", "partition file to select a subset of replays from the folder", cxxopts::value<std::string>())
-      ("o,output", "output filename for replay database", cxxopts::value<std::string>())
-      ("c,converter", "type of converter to use [action|full|strided]", cxxopts::value<std::string>())
-      ("s,stride", "stride for the strided converter", cxxopts::value<std::size_t>())
-      ("save-actions", "strided converter will also save timestep with action", cxxopts::value<bool>())
-      ("g,game", "path to game executable", cxxopts::value<std::string>())
-      ("b,badfile", "file that contains a known set of bad replays", cxxopts::value<std::string>())
+      ("r,replays", "Path to folder of replays or replay file.", cxxopts::value<std::string>())
+      ("p,partition", "Partition file to select a subset of replays a folder.", cxxopts::value<std::string>())
+      ("o,output", "Output filepath for replay database.", cxxopts::value<std::string>())
+      ("c,converter", "Type of converter to use [action|full|strided].", cxxopts::value<std::string>())
+      ("s,stride", "Stride for the strided converter (in game steps).", cxxopts::value<std::size_t>())
+      ("save-actions", "Strided converter will also save steps with player actions.", cxxopts::value<bool>())
+      ("g,game", "Path to 'Versions' folder of the SC2 game.", cxxopts::value<std::string>())
+      ("b,badfile", "File to record a known set of bad replays (to skip).", cxxopts::value<std::string>())
       ("offset", "Offset to apply to partition index", cxxopts::value<int>())
-      ("port", "port for serving the game", cxxopts::value<int>()->default_value("9168"))
-      ("perflog", "log to file the time taken to convert a file", cxxopts::value<std::string>())
-      ("h,help", "This help");
+      ("port", "Port for communication with SC2.", cxxopts::value<int>()->default_value("9168"))
+      ("perflog", "Path to log time taken for replay observation.", cxxopts::value<std::string>())
+      ("h,help", "Show this help.");
     // clang-format on
     const auto cliOpts = cliParser.parse(argc, argv);
 

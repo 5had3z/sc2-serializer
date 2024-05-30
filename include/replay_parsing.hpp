@@ -441,8 +441,7 @@ template<typename ReplayDataType> class ReplayParser
         }
 
         static_assert((HasScalarData<step_data_t> || HasMinimapData<step_data_t> || HasUnitData<step_data_t>
-                          || HasActionData<decltype(replayData_.data)>)
-                      && "At least one data type should be present");
+                       || HasActionData<decltype(replayData_.data)>)&&"At least one data type should be present");
 
         return result;
     }
@@ -506,10 +505,10 @@ template<typename ReplayDataType> class ReplayParser
  */
 template<typename T, std::output_iterator<T> It>
     requires std::is_arithmetic_v<T>
-[[maybe_unused]] auto unpackBoolImage(const Image<bool> &img, It out) -> It
+[[maybe_unused]] auto unpackBoolImage(const Image<bool> &image, It out) -> It
 {
-    for (std::size_t i = 0; i < img.size(); ++i) {
-        const auto bitset = std::bitset<8>(std::to_integer<uint8_t>(img._data[i]));
+    for (std::size_t i = 0; i < image.size(); ++i) {
+        const auto bitset = std::bitset<8>(std::to_integer<uint8_t>(image._data[i]));
 #pragma unroll
         for (int j = 7; j > -1; --j) { *out++ = static_cast<T>(bitset[j]); }
     }
@@ -524,10 +523,10 @@ template<typename T, std::output_iterator<T> It>
  */
 template<typename T>
     requires std::is_arithmetic_v<T>
-auto unpackBoolImage(const Image<bool> &img) noexcept -> std::vector<T>
+auto unpackBoolImage(const Image<bool> &image) noexcept -> std::vector<T>
 {
-    std::vector<T> unpacked_data(img.nelem(), 0);
-    unpackBoolImage(img, unpacked_data.begin());
+    std::vector<T> unpacked_data(image.nelem(), 0);
+    unpackBoolImage(image, unpacked_data.begin());
     return unpacked_data;
 }
 

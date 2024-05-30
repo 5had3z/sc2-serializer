@@ -22,6 +22,7 @@ from sc2_replay_reader import (
 
 app = typer.Typer()
 
+TABLE_NAME = "game_data"
 SQL_TYPES = Literal["INTEGER", "FLOAT", "TEXT", "BOOLEAN"]
 ENUM_KEYS = {"playerRace", "playerResult"}
 LambdaFunctionType = Callable[[ReplayDataAllParser], float | int]
@@ -161,63 +162,17 @@ class SC2Replay(Dataset):
             yield self[index]
 
 
-def merge_databases(source: Path, target: Path, table_name: str):
-    """Function to merge databases"""
-    # Connect to the source database
-    source_conn = sqlite3.connect(source)
-    source_cursor = source_conn.cursor()
+def add_to_database(cursor: sqlite3.Cursor, data_dict: dict[str, Any]):
+    """Add data yielded from dataloader to database"""
+    columns = ", ".join(data_dict.keys())
+    placeholders = ", ".join("?" for _ in data_dict.values())
 
-    # Get column names from the source database
-    source_cursor.execute(f"PRAGMA table_info({table_name})")
-    columns = [column[1] for column in source_cursor.fetchall()]
+    query = f"""
+        INSERT INTO {TABLE_NAME} ({columns})
+        VALUES ({placeholders})
+    """
 
-    # Connect to the target database and create the table if it doesn't exist
-    target_conn = sqlite3.connect(target)
-    target_cursor = target_conn.cursor()
-
-    # Generate the INSERT statement dynamically based on the columns
-    columns_str = ", ".join(columns)
-    placeholders_str = ", ".join(["?" for _ in columns])
-
-    insert_statement = (
-        f"INSERT INTO {table_name} " f"({columns_str}) " f"VALUES ({placeholders_str})"
-    )
-
-    # Fetch data from the source database
-    source_cursor.execute(f"SELECT * FROM {table_name}")
-    data_from_source = source_cursor.fetchall()
-
-    # Insert data into the target database
-    for row in data_from_source:
-        target_cursor.execute(insert_statement, row)
-
-    # Commit changes and close connections
-    target_conn.commit()
-    target_cursor.close()
-    target_conn.close()
-
-    source_cursor.close()
-    source_conn.close()
-
-
-@app.command()
-def merge(folder: Path, target: Path):
-    """Merge all databases in directory to target"""
-    # Assuming the table name is the same in all databases
-    table_name = "game_data"
-
-    assert (
-        folder != target.parent
-    ), "Target should not be in directory of files to parse"
-    assert folder.is_dir(), f"{folder} is not a folder"
-
-    # Loop through all databases in the directory
-    for idx, source in enumerate(folder.glob("*.db")):
-        if idx == 0 and not target.exists():
-            shutil.copyfile(source, target)
-            continue
-        # Merge the databases
-        merge_databases(source, target, table_name)
+    cursor.execute(query, tuple(data_dict.values()))
 
 
 def make_database(
@@ -248,37 +203,6 @@ def make_database(
     cursor.execute(create_table_sql)
     cursor.close()
     return conn
-
-
-def add_to_database(cursor: sqlite3.Cursor, data_dict: dict[str, Any]):
-    """Add data yielded from dataloader to database"""
-    columns = ", ".join(data_dict.keys())
-    placeholders = ", ".join("?" for _ in data_dict.values())
-
-    query = f"""
-        INSERT INTO game_data ({columns})
-        VALUES ({placeholders})
-    """
-
-    cursor.execute(query, tuple(data_dict.values()))
-
-
-@app.command()
-def create_individual(
-    workspace: Annotated[Path, typer.Option()] = Path("."),
-    workers: Annotated[int, typer.Option()] = 0,
-):
-    """
-    Create sql databases for each individual replay database.
-    Replay database(s) are gathered from environment variable DATAPATH.
-    """
-    replay_files = list(Path(os.environ["DATAPATH"]).glob("*.SC2Replays"))
-    for p in replay_files:
-        try:
-            os.environ["DATAPATH"] = str(p)  # Override DATAPATH with individual file
-            create(workspace=workspace, workers=workers, name=p.name)
-        except Exception as e:
-            print(f"Failed Replay {p.name} with exception: {e}")
 
 
 def make_standard(workspace: Path, name: str):
@@ -349,6 +273,79 @@ def create(
     cursor.close()
     conn.commit()
     conn.close()
+
+
+@app.command()
+def create_individual(
+    workspace: Annotated[Path, typer.Option()] = Path("."),
+    workers: Annotated[int, typer.Option()] = 0,
+):
+    """
+    Create sql databases for each individual replay database.
+    Replay database(s) are gathered from environment variable DATAPATH.
+    """
+    replay_files = list(Path(os.environ["DATAPATH"]).glob("*.SC2Replays"))
+    for p in replay_files:
+        try:
+            os.environ["DATAPATH"] = str(p)  # Override DATAPATH with individual file
+            create(workspace=workspace, workers=workers, name=p.name)
+        except Exception as e:
+            print(f"Failed Replay {p.name} with exception: {e}")
+
+
+def merge_databases(source: Path, target: Path):
+    """Function to merge databases"""
+    # Connect to the source database
+    source_conn = sqlite3.connect(source)
+    source_cursor = source_conn.cursor()
+
+    # Get column names from the source database
+    source_cursor.execute(f"PRAGMA table_info({TABLE_NAME})")
+    columns = [column[1] for column in source_cursor.fetchall()]
+
+    # Connect to the target database and create the table if it doesn't exist
+    target_conn = sqlite3.connect(target)
+    target_cursor = target_conn.cursor()
+
+    # Generate the INSERT statement dynamically based on the columns
+    columns_str = ", ".join(columns)
+    placeholders_str = ", ".join(["?" for _ in columns])
+
+    insert_statement = (
+        f"INSERT INTO {TABLE_NAME} " f"({columns_str}) " f"VALUES ({placeholders_str})"
+    )
+
+    # Fetch data from the source database
+    source_cursor.execute(f"SELECT * FROM {TABLE_NAME}")
+    data_from_source = source_cursor.fetchall()
+
+    # Insert data into the target database
+    for row in data_from_source:
+        target_cursor.execute(insert_statement, row)
+
+    # Commit changes and close connections
+    target_conn.commit()
+    target_cursor.close()
+    target_conn.close()
+
+    source_cursor.close()
+    source_conn.close()
+
+
+@app.command()
+def merge(folder: Path, target: Path):
+    """Merge all databases in directory to target"""
+    assert (
+        folder != target.parent
+    ), "Target should not be in directory of files to parse"
+    assert folder.is_dir(), f"{folder} is not a folder"
+
+    # Loop through all databases in the directory
+    for idx, source in enumerate(folder.glob("*.db")):
+        if idx == 0 and not target.exists():
+            shutil.copyfile(source, target)
+        else:  # Merge the databases
+            merge_databases(source, target)
 
 
 if __name__ == "__main__":

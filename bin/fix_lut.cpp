@@ -1,3 +1,15 @@
+/**
+ * @file fix_lut.cpp
+ * @author Bryce Ferenczi
+ * @brief The .SC2Replay index/look-up-table originally used std::streampos to calculate the the beginning of each
+ * replay. Linux and Windows actually have different implementations for std::streampos and are not compatible.
+ * Therefore the LUT needed to be converted to just a standard integer offset, which is what this program does.
+ * @version 0.1
+ * @date 2024-05-30
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
 #include <cxxopts.hpp>
 #include <spdlog/fmt/fmt.h>
 

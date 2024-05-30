@@ -129,7 +129,7 @@ if(SC2_CONVERTER)
     target_link_options(replay_converter PUBLIC -fsanitize=address,leak,undefined)
   endif()
 
-  add_executable(sc2_converter bin/replay_converter.cpp)
+  add_executable(sc2_converter bin/sc2_converter.cpp)
   target_link_libraries(
     sc2_converter
     PUBLIC replay_converter
@@ -143,7 +143,7 @@ if(SC2_CONVERTER)
     target_link_directories(sc2_converter PUBLIC ${Python3_INCLUDE_DIRS}\\..\\libs)
   endif()
 
-  add_executable(sc2_merger bin/merge.cpp src/database.cpp)
+  add_executable(sc2_merger bin/sc2_merger.cpp src/database.cpp)
   target_compile_features(sc2_merger PUBLIC cxx_std_23)
   target_include_directories(sc2_merger PUBLIC include)
   target_link_libraries(

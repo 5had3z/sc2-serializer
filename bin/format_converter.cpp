@@ -1,3 +1,15 @@
+/**
+ * @file format_converter.cpp
+ * @author Bryce Ferenczi
+ * @brief This program converts one form of serialized SC2 data to another. This was originally used from some V1 to V2
+ * type data structure (V1 is deleted and removed from the repo). This has been kept so it can be reused if necessary
+ * without rewriting from scratch.
+ * @version 0.1
+ * @date 2024-05-30
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
 #include <cxxopts.hpp>
 #include <spdlog/fmt/fmt.h>
 
@@ -13,6 +25,14 @@ namespace fs = std::filesystem;
 using SrcFormat = cvt::ReplayDataSoA;
 using DstFormat = cvt::ReplayDataSoANoUnits;
 
+/**
+ * @brief Reads hash,steps pair from text file.
+ * @note This was previously required when the number of steps wasn't recorded in the original SC2Replay format. Number
+ * of steps in replay was gathered by another program and written to a plain-text file for this program to consume and
+ * add for the new format.
+ * @param path Path to hash-step file.
+ * @return Mapping from replay hash to steps in replay.
+ */
 [[nodiscard]] auto read_hash_steps_file(const fs::path &path) noexcept -> std::unordered_map<std::string, std::uint32_t>
 {
     std::unordered_map<std::string, std::uint32_t> hash_steps;
@@ -41,7 +61,7 @@ int main(int argc, char *argv[])
     cliParser.add_options()
         ("i,input", "Source database to convert from", cxxopts::value<std::string>())
         ("o,output", "Destination database, if folder then use source filename", cxxopts::value<std::string>())
-        ("steps-file", "Contains hash-gamestep pairs", cxxopts::value<std::string>())
+        // ("steps-file", "Contains hash-gamestep pairs", cxxopts::value<std::string>())
         ("offset", "Offset to apply to partition index", cxxopts::value<int>())
         ("h,help", "This help");
     // clang-format on
@@ -86,9 +106,9 @@ int main(int argc, char *argv[])
     }
     cvt::ReplayDatabase<DstFormat> dest(destPath);
 
-    const fs::path hashStepFile = cliOpts["steps-file"].as<std::string>();
-    if (!fs::exists(hashStepFile)) { fmt::print("ERROR: Hash-Step file doesn't exist: {}\n", hashStepFile.string()); }
-    const auto hash_steps = read_hash_steps_file(hashStepFile);
+    // const fs::path hashStepFile = cliOpts["steps-file"].as<std::string>();
+    // if (!fs::exists(hashStepFile)) { fmt::print("ERROR: Hash-Step file doesn't exist: {}\n", hashStepFile.string());
+    // } const auto hash_steps = read_hash_steps_file(hashStepFile);
 
     auto already_converted = dest.getHashes();
     const auto print_modulo = source.size() / 10;
