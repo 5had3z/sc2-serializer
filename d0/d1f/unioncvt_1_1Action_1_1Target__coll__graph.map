@@ -1,0 +1,5 @@
+<map id="cvt::Action::Target" name="cvt::Action::Target">
+<area shape="rect" id="Node000001" title="Target data is either a position or another Unit ID. For example the target of moving units could be ..." alt="" coords="5,93,144,119"/>
+<area shape="rect" id="Node000002" href="$d9/d36/structcvt_1_1Point2d.html" title="Basic discrete 2d point." alt="" coords="25,5,124,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,45,77,93,72,93,72,45"/>
+</map>

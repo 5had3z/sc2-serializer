@@ -1,0 +1,20 @@
+<map id="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/data_structures/common.hpp" name="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/data_structures/common.hpp">
+<area shape="rect" id="Node000001" title="This is one of &quot;those&quot; files that just contains a few bits and bobs such as data&#45;vectorization,..." alt="" coords="401,5,579,75"/>
+<area shape="rect" id="Node000002" href="$dd/d93/enums_8hpp.html" title="Common enums in StarCraft II and accompanying tools such as enum&#45;&gt;string and enum&#45;&gt;one&#45;hot." alt="" coords="267,123,361,148"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="428,77,349,118,347,114,425,72"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="368,203,431,229"/>
+<area shape="poly" id="edge9_Node000001_Node000006" title=" " alt="" coords="460,76,427,124,414,158,406,190,401,189,409,156,422,121,456,73"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="437,123,543,148"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="493,75,493,109,487,109,487,75"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="567,123,637,148"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="532,73,579,111,576,116,529,77"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="661,123,714,148"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="562,72,652,114,649,119,560,77"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,196,153,236"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="281,151,150,194,148,189,279,145"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="178,203,263,229"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="302,150,247,196,243,192,299,146"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="287,203,343,229"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="317,148,318,189,312,190,312,148"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="328,146,378,192,375,196,325,150"/>
+</map>

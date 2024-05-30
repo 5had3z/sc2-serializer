@@ -1,0 +1,25 @@
+<map id="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/data_structures/units.hpp" name="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/data_structures/units.hpp">
+<area shape="rect" id="Node000001" title="Unit data structures for StarCraft II. NeutralUnits are treated specially as many properties such as ..." alt="" coords="379,5,558,75"/>
+<area shape="rect" id="Node000002" href="$dd/d3a/common_8hpp.html" title="This is one of &quot;those&quot; files that just contains a few bits and bobs such as data&#45;vectorization,..." alt="" coords="415,123,522,148"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="471,75,471,109,466,109,466,75"/>
+<area shape="rect" id="Node000003" href="$dd/d93/enums_8hpp.html" title="Common enums in StarCraft II and accompanying tools such as enum&#45;&gt;string and enum&#45;&gt;one&#45;hot." alt="" coords="267,196,361,221"/>
+<area shape="poly" id="edge11_Node000001_Node000003" title=" " alt="" coords="439,77,336,188,332,184,435,73"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="546,123,613,148"/>
+<area shape="poly" id="edge12_Node000001_Node000011" title=" " alt="" coords="510,73,557,111,553,116,507,77"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="445,150,353,193,351,188,443,146"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="368,277,431,302"/>
+<area shape="poly" id="edge10_Node000002_Node000007" title=" " alt="" coords="460,150,443,171,427,197,414,231,406,263,401,262,409,229,422,195,439,168,456,146"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="437,196,543,221"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="475,148,485,182,480,184,470,149"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="567,196,637,221"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="491,146,569,187,567,192,489,150"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="661,196,714,221"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="505,145,648,192,647,197,503,151"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="5,269,153,309"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="281,224,150,267,148,262,279,219"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="178,277,263,302"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="302,224,247,270,243,266,299,219"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="287,277,343,302"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="317,221,318,263,312,263,312,222"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="328,220,378,265,375,269,325,223"/>
+</map>

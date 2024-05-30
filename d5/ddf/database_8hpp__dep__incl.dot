@@ -1,9 +1,0 @@
-digraph "/home/runner/work/sc2-serializer/sc2-serializer/include/database.hpp"
-{
- // LATEX_PDF_SIZE
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  Node1 [label="/home/runner/work/sc2\l-serializer/sc2-serializer\l/include/database.hpp",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Database framework for reading and writing serialized replay data. ReplayDatabase is templated on any..."];
-  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node2 [label="/home/runner/work/sc2\l-serializer/sc2-serializer\l/include/observer.hpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d6/da0/observer_8hpp.html",tooltip="Contains StarCraft II game observation classes. Each variant saves observations at different rates to..."];
-}

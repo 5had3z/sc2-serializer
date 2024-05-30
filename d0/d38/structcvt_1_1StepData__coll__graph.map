@@ -1,0 +1,9 @@
+<map id="cvt::StepData" name="cvt::StepData">
+<area shape="rect" id="Node000001" title="Step data that contains scalar, minimap and unit data. Basically all of it." alt="" coords="159,123,269,148"/>
+<area shape="rect" id="Node000002" href="$dc/df4/structcvt_1_1Score.html" title="All score data from the player point&#45;of&#45;view of StarCraft II." alt="" coords="5,5,92,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="78,36,199,120,196,125,75,41"/>
+<area shape="rect" id="Node000003" href="$d2/d1e/structcvt_1_1Image.html" title=" " alt="" coords="117,5,311,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="217,44,217,123,211,123,211,44"/>
+<area shape="rect" id="Node000004" href="$d2/d1e/structcvt_1_1Image.html" title=" " alt="" coords="335,5,485,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="391,43,359,73,319,101,290,115,261,125,259,120,288,110,317,96,356,69,388,39"/>
+</map>

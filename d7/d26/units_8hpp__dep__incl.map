@@ -1,0 +1,9 @@
+<map id="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/data_structures/units.hpp" name="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/data_structures/units.hpp">
+<area shape="rect" id="Node000001" title="Unit data structures for StarCraft II. NeutralUnits are treated specially as many properties such as ..." alt="" coords="208,5,387,75"/>
+<area shape="rect" id="Node000002" href="$d7/dbe/replay__all_8hpp.html" title="Replay data structure for recording and deserializing all observation data." alt="" coords="5,123,184,192"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="227,84,155,125,153,120,225,79"/>
+<area shape="rect" id="Node000003" href="$d6/da0/observer_8hpp.html" title="Contains StarCraft II game observation classes. Each variant saves observations at different rates to..." alt="" coords="208,130,387,185"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="300,89,300,130,295,130,295,89"/>
+<area shape="rect" id="Node000004" href="$d5/d1d/replay__parsing_8hpp.html" title="Set of tools for parsing replay data into a more amenable form for machine learning...." alt="" coords="411,130,613,185"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="373,79,465,128,462,132,371,83"/>
+</map>

@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Replay Parsing &mdash; StarCraft II Serializer  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  
+        <script src="../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Serialization" href="serializer.html" />
+    <link rel="prev" title="Observer" href="observer.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            StarCraft II Serializer
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Welcome to sc2-serializer’s documentation!</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">C++ API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="data_structures.html">Starcraft II Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observer.html">Observer</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Replay Parsing</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv43cvt"><code class="docutils literal notranslate"><span class="pre">cvt</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I00EN3cvt14transformUnitsEN2py7array_tI1TEERKNSt6vectorI5UnitTEE"><code class="docutils literal notranslate"><span class="pre">cvt::transformUnits()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt24transformUnitsByAllianceEN2py4dictERKNSt6vectorI4UnitEE"><code class="docutils literal notranslate"><span class="pre">cvt::transformUnitsByAlliance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt20expandPlayerRelativeE2ItRK5ImageINSt7uint8_tEE2It"><code class="docutils literal notranslate"><span class="pre">cvt::expandPlayerRelative()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt15unpackBoolImageE2ItRK5ImageIbE2It"><code class="docutils literal notranslate"><span class="pre">cvt::unpackBoolImage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt15unpackBoolImageENSt6vectorI1TEERK5ImageIbE"><code class="docutils literal notranslate"><span class="pre">cvt::unpackBoolImage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0_9IsSoATypeEN3cvt20createScalarFeaturesEN2py7array_tI1TEERK12StepDataTypeNSt6size_tE"><code class="docutils literal notranslate"><span class="pre">cvt::createScalarFeatures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I00EN3cvt21createMinimapFeaturesEN2py7array_tI1TEERK14ReplayDataTypeNSt6size_tE19MinimapFeatureFlagsb"><code class="docutils literal notranslate"><span class="pre">cvt::createMinimapFeatures()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt6CasterE"><code class="docutils literal notranslate"><span class="pre">cvt::Caster</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt19MinimapFeatureFlagsE"><code class="docutils literal notranslate"><span class="pre">cvt::MinimapFeatureFlags</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt12ReplayParserE"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayParser</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt12UpgradeStateE"><code class="docutils literal notranslate"><span class="pre">cvt::UpgradeState</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="serializer.html">Serialization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../replay_data.html">Replay Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../benchmark.html">Benchmarks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">StarCraft II Serializer</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">C++ API</a></li>
+      <li class="breadcrumb-item active">Replay Parsing</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/cpp_api/replay_parsing.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="replay-parsing">
+<span id="api-replay-parsing"></span><h1>Replay Parsing<a class="headerlink" href="#replay-parsing" title="Link to this heading"></a></h1>
+<p>Set of tools for parsing replay data into a more amenable form for machine learning. These are mainly used via their Python API. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi </p>
+</dd>
+<dt><strong>Version</strong></dt><dd><p>0.1 </p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>2024-05-27</p>
+</dd>
+<dt><strong>Copyright</strong></dt><dd><p>Copyright (c) 2024 </p>
+</dd>
+</dl>
+</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv43cvt">
+<span id="_CPPv33cvt"></span><span id="_CPPv23cvt"></span><span id="cvt"></span><span class="target" id="df/d0d/namespacecvt"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cvt</span></span></span><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN3cvt14transformUnitsEN2py7array_tI1TEERKNSt6vectorI5UnitTEE">
+<span id="_CPPv3I00EN3cvt14transformUnitsERKNSt6vectorI5UnitTEE"></span><span id="_CPPv2I00EN3cvt14transformUnitsERKNSt6vectorI5UnitTEE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">UnitT</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d5/d1d/replay__parsing_8hpp_1acb12c947944c6a18ee38ec8cd93b1d15"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">transformUnits</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3cvt14transformUnitsEN2py7array_tI1TEERKNSt6vectorI5UnitTEE" title="cvt::transformUnits::UnitT"><span class="n"><span class="pre">UnitT</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">units</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">py</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">array_t</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3cvt14transformUnitsEN2py7array_tI1TEERKNSt6vectorI5UnitTEE" title="cvt::transformUnits::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I00EN3cvt14transformUnitsEN2py7array_tI1TEERKNSt6vectorI5UnitTEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Converts vector of unit structures to a {n_unit, feature} array. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> – output data type of the array </p></li>
+<li><p><strong>UnitT</strong> – type of unit data </p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>units</strong> – Units to convert to array </p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>2D feature array of dimension {n_unit, feature} </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt24transformUnitsByAllianceEN2py4dictERKNSt6vectorI4UnitEE">
+<span id="_CPPv3I0EN3cvt24transformUnitsByAllianceERKNSt6vectorI4UnitEE"></span><span id="_CPPv2I0EN3cvt24transformUnitsByAllianceERKNSt6vectorI4UnitEE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d5/d1d/replay__parsing_8hpp_1a5fa1cf54a819ba74db241ae7de927faf"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">transformUnitsByAlliance</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="data_structures.html#_CPPv4N3cvt4UnitE" title="cvt::Unit"><span class="n"><span class="pre">Unit</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">units</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">py</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dict</span></span><a class="headerlink" href="#_CPPv4I0EN3cvt24transformUnitsByAllianceEN2py4dictERKNSt6vectorI4UnitEE" title="Link to this definition"></a><br /></dt>
+<dd><p><a class="reference internal" href="data_structures.html#d4/d9b/structcvt_1_1Unit"><span class="std std-ref">Unit</span></a> transformation and return grouped by alliance {self, ally, enemy, neutral}. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – output datatype of feature array </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>units</strong> – Vector of units to convert to feature arrays </p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary mapping from alliance to feature array </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt20expandPlayerRelativeE2ItRK5ImageINSt7uint8_tEE2It">
+<span id="_CPPv3I0_NSt15output_iteratorI1TEEEN3cvt20expandPlayerRelativeERK5ImageINSt7uint8_tEE2It"></span><span id="_CPPv2I0_NSt15output_iteratorI1TEEEN3cvt20expandPlayerRelativeERK5ImageINSt7uint8_tEE2It"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">output_iterator</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt20expandPlayerRelativeE2ItRK5ImageINSt7uint8_tEE2It" title="cvt::expandPlayerRelative::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">It</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d5/d1d/replay__parsing_8hpp_1a4619ded191158f3fea7670aa31ffb3b0"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">expandPlayerRelative</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structures.html#_CPPv4I0EN3cvt5ImageE" title="cvt::Image"><span class="n"><span class="pre">Image</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">img</span></span>, <a class="reference internal" href="#_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt20expandPlayerRelativeE2ItRK5ImageINSt7uint8_tEE2It" title="cvt::expandPlayerRelative::It"><span class="n"><span class="pre">It</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">out</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt20expandPlayerRelativeE2ItRK5ImageINSt7uint8_tEE2It" title="cvt::expandPlayerRelative::It"><span class="n"><span class="pre">It</span></span></a><a class="headerlink" href="#_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt20expandPlayerRelativeE2ItRK5ImageINSt7uint8_tEE2It" title="Link to this definition"></a><br /></dt>
+<dd><p>Converts an image of player relative enums to one-hot encoding, i.e. a mask of each class type. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> – value type of the image returned </p></li>
+<li><p><strong>It</strong> – iterator type to write result to </p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>img</strong> – enum image of player_relative data, assumes SC2 data [1-4] (cvt::Alliance) </p></li>
+<li><p><strong>out</strong> – output iterator to write result to, must be preallocated contiguous data to write image to </p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>output iterator one past the output image data </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt15unpackBoolImageE2ItRK5ImageIbE2It">
+<span id="_CPPv3I0_NSt15output_iteratorI1TEEEN3cvt15unpackBoolImageERK5ImageIbE2It"></span><span id="_CPPv2I0_NSt15output_iteratorI1TEEEN3cvt15unpackBoolImageERK5ImageIbE2It"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">output_iterator</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt15unpackBoolImageE2ItRK5ImageIbE2It" title="cvt::unpackBoolImage::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">It</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d5/d1d/replay__parsing_8hpp_1a5b7fa6617e953cee50bf2be6e734b29f"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">unpackBoolImage</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structures.html#_CPPv4I0EN3cvt5ImageE" title="cvt::Image"><span class="n"><span class="pre">Image</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">bool</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">image</span></span>, <a class="reference internal" href="#_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt15unpackBoolImageE2ItRK5ImageIbE2It" title="cvt::unpackBoolImage::It"><span class="n"><span class="pre">It</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">out</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt15unpackBoolImageE2ItRK5ImageIbE2It" title="cvt::unpackBoolImage::It"><span class="n"><span class="pre">It</span></span></a><a class="headerlink" href="#_CPPv4I0_NSt15output_iteratorI1TEEEN3cvt15unpackBoolImageE2ItRK5ImageIbE2It" title="Link to this definition"></a><br /></dt>
+<dd><p>Unpack bool image to output iterator. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – value type to unpack to </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>image</strong> – input image </p></li>
+<li><p><strong>out</strong> – span to write unpacked data into </p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>vector of value type of bool image </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt15unpackBoolImageENSt6vectorI1TEERK5ImageIbE">
+<span id="_CPPv3I0EN3cvt15unpackBoolImageERK5ImageIbE"></span><span id="_CPPv2I0EN3cvt15unpackBoolImageERK5ImageIbE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d5/d1d/replay__parsing_8hpp_1ae3e4dc770e110b55d054b7de5c3bff2c"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">unpackBoolImage</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structures.html#_CPPv4I0EN3cvt5ImageE" title="cvt::Image"><span class="n"><span class="pre">Image</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">bool</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">image</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3cvt15unpackBoolImageENSt6vectorI1TEERK5ImageIbE" title="cvt::unpackBoolImage::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN3cvt15unpackBoolImageENSt6vectorI1TEERK5ImageIbE" title="Link to this definition"></a><br /></dt>
+<dd><p>Unpack bool image to flattened std::vector. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – value type to unpack to </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>image</strong> – input image </p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>vector of value type of bool image </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0_9IsSoATypeEN3cvt20createScalarFeaturesEN2py7array_tI1TEERK12StepDataTypeNSt6size_tE">
+<span id="_CPPv3I0_9IsSoATypeEN3cvt20createScalarFeaturesERK12StepDataTypeNSt6size_tE"></span><span id="_CPPv2I0_9IsSoATypeEN3cvt20createScalarFeaturesERK12StepDataTypeNSt6size_tE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">IsSoAType</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">StepDataType</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d5/d1d/replay__parsing_8hpp_1a22dae411fb776b6155e66ec9e82d581b"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">createScalarFeatures</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0_9IsSoATypeEN3cvt20createScalarFeaturesEN2py7array_tI1TEERK12StepDataTypeNSt6size_tE" title="cvt::createScalarFeatures::StepDataType"><span class="n"><span class="pre">StepDataType</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">timeIdx</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">py</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">array_t</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0_9IsSoATypeEN3cvt20createScalarFeaturesEN2py7array_tI1TEERK12StepDataTypeNSt6size_tE" title="cvt::createScalarFeatures::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0_9IsSoATypeEN3cvt20createScalarFeaturesEN2py7array_tI1TEERK12StepDataTypeNSt6size_tE" title="Link to this definition"></a><br /></dt>
+<dd><p>Convert game state of scalars into a feature vector. TODO: Have a dictionary of lambda functions that can normalize each of these features? </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – feature vector arithmetic type </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>data</strong> – replay data </p></li>
+<li><p><strong>timeIdx</strong> – time index to sample from replay </p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Feature vector of data </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN3cvt21createMinimapFeaturesEN2py7array_tI1TEERK14ReplayDataTypeNSt6size_tE19MinimapFeatureFlagsb">
+<span id="_CPPv3I00EN3cvt21createMinimapFeaturesERK14ReplayDataTypeNSt6size_tE19MinimapFeatureFlagsb"></span><span id="_CPPv2I00EN3cvt21createMinimapFeaturesERK14ReplayDataTypeNSt6size_tE19MinimapFeatureFlagsb"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayDataType</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d5/d1d/replay__parsing_8hpp_1a152d66ac503f1f79278606a882ff15a2"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">createMinimapFeatures</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3cvt21createMinimapFeaturesEN2py7array_tI1TEERK14ReplayDataTypeNSt6size_tE19MinimapFeatureFlagsb" title="cvt::createMinimapFeatures::ReplayDataType"><span class="n"><span class="pre">ReplayDataType</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">replay</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">timeIdx</span></span>, <a class="reference internal" href="#_CPPv4N3cvt19MinimapFeatureFlagsE" title="cvt::MinimapFeatureFlags"><span class="n"><span class="pre">MinimapFeatureFlags</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">includedLayers</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">expandPlayerRel</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">py</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">array_t</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3cvt21createMinimapFeaturesEN2py7array_tI1TEERK14ReplayDataTypeNSt6size_tE19MinimapFeatureFlagsb" title="cvt::createMinimapFeatures::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I00EN3cvt21createMinimapFeaturesEN2py7array_tI1TEERK14ReplayDataTypeNSt6size_tE19MinimapFeatureFlagsb" title="Link to this definition"></a><br /></dt>
+<dd><p>Create Stacked Features <a class="reference internal" href="data_structures.html#d2/d1e/structcvt_1_1Image"><span class="std std-ref">Image</span></a> from Minimap Data (C, H, W) in the order HeightMap, Visibility, Creep, Alerts, Buildable, Pathable, PlayerRelative. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – Underlying type of returned image </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>data</strong> – Replay data </p></li>
+<li><p><strong>timeIdx</strong> – Time index to sample from </p></li>
+<li><p><strong>expandPlayerRel</strong> – Expand the Player Relative to four 1-hot channels (see cvt::Alliance) </p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Returns (C,H,W) <a class="reference internal" href="data_structures.html#d2/d1e/structcvt_1_1Image"><span class="std std-ref">Image</span></a> of Type T </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt6CasterE">
+<span id="_CPPv3I0EN3cvt6CasterE"></span><span id="_CPPv2I0EN3cvt6CasterE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">B</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d6/db9/structcvt_1_1Caster"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Caster</span></span></span><a class="headerlink" href="#_CPPv4I0EN3cvt6CasterE" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;replay_parsing.hpp&gt;</em></div>
+<p>Helper Struct to static_cast one type to an arithmetic type. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>B</strong> – type to cast to </p>
+</dd>
+</dl>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt6CasterclEDa">
+<span id="_CPPv3NK3cvt6CasterclEDa"></span><span id="_CPPv2NK3cvt6CasterclEDa"></span><span id="cvt::Caster::call-operator__autoC"></span><span class="target" id="d6/db9/structcvt_1_1Caster_1a4f59d7b51bcc0ccecfe6c988672641cb"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="o"><span class="pre">()</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">a</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3cvt6CasterE" title="cvt::Caster::B"><span class="n"><span class="pre">B</span></span></a><a class="headerlink" href="#_CPPv4NK3cvt6CasterclEDa" title="Link to this definition"></a><br /></dt>
+<dd><p>Cast the argument to arithmetic type B. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>a</strong> – value to cast </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>casted value </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt19MinimapFeatureFlagsE">
+<span id="_CPPv3N3cvt19MinimapFeatureFlagsE"></span><span id="_CPPv2N3cvt19MinimapFeatureFlagsE"></span><span id="cvt::MinimapFeatureFlags"></span><span class="target" id="db/deb/structcvt_1_1MinimapFeatureFlags"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MinimapFeatureFlags</span></span></span><a class="headerlink" href="#_CPPv4N3cvt19MinimapFeatureFlagsE" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;replay_parsing.hpp&gt;</em></div>
+<p>Class that maps string description of minimap feature layers to a bit flag. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt19MinimapFeatureFlags9getOffsetENSt11string_viewE">
+<span id="_CPPv3NK3cvt19MinimapFeatureFlags9getOffsetENSt11string_viewE"></span><span id="_CPPv2NK3cvt19MinimapFeatureFlags9getOffsetENSt11string_viewE"></span><span id="cvt::MinimapFeatureFlags::getOffset__std::string_viewCCE"></span><span class="target" id="db/deb/structcvt_1_1MinimapFeatureFlags_1a1d75ee4bcb21b9bf6b988e11d2bc80d5"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getOffset</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string_view</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">key</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><a class="headerlink" href="#_CPPv4NK3cvt19MinimapFeatureFlags9getOffsetENSt11string_viewE" title="Link to this definition"></a><br /></dt>
+<dd><p>Find the index of the layer in the bitset. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> – Name of the layer to search </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Index in the layer array </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt19MinimapFeatureFlags3setEv">
+<span id="_CPPv3N3cvt19MinimapFeatureFlags3setEv"></span><span id="_CPPv2N3cvt19MinimapFeatureFlags3setEv"></span><span id="cvt::MinimapFeatureFlags::set"></span><span class="target" id="db/deb/structcvt_1_1MinimapFeatureFlags_1a4e869d524a443ff557d71cf00cd1c305"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt19MinimapFeatureFlags3setEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Set all bits. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt19MinimapFeatureFlags3setENSt11string_viewEb">
+<span id="_CPPv3N3cvt19MinimapFeatureFlags3setENSt11string_viewEb"></span><span id="_CPPv2N3cvt19MinimapFeatureFlags3setENSt11string_viewEb"></span><span id="cvt::MinimapFeatureFlags::set__std::string_view.b"></span><span class="target" id="db/deb/structcvt_1_1MinimapFeatureFlags_1aca4cb43eeec5ed95f35bab8e8bf76354"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string_view</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">key</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3cvt19MinimapFeatureFlags3setENSt11string_viewEb" title="Link to this definition"></a><br /></dt>
+<dd><p>Set minimap layer to value. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> – Name of minimap layer </p></li>
+<li><p><strong>value</strong> – Value to set (default: True) </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt19MinimapFeatureFlags4testENSt11string_viewE">
+<span id="_CPPv3NK3cvt19MinimapFeatureFlags4testENSt11string_viewE"></span><span id="_CPPv2NK3cvt19MinimapFeatureFlags4testENSt11string_viewE"></span><span id="cvt::MinimapFeatureFlags::test__std::string_viewC"></span><span class="target" id="db/deb/structcvt_1_1MinimapFeatureFlags_1a6927bcfac856448e844e1f54991dac16"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">test</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string_view</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">key</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><a class="headerlink" href="#_CPPv4NK3cvt19MinimapFeatureFlags4testENSt11string_viewE" title="Link to this definition"></a><br /></dt>
+<dd><p>Get the current value of the minimap layer. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>key</strong> – Name of the minimap layer to test </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Current activation status </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt19MinimapFeatureFlags5countEv">
+<span id="_CPPv3NK3cvt19MinimapFeatureFlags5countEv"></span><span id="_CPPv2NK3cvt19MinimapFeatureFlags5countEv"></span><span id="cvt::MinimapFeatureFlags::countC"></span><span class="target" id="db/deb/structcvt_1_1MinimapFeatureFlags_1ad5459a4debd3662790c5239e766b2098"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">count</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><a class="headerlink" href="#_CPPv4NK3cvt19MinimapFeatureFlags5countEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Number of active minimap layers. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of active minimap layers </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt19MinimapFeatureFlags5resetEv">
+<span id="_CPPv3N3cvt19MinimapFeatureFlags5resetEv"></span><span id="_CPPv2N3cvt19MinimapFeatureFlags5resetEv"></span><span id="cvt::MinimapFeatureFlags::reset"></span><span class="target" id="db/deb/structcvt_1_1MinimapFeatureFlags_1a3d636b21a6d98f3f94106eb50f121504"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reset</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt19MinimapFeatureFlags5resetEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Set all minimap layers to false. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt19MinimapFeatureFlags5flagsE">
+<span id="_CPPv3N3cvt19MinimapFeatureFlags5flagsE"></span><span id="_CPPv2N3cvt19MinimapFeatureFlags5flagsE"></span><span id="cvt::MinimapFeatureFlags::flags__std::bitset:keys.size():"></span><span class="target" id="db/deb/structcvt_1_1MinimapFeatureFlags_1a0a2dd4d1851431bd7e7e34573a0ac473"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">bitset</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3cvt19MinimapFeatureFlags4keysE" title="cvt::MinimapFeatureFlags::keys"><span class="n"><span class="pre">keys</span></span></a><span class="p"><span class="pre">.</span></span><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">flags</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">bitset</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4N3cvt19MinimapFeatureFlags4keysE" title="cvt::MinimapFeatureFlags::keys"><span class="n"><span class="pre">keys</span></span></a><span class="p"><span class="pre">.</span></span><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">.</span></span><span class="n"><span class="pre">set</span></span><span class="p"><span class="pre">(</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N3cvt19MinimapFeatureFlags5flagsE" title="Link to this definition"></a><br /></dt>
+<dd><p>Layer activation bits. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-attributes">Public Static Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt19MinimapFeatureFlags4keysE">
+<span id="_CPPv3N3cvt19MinimapFeatureFlags4keysE"></span><span id="_CPPv2N3cvt19MinimapFeatureFlags4keysE"></span><span id="cvt::MinimapFeatureFlags::keys__std::arrayC"></span><span class="target" id="db/deb/structcvt_1_1MinimapFeatureFlags_1aacadbd3668d6107f96507e987294b7c2"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">array</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">keys</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="s"><span class="pre">&quot;heightMap&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;visibility&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;creep&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;player_relative&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;alerts&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;buildable&quot;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;pathable&quot;</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt19MinimapFeatureFlags4keysE" title="Link to this definition"></a><br /></dt>
+<dd><p>Minimap feature layers. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt12ReplayParserE">
+<span id="_CPPv3I0EN3cvt12ReplayParserE"></span><span id="_CPPv2I0EN3cvt12ReplayParserE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayDataType</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dc/d19/classcvt_1_1ReplayParser"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayParser</span></span></span><a class="headerlink" href="#_CPPv4I0EN3cvt12ReplayParserE" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;replay_parsing.hpp&gt;</em></div>
+<p>Convenience wrapper around ReplayDataSOA to return map of features at each timestep. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ReplayDataType</strong> – Type of replay data being parsed </p>
+</dd>
+</dl>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser12ReplayParserERKNSt10filesystem4pathE">
+<span id="_CPPv3N3cvt12ReplayParser12ReplayParserERKNSt10filesystem4pathE"></span><span id="_CPPv2N3cvt12ReplayParser12ReplayParserERKNSt10filesystem4pathE"></span><span id="cvt::ReplayParser::ReplayParser__std::filesystem::pathCR"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a9861ece965553946a82315c9f620d53d"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayParser</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">filesystem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">dataPath</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser12ReplayParserERKNSt10filesystem4pathE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser11parseReplayE14ReplayDataType">
+<span id="_CPPv3N3cvt12ReplayParser11parseReplayE14ReplayDataType"></span><span id="_CPPv2N3cvt12ReplayParser11parseReplayE14ReplayDataType"></span><span id="cvt::ReplayParser::parseReplay__ReplayDataType"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a17d837fab0f99035dac2ea274d7537c2"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">parseReplay</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I0EN3cvt12ReplayParserE" title="cvt::ReplayParser::ReplayDataType"><span class="n"><span class="pre">ReplayDataType</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">replayData</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser11parseReplayE14ReplayDataType" title="Link to this definition"></a><br /></dt>
+<dd><p>Ingest replay data for sampling. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>replayData</strong> – Replay data to parse </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser25setPlayerMinimapExpansionEb">
+<span id="_CPPv3N3cvt12ReplayParser25setPlayerMinimapExpansionEb"></span><span id="_CPPv2N3cvt12ReplayParser25setPlayerMinimapExpansionEb"></span><span id="cvt::ReplayParser::setPlayerMinimapExpansion__b"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a2966c4b90913213e8b829cab75b0df96"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setPlayerMinimapExpansion</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">flag</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser25setPlayerMinimapExpansionEb" title="Link to this definition"></a><br /></dt>
+<dd><p>Set whether to expand player_relative to one hot encoding or keep as enum values. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>flag</strong> – true will expand player_relaitive </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser25getPlayerMinimapExpansionEv">
+<span id="_CPPv3NK3cvt12ReplayParser25getPlayerMinimapExpansionEv"></span><span id="_CPPv2NK3cvt12ReplayParser25getPlayerMinimapExpansionEv"></span><span id="cvt::ReplayParser::getPlayerMinimapExpansionC"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1acdd9304b1574c920f99f81202eb70ef0"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getPlayerMinimapExpansion</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser25getPlayerMinimapExpansionEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Get if the player_relative expansion flag has been set. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>if true then player_relative is expanded from enum to one-hot </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser18setMinimapFeaturesERKNSt6vectorINSt6stringEEE">
+<span id="_CPPv3N3cvt12ReplayParser18setMinimapFeaturesERKNSt6vectorINSt6stringEEE"></span><span id="_CPPv2N3cvt12ReplayParser18setMinimapFeaturesERKNSt6vectorINSt6stringEEE"></span><span id="cvt::ReplayParser::setMinimapFeatures__std::vector:ss:CR"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a8dfd86ce72356cd302ff628c0683b8ff"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setMinimapFeatures</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">features</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser18setMinimapFeaturesERKNSt6vectorINSt6stringEEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Set the minimap features to stack and emit from the parser, if an empty list is given then all flags are simply cleared/reset, if a single special key “all” is given then all flags are set. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>features</strong> – list of features to set, must be a member of <a class="reference internal" href="#db/deb/structcvt_1_1MinimapFeatureFlags_1aacadbd3668d6107f96507e987294b7c2"><span class="std std-ref">cvt::MinimapFeatureFlags::keys</span></a> or single key “all” </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser18getMinimapFeaturesEv">
+<span id="_CPPv3NK3cvt12ReplayParser18getMinimapFeaturesEv"></span><span id="_CPPv2NK3cvt12ReplayParser18getMinimapFeaturesEv"></span><span id="cvt::ReplayParser::getMinimapFeaturesC"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a9f0ff2292ac76862bc4b09f7386a90e4"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getMinimapFeatures</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">py</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">list</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser18getMinimapFeaturesEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Get the names of the minimap features of the currently set bits. If expandPlayerRelative is set then this will replace […, player_relative, …] with […, self, ally, neutral, enemy, …]. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>py::list of strings of the currently enabled features </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser6sampleENSt6size_tEb">
+<span id="_CPPv3NK3cvt12ReplayParser6sampleENSt6size_tEb"></span><span id="_CPPv2NK3cvt12ReplayParser6sampleENSt6size_tEb"></span><span id="cvt::ReplayParser::sample__std::s.bC"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a4a74bee74e01640b2a7cbf78b1eb6797"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sample</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">timeIdx</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">unit_alliance</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">py</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dict</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser6sampleENSt6size_tEb" title="Link to this definition"></a><br /></dt>
+<dd><p>Get a python dictionary containing features from that timestep. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timeIdx</strong> – time index to sample </p></li>
+<li><p><strong>unit_alliance</strong> – Whether to group units by alliance in a dictionary (default: false) </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary containing feature data at that point in time </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser4sizeEv">
+<span id="_CPPv3NK3cvt12ReplayParser4sizeEv"></span><span id="_CPPv2NK3cvt12ReplayParser4sizeEv"></span><span id="cvt::ReplayParser::sizeC"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a96be5d9db7170f1653f299b8474e8503"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">size</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser4sizeEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Number of timesteps in the replay. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of timesteps in the replay </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser5emptyEv">
+<span id="_CPPv3NK3cvt12ReplayParser5emptyEv"></span><span id="_CPPv2NK3cvt12ReplayParser5emptyEv"></span><span id="cvt::ReplayParser::emptyC"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a9a536c35fd710089f00c92f2239022ee"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">empty</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser5emptyEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Check if the replay/parser is empty. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if empty </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser4dataEv">
+<span id="_CPPv3NK3cvt12ReplayParser4dataEv"></span><span id="_CPPv2NK3cvt12ReplayParser4dataEv"></span><span id="cvt::ReplayParser::dataC"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1aa49b10a042f88227592cca979a6f5faa"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">data</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser4dataEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Read-only reference to the currently loaded data. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Read-only reference to the currently loaded replay data </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser4infoEv">
+<span id="_CPPv3NK3cvt12ReplayParser4infoEv"></span><span id="_CPPv2NK3cvt12ReplayParser4infoEv"></span><span id="cvt::ReplayParser::infoC"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1aa23108edf3140794d2466ef3cf5f3cff"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">info</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="data_structures.html#_CPPv4N3cvt10ReplayInfoE" title="cvt::ReplayInfo"><span class="n"><span class="pre">ReplayInfo</span></span></a><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser4infoEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Read-only reference to the currently loaded replay header. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Read-only reference to the currently loaded replay header </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser8upgrade_E">
+<span id="_CPPv3N3cvt12ReplayParser8upgrade_E"></span><span id="_CPPv2N3cvt12ReplayParser8upgrade_E"></span><span id="cvt::ReplayParser::upgrade___UpgradeState"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a8fb9a100288554c26087aa764c95d859"></span><a class="reference internal" href="#_CPPv4N3cvt12UpgradeStateE" title="cvt::UpgradeState"><span class="n"><span class="pre">UpgradeState</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">upgrade_</span></span></span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser8upgrade_E" title="Link to this definition"></a><br /></dt>
+<dd><p>Upgrade timing calculator. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser11replayData_E">
+<span id="_CPPv3N3cvt12ReplayParser11replayData_E"></span><span id="_CPPv2N3cvt12ReplayParser11replayData_E"></span><span id="cvt::ReplayParser::replayData___ReplayDataType"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a49a0993ee888409ed95990dc1eb7d4ca"></span><a class="reference internal" href="#_CPPv4I0EN3cvt12ReplayParserE" title="cvt::ReplayParser::ReplayDataType"><span class="n"><span class="pre">ReplayDataType</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">replayData_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser11replayData_E" title="Link to this definition"></a><br /></dt>
+<dd><p>Replay data. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser20minimapFeatureFlags_E">
+<span id="_CPPv3N3cvt12ReplayParser20minimapFeatureFlags_E"></span><span id="_CPPv2N3cvt12ReplayParser20minimapFeatureFlags_E"></span><span id="cvt::ReplayParser::minimapFeatureFlags___MinimapFeatureFlags"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1adfa86127bf00bf681fd13a0f5580ebe4"></span><a class="reference internal" href="#_CPPv4N3cvt19MinimapFeatureFlagsE" title="cvt::MinimapFeatureFlags"><span class="n"><span class="pre">MinimapFeatureFlags</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">minimapFeatureFlags_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser20minimapFeatureFlags_E" title="Link to this definition"></a><br /></dt>
+<dd><p>Minimap feature flags requested. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser21expandPlayerRelative_E">
+<span id="_CPPv3N3cvt12ReplayParser21expandPlayerRelative_E"></span><span id="_CPPv2N3cvt12ReplayParser21expandPlayerRelative_E"></span><span id="cvt::ReplayParser::expandPlayerRelative___b"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1ad5c18211be61c71317223ba46b19264b"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">expandPlayerRelative_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="k"><span class="pre">true</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser21expandPlayerRelative_E" title="Link to this definition"></a><br /></dt>
+<dd><p>Flag to expand player relative from enum to one-hot in minimap. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12UpgradeStateE">
+<span id="_CPPv3N3cvt12UpgradeStateE"></span><span id="_CPPv2N3cvt12UpgradeStateE"></span><span id="cvt::UpgradeState"></span><span class="target" id="dc/d85/classcvt_1_1UpgradeState"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">UpgradeState</span></span></span><a class="headerlink" href="#_CPPv4N3cvt12UpgradeStateE" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;replay_parsing.hpp&gt;</em></div>
+<p><a class="reference internal" href="#dc/d85/classcvt_1_1UpgradeState"><span class="std std-ref">UpgradeState</span></a> class loads information stored in yaml and determines the time points of the game when an upgrade is active for the player. This class can be queried with getState with a gameStep to return a one-hot encoding of the currently active upgrades. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12UpgradeState12UpgradeStateENSt10filesystem4pathE">
+<span id="_CPPv3N3cvt12UpgradeState12UpgradeStateENSt10filesystem4pathE"></span><span id="_CPPv2N3cvt12UpgradeState12UpgradeStateENSt10filesystem4pathE"></span><span id="cvt::UpgradeState::UpgradeState__std::filesystem::path"></span><span class="target" id="dc/d85/classcvt_1_1UpgradeState_1a18c0ea177024c4b6956dfc79930a3d24"></span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">UpgradeState</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">filesystem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dataFile</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3cvt12UpgradeState12UpgradeStateENSt10filesystem4pathE" title="Link to this definition"></a><br /></dt>
+<dd><p>Create upgrade timing instance using information based on dataFile. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>dataFile</strong> – Path to the yaml containing upgrade action data for each game version and race. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12UpgradeState10setVersionENSt11string_viewE">
+<span id="_CPPv3N3cvt12UpgradeState10setVersionENSt11string_viewE"></span><span id="_CPPv2N3cvt12UpgradeState10setVersionENSt11string_viewE"></span><span id="cvt::UpgradeState::setVersion__std::string_view"></span><span class="target" id="dc/d85/classcvt_1_1UpgradeState_1ab7754a62d9f88790cd9bd7ce1d5cd898"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setVersion</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string_view</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">version</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3cvt12UpgradeState10setVersionENSt11string_viewE" title="Link to this definition"></a><br /></dt>
+<dd><p>Set the version of the game. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>version</strong> – string description of the game version i.e. 4.9.1.12345 </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12UpgradeState7setRaceE4Race">
+<span id="_CPPv3N3cvt12UpgradeState7setRaceE4Race"></span><span id="_CPPv2N3cvt12UpgradeState7setRaceE4Race"></span><span id="cvt::UpgradeState::setRace__Race"></span><span class="target" id="dc/d85/classcvt_1_1UpgradeState_1a761f67e1af4ce7a2e0b6648232a03e32"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setRace</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="data_structures.html#_CPPv4N3cvt4RaceE" title="cvt::Race"><span class="n"><span class="pre">Race</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">race</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><a class="headerlink" href="#_CPPv4N3cvt12UpgradeState7setRaceE4Race" title="Link to this definition"></a><br /></dt>
+<dd><p>Set the race of the player. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>race</strong> – The race to set </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12UpgradeState14calculateTimesERKNSt6vectorINSt6vectorI6ActionEEEERKNSt6vectorIjEE">
+<span id="_CPPv3N3cvt12UpgradeState14calculateTimesERKNSt6vectorINSt6vectorI6ActionEEEERKNSt6vectorIjEE"></span><span id="_CPPv2N3cvt12UpgradeState14calculateTimesERKNSt6vectorINSt6vectorI6ActionEEEERKNSt6vectorIjEE"></span><span id="cvt::UpgradeState::calculateTimes__std::vector:std::vector:Action::CR.std::vector:unsigned-i:CR"></span><span class="target" id="dc/d85/classcvt_1_1UpgradeState_1a02402651a83e380a16d2a90ac669fc7f"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">calculateTimes</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="data_structures.html#_CPPv4N3cvt6ActionE" title="cvt::Action"><span class="n"><span class="pre">Action</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">playerActions</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">gameTime</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3cvt12UpgradeState14calculateTimesERKNSt6vectorINSt6vectorI6ActionEEEERKNSt6vectorIjEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculate and set the expected reserach completion times based on the actions and their timepoint. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>playerActions</strong> – Vector of actions the player has performed at each timepoint </p></li>
+<li><p><strong>gameTime</strong> – The timepoint in the game each action is associated with </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0ENK3cvt12UpgradeState8getStateEN2py7array_tI1TEENSt6size_tE">
+<span id="_CPPv3I0ENK3cvt12UpgradeState8getStateENSt6size_tE"></span><span id="_CPPv2I0ENK3cvt12UpgradeState8getStateENSt6size_tE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dc/d85/classcvt_1_1UpgradeState_1a2d349aacec9a56e807362ac5a4e3ba7e"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getState</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">timeIdx</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">py</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">array_t</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0ENK3cvt12UpgradeState8getStateEN2py7array_tI1TEENSt6size_tE" title="cvt::UpgradeState::getState::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0ENK3cvt12UpgradeState8getStateEN2py7array_tI1TEENSt6size_tE" title="Link to this definition"></a><br /></dt>
+<dd><p>Get a one-hot encoding vector of the state of upgrades (0 false, 1 true) </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – datatype of the one-hot encoding </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>timeIdx</strong> – The timepoint to calculate the state of upgrades </p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>one-hot encoding of currently active upgrades as a py::array </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12UpgradeState11getValidIdsEv">
+<span id="_CPPv3NK3cvt12UpgradeState11getValidIdsEv"></span><span id="_CPPv2NK3cvt12UpgradeState11getValidIdsEv"></span><span id="cvt::UpgradeState::getValidIdsC"></span><span class="target" id="dc/d85/classcvt_1_1UpgradeState_1a81675a1a9a6e9800fcec61b83c96e687"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getValidIds</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">set</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4NK3cvt12UpgradeState11getValidIdsEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Get the set of actions ids that correspond to upgrade actions based on currentRace_ and gameVersion_. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Set of upgrade actions </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12UpgradeState13getValidRemapEv">
+<span id="_CPPv3NK3cvt12UpgradeState13getValidRemapEv"></span><span id="_CPPv2NK3cvt12UpgradeState13getValidRemapEv"></span><span id="cvt::UpgradeState::getValidRemapC"></span><span class="target" id="dc/d85/classcvt_1_1UpgradeState_1a4c9a4f9f7bd9650076e285ab2ce43e2b"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getValidRemap</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">array</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">3</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&amp;</span></span><a class="headerlink" href="#_CPPv4NK3cvt12UpgradeState13getValidRemapEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Get remapping of generic tiered “upgrade” action to the distinct tiers. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Mapping from generic tiered action id to actual tier ids. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12UpgradeState8loadInfoEv">
+<span id="_CPPv3N3cvt12UpgradeState8loadInfoEv"></span><span id="_CPPv2N3cvt12UpgradeState8loadInfoEv"></span><span id="cvt::UpgradeState::loadInfo"></span><span class="target" id="dc/d85/classcvt_1_1UpgradeState_1a15f6d1a57b5025270700c3d722b9511b"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">loadInfo</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N3cvt12UpgradeState8loadInfoEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Fill out the id2delay_ mapping with the information from dataFile_ based on the currentRace_ and gameVersion_. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12UpgradeState9dataFile_E">
+<span id="_CPPv3N3cvt12UpgradeState9dataFile_E"></span><span id="_CPPv2N3cvt12UpgradeState9dataFile_E"></span><span id="cvt::UpgradeState::dataFile___std::filesystem::path"></span><span class="target" id="dc/d85/classcvt_1_1UpgradeState_1a013308ad579fd64bca7dd0d41e5122e5"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">filesystem</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">path</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">dataFile_</span></span></span><a class="headerlink" href="#_CPPv4N3cvt12UpgradeState9dataFile_E" title="Link to this definition"></a><br /></dt>
+<dd><p>Path to yaml file that contains upgrade action data from each game version and faction. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12UpgradeState9id2delay_E">
+<span id="_CPPv3N3cvt12UpgradeState9id2delay_E"></span><span id="_CPPv2N3cvt12UpgradeState9id2delay_E"></span><span id="cvt::UpgradeState::id2delay___std::unordered_map:i.i:"></span><span class="target" id="dc/d85/classcvt_1_1UpgradeState_1a0e0d0f89b5edacd3632a3f3020f0aed1"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">int</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">id2delay_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt12UpgradeState9id2delay_E" title="Link to this definition"></a><br /></dt>
+<dd><p>Mapping from action/upgrade id to the time it takes to research in game steps. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12UpgradeState12currentRace_E">
+<span id="_CPPv3N3cvt12UpgradeState12currentRace_E"></span><span id="_CPPv2N3cvt12UpgradeState12currentRace_E"></span><span id="cvt::UpgradeState::currentRace___Race"></span><span class="target" id="dc/d85/classcvt_1_1UpgradeState_1a29cf19a612a8e8bb7ca3bcbb27fa47f5"></span><a class="reference internal" href="data_structures.html#_CPPv4N3cvt4RaceE" title="cvt::Race"><span class="n"><span class="pre">Race</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">currentRace_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><a class="reference internal" href="data_structures.html#_CPPv4N3cvt4RaceE" title="cvt::Race"><span class="n"><span class="pre">Race</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="data_structures.html#_CPPv4N3cvt4Race6RandomE" title="cvt::Race::Random"><span class="n"><span class="pre">Random</span></span></a><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt12UpgradeState12currentRace_E" title="Link to this definition"></a><br /></dt>
+<dd><p>Current race of the player. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12UpgradeState13upgradeTimes_E">
+<span id="_CPPv3N3cvt12UpgradeState13upgradeTimes_E"></span><span id="_CPPv2N3cvt12UpgradeState13upgradeTimes_E"></span><span id="cvt::UpgradeState::upgradeTimes___std::vector:int32_t:"></span><span class="target" id="dc/d85/classcvt_1_1UpgradeState_1a28daef8e7e27ac66c5e087e63a06bafc"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">int32_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">upgradeTimes_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt12UpgradeState13upgradeTimes_E" title="Link to this definition"></a><br /></dt>
+<dd><p>The times when the upgrade is active for the player. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12UpgradeState12gameVersion_E">
+<span id="_CPPv3N3cvt12UpgradeState12gameVersion_E"></span><span id="_CPPv2N3cvt12UpgradeState12gameVersion_E"></span><span id="cvt::UpgradeState::gameVersion___ss"></span><span class="target" id="dc/d85/classcvt_1_1UpgradeState_1afc3845b4693cab92eeaa6d2907b3ca39"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gameVersion_</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="p"><span class="pre">{</span></span><span class="p"><span class="pre">}</span></span><a class="headerlink" href="#_CPPv4N3cvt12UpgradeState12gameVersion_E" title="Link to this definition"></a><br /></dt>
+<dd><p>The current version of the game. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="observer.html" class="btn btn-neutral float-left" title="Observer" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="serializer.html" class="btn btn-neutral float-right" title="Serialization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bryce Ferenczi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

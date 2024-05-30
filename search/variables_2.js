@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['flags_337',['flags',['../db/deb/structcvt_1_1MinimapFeatureFlags.html#a0a2dd4d1851431bd7e7e34573a0ac473',1,'cvt::MinimapFeatureFlags']]]
+  ['flags_0',['flags',['../db/deb/structcvt_1_1MinimapFeatureFlags.html#a0a2dd4d1851431bd7e7e34573a0ac473',1,'cvt::MinimapFeatureFlags']]]
 ];

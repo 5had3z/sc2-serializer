@@ -1,0 +1,9 @@
+<map id="cvt::Unit" name="cvt::Unit">
+<area shape="rect" id="Node000001" title="Basic StarCraft II Unit Data." alt="" coords="44,225,121,251"/>
+<area shape="rect" id="Node000002" href="$d6/d87/structcvt_1_1Point3f.html" title="Basic continuous 3d point." alt="" coords="5,93,101,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,131,83,224,77,226,56,133"/>
+<area shape="rect" id="Node000003" href="$dd/d3e/structcvt_1_1UnitOrder.html" title="Element in order queue for unit to follow." alt="" coords="126,93,239,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,131,94,227,90,223,164,128"/>
+<area shape="rect" id="Node000004" href="$d9/d36/structcvt_1_1Point2d.html" title="Basic discrete 2d point." alt="" coords="133,5,232,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="185,45,185,93,180,93,180,45"/>
+</map>
