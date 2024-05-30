@@ -22,7 +22,7 @@ namespace cvt {
 /**
  * @brief Replay step data that only contains scalar data
  */
-struct StepDataNoUnitsMiniMap
+struct StepDataNoUnitsMinimap
 {
     using has_scalar_data = std::true_type;
 
@@ -34,19 +34,19 @@ struct StepDataNoUnitsMiniMap
     std::uint16_t popWorkers{};
     Score score{};
 
-    [[nodiscard]] auto operator==(const StepDataNoUnitsMiniMap &other) const noexcept -> bool = default;
+    [[nodiscard]] auto operator==(const StepDataNoUnitsMinimap &other) const noexcept -> bool = default;
 };
 
-static_assert(HasScalarData<StepDataNoUnitsMiniMap>);
+static_assert(HasScalarData<StepDataNoUnitsMinimap>);
 
 /**
- * @brief SoA representation of an array of StepDataNoUnitsMiniMap
+ * @brief SoA representation of an array of StepDataNoUnitsMinimap
  */
-struct StepDataSoANoUnitsMiniMap
+struct StepDataNoUnitsMinimapSoA
 {
     using has_scalar_data = std::true_type;
 
-    using struct_type = StepDataNoUnitsMiniMap;
+    using struct_type = StepDataNoUnitsMinimap;
 
     std::vector<std::uint32_t> gameStep{};
     std::vector<std::uint16_t> minearals{};
@@ -56,16 +56,16 @@ struct StepDataSoANoUnitsMiniMap
     std::vector<std::uint16_t> popWorkers{};
     std::vector<Score> score{};
 
-    [[nodiscard]] auto operator==(const StepDataSoANoUnitsMiniMap &other) const noexcept -> bool = default;
+    [[nodiscard]] auto operator==(const StepDataNoUnitsMinimapSoA &other) const noexcept -> bool = default;
 
     /**
      * @brief Gather step data from each array to make structure of data at step.
      * @param idx time index of replay to gather.
      * @return Gathered step data.
      */
-    [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> StepDataNoUnitsMiniMap
+    [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> StepDataNoUnitsMinimap
     {
-        StepDataNoUnitsMiniMap stepData;
+        StepDataNoUnitsMinimap stepData;
         stepData.gameStep = gameStep[idx];
         stepData.minearals = minearals[idx];
         stepData.vespene = vespene[idx];
@@ -75,19 +75,26 @@ struct StepDataSoANoUnitsMiniMap
         stepData.score = score[idx];
         return stepData;
     }
+
+    /**
+     * @brief Number of game steps in the Structure-of-Arrays
+     *
+     * @return std::size_t
+     */
+    [[nodiscard]] auto size() const noexcept -> std::size_t { return gameStep.size(); }
 };
 
-static_assert(HasScalarData<StepDataSoANoUnitsMiniMap> && IsSoAType<StepDataSoANoUnitsMiniMap>);
+static_assert(HasScalarData<StepDataNoUnitsMinimapSoA> && IsSoAType<StepDataNoUnitsMinimapSoA>);
 
 /**
  * @brief ReplayData with minimap and scalar data
  */
-using ReplayDataNoUnitsMiniMap = ReplayDataTemplate<StepDataNoUnitsMiniMap>;
+using ReplayDataNoUnitsMiniMap = ReplayDataTemplate<StepDataNoUnitsMinimap>;
 
 /**
  * @brief ReplayData as SoA with minimap and scalar data
  */
-using ReplayDataSoANoUnitsMiniMap = ReplayDataTemplateSoA<StepDataSoANoUnitsMiniMap>;
+using ReplayDataSoANoUnitsMiniMap = ReplayDataTemplateSoA<StepDataNoUnitsMinimapSoA>;
 static_assert(std::same_as<ReplayDataSoANoUnitsMiniMap::struct_type, ReplayDataNoUnitsMiniMap>);
 
 /**

@@ -1,5 +1,7 @@
-"""Basic example PyTorch Dataloader, a more complex dataloader can be found in
-the experiment code accompanying the paper at https://github.com/5had3z/sc2-experiments"""
+"""
+Basic example PyTorch Dataloader, a more complex dataloader can be found in the
+experiment code accompanying the paper at https://github.com/5had3z/sc2-experiments.
+"""
 
 from dataclasses import dataclass
 from typing import Sequence
@@ -46,7 +48,16 @@ def find_closest_indices(options: Sequence[int], targets: Sequence[int]):
 
 
 class SC2Dataset(Dataset):
-    """Example PyTorch Dataset for StarCraft II Data"""
+    """Example PyTorch Dataset for StarCraft II Data.
+
+    This sample dataloader reads a replay around the timepoint range specified and returns
+    the requested [scalar, minimap] features and the game outcome from the player POV.
+
+    Args:
+        sampler (ReplaySampler): Sampler that yields a replay file and index in that file.
+        features (list[str], optional): List of step data features to use. (default: [minimaps, scalars])
+        timepoints (TimeRange): Timepoints in the replay to sample from.
+    """
 
     def __init__(
         self,
@@ -54,17 +65,10 @@ class SC2Dataset(Dataset):
         features: list[str] | None = None,
         timepoints: TimeRange = TimeRange(0, 30, 0.5),
     ):
-        """
-        Args:
-            root_dir (string): Directory where the dataset will be stored.
-            download (bool, optional): Whether to download the dataset.
-            transform (callable, optional): Optional transform to be applied on a sample.
-        """
         self.sampler = sampler
         self.features = ["minimaps", "scalars"] if features is None else features
         self.db_handle, self.parser = get_database_and_parser(
-            parse_units="units" in self.features,
-            parse_minimaps="minimaps" in self.features,
+            parse_units=False, parse_minimaps="minimaps" in self.features
         )
 
         _loop_per_min = 22.4 * 60
@@ -74,18 +78,29 @@ class SC2Dataset(Dataset):
         return len(self.sampler)
 
     def __getitem__(self, index: int):
+        """Sample from dataset at index.
+
+        Args:
+            index (int): Index to forward to ReplaySampler
+
+        Return:
+            dict [str, Tensor]: observation data, True if valid mask, and game outcome
+        """
         filepath, db_index = self.sampler.sample(index)
 
         assert self.db_handle.load(filepath), f"Failed to load {filepath}"
-        assert (
-            db_index < self.db_handle.size()
-        ), f"{db_index} exceeds {self.db_handle.size()}"
+        if db_index >= len(self.db_handle):
+            raise IndexError(f"{db_index} exceeds {len(self.db_handle)}")
 
         self.parser.parse_replay(self.db_handle.getEntry(db_index))
         return self.load_from_parser()
 
     def load_from_parser(self):
-        """Load data currently in parser for training"""
+        """Sample from data currently in parser
+
+        Return:
+            dict [str, Tensor]: observation data, True if valid mask, and game outcome
+        """
         outputs_list = self.parser.sample(0)
         outputs_list = {k: [outputs_list[k]] for k in self.features}
 

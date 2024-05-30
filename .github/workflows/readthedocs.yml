@@ -2,24 +2,24 @@
 name: Docs
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
-    - name: Requirements
-      run: |
-        sudo apt-get update
-        sudo apt-get install doxygen sphinx-doc python3-sphinx-rtd-theme python3-breathe python3-sphinx-sitemap
-    - name: Checkout repo
-      uses: actions/checkout@v4
-    - name: Build docs
-      run: |
-        make -C docs_sphinx html
-        touch docs_sphinx/_build/html/.nojekyll
-    - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@releases/v3
-      with:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        BRANCH: gh-pages # The branch the action should deploy to.
-        FOLDER: docs_sphinx/_build/html # The folder the action should deploy.
+      - name: Requirements
+        run: |
+          sudo apt-get update
+          sudo apt-get install doxygen sphinx-doc python3-sphinx-rtd-theme python3-breathe
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Build docs
+        run: |
+          make -C docs_sphinx html
+          touch docs_sphinx/_build/html/.nojekyll
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages # The branch the action should deploy to.
+          FOLDER: docs_sphinx/_build/html # The folder the action should deploy.

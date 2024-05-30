@@ -85,7 +85,14 @@ template<> void bindImage<bool>(py::module &m, const std::string &name)
  */
 template<typename T> void bindReplayDataInterfaces(py::module &m, const std::string &name)
 {
-    py::class_<T>(m, name.c_str()).def_readwrite("header", &T::header).def_readwrite("data", &T::data);
+    py::class_<T>(m, name.c_str())
+        .def_readwrite("header", &T::header)
+        .def_readwrite("data", &T::data)
+        .def("__len__", &T::size)
+        .def("__getitem__", [](const T &t, std::size_t i) {
+            if (i >= t.size()) { throw py::index_error(); }
+            return t[i];
+        });
 
     const auto dbName = name + "Database";
     py::class_<cvt::ReplayDatabase<T>>(m, dbName.c_str())
@@ -96,8 +103,10 @@ template<typename T> void bindReplayDataInterfaces(py::module &m, const std::str
         .def("load", &cvt::ReplayDatabase<T>::load, py::arg("dbPath"))
         .def("isFull", &cvt::ReplayDatabase<T>::isFull)
         .def("size", &cvt::ReplayDatabase<T>::size)
+        .def("__len__", &cvt::ReplayDatabase<T>::size)
         .def("addEntry", &cvt::ReplayDatabase<T>::addEntry, py::arg("data"))
         .def("getEntry", &cvt::ReplayDatabase<T>::getEntry, py::arg("index"))
+        .def("__getitem__", &cvt::ReplayDatabase<T>::getEntry, py::arg("index"))
         .def("getHeader", &cvt::ReplayDatabase<T>::getHeader, py::arg("index"))
         .def("getHashIdEntry", &cvt::ReplayDatabase<T>::getHashId, py::arg("index"))
         .def_property_readonly("path", &cvt::ReplayDatabase<T>::path);
@@ -108,6 +117,7 @@ template<typename T> void bindReplayDataInterfaces(py::module &m, const std::str
         .def("sample", &cvt::ReplayParser<T>::sample, py::arg("time_idx"), py::arg("unit_alliance") = false)
         .def("parse_replay", &cvt::ReplayParser<T>::parseReplay, py::arg("replay_data"))
         .def("size", &cvt::ReplayParser<T>::size)
+        .def("__len__", &cvt::ReplayParser<T>::size)
         .def("empty", &cvt::ReplayParser<T>::empty)
         .def("setPlayerMinimapExpansion", &cvt::ReplayParser<T>::setPlayerMinimapExpansion, py::arg("flag"))
         .def("getPlayerMinimapExpansion", &cvt::ReplayParser<T>::getPlayerMinimapExpansion)
@@ -190,8 +200,8 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
 
     bindEnums(m);
 
-    bindImage<std::uint8_t>(m, "Image_uint8");
-    bindImage<bool>(m, "Image_bool");
+    bindImage<std::uint8_t>(m, "ImageUInt8");
+    bindImage<bool>(m, "ImageBool");
 
     py::class_<cvt::Point3f>(m, "Point3f", py::buffer_protocol())
         .def(py::init<>())
@@ -359,33 +369,91 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
             py::kw_only(),
             py::arg("onehot_enum") = false);
 
-    py::class_<cvt::StepDataSoANoUnitsMiniMap>(m, "StepDataSoANoUnitsMiniMap")
+    py::class_<cvt::StepDataNoUnitsMinimap>(m, "StepDataNoUnitsMinimap")
         .def(py::self == py::self)
         .def(py::self != py::self)
-        .def_readwrite("gameStep", &cvt::StepDataSoANoUnitsMiniMap::gameStep)
-        .def_readwrite("minerals", &cvt::StepDataSoANoUnitsMiniMap::minearals)
-        .def_readwrite("vespene", &cvt::StepDataSoANoUnitsMiniMap::vespene)
-        .def_readwrite("popMax", &cvt::StepDataSoANoUnitsMiniMap::popMax)
-        .def_readwrite("popArmy", &cvt::StepDataSoANoUnitsMiniMap::popArmy)
-        .def_readwrite("popWorkers", &cvt::StepDataSoANoUnitsMiniMap::popWorkers)
-        .def_readwrite("score", &cvt::StepDataSoANoUnitsMiniMap::score);
+        .def_readwrite("gameStep", &cvt::StepDataNoUnitsMinimap::gameStep)
+        .def_readwrite("minerals", &cvt::StepDataNoUnitsMinimap::minearals)
+        .def_readwrite("vespene", &cvt::StepDataNoUnitsMinimap::vespene)
+        .def_readwrite("popMax", &cvt::StepDataNoUnitsMinimap::popMax)
+        .def_readwrite("popArmy", &cvt::StepDataNoUnitsMinimap::popArmy)
+        .def_readwrite("popWorkers", &cvt::StepDataNoUnitsMinimap::popWorkers)
+        .def_readwrite("score", &cvt::StepDataNoUnitsMinimap::score);
 
-    py::class_<cvt::StepDataSoANoUnits>(m, "StepDataSoANoUnits")
+    py::class_<cvt::StepDataNoUnitsMinimapSoA>(m, "StepDataNoUnitsMinimapSoA")
         .def(py::self == py::self)
         .def(py::self != py::self)
-        .def_readwrite("gameStep", &cvt::StepDataSoANoUnits::gameStep)
-        .def_readwrite("minerals", &cvt::StepDataSoANoUnits::minearals)
-        .def_readwrite("vespene", &cvt::StepDataSoANoUnits::vespene)
-        .def_readwrite("popMax", &cvt::StepDataSoANoUnits::popMax)
-        .def_readwrite("popArmy", &cvt::StepDataSoANoUnits::popArmy)
-        .def_readwrite("popWorkers", &cvt::StepDataSoANoUnits::popWorkers)
-        .def_readwrite("score", &cvt::StepDataSoANoUnits::score)
-        .def_readwrite("visibility", &cvt::StepDataSoANoUnits::visibility)
-        .def_readwrite("creep", &cvt::StepDataSoANoUnits::creep)
-        .def_readwrite("player_relative", &cvt::StepDataSoANoUnits::player_relative)
-        .def_readwrite("alerts", &cvt::StepDataSoANoUnits::alerts)
-        .def_readwrite("buildable", &cvt::StepDataSoANoUnits::buildable)
-        .def_readwrite("pathable", &cvt::StepDataSoANoUnits::pathable);
+        .def_readwrite("gameStep", &cvt::StepDataNoUnitsMinimapSoA::gameStep)
+        .def_readwrite("minerals", &cvt::StepDataNoUnitsMinimapSoA::minearals)
+        .def_readwrite("vespene", &cvt::StepDataNoUnitsMinimapSoA::vespene)
+        .def_readwrite("popMax", &cvt::StepDataNoUnitsMinimapSoA::popMax)
+        .def_readwrite("popArmy", &cvt::StepDataNoUnitsMinimapSoA::popArmy)
+        .def_readwrite("popWorkers", &cvt::StepDataNoUnitsMinimapSoA::popWorkers)
+        .def_readwrite("score", &cvt::StepDataNoUnitsMinimapSoA::score)
+        .def("__len__", &cvt::StepDataNoUnitsMinimapSoA::size)
+        .def("__getitem__", [](const cvt::StepDataNoUnitsMinimapSoA &t, std::size_t i) {
+            if (i >= t.size()) { throw py::index_error(); }
+            return t[i];
+        });
+
+    py::class_<cvt::StepDataNoUnits>(m, "StepDataNoUnits")
+        .def(py::self == py::self)
+        .def(py::self != py::self)
+        .def_readwrite("gameStep", &cvt::StepDataNoUnits::gameStep)
+        .def_readwrite("minerals", &cvt::StepDataNoUnits::minearals)
+        .def_readwrite("vespene", &cvt::StepDataNoUnits::vespene)
+        .def_readwrite("popMax", &cvt::StepDataNoUnits::popMax)
+        .def_readwrite("popArmy", &cvt::StepDataNoUnits::popArmy)
+        .def_readwrite("popWorkers", &cvt::StepDataNoUnits::popWorkers)
+        .def_readwrite("score", &cvt::StepDataNoUnits::score)
+        .def_readwrite("visibility", &cvt::StepDataNoUnits::visibility)
+        .def_readwrite("creep", &cvt::StepDataNoUnits::creep)
+        .def_readwrite("player_relative", &cvt::StepDataNoUnits::player_relative)
+        .def_readwrite("alerts", &cvt::StepDataNoUnits::alerts)
+        .def_readwrite("buildable", &cvt::StepDataNoUnits::buildable)
+        .def_readwrite("pathable", &cvt::StepDataNoUnits::pathable);
+
+    py::class_<cvt::StepDataNoUnitsSoA>(m, "StepDataNoUnitsSoA")
+        .def(py::self == py::self)
+        .def(py::self != py::self)
+        .def_readwrite("gameStep", &cvt::StepDataNoUnitsSoA::gameStep)
+        .def_readwrite("minerals", &cvt::StepDataNoUnitsSoA::minearals)
+        .def_readwrite("vespene", &cvt::StepDataNoUnitsSoA::vespene)
+        .def_readwrite("popMax", &cvt::StepDataNoUnitsSoA::popMax)
+        .def_readwrite("popArmy", &cvt::StepDataNoUnitsSoA::popArmy)
+        .def_readwrite("popWorkers", &cvt::StepDataNoUnitsSoA::popWorkers)
+        .def_readwrite("score", &cvt::StepDataNoUnitsSoA::score)
+        .def_readwrite("visibility", &cvt::StepDataNoUnitsSoA::visibility)
+        .def_readwrite("creep", &cvt::StepDataNoUnitsSoA::creep)
+        .def_readwrite("player_relative", &cvt::StepDataNoUnitsSoA::player_relative)
+        .def_readwrite("alerts", &cvt::StepDataNoUnitsSoA::alerts)
+        .def_readwrite("buildable", &cvt::StepDataNoUnitsSoA::buildable)
+        .def_readwrite("pathable", &cvt::StepDataNoUnitsSoA::pathable)
+        .def("__len__", &cvt::StepDataNoUnitsSoA::size)
+        .def("__getitem__", [](const cvt::StepDataNoUnitsSoA &t, std::size_t i) {
+            if (i >= t.size()) { throw py::index_error(); }
+            return t[i];
+        });
+
+    py::class_<cvt::StepData>(m, "StepData")
+        .def(py::self == py::self)
+        .def(py::self != py::self)
+        .def_readwrite("gameStep", &cvt::StepData::gameStep)
+        .def_readwrite("minerals", &cvt::StepData::minearals)
+        .def_readwrite("vespene", &cvt::StepData::vespene)
+        .def_readwrite("popMax", &cvt::StepData::popMax)
+        .def_readwrite("popArmy", &cvt::StepData::popArmy)
+        .def_readwrite("popWorkers", &cvt::StepData::popWorkers)
+        .def_readwrite("score", &cvt::StepData::score)
+        .def_readwrite("visibility", &cvt::StepData::visibility)
+        .def_readwrite("creep", &cvt::StepData::creep)
+        .def_readwrite("player_relative", &cvt::StepData::player_relative)
+        .def_readwrite("alerts", &cvt::StepData::alerts)
+        .def_readwrite("buildable", &cvt::StepData::buildable)
+        .def_readwrite("pathable", &cvt::StepData::pathable)
+        .def_readwrite("actions", &cvt::StepData::actions)
+        .def_readwrite("units", &cvt::StepData::units)
+        .def_readwrite("neutralUnits", &cvt::StepData::neutralUnits);
 
     py::class_<cvt::StepDataSoA>(m, "StepDataSoA")
         .def(py::self == py::self)
@@ -405,7 +473,12 @@ PYBIND11_MODULE(_sc2_replay_reader, m)
         .def_readwrite("pathable", &cvt::StepDataSoA::pathable)
         .def_readwrite("actions", &cvt::StepDataSoA::actions)
         .def_readwrite("units", &cvt::StepDataSoA::units)
-        .def_readwrite("neutralUnits", &cvt::StepDataSoA::neutralUnits);
+        .def_readwrite("neutralUnits", &cvt::StepDataSoA::neutralUnits)
+        .def("__len__", &cvt::StepDataSoA::size)
+        .def("__getitem__", [](const cvt::StepDataSoA &t, std::size_t i) {
+            if (i >= t.size()) { throw py::index_error(); }
+            return t[i];
+        });
 
     py::class_<cvt::ReplayInfo>(m, "ReplayInfo")
         .def(py::self == py::self)

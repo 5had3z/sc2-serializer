@@ -48,7 +48,7 @@ static_assert(HasScalarData<StepDataNoUnits> && HasMinimapData<StepDataNoUnits>)
 /**
  * @brief SoA representation of an array of StepDataNoUnits
  */
-struct StepDataSoANoUnits
+struct StepDataNoUnitsSoA
 {
     using has_scalar_data = std::true_type;
     using has_minimap_data = std::true_type;
@@ -68,7 +68,7 @@ struct StepDataSoANoUnits
     std::vector<Image<bool>> buildable{};
     std::vector<Image<bool>> pathable{};
 
-    [[nodiscard]] auto operator==(const StepDataSoANoUnits &other) const noexcept -> bool = default;
+    [[nodiscard]] auto operator==(const StepDataNoUnitsSoA &other) const noexcept -> bool = default;
 
     /**
      * @brief Gather step data from each array to make structure of data at step.
@@ -93,9 +93,16 @@ struct StepDataSoANoUnits
         stepData.pathable = pathable[idx];
         return stepData;
     }
+
+    /**
+     * @brief Number of game steps in the Structure-of-Arrays
+     *
+     * @return std::size_t
+     */
+    [[nodiscard]] auto size() const noexcept -> std::size_t { return gameStep.size(); }
 };
 
-static_assert(HasScalarData<StepDataSoANoUnits> && HasMinimapData<StepDataSoANoUnits> && IsSoAType<StepDataSoANoUnits>);
+static_assert(HasScalarData<StepDataNoUnitsSoA> && HasMinimapData<StepDataNoUnitsSoA> && IsSoAType<StepDataNoUnitsSoA>);
 
 /**
  * @brief ReplayData with minimap and scalar data
@@ -105,7 +112,7 @@ using ReplayDataNoUnits = ReplayDataTemplate<StepDataNoUnits>;
 /**
  * @brief ReplayData as SoA with minimap and scalar data
  */
-using ReplayDataSoANoUnits = ReplayDataTemplateSoA<StepDataSoANoUnits>;
+using ReplayDataSoANoUnits = ReplayDataTemplateSoA<StepDataNoUnitsSoA>;
 
 static_assert(std::same_as<ReplayDataSoANoUnits::struct_type, ReplayDataNoUnits>);
 

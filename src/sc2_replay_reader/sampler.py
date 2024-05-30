@@ -1,4 +1,6 @@
-"""Replay sampling classes for dataloading"""
+"""
+Replay sampling classes for yielding replays when dataloading.
+"""
 
 import os
 import sqlite3
@@ -19,15 +21,25 @@ class ReplaySampler(ABC):
         self.is_train = is_train
 
     @abstractmethod
-    def sample(self, index: int) -> tuple[Path, int]:
-        """Return path to database and index to sample"""
+    def __len__(self) -> int: ...
 
     @abstractmethod
-    def __len__(self) -> int:
-        """Number of replays in dataset"""
+    def sample(self, index: int) -> tuple[Path, int]:
+        """Sample 'index' from replays by calculating the file and index in that file to sample at.
+
+        Returns:
+            tuple[Path,int]: Filepath to database and index
+        """
 
     def get_split_params(self, dataset_size: int):
-        """Return start_idx and n_replays based on train or test|val"""
+        """Calculate start offset + size based on the full dataset size.
+
+        Args:
+            dataset_size (int): Size of the full dataset aka total number of replays
+
+        Returns:
+            tuple[int,int]: start_idx and n_replays for this split
+        """
         train_size = int(dataset_size * self.train_ratio)
 
         if self.is_train:
@@ -43,20 +55,19 @@ class ReplaySampler(ABC):
 
 
 class BasicSampler(ReplaySampler):
-    """Sample replays from single file or folder of replay files"""
+    """Sample replays from single file or folder of replay files.
+
+    Args:
+        path (Path): Path to individual or folder of .SC2Replays file(s)
+        train_ratio (float): Proportion of all data used for training
+        is_train (bool): whether to sample from train or test|val split
+
+    Raises:
+        FileNotFoundError: path doesn't exist
+        AssertionError: no .SC2Replay files found in folder
+    """
 
     def __init__(self, replays_path: Path, train_ratio: float, is_train: bool) -> None:
-        """Sample replays from a single database or folder of databases
-
-        Args:
-            path (Path): Path to individual or folder of .SC2Replays file(s)
-            train_ratio (float): Proportion of all data used for training
-            is_train (bool): whether to sample from train or test|val split
-
-        Raises:
-            FileNotFoundError: path doesn't exist
-            AssertionError: no .SC2Replay files found in folder
-        """
         super().__init__(train_ratio, is_train)
         if not replays_path.exists():
             raise FileNotFoundError(
@@ -93,8 +104,19 @@ class BasicSampler(ReplaySampler):
 
 
 class SQLSampler(ReplaySampler):
-    """Use SQLite3 database to yield from a folder of
-    replay databases with filters applied"""
+    """Use SQLite3 database to yield from a folder of replay databases with filters applied.
+
+    Args:
+        database (str): Path to sqlite3 database with replay info, prefix '$ENV:' will be prefixed with DATAPATH.
+        replays_folder (Path): Path to folder of .SC2Replays file(s)
+        filter_query (str): SQL query to filter sampled replays
+        train_ratio (float): Proportion of all data used for training
+        is_train (bool): whether to sample from train or test|val split
+
+    Raises:
+        AssertionError: replays_folder doesn't exist
+        AssertionError: no .SC2Replay files found in folder
+    """
 
     def __init__(
         self,
@@ -104,20 +126,6 @@ class SQLSampler(ReplaySampler):
         train_ratio: float,
         is_train: bool,
     ) -> None:
-        """Filter sampled replays from a folder of replays
-
-        Args:
-            database (str): Path to sqlite3 database with replay info,
-                            prefix '$ENV:' will be prefixed with DATAPATH
-            replays_folder (Path): Path to folder of .SC2Replays file(s)
-            filter_query (str): SQL query to filter sampled replays
-            train_ratio (float): Proportion of all data used for training
-            is_train (bool): whether to sample from train or test|val split
-
-        Raises:
-            AssertionError: replays_folder doesn't exist
-            AssertionError: no .SC2Replay files found in folder
-        """
         super().__init__(train_ratio, is_train)
         if database.startswith("$ENV:"):
             self.database_path = Path(

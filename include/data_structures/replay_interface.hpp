@@ -159,6 +159,29 @@ template<typename StepDataType> struct ReplayDataTemplate
     }
 
     /**
+     * @brief Number of observed steps in the replay data
+     *
+     * @return std::size_t
+     */
+    [[nodiscard]] auto size() const noexcept -> std::size_t { return data.size(); }
+
+    /**
+     * @brief Get constant reference to replay data at step index
+     *
+     * @param index index of replay observations
+     * @return const StepDataType&
+     */
+    [[nodiscard]] auto operator[](std::size_t index) const noexcept -> const StepDataType & { return data[index]; }
+
+    /**
+     * @brief Get reference to replay data at step index
+     *
+     * @param index index of replay observations
+     * @return const StepDataType&
+     */
+    [[nodiscard]] auto operator[](std::size_t index) noexcept -> StepDataType & { return data[index]; }
+
+    /**
      * @brief Get the unique hash ID of the replay
      * @return Mutable reference of string hash of the replay
      */
@@ -191,9 +214,9 @@ template<typename StepDataType> struct ReplayDataTemplate
 template<IsSoAType StepDataSoAType> struct ReplayDataTemplateSoA
 {
     /**
-     * @brief type of replay data
+     * @brief struct type of observation data at each step
      */
-    using step_type = StepDataSoAType;
+    using step_type = StepDataSoAType::struct_type;
 
     /**
      * @brief AoS equivalent struct type
@@ -221,6 +244,29 @@ template<IsSoAType StepDataSoAType> struct ReplayDataTemplateSoA
     }
 
     /**
+     * @brief Number of observed steps in the replay data
+     *
+     * @return std::size_t
+     */
+    [[nodiscard]] auto size() const noexcept -> std::size_t { return data.size(); }
+
+    /**
+     * @brief Get constant reference to replay data at step index
+     *
+     * @param index index of replay observations
+     * @return const StepDataType&
+     */
+    [[nodiscard]] auto operator[](std::size_t index) const noexcept -> const step_type & { return data[index]; }
+
+    /**
+     * @brief Get reference to replay data at step index
+     *
+     * @param index index of replay observations
+     * @return const StepDataType&
+     */
+    [[nodiscard]] auto operator[](std::size_t index) noexcept -> step_type & { return data[index]; }
+
+    /**
      * @brief Get the unique hash ID of the replay
      * @return Mutable reference of string hash of the replay
      */
@@ -243,13 +289,6 @@ template<IsSoAType StepDataSoAType> struct ReplayDataTemplateSoA
      * @return Constant reference to Player Id of the replay
      */
     [[nodiscard]] auto getPlayerId() const noexcept -> std::uint32_t { return header.playerId; }
-
-    /**
-     * @brief Gather the step data from struct of arrays at a point in time.
-     * @param idx Index of replay to gather data
-     * @return Observation data in original struct form
-     */
-    [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> StepDataSoAType::struct_type { return data[idx]; }
 };
 
 /**

@@ -104,6 +104,13 @@ struct StepDataSoA
         stepData.neutralUnits = neutralUnits[idx];
         return stepData;
     }
+
+    /**
+     * @brief Number of game steps in the Structure-of-Arrays
+     *
+     * @return std::size_t
+     */
+    [[nodiscard]] auto size() const noexcept -> std::size_t { return gameStep.size(); }
 };
 
 static_assert(

@@ -168,7 +168,6 @@ src/sc2_replay_reader/_sc2_replay_reader.pyi
 # Visual Studio Fragments
 .vs
 out
-docs/
 _deps/
 _build/
 _static/

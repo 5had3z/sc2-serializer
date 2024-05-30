@@ -11,9 +11,11 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 # import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import sys
 import subprocess
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent.parent / "src" / "sc2_replay_reader"))
 
 # Doxygen
 subprocess.call("doxygen Doxyfile", shell=True)
@@ -39,8 +41,8 @@ extensions = [
     "sphinx.ext.mathjax",
     "sphinx.ext.ifconfig",
     "sphinx.ext.viewcode",
-    "sphinx_sitemap",
     "sphinx.ext.inheritance_diagram",
+    "sphinx.ext.napoleon",
     "breathe",
 ]
 

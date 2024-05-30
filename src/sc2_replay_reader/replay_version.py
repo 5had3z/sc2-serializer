@@ -1,4 +1,7 @@
-"""Use mpyq to extract version data from the replay"""
+"""
+Use mpyq to extract version data from the replay. This is used by `sc2_serializer`
+when running replays to determine which version of the game to launch.
+"""
 
 import io
 import json
