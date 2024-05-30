@@ -104,10 +104,10 @@ Collaboration diagram for cvt::ReplayDataTemplateSoA&lt; StepDataSoAType &gt;:</
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ae565a4e2da36c04f21fa8bde63bdfe30" id="r_ae565a4e2da36c04f21fa8bde63bdfe30"><td class="memItemLeft" align="right" valign="top"><a id="ae565a4e2da36c04f21fa8bde63bdfe30" name="ae565a4e2da36c04f21fa8bde63bdfe30"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>step_type</b> = StepDataSoAType</td></tr>
-<tr class="memdesc:ae565a4e2da36c04f21fa8bde63bdfe30"><td class="mdescLeft">&#160;</td><td class="mdescRight">type of replay data <br /></td></tr>
-<tr class="separator:ae565a4e2da36c04f21fa8bde63bdfe30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a499b8b974d5105e9d1ed53263037ed52" id="r_a499b8b974d5105e9d1ed53263037ed52"><td class="memItemLeft" align="right" valign="top"><a id="a499b8b974d5105e9d1ed53263037ed52" name="a499b8b974d5105e9d1ed53263037ed52"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>step_type</b> = StepDataSoAType::struct_type</td></tr>
+<tr class="memdesc:a499b8b974d5105e9d1ed53263037ed52"><td class="mdescLeft">&#160;</td><td class="mdescRight">struct type of observation data at each step <br /></td></tr>
+<tr class="separator:a499b8b974d5105e9d1ed53263037ed52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ada185f07c364ead2c79f34a9d67c101c" id="r_ada185f07c364ead2c79f34a9d67c101c"><td class="memItemLeft" align="right" valign="top"><a id="ada185f07c364ead2c79f34a9d67c101c" name="ada185f07c364ead2c79f34a9d67c101c"></a>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>struct_type</b> = <a class="el" href="../../df/d79/structcvt_1_1ReplayDataTemplate.html">ReplayDataTemplate</a>&lt; typename StepDataSoAType::struct_type &gt;</td></tr>
 <tr class="memdesc:ada185f07c364ead2c79f34a9d67c101c"><td class="mdescLeft">&#160;</td><td class="mdescRight">AoS equivalent struct type. <br /></td></tr>
@@ -118,6 +118,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6936ace2d5902c7a25eb0eefdb278a96" id="r_a6936ace2d5902c7a25eb0eefdb278a96"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a6936ace2d5902c7a25eb0eefdb278a96">operator==</a> (const <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html">ReplayDataTemplateSoA</a> &amp;other) const noexcept -&gt; bool</td></tr>
 <tr class="memdesc:a6936ace2d5902c7a25eb0eefdb278a96"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check equality between replays.  <br /></td></tr>
 <tr class="separator:a6936ace2d5902c7a25eb0eefdb278a96"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd95f29738d38d19483b2320b43d8c81" id="r_abd95f29738d38d19483b2320b43d8c81"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#abd95f29738d38d19483b2320b43d8c81">size</a> () const noexcept -&gt; std::size_t</td></tr>
+<tr class="memdesc:abd95f29738d38d19483b2320b43d8c81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of observed steps in the replay data.  <br /></td></tr>
+<tr class="separator:abd95f29738d38d19483b2320b43d8c81"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35c429656c171554e4c563715c794e19" id="r_a35c429656c171554e4c563715c794e19"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a35c429656c171554e4c563715c794e19">operator[]</a> (std::size_t index) const noexcept -&gt; const <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a499b8b974d5105e9d1ed53263037ed52">step_type</a> &amp;</td></tr>
+<tr class="memdesc:a35c429656c171554e4c563715c794e19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get constant reference to replay data at step index.  <br /></td></tr>
+<tr class="separator:a35c429656c171554e4c563715c794e19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f2035236ea362a17451db2ea2794537" id="r_a5f2035236ea362a17451db2ea2794537"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a5f2035236ea362a17451db2ea2794537">operator[]</a> (std::size_t index) noexcept -&gt; <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a499b8b974d5105e9d1ed53263037ed52">step_type</a> &amp;</td></tr>
+<tr class="memdesc:a5f2035236ea362a17451db2ea2794537"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get reference to replay data at step index.  <br /></td></tr>
+<tr class="separator:a5f2035236ea362a17451db2ea2794537"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4c9a019cc37639134400d02e71f6cfa3" id="r_a4c9a019cc37639134400d02e71f6cfa3"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a4c9a019cc37639134400d02e71f6cfa3">getReplayHash</a> () noexcept -&gt; std::string &amp;</td></tr>
 <tr class="memdesc:a4c9a019cc37639134400d02e71f6cfa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the unique hash ID of the replay.  <br /></td></tr>
 <tr class="separator:a4c9a019cc37639134400d02e71f6cfa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,9 +139,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a798e1bccbd1705c31210a1514a2128f3" id="r_a798e1bccbd1705c31210a1514a2128f3"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a798e1bccbd1705c31210a1514a2128f3">getPlayerId</a> () const noexcept -&gt; std::uint32_t</td></tr>
 <tr class="memdesc:a798e1bccbd1705c31210a1514a2128f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the player perspective Id of the replay.  <br /></td></tr>
 <tr class="separator:a798e1bccbd1705c31210a1514a2128f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30446f66700b2b3ff742343a2a9aaea0" id="r_a30446f66700b2b3ff742343a2a9aaea0"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a30446f66700b2b3ff742343a2a9aaea0">operator[]</a> (std::size_t idx) const noexcept -&gt; StepDataSoAType::struct_type</td></tr>
-<tr class="memdesc:a30446f66700b2b3ff742343a2a9aaea0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gather the step data from struct of arrays at a point in time.  <br /></td></tr>
-<tr class="separator:a30446f66700b2b3ff742343a2a9aaea0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -313,8 +319,8 @@ template&lt;IsSoAType StepDataSoAType&gt; </div>
 
 </div>
 </div>
-<a id="a30446f66700b2b3ff742343a2a9aaea0" name="a30446f66700b2b3ff742343a2a9aaea0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30446f66700b2b3ff742343a2a9aaea0">&#9670;&#160;</a></span>operator[]()</h2>
+<a id="a35c429656c171554e4c563715c794e19" name="a35c429656c171554e4c563715c794e19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35c429656c171554e4c563715c794e19">&#9670;&#160;</a></span>operator[]() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -328,8 +334,8 @@ template&lt;IsSoAType StepDataSoAType&gt; </div>
           <td class="memname">auto <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html">cvt::ReplayDataTemplateSoA</a>&lt; StepDataSoAType &gt;::operator[] </td>
           <td>(</td>
           <td class="paramtype">std::size_t&#160;</td>
-          <td class="paramname"><em>idx</em></td><td>)</td>
-          <td> const -&gt; StepDataSoAType::struct_type </td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const -&gt; const <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a499b8b974d5105e9d1ed53263037ed52">step_type</a> &amp; </td>
         </tr>
       </table>
   </td>
@@ -339,14 +345,81 @@ template&lt;IsSoAType StepDataSoAType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Gather the step data from struct of arrays at a point in time. </p>
+<p>Get constant reference to replay data at step index. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">idx</td><td>Index of replay to gather data </td></tr>
+    <tr><td class="paramname">index</td><td>index of replay observations </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>Observation data in original struct form </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>const StepDataType&amp; </dd></dl>
+
+</div>
+</div>
+<a id="a5f2035236ea362a17451db2ea2794537" name="a5f2035236ea362a17451db2ea2794537"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f2035236ea362a17451db2ea2794537">&#9670;&#160;</a></span>operator[]() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;IsSoAType StepDataSoAType&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html">cvt::ReplayDataTemplateSoA</a>&lt; StepDataSoAType &gt;::operator[] </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> -&gt; <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html#a499b8b974d5105e9d1ed53263037ed52">step_type</a> &amp; </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get reference to replay data at step index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>index of replay observations </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>const StepDataType&amp; </dd></dl>
+
+</div>
+</div>
+<a id="abd95f29738d38d19483b2320b43d8c81" name="abd95f29738d38d19483b2320b43d8c81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd95f29738d38d19483b2320b43d8c81">&#9670;&#160;</a></span>size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;IsSoAType StepDataSoAType&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html">cvt::ReplayDataTemplateSoA</a>&lt; StepDataSoAType &gt;::size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const -&gt; std::size_t </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of observed steps in the replay data. </p>
+<dl class="section return"><dt>Returns</dt><dd>std::size_t </dd></dl>
 
 </div>
 </div>

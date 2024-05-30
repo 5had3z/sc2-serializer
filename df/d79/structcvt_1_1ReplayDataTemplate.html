@@ -112,6 +112,15 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a44e6ad27a399e17ec815d74917ff1f34" id="r_a44e6ad27a399e17ec815d74917ff1f34"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d79/structcvt_1_1ReplayDataTemplate.html#a44e6ad27a399e17ec815d74917ff1f34">operator==</a> (const <a class="el" href="../../df/d79/structcvt_1_1ReplayDataTemplate.html">ReplayDataTemplate</a> &amp;other) const noexcept -&gt; bool</td></tr>
 <tr class="memdesc:a44e6ad27a399e17ec815d74917ff1f34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check equality between replays.  <br /></td></tr>
 <tr class="separator:a44e6ad27a399e17ec815d74917ff1f34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7dcd6e18df38480c19c3ed51b7e75790" id="r_a7dcd6e18df38480c19c3ed51b7e75790"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d79/structcvt_1_1ReplayDataTemplate.html#a7dcd6e18df38480c19c3ed51b7e75790">size</a> () const noexcept -&gt; std::size_t</td></tr>
+<tr class="memdesc:a7dcd6e18df38480c19c3ed51b7e75790"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of observed steps in the replay data.  <br /></td></tr>
+<tr class="separator:a7dcd6e18df38480c19c3ed51b7e75790"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3620b4ff93e133e474cd04fb8d30afe" id="r_ad3620b4ff93e133e474cd04fb8d30afe"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d79/structcvt_1_1ReplayDataTemplate.html#ad3620b4ff93e133e474cd04fb8d30afe">operator[]</a> (std::size_t index) const noexcept -&gt; const StepDataType &amp;</td></tr>
+<tr class="memdesc:ad3620b4ff93e133e474cd04fb8d30afe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get constant reference to replay data at step index.  <br /></td></tr>
+<tr class="separator:ad3620b4ff93e133e474cd04fb8d30afe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4708e0b4978275aa449f753616d64d58" id="r_a4708e0b4978275aa449f753616d64d58"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d79/structcvt_1_1ReplayDataTemplate.html#a4708e0b4978275aa449f753616d64d58">operator[]</a> (std::size_t index) noexcept -&gt; StepDataType &amp;</td></tr>
+<tr class="memdesc:a4708e0b4978275aa449f753616d64d58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get reference to replay data at step index.  <br /></td></tr>
+<tr class="separator:a4708e0b4978275aa449f753616d64d58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a350c86b7472e5ba824f6f63958e9600b" id="r_a350c86b7472e5ba824f6f63958e9600b"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d79/structcvt_1_1ReplayDataTemplate.html#a350c86b7472e5ba824f6f63958e9600b">getReplayHash</a> () noexcept -&gt; std::string &amp;</td></tr>
 <tr class="memdesc:a350c86b7472e5ba824f6f63958e9600b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the unique hash ID of the replay.  <br /></td></tr>
 <tr class="separator:a350c86b7472e5ba824f6f63958e9600b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -301,6 +310,110 @@ template&lt;typename StepDataType &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>True if both replays are equal </dd></dl>
+
+</div>
+</div>
+<a id="ad3620b4ff93e133e474cd04fb8d30afe" name="ad3620b4ff93e133e474cd04fb8d30afe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3620b4ff93e133e474cd04fb8d30afe">&#9670;&#160;</a></span>operator[]() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename StepDataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../df/d79/structcvt_1_1ReplayDataTemplate.html">cvt::ReplayDataTemplate</a>&lt; StepDataType &gt;::operator[] </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const -&gt; const StepDataType &amp; </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get constant reference to replay data at step index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>index of replay observations </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>const StepDataType&amp; </dd></dl>
+
+</div>
+</div>
+<a id="a4708e0b4978275aa449f753616d64d58" name="a4708e0b4978275aa449f753616d64d58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4708e0b4978275aa449f753616d64d58">&#9670;&#160;</a></span>operator[]() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename StepDataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../df/d79/structcvt_1_1ReplayDataTemplate.html">cvt::ReplayDataTemplate</a>&lt; StepDataType &gt;::operator[] </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> -&gt; StepDataType &amp; </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get reference to replay data at step index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>index of replay observations </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>const StepDataType&amp; </dd></dl>
+
+</div>
+</div>
+<a id="a7dcd6e18df38480c19c3ed51b7e75790" name="a7dcd6e18df38480c19c3ed51b7e75790"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7dcd6e18df38480c19c3ed51b7e75790">&#9670;&#160;</a></span>size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename StepDataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../df/d79/structcvt_1_1ReplayDataTemplate.html">cvt::ReplayDataTemplate</a>&lt; StepDataType &gt;::size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const -&gt; std::size_t </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Number of observed steps in the replay data. </p>
+<dl class="section return"><dt>Returns</dt><dd>std::size_t </dd></dl>
 
 </div>
 </div>

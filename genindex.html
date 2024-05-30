@@ -41,9 +41,10 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
 <li class="toctree-l1"><a class="reference internal" href="index.html">Welcome to sc2-serializer’s documentation!</a></li>
-<li class="toctree-l1"><a class="reference internal" href="cpp_api/index.html">C++ API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="replay_data.html">Replay Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataloading.html">Dataloading</a></li>
 <li class="toctree-l1"><a class="reference internal" href="benchmark.html">Benchmarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp_api/index.html">C++ API</a></li>
 </ul>
 
         </div>
@@ -450,6 +451,10 @@
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt18ReplayDataTemplateeqERK18ReplayDataTemplate">cvt::ReplayDataTemplate::operator== (C++ function)</a>
 </li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18ReplayDataTemplateixENSt6size_tE">cvt::ReplayDataTemplate::operator[] (C++ function)</a>, <a href="cpp_api/data_structures.html#_CPPv4NK3cvt18ReplayDataTemplateixENSt6size_tE">[1]</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt18ReplayDataTemplate4sizeEv">cvt::ReplayDataTemplate::size (C++ function)</a>
+</li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18ReplayDataTemplate9step_typeE">cvt::ReplayDataTemplate::step_type (C++ type)</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4I_9IsSoATypeEN3cvt21ReplayDataTemplateSoAE">cvt::ReplayDataTemplateSoA (C++ struct)</a>
@@ -464,7 +469,9 @@
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt21ReplayDataTemplateSoAeqERK21ReplayDataTemplateSoA">cvt::ReplayDataTemplateSoA::operator== (C++ function)</a>
 </li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt21ReplayDataTemplateSoAixENSt6size_tE">cvt::ReplayDataTemplateSoA::operator[] (C++ function)</a>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt21ReplayDataTemplateSoAixENSt6size_tE">cvt::ReplayDataTemplateSoA::operator[] (C++ function)</a>, <a href="cpp_api/data_structures.html#_CPPv4NK3cvt21ReplayDataTemplateSoAixENSt6size_tE">[1]</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt21ReplayDataTemplateSoA4sizeEv">cvt::ReplayDataTemplateSoA::size (C++ function)</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt21ReplayDataTemplateSoA9step_typeE">cvt::ReplayDataTemplateSoA::step_type (C++ type)</a>
 </li>
@@ -676,25 +683,91 @@
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt15StepDataNoUnits10visibilityE">cvt::StepDataNoUnits::visibility (C++ member)</a>
 </li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMiniMapE">cvt::StepDataNoUnitsMiniMap (C++ struct)</a>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMinimapE">cvt::StepDataNoUnitsMinimap (C++ struct)</a>
 </li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMiniMap8gameStepE">cvt::StepDataNoUnitsMiniMap::gameStep (C++ member)</a>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMinimap8gameStepE">cvt::StepDataNoUnitsMinimap::gameStep (C++ member)</a>
 </li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMiniMap15has_scalar_dataE">cvt::StepDataNoUnitsMiniMap::has_scalar_data (C++ type)</a>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMinimap15has_scalar_dataE">cvt::StepDataNoUnitsMinimap::has_scalar_data (C++ type)</a>
 </li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMiniMap9minearalsE">cvt::StepDataNoUnitsMiniMap::minearals (C++ member)</a>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMinimap9minearalsE">cvt::StepDataNoUnitsMinimap::minearals (C++ member)</a>
 </li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt22StepDataNoUnitsMiniMapeqERK22StepDataNoUnitsMiniMap">cvt::StepDataNoUnitsMiniMap::operator== (C++ function)</a>
+      <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt22StepDataNoUnitsMinimapeqERK22StepDataNoUnitsMinimap">cvt::StepDataNoUnitsMinimap::operator== (C++ function)</a>
 </li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMiniMap7popArmyE">cvt::StepDataNoUnitsMiniMap::popArmy (C++ member)</a>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMinimap7popArmyE">cvt::StepDataNoUnitsMinimap::popArmy (C++ member)</a>
 </li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMiniMap6popMaxE">cvt::StepDataNoUnitsMiniMap::popMax (C++ member)</a>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMinimap6popMaxE">cvt::StepDataNoUnitsMinimap::popMax (C++ member)</a>
 </li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMiniMap10popWorkersE">cvt::StepDataNoUnitsMiniMap::popWorkers (C++ member)</a>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMinimap10popWorkersE">cvt::StepDataNoUnitsMinimap::popWorkers (C++ member)</a>
 </li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMiniMap5scoreE">cvt::StepDataNoUnitsMiniMap::score (C++ member)</a>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMinimap5scoreE">cvt::StepDataNoUnitsMinimap::score (C++ member)</a>
 </li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMiniMap7vespeneE">cvt::StepDataNoUnitsMiniMap::vespene (C++ member)</a>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt22StepDataNoUnitsMinimap7vespeneE">cvt::StepDataNoUnitsMinimap::vespene (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataNoUnitsMinimapSoAE">cvt::StepDataNoUnitsMinimapSoA (C++ struct)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataNoUnitsMinimapSoA8gameStepE">cvt::StepDataNoUnitsMinimapSoA::gameStep (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataNoUnitsMinimapSoA15has_scalar_dataE">cvt::StepDataNoUnitsMinimapSoA::has_scalar_data (C++ type)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataNoUnitsMinimapSoA9minearalsE">cvt::StepDataNoUnitsMinimapSoA::minearals (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt25StepDataNoUnitsMinimapSoAeqERK25StepDataNoUnitsMinimapSoA">cvt::StepDataNoUnitsMinimapSoA::operator== (C++ function)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt25StepDataNoUnitsMinimapSoAixENSt6size_tE">cvt::StepDataNoUnitsMinimapSoA::operator[] (C++ function)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataNoUnitsMinimapSoA7popArmyE">cvt::StepDataNoUnitsMinimapSoA::popArmy (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataNoUnitsMinimapSoA6popMaxE">cvt::StepDataNoUnitsMinimapSoA::popMax (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataNoUnitsMinimapSoA10popWorkersE">cvt::StepDataNoUnitsMinimapSoA::popWorkers (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataNoUnitsMinimapSoA5scoreE">cvt::StepDataNoUnitsMinimapSoA::score (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt25StepDataNoUnitsMinimapSoA4sizeEv">cvt::StepDataNoUnitsMinimapSoA::size (C++ function)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataNoUnitsMinimapSoA11struct_typeE">cvt::StepDataNoUnitsMinimapSoA::struct_type (C++ type)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataNoUnitsMinimapSoA7vespeneE">cvt::StepDataNoUnitsMinimapSoA::vespene (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataNoUnitsSoAE">cvt::StepDataNoUnitsSoA (C++ struct)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataNoUnitsSoA6alertsE">cvt::StepDataNoUnitsSoA::alerts (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataNoUnitsSoA9buildableE">cvt::StepDataNoUnitsSoA::buildable (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataNoUnitsSoA5creepE">cvt::StepDataNoUnitsSoA::creep (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataNoUnitsSoA8gameStepE">cvt::StepDataNoUnitsSoA::gameStep (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataNoUnitsSoA16has_minimap_dataE">cvt::StepDataNoUnitsSoA::has_minimap_data (C++ type)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataNoUnitsSoA15has_scalar_dataE">cvt::StepDataNoUnitsSoA::has_scalar_data (C++ type)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataNoUnitsSoA9minearalsE">cvt::StepDataNoUnitsSoA::minearals (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt18StepDataNoUnitsSoAeqERK18StepDataNoUnitsSoA">cvt::StepDataNoUnitsSoA::operator== (C++ function)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt18StepDataNoUnitsSoAixENSt6size_tE">cvt::StepDataNoUnitsSoA::operator[] (C++ function)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataNoUnitsSoA8pathableE">cvt::StepDataNoUnitsSoA::pathable (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataNoUnitsSoA15player_relativeE">cvt::StepDataNoUnitsSoA::player_relative (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataNoUnitsSoA7popArmyE">cvt::StepDataNoUnitsSoA::popArmy (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataNoUnitsSoA6popMaxE">cvt::StepDataNoUnitsSoA::popMax (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataNoUnitsSoA10popWorkersE">cvt::StepDataNoUnitsSoA::popWorkers (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataNoUnitsSoA5scoreE">cvt::StepDataNoUnitsSoA::score (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt18StepDataNoUnitsSoA4sizeEv">cvt::StepDataNoUnitsSoA::size (C++ function)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataNoUnitsSoA11struct_typeE">cvt::StepDataNoUnitsSoA::struct_type (C++ type)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataNoUnitsSoA7vespeneE">cvt::StepDataNoUnitsSoA::vespene (C++ member)</a>
+</li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataNoUnitsSoA10visibilityE">cvt::StepDataNoUnitsSoA::visibility (C++ member)</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt11StepDataSoAE">cvt::StepDataSoA (C++ struct)</a>
 </li>
@@ -734,6 +807,8 @@
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt11StepDataSoA5scoreE">cvt::StepDataSoA::score (C++ member)</a>
 </li>
+      <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt11StepDataSoA4sizeEv">cvt::StepDataSoA::size (C++ function)</a>
+</li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt11StepDataSoA11struct_typeE">cvt::StepDataSoA::struct_type (C++ type)</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt11StepDataSoA5unitsE">cvt::StepDataSoA::units (C++ member)</a>
@@ -741,68 +816,6 @@
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt11StepDataSoA7vespeneE">cvt::StepDataSoA::vespene (C++ member)</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt11StepDataSoA10visibilityE">cvt::StepDataSoA::visibility (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataSoANoUnitsE">cvt::StepDataSoANoUnits (C++ struct)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataSoANoUnits6alertsE">cvt::StepDataSoANoUnits::alerts (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataSoANoUnits9buildableE">cvt::StepDataSoANoUnits::buildable (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataSoANoUnits5creepE">cvt::StepDataSoANoUnits::creep (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataSoANoUnits8gameStepE">cvt::StepDataSoANoUnits::gameStep (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataSoANoUnits16has_minimap_dataE">cvt::StepDataSoANoUnits::has_minimap_data (C++ type)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataSoANoUnits15has_scalar_dataE">cvt::StepDataSoANoUnits::has_scalar_data (C++ type)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataSoANoUnits9minearalsE">cvt::StepDataSoANoUnits::minearals (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt18StepDataSoANoUnitseqERK18StepDataSoANoUnits">cvt::StepDataSoANoUnits::operator== (C++ function)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt18StepDataSoANoUnitsixENSt6size_tE">cvt::StepDataSoANoUnits::operator[] (C++ function)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataSoANoUnits8pathableE">cvt::StepDataSoANoUnits::pathable (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataSoANoUnits15player_relativeE">cvt::StepDataSoANoUnits::player_relative (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataSoANoUnits7popArmyE">cvt::StepDataSoANoUnits::popArmy (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataSoANoUnits6popMaxE">cvt::StepDataSoANoUnits::popMax (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataSoANoUnits10popWorkersE">cvt::StepDataSoANoUnits::popWorkers (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataSoANoUnits5scoreE">cvt::StepDataSoANoUnits::score (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataSoANoUnits11struct_typeE">cvt::StepDataSoANoUnits::struct_type (C++ type)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataSoANoUnits7vespeneE">cvt::StepDataSoANoUnits::vespene (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt18StepDataSoANoUnits10visibilityE">cvt::StepDataSoANoUnits::visibility (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataSoANoUnitsMiniMapE">cvt::StepDataSoANoUnitsMiniMap (C++ struct)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataSoANoUnitsMiniMap8gameStepE">cvt::StepDataSoANoUnitsMiniMap::gameStep (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataSoANoUnitsMiniMap15has_scalar_dataE">cvt::StepDataSoANoUnitsMiniMap::has_scalar_data (C++ type)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataSoANoUnitsMiniMap9minearalsE">cvt::StepDataSoANoUnitsMiniMap::minearals (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt25StepDataSoANoUnitsMiniMapeqERK25StepDataSoANoUnitsMiniMap">cvt::StepDataSoANoUnitsMiniMap::operator== (C++ function)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4NK3cvt25StepDataSoANoUnitsMiniMapixENSt6size_tE">cvt::StepDataSoANoUnitsMiniMap::operator[] (C++ function)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataSoANoUnitsMiniMap7popArmyE">cvt::StepDataSoANoUnitsMiniMap::popArmy (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataSoANoUnitsMiniMap6popMaxE">cvt::StepDataSoANoUnitsMiniMap::popMax (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataSoANoUnitsMiniMap10popWorkersE">cvt::StepDataSoANoUnitsMiniMap::popWorkers (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataSoANoUnitsMiniMap5scoreE">cvt::StepDataSoANoUnitsMiniMap::score (C++ member)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataSoANoUnitsMiniMap11struct_typeE">cvt::StepDataSoANoUnitsMiniMap::struct_type (C++ type)</a>
-</li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt25StepDataSoANoUnitsMiniMap7vespeneE">cvt::StepDataSoANoUnitsMiniMap::vespene (C++ member)</a>
 </li>
       <li><a href="cpp_api/observer.html#_CPPv4I0EN3cvt16StridedConverterE">cvt::StridedConverter (C++ class)</a>
 </li>

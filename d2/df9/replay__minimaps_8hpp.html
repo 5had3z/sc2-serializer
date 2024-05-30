@@ -130,8 +130,8 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d3d/structcvt_1_1StepDataNoUnits.html">cvt::StepDataNoUnits</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replay step data that contains scalar data and minimap data.  <a href="../../dc/d3d/structcvt_1_1StepDataNoUnits.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d7e/structcvt_1_1StepDataSoANoUnits.html">cvt::StepDataSoANoUnits</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">SoA representation of an array of <a class="el" href="../../dc/d3d/structcvt_1_1StepDataNoUnits.html" title="Replay step data that contains scalar data and minimap data.">StepDataNoUnits</a>.  <a href="../../d7/d7e/structcvt_1_1StepDataSoANoUnits.html#details">More...</a><br /></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/dc3/structcvt_1_1StepDataNoUnitsSoA.html">cvt::StepDataNoUnitsSoA</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">SoA representation of an array of <a class="el" href="../../dc/d3d/structcvt_1_1StepDataNoUnits.html" title="Replay step data that contains scalar data and minimap data.">StepDataNoUnits</a>.  <a href="../../d9/dc3/structcvt_1_1StepDataNoUnitsSoA.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/ddd/structcvt_1_1DatabaseInterface_3_01ReplayDataSoANoUnits_01_4.html">cvt::DatabaseInterface&lt; ReplayDataSoANoUnits &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Database interface implementation for ReplayDataSoANoUnits.  <a href="../../dd/ddd/structcvt_1_1DatabaseInterface_3_01ReplayDataSoANoUnits_01_4.html#details">More...</a><br /></td></tr>
@@ -143,10 +143,10 @@ Typedefs</h2></td></tr>
 using&#160;</td><td class="memItemRight" valign="bottom"><b>cvt::ReplayDataNoUnits</b> = <a class="el" href="../../df/d79/structcvt_1_1ReplayDataTemplate.html">ReplayDataTemplate</a>&lt; <a class="el" href="../../dc/d3d/structcvt_1_1StepDataNoUnits.html">StepDataNoUnits</a> &gt;</td></tr>
 <tr class="memdesc:a35a3846c0f360c69bcbba1f4da63cb1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">ReplayData with minimap and scalar data. <br /></td></tr>
 <tr class="separator:a35a3846c0f360c69bcbba1f4da63cb1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a123b7f7536981a9edbdcda78e0fa208f" id="r_a123b7f7536981a9edbdcda78e0fa208f"><td class="memItemLeft" align="right" valign="top"><a id="a123b7f7536981a9edbdcda78e0fa208f" name="a123b7f7536981a9edbdcda78e0fa208f"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>cvt::ReplayDataSoANoUnits</b> = <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html">ReplayDataTemplateSoA</a>&lt; <a class="el" href="../../d7/d7e/structcvt_1_1StepDataSoANoUnits.html">StepDataSoANoUnits</a> &gt;</td></tr>
-<tr class="memdesc:a123b7f7536981a9edbdcda78e0fa208f"><td class="mdescLeft">&#160;</td><td class="mdescRight">ReplayData as SoA with minimap and scalar data. <br /></td></tr>
-<tr class="separator:a123b7f7536981a9edbdcda78e0fa208f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a23091211654cad5ced4165b7a64cf2" id="r_a3a23091211654cad5ced4165b7a64cf2"><td class="memItemLeft" align="right" valign="top"><a id="a3a23091211654cad5ced4165b7a64cf2" name="a3a23091211654cad5ced4165b7a64cf2"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>cvt::ReplayDataSoANoUnits</b> = <a class="el" href="../../d4/de6/structcvt_1_1ReplayDataTemplateSoA.html">ReplayDataTemplateSoA</a>&lt; <a class="el" href="../../d9/dc3/structcvt_1_1StepDataNoUnitsSoA.html">StepDataNoUnitsSoA</a> &gt;</td></tr>
+<tr class="memdesc:a3a23091211654cad5ced4165b7a64cf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">ReplayData as SoA with minimap and scalar data. <br /></td></tr>
+<tr class="separator:a3a23091211654cad5ced4165b7a64cf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Replay observation data that only contains scalar (score and economy) and minimap data. Is compatible with reading ReplayData as the ordering of the data is the same, we just stop reading before Unit data. </p>
