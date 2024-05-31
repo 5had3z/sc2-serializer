@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sc2_replay_reader.sampler &mdash; StarCraft II Serializer  documentation</title>
+  <title>sc2_serializer.sampler &mdash; StarCraft II Serializer  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
@@ -62,7 +62,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">sc2_replay_reader.sampler</li>
+      <li class="breadcrumb-item active">sc2_serializer.sampler</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -71,7 +71,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for sc2_replay_reader.sampler</h1><div class="highlight"><pre>
+  <h1>Source code for sc2_serializer.sampler</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Replay sampling classes for yielding replays when dataloading.</span>
 <span class="sd">&quot;&quot;&quot;</span>
@@ -84,11 +84,11 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="kn">from</span> <span class="nn">._sc2_replay_reader</span> <span class="kn">import</span> <span class="n">ReplayDataScalarOnlyDatabase</span>
+<span class="kn">from</span> <span class="nn">._sc2_serializer</span> <span class="kn">import</span> <span class="n">ReplayDataScalarOnlyDatabase</span>
 
 
 <div class="viewcode-block" id="ReplaySampler">
-<a class="viewcode-back" href="../../dataloading.html#sc2_replay_reader.sampler.ReplaySampler">[docs]</a>
+<a class="viewcode-back" href="../../dataloading.html#sc2_serializer.sampler.ReplaySampler">[docs]</a>
 <span class="k">class</span> <span class="nc">ReplaySampler</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Abstract interface to sample from set of replay databases&quot;&quot;&quot;</span>
 
@@ -97,10 +97,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">is_train</span> <span class="o">=</span> <span class="n">is_train</span>
 
     <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span> <span class="o">...</span>
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="o">...</span>
 
 <div class="viewcode-block" id="ReplaySampler.sample">
-<a class="viewcode-back" href="../../dataloading.html#sc2_replay_reader.sampler.ReplaySampler.sample">[docs]</a>
+<a class="viewcode-back" href="../../dataloading.html#sc2_serializer.sampler.ReplaySampler.sample">[docs]</a>
     <span class="nd">@abstractmethod</span>
     <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample &#39;index&#39; from replays by calculating the file and index in that file to sample at.</span>
@@ -111,7 +112,7 @@
 
 
 <div class="viewcode-block" id="ReplaySampler.get_split_params">
-<a class="viewcode-back" href="../../dataloading.html#sc2_replay_reader.sampler.ReplaySampler.get_split_params">[docs]</a>
+<a class="viewcode-back" href="../../dataloading.html#sc2_serializer.sampler.ReplaySampler.get_split_params">[docs]</a>
     <span class="k">def</span> <span class="nf">get_split_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate start offset + size based on the full dataset size.</span>
 
@@ -138,7 +139,7 @@
 
 
 <div class="viewcode-block" id="BasicSampler">
-<a class="viewcode-back" href="../../dataloading.html#sc2_replay_reader.sampler.BasicSampler">[docs]</a>
+<a class="viewcode-back" href="../../dataloading.html#sc2_serializer.sampler.BasicSampler">[docs]</a>
 <span class="k">class</span> <span class="nc">BasicSampler</span><span class="p">(</span><span class="n">ReplaySampler</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample replays from single file or folder of replay files.</span>
 
@@ -183,7 +184,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_replays</span>
 
 <div class="viewcode-block" id="BasicSampler.sample">
-<a class="viewcode-back" href="../../dataloading.html#sc2_replay_reader.sampler.BasicSampler.sample">[docs]</a>
+<a class="viewcode-back" href="../../dataloading.html#sc2_serializer.sampler.BasicSampler.sample">[docs]</a>
     <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="n">file_index</span> <span class="o">=</span> <span class="n">upper_bound</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_accumulated_replays</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_idx</span> <span class="o">+</span> <span class="n">index</span><span class="p">)</span>
         <span class="n">db_index</span> <span class="o">=</span> <span class="n">index</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_accumulated_replays</span><span class="p">[</span><span class="n">file_index</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
@@ -193,7 +194,7 @@
 
 
 <div class="viewcode-block" id="SQLSampler">
-<a class="viewcode-back" href="../../dataloading.html#sc2_replay_reader.sampler.SQLSampler">[docs]</a>
+<a class="viewcode-back" href="../../dataloading.html#sc2_serializer.sampler.SQLSampler">[docs]</a>
 <span class="k">class</span> <span class="nc">SQLSampler</span><span class="p">(</span><span class="n">ReplaySampler</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Use SQLite3 database to yield from a folder of replay databases with filters applied.</span>
 
@@ -250,7 +251,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_replays</span>
 
 <div class="viewcode-block" id="SQLSampler.sample">
-<a class="viewcode-back" href="../../dataloading.html#sc2_replay_reader.sampler.SQLSampler.sample">[docs]</a>
+<a class="viewcode-back" href="../../dataloading.html#sc2_serializer.sampler.SQLSampler.sample">[docs]</a>
     <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
         <span class="n">query</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_query</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; LIMIT 1 OFFSET </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">start_idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">index</span><span class="si">}</span><span class="s2">;&quot;</span>
 

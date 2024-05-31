@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>sc2_replay_reader.example &mdash; StarCraft II Serializer  documentation</title>
+  <title>sc2_serializer.example &mdash; StarCraft II Serializer  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=86f27845" />
       <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=eafc0fe6" />
@@ -62,7 +62,7 @@
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
-      <li class="breadcrumb-item active">sc2_replay_reader.example</li>
+      <li class="breadcrumb-item active">sc2_serializer.example</li>
       <li class="wy-breadcrumbs-aside">
       </li>
   </ul>
@@ -71,7 +71,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <h1>Source code for sc2_replay_reader.example</h1><div class="highlight"><pre>
+  <h1>Source code for sc2_serializer.example</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Basic example PyTorch Dataloader, a more complex dataloader can be found in the</span>
 <span class="sd">experiment code accompanying the paper at https://github.com/5had3z/sc2-experiments.</span>
@@ -122,7 +122,7 @@
 
 
 <div class="viewcode-block" id="SC2Dataset">
-<a class="viewcode-back" href="../../dataloading.html#sc2_replay_reader.example.SC2Dataset">[docs]</a>
+<a class="viewcode-back" href="../../dataloading.html#sc2_serializer.example.SC2Dataset">[docs]</a>
 <span class="k">class</span> <span class="nc">SC2Dataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Example PyTorch Dataset for StarCraft II Data.</span>
 
@@ -172,7 +172,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">load_from_parser</span><span class="p">()</span>
 
 <div class="viewcode-block" id="SC2Dataset.load_from_parser">
-<a class="viewcode-back" href="../../dataloading.html#sc2_replay_reader.example.SC2Dataset.load_from_parser">[docs]</a>
+<a class="viewcode-back" href="../../dataloading.html#sc2_serializer.example.SC2Dataset.load_from_parser">[docs]</a>
     <span class="k">def</span> <span class="nf">load_from_parser</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Sample from data currently in parser</span>
 
