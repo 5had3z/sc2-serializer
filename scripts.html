@@ -47,7 +47,11 @@
 <li class="toctree-l1"><a class="reference internal" href="replay_data.html">Replay Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataloading.html">Dataloading</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Scripts</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#find-all-versions">find_all_versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#find-all-versions">find_all_versions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#find_all_versions.compare_replays_and_game"><code class="docutils literal notranslate"><span class="pre">compare_replays_and_game()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#find_all_versions.write_replay_versions"><code class="docutils literal notranslate"><span class="pre">write_replay_versions()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#gen-info-header">gen_info_header</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#gen-info-yaml">gen_info_yaml</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#inspect-replay">inspect_replay</a><ul>
@@ -112,6 +116,18 @@
 <p>Various helper scripts are included in the complete source code but not included in the python library, since they mostly deal with the dataset generation, rather than dataloading.</p>
 <section id="find-all-versions">
 <h2>find_all_versions<a class="headerlink" href="#find-all-versions" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="find_all_versions.compare_replays_and_game">
+<span class="sig-prename descclassname"><span class="pre">find_all_versions.</span></span><span class="sig-name descname"><span class="pre">compare_replays_and_game</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">replays</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">game</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/find_all_versions.html#compare_replays_and_game"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#find_all_versions.compare_replays_and_game" title="Link to this definition"></a></dt>
+<dd><p>Compare versions of replays with versions of the game verision currently present</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="find_all_versions.write_replay_versions">
+<span class="sig-prename descclassname"><span class="pre">find_all_versions.</span></span><span class="sig-name descname"><span class="pre">write_replay_versions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">replays</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/find_all_versions.html#write_replay_versions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#find_all_versions.write_replay_versions" title="Link to this definition"></a></dt>
+<dd><p>Write all the game,data,build versions found in folder of replays to a csv</p>
+</dd></dl>
+
 </section>
 <section id="gen-info-header">
 <h2>gen_info_header<a class="headerlink" href="#gen-info-header" title="Link to this heading"></a></h2>
