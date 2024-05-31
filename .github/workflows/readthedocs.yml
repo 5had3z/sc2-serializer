@@ -10,8 +10,8 @@ jobs:
       - name: Requirements
         run: |
           sudo apt-get update
-          sudo apt-get install doxygen sphinx-doc cmake pipx libboost-iostreams1.74-dev libtbb-dev
-          pipx install sphinx-rtd-theme breathe black git+https://github.com/5had3z/pybind11-stubgen.git
+          sudo apt-get install doxygen sphinx-doc cmake pipx python3-sphinx-rtd-theme python3-breathe libboost-iostreams1.74-dev libtbb-dev
+          pipx install black git+https://github.com/5had3z/pybind11-stubgen.git
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Build main library for python bindings
