@@ -13,6 +13,8 @@ jobs:
           sudo apt-get install doxygen sphinx-doc python3-sphinx-rtd-theme python3-breathe
       - name: Checkout repo
         uses: actions/checkout@v4
+      - name: Need to build main library for python bindings.
+        run: python3 -m pip install .
       - name: Build docs
         run: |
           mkdir -p docs/_build/html/_sources
