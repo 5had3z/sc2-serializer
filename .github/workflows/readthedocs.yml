@@ -15,7 +15,7 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Build main library for python bindings
-        run: pipx install .
+        run: pip3 install . --break-system-packages
       - name: Build docs
         run: |
           make -C docs html
