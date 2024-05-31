@@ -15,8 +15,8 @@ jobs:
         uses: actions/checkout@v4
       - name: Build docs
         run: |
-          mkdir docs/_build
-          cp -r src/sc2_replay_reader docs/_build/sc2_replay_reader
+          mkdir -p docs/_build/html/_sources
+          cp -r src/sc2_replay_reader docs/_build/html/_sources/sc2_replay_reader
           make -C docs html
           touch docs/_build/html/.nojekyll
       - name: Deploy
