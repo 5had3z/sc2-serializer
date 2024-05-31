@@ -62,7 +62,13 @@
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#pytorch-example">PyTorch Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#pytorch-example">PyTorch Example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#sc2_replay_reader.example.SC2Dataset"><code class="docutils literal notranslate"><span class="pre">SC2Dataset</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#sc2_replay_reader.example.SC2Dataset.load_from_parser"><code class="docutils literal notranslate"><span class="pre">SC2Dataset.load_from_parser()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="benchmark.html">Benchmarks</a></li>
@@ -210,6 +216,37 @@
 </section>
 <section id="pytorch-example">
 <h2>PyTorch Example<a class="headerlink" href="#pytorch-example" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="sc2_replay_reader.example.SC2Dataset">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">sc2_replay_reader.example.</span></span><span class="sig-name descname"><span class="pre">SC2Dataset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sampler</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#sc2_replay_reader.sampler.ReplaySampler" title="sc2_replay_reader.sampler.ReplaySampler"><span class="pre">ReplaySampler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timepoints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">TimeRange</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">TimeRange(min=0,</span> <span class="pre">max=30,</span> <span class="pre">step=0.5)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sc2_replay_reader/example.html#SC2Dataset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sc2_replay_reader.example.SC2Dataset" title="Link to this definition"></a></dt>
+<dd><p>Example PyTorch Dataset for StarCraft II Data.</p>
+<p>This sample dataloader reads a replay around the timepoint range specified and returns
+the requested [scalar, minimap] features and the game outcome from the player POV.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sampler</strong> (<a class="reference internal" href="#sc2_replay_reader.sampler.ReplaySampler" title="sc2_replay_reader.sampler.ReplaySampler"><em>ReplaySampler</em></a>) – Sampler that yields a replay file and index in that file.</p></li>
+<li><p><strong>features</strong> (<em>list</em><em>[</em><em>str</em><em>]</em><em>, </em><em>optional</em>) – List of step data features to use. (default: [minimaps, scalars])</p></li>
+<li><p><strong>timepoints</strong> (<em>TimeRange</em>) – Timepoints in the replay to sample from.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="sc2_replay_reader.example.SC2Dataset.load_from_parser">
+<span class="sig-name descname"><span class="pre">load_from_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sc2_replay_reader/example.html#SC2Dataset.load_from_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sc2_replay_reader.example.SC2Dataset.load_from_parser" title="Link to this definition"></a></dt>
+<dd><p>Sample from data currently in parser</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>observation data, True if valid mask, and game outcome</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict [str, Tensor]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 
