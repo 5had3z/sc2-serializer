@@ -1,6 +1,6 @@
 # sc2-serializer
 
-Starcraft II replay serialization and dataloding tool for machine learning. Serialization uses less than half the memory, runs 11% faster, and produces files 10x smaller than [AlphaStar-Unplugged](https://github.com/google-deepmind/alphastar/tree/main/alphastar/unplugged/data).
+Starcraft II replay serialization and dataloding tool for machine learning. Serialization uses less than half the memory, runs 11% faster, and produces files 10x smaller than [AlphaStar-Unplugged](https://github.com/google-deepmind/alphastar/tree/main/alphastar/unplugged/data). The associated example outcome and minimap forecasting experiments that use this dataset can be found [here](https://github.com/5had3z/sc2-experiments).
 
 ## Documentation
 
