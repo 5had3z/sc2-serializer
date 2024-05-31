@@ -14,16 +14,21 @@ app = typer.Typer()
 
 @dataclass
 class ReplayFile:
+    """Filepath and size of replay"""
+
     path: Path
     size: int
 
 
 @dataclass
 class Partition:
+    """Partition of replays and their total size"""
+
     files: list[ReplayFile] = field(default_factory=list)
     size: int = 0
 
     def append(self, file: ReplayFile):
+        """Add replay file to partition"""
         self.files.append(file)
         self.size += file.size
 

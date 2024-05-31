@@ -113,7 +113,8 @@ def check_first_step(path: Path, threshold: int = 224):
                     playerId = sample.header.playerId
                     filename = replay.stem
                     print(
-                        f"high initial gamestep {first_step} in {replayHash=}, {playerId=}, {filename=}"
+                        f"high initial gamestep {first_step} in "
+                        f"{replayHash=},{playerId=},{filename=}"
                     )
                     count_bad += 1
             total_replays += db.size()
@@ -135,6 +136,8 @@ def count(folder: Annotated[Path, typer.Option(help="Folder to count replays")])
 
 
 class SubCommand(str, Enum):
+    """Different inspection commands"""
+
     scatter_units = "scatter_units"
     minimap_video = "minimap_video"
     test_parseable = "test_parseable"
@@ -150,7 +153,7 @@ def inspect(
     ] = Path.cwd()
     / "workspace",
 ):
-    """"""
+    """Script to poke around and inspect the serialized replay data"""
     db, parser = get_database_and_parser(parse_units=True, parse_minimaps=True)
     db.open(file)
 
