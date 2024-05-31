@@ -15,9 +15,7 @@ import sys
 import subprocess
 from pathlib import Path
 
-sys.path.insert(
-    0, str(Path(__file__).parent / "_build" / "html" / "_sources" / "sc2_replay_reader")
-)
+sys.path.insert(0, str(Path(__file__).parent / "_build" / "html" / "_sources"))
 
 # Doxygen
 subprocess.call("doxygen Doxyfile", shell=True)
