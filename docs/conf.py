@@ -11,11 +11,9 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 # import os
-import sys
+# import sys
+# sys.path.insert(0, os.path.abspath('.'))
 import subprocess
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).parent / "_build" / "html" / "_sources"))
 
 # Doxygen
 subprocess.call("doxygen Doxyfile", shell=True)
