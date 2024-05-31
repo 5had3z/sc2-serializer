@@ -37,7 +37,14 @@ classifiers = [
 dependencies = ["numpy"]
 
 [project.optional-dependencies]
-database = ["torch>=1.11.0", "typer>=0.9.0"]
+dev = [
+    "torch>=1.11.0",
+    "typer>=0.9.0",
+    "pysc2",
+    "matplotlib",
+    "opencv-python",
+    "pyyaml",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/5had3z/sc2-serializer"

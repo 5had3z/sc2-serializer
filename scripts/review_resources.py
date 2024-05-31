@@ -92,7 +92,8 @@ def main(
     file: Annotated[Path, typer.Option(help=".txt or .SC2Replays file to read")],
     idx: Annotated[int, typer.Option(help="Index to sample from .SC2Replays")] = 0,
 ):
-    """"""
+    """Plot how the resources are changing over time. Good to check our modifications
+    with visibility and default values are working as expected"""
     if not file.exists():
         raise FileNotFoundError(file)
 

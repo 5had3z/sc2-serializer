@@ -24,5 +24,6 @@ Table of Contents
     self
     replay_data
     dataloading
+    scripts
     benchmark
     cpp_api/index

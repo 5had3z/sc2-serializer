@@ -51,7 +51,7 @@ def get_target_folders(base_folder: Path, replay_list: Path | None):
 
 
 @app.command()
-def run(
+def main(
     converter: Annotated[Path, typer.Option()],
     outfolder: Annotated[Path, typer.Option()],
     replays: Annotated[Path, typer.Option()],

@@ -18,98 +18,74 @@ See [https://5had3z.github.io/sc2-serializer/index.html](https://5had3z.github.i
 
 ### General
 
-To use the SCII replay observer for converting replays, you will need to initialize the 3rdparty submodule(s).
-
-```
+To use the StarCraftII replay observer for converting replays, you will need to initialize the 3rdparty submodule(s).
+```bash
 git submodule update --init --recursive
 ```
 
-To build if you use vscode you should be able to just use the cmake extension Otherwise the CLI should be the following.
-
-```
-cmake -B build
-cmake --build build --target ALL_BUILD
+This the observer also relies on a python script to query game version information when launching replays. This python script uses [mpyq](https://github.com/eagleflo/mpyq), which can be installed with
+```bash
+pip3 install mpyq
 ```
 
-### Python Dependencies
-
-This library relies on a python script to find the dataVersion for launching replays. This python script uses [mpyq](https://github.com/eagleflo/mpyq), which can be installed with
-
-```
-pip install mpyq
-```
-
-To select a target python instance when compiling for linux during cmake configure step, you can set `-DPython3_EXECUTABLE=/usr/bin/python3.10`. If using VSCode this can also be achieved in the settings.json file by adding the below:
-
+If you need to manually select a target python instance when compiling for linux during cmake configure step, you can set `-DPython3_EXECUTABLE=/usr/bin/python3.10`. If using vscode this can also be achieved by adding the below in `.vscode/settings.json`:
 ```json
 "cmake.configureSettings": {
     "Python3_EXECUTABLE": "/usr/bin/python3.10"
 }
 ```
 
+
 ### Linux
 
-This requires >=gcc-13 since some c++23 features are used.
-If using ubuntu 18.04 or higher, you can get this via the test toolchain ppa on ubuntu. To update cmake to latest and greatest, follow the instructions [here](https://apt.kitware.com/).
+Compilation requires >=gcc-13 since some c++23 features are used. If using ubuntu 18.04 or higher, you can get this via the test toolchain ppa on ubuntu shown below. To update cmake to latest and greatest, follow the instructions [here](https://apt.kitware.com/).
 
-```
+```bash
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt update
 sudo apt install gcc-13 g++-13
 ```
 
-To use the SCII replay observer, you will need to initialize the 3rdparty submodule(s).
-
-```
-git submodule update --init --recursive
-```
-
 To build if you use vscode you should be able to just use the cmake extension and select gcc-13 toolchain. Otherwise the CLI should be the following.
 
-```
+```bash
 CC=/usr/bin/gcc-13 CXX=/usr/bin/g++-13 cmake -B build -GNinja
 cmake --build build
 ```
 
 ### Windows
 
-Only tested with Visual Studio 2022 Version 17.7.6, _MSC_VER=1936. Downloading TBB from intel is also required, [link here](https://www.intel.com/content/www/us/en/developer/articles/tool/oneapi-standalone-components.html#onetbb) (Tested with 2021.11.0).
+Only tested with Visual Studio 2022 Version 17.7.6, _MSC_VER=1936. Downloading and installing TBB from intel is also required, [link here](https://www.intel.com/content/www/us/en/developer/articles/tool/oneapi-standalone-components.html#onetbb) (Tested with 2021.11.0). You will need to make sure `PYTHONHOME` is set correctly. This package will compile both boost and zlib for you. If you already have these somewhere else and want to save the compilation time, you'll have to modify CMakeLists.txt yourself. Otherwise you should be able to compile this library with standard cmake commands or the vscode extension.
 
-I would not recommend Python 3.12, [dm-tree will not compile](https://github.com/google-deepmind/tree/issues/109)
-
-You will need to make sure PYTHONHOME is set correctly.
-
-This package will compile both boost and zlib for you. If you already have these somewhere else and want to save the compilation time, you'll have to modify CMakeLists.txt yourself.
-
-## Building Python Bindigs
-
-Currently requires >=gcc-11 and should be relatively simple to install since CMake Package Manager deals with C++ dependencies. The library bindings are called `sc2_serializer` as that's mainly what it does.
-```sh
-pip3 install .
+```shell
+cmake -B build
+cmake --build build
 ```
 
-If you install in editable mode, you won't get the auto-gen stubs, you can add this manually (you need to install my fork from pyproject.toml)
-```sh
+
+## Building Python Bindings
+
+Currently requires >=gcc-11 and should be relatively simple to install since CMake Package Manager deals with C++ dependencies, however you will have to install `libboost-iostreams-dev` when building for linux. The library bindings module is called `sc2_serializer` and includes a few extra dataset sampling utilities and an example PyTorch dataloader for outcome prediction.
+```bash
+sudo apt install libboost-iostreams-dev
+pip3 install git+https://github.com/5had3z/sc2-serializer.git
+```
+
+If you clone this repo and install with editable mode, you won't get the auto-gen stubs, you can add this manually (you need to install my fork from pyproject.toml)
+```bash
+pip3 install -e .
 pybind11-stubgen _sc2_serializer --module-path build/_sc2_serializer.cpython-310-x86_64-linux-gnu.so -o src/sc2_serializer
 ```
 
-It is also faster to iterate while developing by installing in editable mode, removing pip's compiled version `src/sc2_serializer/_sc2_serializer.cpython-310-x86_64-linux-gnu.so` and symbolically linking to `build/_sc2_serializer.cpython-310-x86_64-linux-gnu.so` instead for incremental builds. You will have manually update the stub with the previously mentioned script if api changes are made.
+It is faster to iterate while developing by installing in editable mode, removing pip's compiled version `src/sc2_serializer/_sc2_serializer.cpython-310-x86_64-linux-gnu.so` and symbolically linking to `build/_sc2_serializer.cpython-310-x86_64-linux-gnu.so` instead for incremental builds. You will have manually update the stub with the previously mentioned command if API changes are made.
 
-## Generating SQL Database
+## Development Dependencies
 
-To generate meta-data for all the replays, we require additional dependencies, which can be installed with:
+The [scripts](./scripts/) folder contains a bunch of utilities used for developing and creating a StarCraftII Dataset. Additional dependencies required by these can be installed with the `dev` option when installing the main library (or you can peek [pyproject.toml](pyproject.toml) and install them manually).
 
 ```bash
-pip install sc2-replay-parser[database]
+pip3 install -e .[dev]
 ```
-
-Set the environment variable "DATAPATH" to the directory containing "*.SC2Replays" files.
-
-Run `python gen_database.py --workspace <OUTPUT_DIR> --workers=8`
-
-- <OUTPUT_DIR> is the output directory.
-- --workers sets the number of dataloader workers.
-
 
 ## Git hooks
 
