@@ -11,7 +11,7 @@ from pysc2.lib.actions import FUNCTIONS
 
 # Read game info file to load action/upgrade data
 _game_info_file = (
-    Path(__file__).parent.parent.parent / "src" / "sc2_replay_reader" / "game_info.yaml"
+    Path(__file__).parent.parent.parent / "src" / "sc2_serializer" / "game_info.yaml"
 )
 with open(_game_info_file, "r", encoding="utf-8") as f:
     _game_data = yaml.safe_load(f)

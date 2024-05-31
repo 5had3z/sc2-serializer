@@ -14,7 +14,7 @@ import typer
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_agg import FigureCanvasAgg
 
-from sc2_replay_reader import (
+from sc2_serializer import (
     ReplayDataAllDatabase,
     ReplayDatabase,
     ReplayDataScalarOnlyDatabase,
@@ -23,7 +23,7 @@ from sc2_replay_reader import (
     set_replay_database_logger_level,
     spdlog_lvl,
 )
-from sc2_replay_reader.unit_features import NeutralUnit, NeutralUnitOH, Unit, UnitOH
+from sc2_serializer.unit_features import NeutralUnit, NeutralUnitOH, Unit, UnitOH
 
 app = typer.Typer()
 

@@ -2,9 +2,11 @@ import os
 from pathlib import Path
 
 import pytest
-from sc2_replay_reader.example import SC2Dataset
-from sc2_replay_reader.sampler import SQLSampler
-from sc2_replay_reader import get_database_and_parser, StepDataSoA
+from sc2_serializer.example import SC2Dataset
+from sc2_serializer.sampler import SQLSampler
+from sc2_serializer import get_database_and_parser, StepDataSoA
+
+_DEFAULT_REPLAYS = "/mnt/datasets/sc2-tournament"
 
 
 @pytest.mark.parametrize("has_units", [True, False])
@@ -12,7 +14,7 @@ from sc2_replay_reader import get_database_and_parser, StepDataSoA
 def test_replay_database_ops(has_units: bool, has_minimaps: bool):
     """Test basic functionality of python bindings to replay database"""
     db, parser = get_database_and_parser(has_units, has_minimaps)
-    replays_path = Path(os.environ.get("DATAPATH", "/mnt/datasets/sc2-tournament"))
+    replays_path = Path(os.environ.get("DATAPATH", _DEFAULT_REPLAYS))
     replay_file = next(
         filter(lambda x: x.suffix == ".SC2Replays", replays_path.iterdir())
     )
@@ -37,7 +39,7 @@ def test_pytorch_sql_example():
         "number_game_step > 1024",
         "playerAPM > 100",
     ]
-    replays_path = Path(os.environ.get("DATAPATH", "/mnt/datasets/sc2-tournament"))
+    replays_path = Path(os.environ.get("DATAPATH", _DEFAULT_REPLAYS))
     sampler = SQLSampler(
         "$ENV:gamedata.db", replays_path, filters, train_ratio=0.8, is_train=True
     )

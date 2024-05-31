@@ -11,7 +11,7 @@ import typer
 from torch import Tensor
 from torch.utils.data import DataLoader, Dataset
 
-from sc2_replay_reader import (
+from sc2_serializer import (
     GAME_INFO_FILE,
     ReplayDataAllDatabase,
     ReplayDataAllParser,

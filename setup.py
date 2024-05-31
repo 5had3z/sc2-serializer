@@ -2,6 +2,7 @@
 Compile the python reader only.
 Based on https://github.com/pybind/cmake_example/blob/master/setup.py
 """
+
 import os
 import subprocess
 import sys
@@ -13,14 +14,18 @@ from setuptools.command.build_ext import build_ext
 
 
 class CMakeExtension(Extension):
+    """CMake Specific Extension that records source dir"""
+
     def __init__(self, name: str, source_dir: str = "") -> None:
         super().__init__(name, sources=[])
         self.source_dir = Path(source_dir).resolve()
 
 
 class CMakeBuild(build_ext):
+    """Build class for CMake Extension"""
+
     def get_outputs(self):
-        return super().get_outputs() + ["_sc2_replay_reader.pyi"]
+        return super().get_outputs() + ["_sc2_serializer.pyi"]
 
     def build_extension(self, ext: CMakeExtension) -> None:
         ext_fullpath = Path.cwd() / self.get_ext_fullpath(ext.name)
@@ -51,7 +56,7 @@ class CMakeBuild(build_ext):
         subprocess.run(
             [
                 "pybind11-stubgen",
-                "_sc2_replay_reader",
+                "_sc2_serializer",
                 f"-o={extdir}{os.sep}",
                 f"--module-path={ext_fullpath}",
             ],
@@ -59,7 +64,7 @@ class CMakeBuild(build_ext):
             check=True,
         )
         subprocess.run(
-            ["black", f"{extdir}{os.sep}_sc2_replay_reader.pyi"],
+            ["black", f"{extdir}{os.sep}_sc2_serializer.pyi"],
             cwd=build_temp,
             check=True,
         )
@@ -67,7 +72,7 @@ class CMakeBuild(build_ext):
 
 if __name__ == "__main__":
     setup(
-        ext_modules=[CMakeExtension("sc2_replay_reader._sc2_replay_reader")],
+        ext_modules=[CMakeExtension("sc2_serializer._sc2_serializer")],
         cmdclass={"build_ext": CMakeBuild},
         zip_safe=False,
     )

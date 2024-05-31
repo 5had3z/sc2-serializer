@@ -191,19 +191,19 @@ if(SC2_PY_READER)
     0.8.0)
 
   pybind11_add_module(
-    _sc2_replay_reader
+    _sc2_serializer
     src/database.cpp
     src/bindings.cpp
     src/upgrade_state.cpp)
-  target_compile_features(_sc2_replay_reader PUBLIC cxx_std_23)
+  target_compile_features(_sc2_serializer PUBLIC cxx_std_23)
   target_link_libraries(
-    _sc2_replay_reader
+    _sc2_serializer
     PUBLIC spdlog::spdlog
            Boost::pfr
            Boost::iostreams
            yaml-cpp)
-  target_compile_options(_sc2_replay_reader PUBLIC ${_COMPILE_OPTIONS})
-  target_include_directories(_sc2_replay_reader PUBLIC include)
+  target_compile_options(_sc2_serializer PUBLIC ${_COMPILE_OPTIONS})
+  target_include_directories(_sc2_serializer PUBLIC include)
 endif()
 
 # ---- Testing Suite ----

@@ -13,10 +13,10 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 
 [tool.setuptools.package-data]
-sc2_replay_reader = ["*.yaml"]
+sc2_serializer = ["*.yaml"]
 
 [project]
-name = "sc2_replay_reader"
+name = "sc2_serializer"
 authors = [
     { name = "Bryce Ferenczi", email = "frenzi@hotmail.com.au" },
     { name = "Rhys Newbury", email = "newbury777@gmail.com" },

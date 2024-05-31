@@ -2,7 +2,7 @@
 
 from enum import IntEnum, auto
 
-import sc2_replay_reader as sc2
+import sc2_serializer as sc2
 
 _VisSize = len(sc2.Visibility.__entries)
 _AliSize = len(sc2.Alliance.__entries)

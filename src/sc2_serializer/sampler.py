@@ -10,7 +10,7 @@ from pathlib import Path
 
 import numpy as np
 
-from ._sc2_replay_reader import ReplayDataScalarOnlyDatabase
+from ._sc2_serializer import ReplayDataScalarOnlyDatabase
 
 
 class ReplaySampler(ABC):
@@ -21,7 +21,8 @@ class ReplaySampler(ABC):
         self.is_train = is_train
 
     @abstractmethod
-    def __len__(self) -> int: ...
+    def __len__(self) -> int:
+        ...
 
     @abstractmethod
     def sample(self, index: int) -> tuple[Path, int]:

@@ -83,17 +83,17 @@ This package will compile both boost and zlib for you. If you already have these
 
 ## Building Python Bindigs
 
-Currently requires >=gcc-11 and should be relatively simple to install since CMake Package Manager deals with C++ dependencies. The library bindings are called `sc2_replay_reader` as that's mainly what it does.
+Currently requires >=gcc-11 and should be relatively simple to install since CMake Package Manager deals with C++ dependencies. The library bindings are called `sc2_serializer` as that's mainly what it does.
 ```sh
 pip3 install .
 ```
 
 If you install in editable mode, you won't get the auto-gen stubs, you can add this manually (you need to install my fork from pyproject.toml)
 ```sh
-pybind11-stubgen _sc2_replay_reader --module-path build/_sc2_replay_reader.cpython-310-x86_64-linux-gnu.so -o src/sc2_replay_reader
+pybind11-stubgen _sc2_serializer --module-path build/_sc2_serializer.cpython-310-x86_64-linux-gnu.so -o src/sc2_serializer
 ```
 
-It is also faster to iterate while developing by installing in editable mode, removing pip's compiled version `src/sc2_replay_reader/_sc2_replay_reader.cpython-310-x86_64-linux-gnu.so` and symbolically linking to `build/_sc2_replay_reader.cpython-310-x86_64-linux-gnu.so` instead for incremental builds. You will have manually update the stub with the previously mentioned script if api changes are made.
+It is also faster to iterate while developing by installing in editable mode, removing pip's compiled version `src/sc2_serializer/_sc2_serializer.cpython-310-x86_64-linux-gnu.so` and symbolically linking to `build/_sc2_serializer.cpython-310-x86_64-linux-gnu.so` instead for incremental builds. You will have manually update the stub with the previously mentioned script if api changes are made.
 
 ## Generating SQL Database
 

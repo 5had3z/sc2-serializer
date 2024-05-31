@@ -10,7 +10,7 @@ import numpy as np
 import typer
 from matplotlib import pyplot as plt
 
-import sc2_replay_reader
+import sc2_serializer
 
 app = typer.Typer()
 
@@ -42,7 +42,7 @@ def from_experiment(file: Path):
 def from_database(file: Path, idx: int):
     """Read from proper database"""
     temp: dict[int, list[int]] = {}
-    db = sc2_replay_reader.ReplayDatabase(file)
+    db = sc2_serializer.ReplayDatabase(file)
     replay_data = db.getEntry(idx)
 
     for unit in replay_data.data.neutralUnits[0]:
@@ -64,7 +64,7 @@ def from_database(file: Path, idx: int):
 
 
 def find_later_additions(file: Path, idx: int):
-    db = sc2_replay_reader.ReplayDatabase(file)
+    db = sc2_serializer.ReplayDatabase(file)
     replay_data = db.getEntry(idx)
 
     starter_resources: dict[int, Resource] = {

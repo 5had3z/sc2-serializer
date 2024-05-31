@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from ._sc2_replay_reader import (
+from ._sc2_serializer import (
     ReplayDataAllDatabase,
     ReplayDataNoUnitsDatabase,
     ReplayDataScalarOnlyDatabase,
@@ -10,7 +10,7 @@ from ._sc2_replay_reader import (
     ReplayDataNoUnitsParser,
     ReplayDataScalarOnlyParser,
 )
-from ._sc2_replay_reader import *  # noqa : F403
+from ._sc2_serializer import *  # noqa : F403
 
 GAME_INFO_FILE = (Path(__file__).parent / "game_info.yaml").absolute()
 
