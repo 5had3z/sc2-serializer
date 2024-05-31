@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Scripts &mdash; StarCraft II Serializer  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=86f27845" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=eafc0fe6" />
+
+  
+  
+        <script src="_static/jquery.js?v=8dae8fb0"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Benchmarks" href="benchmark.html" />
+    <link rel="prev" title="Dataloading" href="dataloading.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            StarCraft II Serializer
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Welcome to sc2-serializer’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="replay_data.html">Replay Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dataloading.html">Dataloading</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Scripts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#find-all-versions">find_all_versions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gen-info-header">gen_info_header</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#gen-info-yaml">gen_info_yaml</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inspect-replay">inspect_replay</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#inspect_replay.inspect"><code class="docutils literal notranslate"><span class="pre">inspect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#inspect_replay.count"><code class="docutils literal notranslate"><span class="pre">count()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#make-partitions">make_partitions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#make_partitions.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#merge-info-yaml">merge_info_yaml</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#merge_info_yaml.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#replay-parallel">replay_parallel</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#replay_parallel.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#replay-sql">replay_sql</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#replay_sql.create"><code class="docutils literal notranslate"><span class="pre">create()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#replay_sql.create_individual"><code class="docutils literal notranslate"><span class="pre">create_individual()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#replay_sql.merge"><code class="docutils literal notranslate"><span class="pre">merge()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#review-resources">review_resources</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#review_resources.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="benchmark.html">Benchmarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cpp_api/index.html">C++ API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">StarCraft II Serializer</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Scripts</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/scripts.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="scripts">
+<span id="id1"></span><h1>Scripts<a class="headerlink" href="#scripts" title="Link to this heading"></a></h1>
+<p>Various helper scripts are included in the complete source code but not included in the python library, since they mostly deal with the dataset generation, rather than dataloading.</p>
+<section id="find-all-versions">
+<h2>find_all_versions<a class="headerlink" href="#find-all-versions" title="Link to this heading"></a></h2>
+</section>
+<section id="gen-info-header">
+<h2>gen_info_header<a class="headerlink" href="#gen-info-header" title="Link to this heading"></a></h2>
+<p>Generates generated_info.hpp</p>
+</section>
+<section id="gen-info-yaml">
+<h2>gen_info_yaml<a class="headerlink" href="#gen-info-yaml" title="Link to this heading"></a></h2>
+<p>Generates game_info.yaml</p>
+</section>
+<section id="inspect-replay">
+<h2>inspect_replay<a class="headerlink" href="#inspect-replay" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="inspect_replay.inspect">
+<span class="sig-prename descclassname"><span class="pre">inspect_replay.</span></span><span class="sig-name descname"><span class="pre">inspect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SubCommand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfolder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">PosixPath('/home/runner/work/sc2-serializer/sc2-serializer/docs/workspace')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/inspect_replay.html#inspect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inspect_replay.inspect" title="Link to this definition"></a></dt>
+<dd><p>Script to poke around and inspect the serialized replay data</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="inspect_replay.count">
+<span class="sig-prename descclassname"><span class="pre">inspect_replay.</span></span><span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/inspect_replay.html#count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inspect_replay.count" title="Link to this definition"></a></dt>
+<dd><p>Count number of replays in a set of shards</p>
+</dd></dl>
+
+</section>
+<section id="make-partitions">
+<h2>make_partitions<a class="headerlink" href="#make-partitions" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="make_partitions.main">
+<span class="sig-prename descclassname"><span class="pre">make_partitions.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/make_partitions.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#make_partitions.main" title="Link to this definition"></a></dt>
+<dd><p>Read folder or SC2 Replay files and generate a set of files that
+contain an even size distribution of SC2 replay filenames</p>
+</dd></dl>
+
+</section>
+<section id="merge-info-yaml">
+<h2>merge_info_yaml<a class="headerlink" href="#merge-info-yaml" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="merge_info_yaml.main">
+<span class="sig-prename descclassname"><span class="pre">merge_info_yaml.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/merge_info_yaml.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#merge_info_yaml.main" title="Link to this definition"></a></dt>
+<dd><p>Copies info from source yaml to destination yaml without duplication</p>
+</dd></dl>
+
+</section>
+<section id="replay-parallel">
+<h2>replay_parallel<a class="headerlink" href="#replay-parallel" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="replay_parallel.main">
+<span class="sig-prename descclassname"><span class="pre">replay_parallel.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">converter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfolder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replays</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">game</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replay_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_parallel</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/replay_parallel.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#replay_parallel.main" title="Link to this definition"></a></dt>
+<dd><p>Convert replays at a target folder with n_parallel processes</p>
+</dd></dl>
+
+</section>
+<section id="replay-sql">
+<h2>replay_sql<a class="headerlink" href="#replay-sql" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="replay_sql.create">
+<span class="sig-prename descclassname"><span class="pre">replay_sql.</span></span><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">PosixPath('/home/runner/work/sc2-serializer/sc2-serializer/docs')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'gamedata'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pod_offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/replay_sql.html#create"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#replay_sql.create" title="Link to this definition"></a></dt>
+<dd><p>Standard creation function to create sql database from dataloader
+Replay database(s) are gathered from environment variable DATAPATH</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="replay_sql.create_individual">
+<span class="sig-prename descclassname"><span class="pre">replay_sql.</span></span><span class="sig-name descname"><span class="pre">create_individual</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workspace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">PosixPath('.')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">workers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/replay_sql.html#create_individual"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#replay_sql.create_individual" title="Link to this definition"></a></dt>
+<dd><p>Create sql databases for each individual replay database.
+Replay database(s) are gathered from environment variable DATAPATH.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="replay_sql.merge">
+<span class="sig-prename descclassname"><span class="pre">replay_sql.</span></span><span class="sig-name descname"><span class="pre">merge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/replay_sql.html#merge"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#replay_sql.merge" title="Link to this definition"></a></dt>
+<dd><p>Merge all databases in directory to target</p>
+</dd></dl>
+
+</section>
+<section id="review-resources">
+<h2>review_resources<a class="headerlink" href="#review-resources" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="review_resources.main">
+<span class="sig-prename descclassname"><span class="pre">review_resources.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/review_resources.html#main"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#review_resources.main" title="Link to this definition"></a></dt>
+<dd><p>Plot how the resources are changing over time. Good to check our modifications
+with visibility and default values are working as expected</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="dataloading.html" class="btn btn-neutral float-left" title="Dataloading" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="benchmark.html" class="btn btn-neutral float-right" title="Benchmarks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bryce Ferenczi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

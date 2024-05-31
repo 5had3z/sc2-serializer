@@ -43,6 +43,7 @@
 <li class="toctree-l1"><a class="reference internal" href="index.html">Welcome to sc2-serializer’s documentation!</a></li>
 <li class="toctree-l1"><a class="reference internal" href="replay_data.html">Replay Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dataloading.html">Dataloading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="scripts.html">Scripts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="benchmark.html">Benchmarks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cpp_api/index.html">C++ API</a></li>
 </ul>
@@ -78,7 +79,9 @@
  | <a href="#C"><strong>C</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
+ | <a href="#I"><strong>I</strong></a>
  | <a href="#L"><strong>L</strong></a>
+ | <a href="#M"><strong>M</strong></a>
  | <a href="#R"><strong>R</strong></a>
  | <a href="#S"><strong>S</strong></a>
  
@@ -94,6 +97,12 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="scripts.html#inspect_replay.count">count() (in module inspect_replay)</a>
+</li>
+      <li><a href="scripts.html#replay_sql.create">create() (in module replay_sql)</a>
+</li>
+      <li><a href="scripts.html#replay_sql.create_individual">create_individual() (in module replay_sql)</a>
+</li>
       <li><a href="cpp_api/data_structures.html#_CPPv43cvt">cvt (C++ type)</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[1]</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[2]</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[3]</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[4]</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[5]</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[6]</a>, <a href="cpp_api/observer.html#_CPPv43cvt">[7]</a>, <a href="cpp_api/replay_parsing.html#_CPPv43cvt">[8]</a>, <a href="cpp_api/serializer.html#_CPPv43cvt">[9]</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt6ActionE">cvt::Action (C++ struct)</a>
@@ -570,12 +579,12 @@
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt5Score18collected_mineralsE">cvt::Score::collected_minerals (C++ member)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt5Score17collected_vespeneE">cvt::Score::collected_vespene (C++ member)</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt5Score24collection_rate_mineralsE">cvt::Score::collection_rate_minerals (C++ member)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt5Score23collection_rate_vespeneE">cvt::Score::collection_rate_vespene (C++ member)</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt5Score20idle_production_timeE">cvt::Score::idle_production_time (C++ member)</a>
@@ -1099,10 +1108,38 @@
   </ul></td>
 </tr></table>
 
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="scripts.html#inspect_replay.inspect">inspect() (in module inspect_replay)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="dataloading.html#sc2_serializer.example.SC2Dataset.load_from_parser">load_from_parser() (sc2_serializer.example.SC2Dataset method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="M">M</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="scripts.html#make_partitions.main">main() (in module make_partitions)</a>
+
+      <ul>
+        <li><a href="scripts.html#merge_info_yaml.main">(in module merge_info_yaml)</a>
+</li>
+        <li><a href="scripts.html#replay_parallel.main">(in module replay_parallel)</a>
+</li>
+        <li><a href="scripts.html#review_resources.main">(in module review_resources)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="scripts.html#replay_sql.merge">merge() (in module replay_sql)</a>
 </li>
   </ul></td>
 </tr></table>

@@ -1,4 +1,4 @@
-.. _api_data:
+.. _api_data_structures:
 
 Starcraft II Data Structures
 ============================

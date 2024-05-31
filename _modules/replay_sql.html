@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>replay_sql &mdash; StarCraft II Serializer  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  
+        <script src="../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            StarCraft II Serializer
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Welcome to sc2-serializer’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../replay_data.html">Replay Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dataloading.html">Dataloading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html">Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../benchmark.html">Benchmarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cpp_api/index.html">C++ API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">StarCraft II Serializer</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">replay_sql</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for replay_sql</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Annotated</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Literal</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">typer</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">Dataset</span>
+
+<span class="kn">from</span> <span class="nn">sc2_serializer</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">GAME_INFO_FILE</span><span class="p">,</span>
+    <span class="n">ReplayDataAllDatabase</span><span class="p">,</span>
+    <span class="n">ReplayDataAllParser</span><span class="p">,</span>
+    <span class="n">Score</span><span class="p">,</span>
+    <span class="n">set_replay_database_logger_level</span><span class="p">,</span>
+    <span class="n">spdlog_lvl</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Typer</span><span class="p">()</span>
+
+<span class="n">TABLE_NAME</span> <span class="o">=</span> <span class="s2">&quot;game_data&quot;</span>
+<span class="n">SQL_TYPES</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;INTEGER&quot;</span><span class="p">,</span> <span class="s2">&quot;FLOAT&quot;</span><span class="p">,</span> <span class="s2">&quot;TEXT&quot;</span><span class="p">,</span> <span class="s2">&quot;BOOLEAN&quot;</span><span class="p">]</span>
+<span class="n">ENUM_KEYS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;playerRace&quot;</span><span class="p">,</span> <span class="s2">&quot;playerResult&quot;</span><span class="p">}</span>
+<span class="n">LambdaFunctionType</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">ReplayDataAllParser</span><span class="p">],</span> <span class="nb">float</span> <span class="o">|</span> <span class="nb">int</span><span class="p">]</span>
+
+<span class="n">FEATURES</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SQL_TYPES</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;replayHash&quot;</span><span class="p">:</span> <span class="s2">&quot;TEXT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;gameVersion&quot;</span><span class="p">:</span> <span class="s2">&quot;TEXT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;playerId&quot;</span><span class="p">:</span> <span class="s2">&quot;INTEGER&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;playerRace&quot;</span><span class="p">:</span> <span class="s2">&quot;TEXT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;playerResult&quot;</span><span class="p">:</span> <span class="s2">&quot;TEXT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;playerMMR&quot;</span><span class="p">:</span> <span class="s2">&quot;INTEGER&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;playerAPM&quot;</span><span class="p">:</span> <span class="s2">&quot;INTEGER&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="c1"># Manually include additional columns</span>
+<span class="n">ADDITIONAL_COLUMNS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SQL_TYPES</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;partition&quot;</span><span class="p">:</span> <span class="s2">&quot;TEXT&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;idx&quot;</span><span class="p">:</span> <span class="s2">&quot;INTEGER&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;read_success&quot;</span><span class="p">:</span> <span class="s2">&quot;BOOLEAN&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;parse_success&quot;</span><span class="p">:</span> <span class="s2">&quot;BOOLEAN&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">ALL_ATTRIBUTES</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">attr</span>
+    <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">Score</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">Score</span><span class="p">,</span> <span class="n">attr</span><span class="p">))</span>
+    <span class="k">if</span> <span class="s2">&quot;__&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">attr</span>
+<span class="p">]</span>
+
+<span class="n">LAMBDA_COLUMNS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SQL_TYPES</span><span class="p">,</span> <span class="n">LambdaFunctionType</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;max_units&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;TEXT&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">y</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">units</span><span class="p">)),</span>
+    <span class="s2">&quot;game_length&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;INTEGER&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">gameStep</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])),</span>
+    <span class="s2">&quot;number_game_step&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;INTEGER&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">gameStep</span><span class="p">)),</span>
+    <span class="s2">&quot;initial_game_step&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;INTEGER&quot;</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="n">y</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">gameStep</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+    <span class="o">**</span><span class="p">{</span>
+        <span class="sa">f</span><span class="s2">&quot;final_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="p">(</span>
+            <span class="s2">&quot;FLOAT&quot;</span><span class="p">,</span>
+            <span class="p">(</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">y</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">score</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">key</span><span class="p">)))(</span><span class="n">i</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ALL_ATTRIBUTES</span>
+    <span class="p">},</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">upper_bound</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Find the index of the last element which is less or equal to value</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">argwhere</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">le</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">value</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+
+<span class="k">class</span> <span class="nc">SC2Replay</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Basic SC2 Replay Dataloader&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">basepath</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+        <span class="n">features</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+        <span class="n">lambda_columns</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SQL_TYPES</span><span class="p">,</span> <span class="n">LambdaFunctionType</span><span class="p">]],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">features</span> <span class="o">=</span> <span class="n">features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db_handle</span> <span class="o">=</span> <span class="n">ReplayDataAllDatabase</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="n">ReplayDataAllParser</span><span class="p">(</span><span class="n">GAME_INFO_FILE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lambda_columns</span> <span class="o">=</span> <span class="n">lambda_columns</span>
+
+        <span class="n">set_replay_database_logger_level</span><span class="p">(</span><span class="n">spdlog_lvl</span><span class="o">.</span><span class="n">warn</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">basepath</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">replays</span> <span class="o">=</span> <span class="p">[</span><span class="n">basepath</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">replays</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">basepath</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.SC2Replays&quot;</span><span class="p">))</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">replays</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;No .SC2Replays found in </span><span class="si">{</span><span class="n">basepath</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="n">replays_per_file</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">empty</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">replays</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+        <span class="n">replays_per_file</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">replay</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">replays</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_handle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">replay</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">FileNotFoundError</span>
+            <span class="n">replays_per_file</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_handle</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_accumulated_replays</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">replays_per_file</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_replays</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_accumulated_replays</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_replays</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;No replays in dataset&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_replays</span>
+
+    <span class="c1"># @profile</span>
+    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">index</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="n">file_index</span> <span class="o">=</span> <span class="n">upper_bound</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_accumulated_replays</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_handle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">replays</span><span class="p">[</span><span class="n">file_index</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="ne">FileNotFoundError</span>
+        <span class="n">db_index</span> <span class="o">=</span> <span class="n">index</span> <span class="o">-</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_accumulated_replays</span><span class="p">[</span><span class="n">file_index</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">replay_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_handle</span><span class="o">.</span><span class="n">getEntry</span><span class="p">(</span><span class="n">db_index</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">replay_data</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">popArmy</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;No data in replay&quot;</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">MemoryError</span><span class="p">,</span> <span class="ne">AssertionError</span><span class="p">):</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;partition&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">replays</span><span class="p">[</span><span class="n">file_index</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+                <span class="s2">&quot;idx&quot;</span><span class="p">:</span> <span class="n">db_index</span><span class="p">,</span>
+                <span class="s2">&quot;read_success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+                <span class="s2">&quot;parse_success&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">hash_</span><span class="p">,</span> <span class="n">id_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db_handle</span><span class="o">.</span><span class="n">getHashIdEntry</span><span class="p">(</span><span class="n">db_index</span><span class="p">)</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;playerId&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">id_</span>
+                <span class="n">data</span><span class="p">[</span><span class="s2">&quot;replayHash&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">hash_</span>
+            <span class="k">except</span> <span class="ne">MemoryError</span><span class="p">:</span>
+                <span class="k">pass</span>
+
+            <span class="k">return</span> <span class="n">data</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_replay</span><span class="p">(</span><span class="n">replay_data</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">IndexError</span><span class="p">,</span> <span class="ne">RuntimeError</span><span class="p">):</span>
+            <span class="n">parse_success</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">parse_success</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">info</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="p">}</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ENUM_KEYS</span> <span class="k">else</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">lambda_columns</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;partition&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">replays</span><span class="p">[</span><span class="n">file_index</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
+            <span class="s2">&quot;idx&quot;</span><span class="p">:</span> <span class="n">db_index</span><span class="p">,</span>
+            <span class="s2">&quot;read_success&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;parse_success&quot;</span><span class="p">:</span> <span class="n">parse_success</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">data</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+            <span class="k">yield</span> <span class="bp">self</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">add_to_database</span><span class="p">(</span><span class="n">cursor</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Cursor</span><span class="p">,</span> <span class="n">data_dict</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Add data yielded from dataloader to database&quot;&quot;&quot;</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">placeholders</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s2">&quot;?&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">data_dict</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="n">query</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        INSERT INTO </span><span class="si">{</span><span class="n">TABLE_NAME</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">columns</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">        VALUES (</span><span class="si">{</span><span class="n">placeholders</span><span class="si">}</span><span class="s2">)</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">data_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+
+
+<span class="k">def</span> <span class="nf">make_database</span><span class="p">(</span>
+    <span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">additional_columns</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SQL_TYPES</span><span class="p">],</span>
+    <span class="n">features</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SQL_TYPES</span><span class="p">],</span>
+    <span class="n">lambda_columns</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">SQL_TYPES</span><span class="p">,</span> <span class="n">LambdaFunctionType</span><span class="p">]],</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create database of replay metadata&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Removing existing database to start anew: </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+
+    <span class="c1"># Connect to the SQLite database (creates a new database if it doesn&#39;t exist)</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+
+    <span class="c1"># Create a cursor object to execute SQL commands</span>
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="c1"># Create a table with the specified headings and data types</span>
+    <span class="n">create_table_sql</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">        CREATE TABLE game_data (</span>
+<span class="s2">            </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">datatype</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">column</span><span class="p">,</span><span class="w"> </span><span class="n">datatype</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">additional_columns</span><span class="o">.</span><span class="n">items</span><span class="p">())</span><span class="si">}</span><span class="s2">,</span>
+<span class="s2">            </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">datatype</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">column</span><span class="p">,</span><span class="w"> </span><span class="n">datatype</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">features</span><span class="o">.</span><span class="n">items</span><span class="p">())</span><span class="si">}</span><span class="s2">,</span>
+<span class="s2">            </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">datatype</span><span class="si">}</span><span class="s2">&quot;</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">column</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">datatype</span><span class="p">,</span><span class="w"> </span><span class="n">_</span><span class="p">)</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">lambda_columns</span><span class="o">.</span><span class="n">items</span><span class="p">())</span><span class="si">}</span>
+<span class="s2">        )</span>
+<span class="s2">    &quot;&quot;&quot;</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">create_table_sql</span><span class="p">)</span>
+    <span class="n">cursor</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">conn</span>
+
+
+<span class="k">def</span> <span class="nf">make_standard</span><span class="p">(</span><span class="n">workspace</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create dataset and sql from standard replay dataset&quot;&quot;&quot;</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">SC2Replay</span><span class="p">(</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DATAPATH&quot;</span><span class="p">]),</span> <span class="nb">set</span><span class="p">(</span><span class="n">FEATURES</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">LAMBDA_COLUMNS</span>
+    <span class="p">)</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">make_database</span><span class="p">(</span>
+        <span class="n">workspace</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">.db&quot;</span><span class="p">,</span> <span class="n">ADDITIONAL_COLUMNS</span><span class="p">,</span> <span class="n">FEATURES</span><span class="p">,</span> <span class="n">LAMBDA_COLUMNS</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">conn</span>
+
+
+<span class="k">def</span> <span class="nf">make_kubernetes</span><span class="p">(</span><span class="n">workspace</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">pod_offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create sql database per pod index, replay database must be indexed&quot;&quot;&quot;</span>
+    <span class="n">number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;POD_NAME&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">pod_offset</span>
+    <span class="n">dataset</span> <span class="o">=</span> <span class="n">SC2Replay</span><span class="p">(</span>
+        <span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DATAPATH&quot;</span><span class="p">])</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;db_</span><span class="si">{</span><span class="n">number</span><span class="si">}</span><span class="s2">.SC2Replays&quot;</span><span class="p">,</span>
+        <span class="nb">set</span><span class="p">(</span><span class="n">FEATURES</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span>
+        <span class="n">LAMBDA_COLUMNS</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">db_file</span> <span class="o">=</span> <span class="n">workspace</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">number</span><span class="si">}</span><span class="s2">.db&quot;</span>
+    <span class="k">if</span> <span class="n">db_file</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="n">file_size_bytes</span> <span class="o">=</span> <span class="n">db_file</span><span class="o">.</span><span class="n">stat</span><span class="p">()</span><span class="o">.</span><span class="n">st_size</span>
+
+        <span class="c1"># Convert bytes to megabytes</span>
+        <span class="n">file_size_mb</span> <span class="o">=</span> <span class="n">file_size_bytes</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found existing file: </span><span class="si">{</span><span class="n">db_file</span><span class="si">}</span><span class="s2"> with size </span><span class="si">{</span><span class="n">file_size_mb</span><span class="si">}</span><span class="s2">MB&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">file_size_mb</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;skipping file which exists....&quot;</span><span class="p">)</span>
+            <span class="n">exit</span><span class="p">()</span>
+
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">make_database</span><span class="p">(</span><span class="n">db_file</span><span class="p">,</span> <span class="n">ADDITIONAL_COLUMNS</span><span class="p">,</span> <span class="n">FEATURES</span><span class="p">,</span> <span class="n">LAMBDA_COLUMNS</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dataset</span><span class="p">,</span> <span class="n">conn</span>
+
+
+<div class="viewcode-block" id="create">
+<a class="viewcode-back" href="../scripts.html#replay_sql.create">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">create</span><span class="p">(</span>
+    <span class="n">workspace</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">()]</span> <span class="o">=</span> <span class="n">Path</span><span class="p">()</span><span class="o">.</span><span class="n">cwd</span><span class="p">(),</span>
+    <span class="n">workers</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">()]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">name</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">()]</span> <span class="o">=</span> <span class="s2">&quot;gamedata&quot;</span><span class="p">,</span>
+    <span class="n">pod_offset</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">(</span><span class="n">help</span><span class="o">=</span><span class="s2">&quot;Apply offset to k8s pod index&quot;</span><span class="p">)]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Standard creation function to create sql database from dataloader</span>
+<span class="sd">    Replay database(s) are gathered from environment variable DATAPATH</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s2">&quot;POD_NAME&quot;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
+        <span class="n">dataset</span><span class="p">,</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">make_kubernetes</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">pod_offset</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">dataset</span><span class="p">,</span> <span class="n">conn</span> <span class="o">=</span> <span class="n">make_standard</span><span class="p">(</span><span class="n">workspace</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+    <span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="n">workers</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="k">with</span> <span class="n">typer</span><span class="o">.</span><span class="n">progressbar</span><span class="p">(</span><span class="n">dataloader</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">dataloader</span><span class="p">))</span> <span class="k">as</span> <span class="n">pbar</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">pbar</span><span class="p">:</span>
+            <span class="n">sample</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+            <span class="n">converted_d</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Tensor</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">sample</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">}</span>
+            <span class="n">add_to_database</span><span class="p">(</span><span class="n">cursor</span><span class="p">,</span> <span class="n">converted_d</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">pbar</span><span class="o">.</span><span class="n">pos</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="n">cursor</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="create_individual">
+<a class="viewcode-back" href="../scripts.html#replay_sql.create_individual">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">create_individual</span><span class="p">(</span>
+    <span class="n">workspace</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">()]</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">),</span>
+    <span class="n">workers</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">typer</span><span class="o">.</span><span class="n">Option</span><span class="p">()]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create sql databases for each individual replay database.</span>
+<span class="sd">    Replay database(s) are gathered from environment variable DATAPATH.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">replay_files</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DATAPATH&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.SC2Replays&quot;</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">replay_files</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;DATAPATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>  <span class="c1"># Override DATAPATH with individual file</span>
+            <span class="n">create</span><span class="p">(</span><span class="n">workspace</span><span class="o">=</span><span class="n">workspace</span><span class="p">,</span> <span class="n">workers</span><span class="o">=</span><span class="n">workers</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed Replay </span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2"> with exception: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">merge_databases</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Function to merge databases&quot;&quot;&quot;</span>
+    <span class="c1"># Connect to the source database</span>
+    <span class="n">source_conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+    <span class="n">source_cursor</span> <span class="o">=</span> <span class="n">source_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="c1"># Get column names from the source database</span>
+    <span class="n">source_cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;PRAGMA table_info(</span><span class="si">{</span><span class="n">TABLE_NAME</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">column</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">source_cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()]</span>
+
+    <span class="c1"># Connect to the target database and create the table if it doesn&#39;t exist</span>
+    <span class="n">target_conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+    <span class="n">target_cursor</span> <span class="o">=</span> <span class="n">target_conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+    <span class="c1"># Generate the INSERT statement dynamically based on the columns</span>
+    <span class="n">columns_str</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">placeholders_str</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s2">&quot;?&quot;</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">])</span>
+
+    <span class="n">insert_statement</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;INSERT INTO </span><span class="si">{</span><span class="n">TABLE_NAME</span><span class="si">}</span><span class="s2"> &quot;</span> <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">columns_str</span><span class="si">}</span><span class="s2">) &quot;</span> <span class="sa">f</span><span class="s2">&quot;VALUES (</span><span class="si">{</span><span class="n">placeholders_str</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Fetch data from the source database</span>
+    <span class="n">source_cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;SELECT * FROM </span><span class="si">{</span><span class="n">TABLE_NAME</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">data_from_source</span> <span class="o">=</span> <span class="n">source_cursor</span><span class="o">.</span><span class="n">fetchall</span><span class="p">()</span>
+
+    <span class="c1"># Insert data into the target database</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">data_from_source</span><span class="p">:</span>
+        <span class="n">target_cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">insert_statement</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span>
+
+    <span class="c1"># Commit changes and close connections</span>
+    <span class="n">target_conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="n">target_cursor</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">target_conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">source_cursor</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">source_conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="merge">
+<a class="viewcode-back" href="../scripts.html#replay_sql.merge">[docs]</a>
+<span class="nd">@app</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="n">folder</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge all databases in directory to target&quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="n">folder</span> <span class="o">!=</span> <span class="n">target</span><span class="o">.</span><span class="n">parent</span>
+    <span class="p">),</span> <span class="s2">&quot;Target should not be in directory of files to parse&quot;</span>
+    <span class="k">assert</span> <span class="n">folder</span><span class="o">.</span><span class="n">is_dir</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">folder</span><span class="si">}</span><span class="s2"> is not a folder&quot;</span>
+
+    <span class="c1"># Loop through all databases in the directory</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">source</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">folder</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.db&quot;</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">target</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># Merge the databases</span>
+            <span class="n">merge_databases</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">app</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bryce Ferenczi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
