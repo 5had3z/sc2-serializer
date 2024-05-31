@@ -10,9 +10,12 @@ import yaml
 from pysc2.lib.actions import FUNCTIONS
 
 # Read game info file to load action/upgrade data
-_game_info_file = Path(__file__).parent / "game_info.yaml"
+_game_info_file = (
+    Path(__file__).parent.parent.parent / "src" / "sc2_replay_reader" / "game_info.yaml"
+)
 with open(_game_info_file, "r", encoding="utf-8") as f:
     _game_data = yaml.safe_load(f)
+
 _version_mapping: dict[str, dict[str, int]] = {}
 for _game_version in _game_data:
     # Use Name, Friendly Name and PySC2 Name to try and get a match

@@ -14,7 +14,7 @@ from pathlib import Path
 import typer
 from pysc2.lib.units import Neutral, Protoss, Terran, Zerg
 
-from sc2_replay_reader import upgrade_map
+from utils import upgrade_map
 
 app = typer.Typer()
 

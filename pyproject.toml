@@ -22,7 +22,7 @@ authors = [
     { name = "Rhys Newbury", email = "newbury777@gmail.com" },
 ]
 version = "0.0.1"
-description = "Python bindings to read generated database from sc2-serializer"
+description = "Python bindings to read files from sc2-serializer"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
@@ -34,9 +34,10 @@ classifiers = [
     "Operating System :: OS Independent",
     "Natural Language :: English",
 ]
+dependencies = ["numpy"]
 
 [project.optional-dependencies]
-database = ["torch >=1.11.0", "typer>=0.9.0"]
+database = ["torch>=1.11.0", "typer>=0.9.0"]
 
 [project.urls]
 "Homepage" = "https://github.com/5had3z/sc2-serializer"

@@ -157,7 +157,7 @@ if(SC2_CONVERTER)
   add_custom_command(
     TARGET replay_converter
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/src/sc2_replay_reader/replay_version.py
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/scripts/utils/replay_version.py
             $<TARGET_FILE_DIR:replay_converter>)
 
   if(MSVC)
