@@ -13,7 +13,7 @@ jobs:
           sudo apt-get install doxygen sphinx-doc cmake pipx python3-sphinx-rtd-theme python3-breathe libboost-iostreams1.74-dev libtbb-dev
           pipx install black git+https://github.com/5had3z/pybind11-stubgen.git
           pip3 install torch --index-url https://download.pytorch.org/whl/cpu --break-system-packages
-          pip3 install typer matplotlib opencv-python-headless --break-system-packages
+          pip3 install typer matplotlib opencv-python-headless mpyq --break-system-packages
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Build main library for python bindings
