@@ -44,11 +44,11 @@ class ReplaySampler(ABC):
         train_size = int(dataset_size * self.train_ratio)
 
         if self.is_train:
-            start_idx = train_size
-            n_replays = dataset_size - train_size
-        else:
             start_idx = 0
             n_replays = train_size
+        else:
+            start_idx = train_size
+            n_replays = dataset_size - train_size
 
         assert n_replays > 0, f"n_replays is not greater than zero: {n_replays}"
 
