@@ -126,11 +126,11 @@
         <span class="n">train_size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">dataset_size</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_ratio</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_train</span><span class="p">:</span>
-            <span class="n">start_idx</span> <span class="o">=</span> <span class="n">train_size</span>
-            <span class="n">n_replays</span> <span class="o">=</span> <span class="n">dataset_size</span> <span class="o">-</span> <span class="n">train_size</span>
-        <span class="k">else</span><span class="p">:</span>
             <span class="n">start_idx</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="n">n_replays</span> <span class="o">=</span> <span class="n">train_size</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">start_idx</span> <span class="o">=</span> <span class="n">train_size</span>
+            <span class="n">n_replays</span> <span class="o">=</span> <span class="n">dataset_size</span> <span class="o">-</span> <span class="n">train_size</span>
 
         <span class="k">assert</span> <span class="n">n_replays</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;n_replays is not greater than zero: </span><span class="si">{</span><span class="n">n_replays</span><span class="si">}</span><span class="s2">&quot;</span>
 
