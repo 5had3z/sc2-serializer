@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 from sc2_serializer.example import SC2Dataset
-from sc2_serializer.sampler import SQLSampler
+from sc2_serializer.sampler import BasicSampler, SQLSampler
 from sc2_serializer import get_database_and_parser, StepDataSoA
 
 _DEFAULT_REPLAYS = "/mnt/datasets/sc2-tournament"
@@ -31,18 +31,53 @@ def test_replay_database_ops(has_units: bool, has_minimaps: bool):
         parser.parse_replay(replay1)
 
 
-def test_pytorch_sql_example():
-    """Test able to yield data from the example dataset"""
-    filters = [
-        "game_length > 6720",
-        "parse_success = 1",
-        "number_game_step > 1024",
-        "playerAPM > 100",
-    ]
-    replays_path = Path(os.environ.get("DATAPATH", _DEFAULT_REPLAYS))
-    sampler = SQLSampler(
-        "$ENV:gamedata.db", replays_path, filters, train_ratio=0.8, is_train=True
-    )
+_REPLAYS_PATH = Path(os.environ.get("DATAPATH", _DEFAULT_REPLAYS))
+
+
+@pytest.mark.parametrize(
+    "sampler",
+    [
+        SQLSampler(
+            "$ENV:gamedata.db",
+            _REPLAYS_PATH,
+            [
+                "game_length > 6720",
+                "parse_success = 1",
+                "number_game_step > 1024",
+                "playerAPM > 100",
+            ],
+            train_ratio=0.8,
+            is_train=True,
+        ),
+        BasicSampler(_REPLAYS_PATH, train_ratio=0.8, is_train=True),
+    ],
+)
+def test_pytorch_example(sampler):
+    """Test able to yield data from the example dataset, some sample data might have issues so
+    might have to attempt a few times (e.g. missing alert data on older game versions).
+    """
     dataset = SC2Dataset(sampler, features=["minimaps", "scalars"])
-    test_sample = dataset[0]
-    assert test_sample
+
+    tries = 0
+    MAX_TRY = 10
+    while tries < MAX_TRY:
+        try:
+            idx = tries * (len(dataset) // MAX_TRY)
+            test_sample = dataset[idx]
+            assert test_sample
+        except RuntimeError as err:
+            if str(err) == "Tried to get alerts data but it was empty":
+                tries += 1
+            else:
+                raise RuntimeError from err
+        else:
+            break
+
+    if tries >= MAX_TRY:
+        raise RuntimeError("FAILED TO READ ANY REPLAY")
+
+    with pytest.raises(IndexError):
+        test_sample = sampler[len(sampler)]
+
+    with pytest.raises(IndexError):
+        test_sample = dataset[len(dataset)]

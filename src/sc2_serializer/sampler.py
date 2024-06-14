@@ -21,15 +21,21 @@ class ReplaySampler(ABC):
         self.is_train = is_train
 
     @abstractmethod
-    def __len__(self) -> int:
-        ...
+    def __len__(self) -> int: ...
+
+    def __getitem__(self, index: int) -> tuple[Path, int]:
+        """Magic method that forwards to `sample`"""
+        return self.sample(index)
 
     @abstractmethod
     def sample(self, index: int) -> tuple[Path, int]:
         """Sample 'index' from replays by calculating the file and index in that file to sample at.
 
+        Args:
+            index (int): Index from 'global' dataset to sample
+
         Returns:
-            tuple[Path,int]: Filepath to database and index
+            tuple[Path,int]: Filepath to database and index to sample from.
         """
 
     def get_split_params(self, dataset_size: int):
@@ -99,6 +105,8 @@ class BasicSampler(ReplaySampler):
         return self.n_replays
 
     def sample(self, index: int) -> tuple[Path, int]:
+        if index >= len(self):
+            raise IndexError(f"{index=} out of range {len(self)}")
         file_index = upper_bound(self._accumulated_replays, self.start_idx + index)
         db_index = index - int(self._accumulated_replays[file_index].item())
         return self.replays[file_index], db_index
@@ -160,6 +168,8 @@ class SQLSampler(ReplaySampler):
         return self.n_replays
 
     def sample(self, index: int) -> tuple[Path, int]:
+        if index >= len(self):
+            raise IndexError(f"{index=} out of range {len(self)}")
         query = self.filter_query[:-1] + f" LIMIT 1 OFFSET {self.start_idx + index};"
 
         with closing(sqlite3.connect(self.database_path)) as db:
