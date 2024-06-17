@@ -38,7 +38,7 @@ _REPLAYS_PATH = Path(os.environ.get("DATAPATH", _DEFAULT_REPLAYS))
     "sampler",
     [
         SQLSampler(
-            "$ENV:gamedata.db",
+            f"{_DEFAULT_REPLAYS}/gamedata.db",
             _REPLAYS_PATH,
             [
                 "game_length > 6720",

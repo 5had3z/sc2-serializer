@@ -21,7 +21,8 @@ class ReplaySampler(ABC):
         self.is_train = is_train
 
     @abstractmethod
-    def __len__(self) -> int: ...
+    def __len__(self) -> int:
+        ...
 
     def __getitem__(self, index: int) -> tuple[Path, int]:
         """Magic method that forwards to `sample`"""
@@ -201,4 +202,4 @@ def upper_bound(x: np.ndarray, value: float) -> int:
     """
     Find the index of the last element which is less or equal to value
     """
-    return int(np.argwhere(x <= value)[-1])
+    return np.argwhere(x <= value)[-1].item()

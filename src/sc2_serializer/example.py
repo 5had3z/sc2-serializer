@@ -14,7 +14,7 @@ from . import get_database_and_parser, Result
 from .sampler import ReplaySampler
 
 
-@dataclass
+@dataclass(slots=True)
 class TimeRange:
     """Parameters for a range of time points"""
 
@@ -36,6 +36,11 @@ def find_closest_indices(options: Sequence[int], targets: Sequence[int]):
     """
     tgt_idx = 0
     nearest = torch.full([len(targets)], -1, dtype=torch.int32)
+
+    # Edge case where target for tick 0 but first observation is not at tick 0
+    if targets[0] < options[0]:
+        nearest[0] = 0
+
     for idx, (prv, nxt) in enumerate(zip(options, options[1:])):
         if prv > targets[tgt_idx]:  # not in between, skip
             tgt_idx += 1
@@ -44,6 +49,7 @@ def find_closest_indices(options: Sequence[int], targets: Sequence[int]):
             tgt_idx += 1
         if tgt_idx == nearest.nelement():
             break
+
     return nearest
 
 
@@ -55,7 +61,8 @@ class SC2Dataset(Dataset):
 
     Args:
         sampler (ReplaySampler): Sampler that yields a replay file and index in that file.
-        features (list[str], optional): List of step data features to use. (default: [minimaps, scalars])
+        features (list[str], optional): List of step data features to use. (default: [minimaps,
+        scalars])
         timepoints (TimeRange): Timepoints in the replay to sample from.
     """
 
@@ -101,17 +108,16 @@ class SC2Dataset(Dataset):
         Return:
             dict [str, Tensor]: observation data, True if valid mask, and game outcome
         """
-        outputs_list = self.parser.sample(0)
-        outputs_list = {k: [outputs_list[k]] for k in self.features}
+        outputs_list = {k: [] for k in self.features}
 
         sample_indices = find_closest_indices(
-            self.parser.data.gameStep, self._target_game_loops[1:]
+            self.parser.data.gameStep, self._target_game_loops
         )
         for idx in sample_indices:
             if idx == -1:
                 sample = {k: np.zeros_like(outputs_list[k][-1]) for k in outputs_list}
             else:
-                sample = self.parser.sample(int(idx.item()))
+                sample = self.parser.sample_all(int(idx.item()))
             for k in outputs_list:
                 outputs_list[k].append(sample[k])
 
