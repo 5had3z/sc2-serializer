@@ -454,18 +454,102 @@
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser6sampleENSt6size_tEb">
-<span id="_CPPv3NK3cvt12ReplayParser6sampleENSt6size_tEb"></span><span id="_CPPv2NK3cvt12ReplayParser6sampleENSt6size_tEb"></span><span id="cvt::ReplayParser::sample__std::s.bC"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a4a74bee74e01640b2a7cbf78b1eb6797"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sample</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">timeIdx</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">unit_alliance</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">py</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dict</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser6sampleENSt6size_tEb" title="Link to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser9sampleAllENSt6size_tEb">
+<span id="_CPPv3NK3cvt12ReplayParser9sampleAllENSt6size_tEb"></span><span id="_CPPv2NK3cvt12ReplayParser9sampleAllENSt6size_tEb"></span><span id="cvt::ReplayParser::sampleAll__std::s.bC"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a5f45da1e63e24dc86a36c7e4463ba432"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sampleAll</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">unit_alliance</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">py</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dict</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser9sampleAllENSt6size_tEb" title="Link to this definition"></a><br /></dt>
 <dd><p>Get a python dictionary containing features from that timestep. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>timeIdx</strong> – time index to sample </p></li>
+<li><p><strong>index</strong> – index of replay sample </p></li>
 <li><p><strong>unit_alliance</strong> – Whether to group units by alliance in a dictionary (default: false) </p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Dictionary containing feature data at that point in time </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser11sampleUnitsENSt6size_tE">
+<span id="_CPPv3NK3cvt12ReplayParser11sampleUnitsENSt6size_tE"></span><span id="_CPPv2NK3cvt12ReplayParser11sampleUnitsENSt6size_tE"></span><span id="cvt::ReplayParser::sampleUnits__std::sC"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a5054eaba0d54cf71ec5b3eab42859665"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sampleUnits</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser11sampleUnitsENSt6size_tE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sample all unit data from replay at index. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> – Index from replay to sample from </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="data_structures.html#d4/d9b/structcvt_1_1Unit"><span class="std std-ref">Unit</span></a> data transformed into an array [N,D] where N is number of units, D is dimensionality of the feature vector of each unit. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser24sampleUnitsGroupAllianceENSt6size_tE">
+<span id="_CPPv3NK3cvt12ReplayParser24sampleUnitsGroupAllianceENSt6size_tE"></span><span id="_CPPv2NK3cvt12ReplayParser24sampleUnitsGroupAllianceENSt6size_tE"></span><span id="cvt::ReplayParser::sampleUnitsGroupAlliance__std::sC"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1ac4bf029202b3788c4f61a9d429284251"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sampleUnitsGroupAlliance</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser24sampleUnitsGroupAllianceENSt6size_tE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sample unit data from replay at index, grouped into dictionary of alliances. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> – Index from replay to sample from </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary of unit data transformed into a [N,D] array grouped by alliance </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser18sampleNeutralUnitsENSt6size_tE">
+<span id="_CPPv3NK3cvt12ReplayParser18sampleNeutralUnitsENSt6size_tE"></span><span id="_CPPv2NK3cvt12ReplayParser18sampleNeutralUnitsENSt6size_tE"></span><span id="cvt::ReplayParser::sampleNeutralUnits__std::sC"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a29b70313428a4f1f028f57679c17d748"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sampleNeutralUnits</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser18sampleNeutralUnitsENSt6size_tE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sample neutral unit data from replay at index. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> – Index from replay to sample from </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Neutral <a class="reference internal" href="data_structures.html#d4/d9b/structcvt_1_1Unit"><span class="std std-ref">Unit</span></a> data transformed into a [N,D] array </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser13sampleActionsENSt6size_tE">
+<span id="_CPPv3NK3cvt12ReplayParser13sampleActionsENSt6size_tE"></span><span id="_CPPv2NK3cvt12ReplayParser13sampleActionsENSt6size_tE"></span><span id="cvt::ReplayParser::sampleActions__std::sC"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a599d6e6a06d032c323ea2d38a0cb6738"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sampleActions</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser13sampleActionsENSt6size_tE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sample action from replay at index. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> – Index from replay to sample from </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of actions made by the player in the native struct form </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser14sampleMinimapsENSt6size_tE">
+<span id="_CPPv3NK3cvt12ReplayParser14sampleMinimapsENSt6size_tE"></span><span id="_CPPv2NK3cvt12ReplayParser14sampleMinimapsENSt6size_tE"></span><span id="cvt::ReplayParser::sampleMinimaps__std::sC"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a87271acd03cc84795a5b61448c551437"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sampleMinimaps</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser14sampleMinimapsENSt6size_tE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sample minimap data from replay at index. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> – Index from replay to sample from </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Minimap data transformed into an tensor [C,H,W] of the layers specified by minimapFeatureFlags </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK3cvt12ReplayParser13sampleScalarsENSt6size_tE">
+<span id="_CPPv3NK3cvt12ReplayParser13sampleScalarsENSt6size_tE"></span><span id="_CPPv2NK3cvt12ReplayParser13sampleScalarsENSt6size_tE"></span><span id="cvt::ReplayParser::sampleScalars__std::sC"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a938cea2e22bfaf82b7efe3a9a7aba60e"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sampleScalars</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK3cvt12ReplayParser13sampleScalarsENSt6size_tE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sample scalar data from replay at index. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> – Index from replay to sample from </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Scalar data transformed into a vector </p>
 </dd>
 </dl>
 </dd></dl>
@@ -513,6 +597,19 @@
 </dd>
 </dl>
 </dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-types">Private Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser9feature_tE">
+<span id="_CPPv3N3cvt12ReplayParser9feature_tE"></span><span id="_CPPv2N3cvt12ReplayParser9feature_tE"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a27898cfe6a01517192fa8a4e3d97e2ac"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">feature_t</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser9feature_tE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt12ReplayParser11step_data_tE">
+<span id="_CPPv3N3cvt12ReplayParser11step_data_tE"></span><span id="_CPPv2N3cvt12ReplayParser11step_data_tE"></span><span class="target" id="dc/d19/classcvt_1_1ReplayParser_1a716bac49f8c0fb754539d94a6ff2bc58"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">step_data_t</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3cvt12ReplayParserE" title="cvt::ReplayParser::ReplayDataType"><span class="n"><span class="pre">ReplayDataType</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">step_type</span></span><a class="headerlink" href="#_CPPv4N3cvt12ReplayParser11step_data_tE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">

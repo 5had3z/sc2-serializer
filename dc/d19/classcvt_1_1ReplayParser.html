@@ -106,9 +106,27 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a9f0ff2292ac76862bc4b09f7386a90e4" id="r_a9f0ff2292ac76862bc4b09f7386a90e4"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html#a9f0ff2292ac76862bc4b09f7386a90e4">getMinimapFeatures</a> () const -&gt; py::list</td></tr>
 <tr class="memdesc:a9f0ff2292ac76862bc4b09f7386a90e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the names of the minimap features of the currently set bits. If expandPlayerRelative is set then this will replace [..., player_relative, ...] with [..., self, ally, neutral, enemy, ...].  <br /></td></tr>
 <tr class="separator:a9f0ff2292ac76862bc4b09f7386a90e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4a74bee74e01640b2a7cbf78b1eb6797" id="r_a4a74bee74e01640b2a7cbf78b1eb6797"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html#a4a74bee74e01640b2a7cbf78b1eb6797">sample</a> (std::size_t timeIdx, bool unit_alliance=false) const -&gt; py::dict</td></tr>
-<tr class="memdesc:a4a74bee74e01640b2a7cbf78b1eb6797"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a python dictionary containing features from that timestep.  <br /></td></tr>
-<tr class="separator:a4a74bee74e01640b2a7cbf78b1eb6797"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5f45da1e63e24dc86a36c7e4463ba432" id="r_a5f45da1e63e24dc86a36c7e4463ba432"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html#a5f45da1e63e24dc86a36c7e4463ba432">sampleAll</a> (std::size_t index, bool unit_alliance=false) const -&gt; py::dict</td></tr>
+<tr class="memdesc:a5f45da1e63e24dc86a36c7e4463ba432"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a python dictionary containing features from that timestep.  <br /></td></tr>
+<tr class="separator:a5f45da1e63e24dc86a36c7e4463ba432"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5054eaba0d54cf71ec5b3eab42859665" id="r_a5054eaba0d54cf71ec5b3eab42859665"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html#a5054eaba0d54cf71ec5b3eab42859665">sampleUnits</a> (std::size_t index) const</td></tr>
+<tr class="memdesc:a5054eaba0d54cf71ec5b3eab42859665"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sample all unit data from replay at index.  <br /></td></tr>
+<tr class="separator:a5054eaba0d54cf71ec5b3eab42859665"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4bf029202b3788c4f61a9d429284251" id="r_ac4bf029202b3788c4f61a9d429284251"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html#ac4bf029202b3788c4f61a9d429284251">sampleUnitsGroupAlliance</a> (std::size_t index) const</td></tr>
+<tr class="memdesc:ac4bf029202b3788c4f61a9d429284251"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sample unit data from replay at index, grouped into dictionary of alliances.  <br /></td></tr>
+<tr class="separator:ac4bf029202b3788c4f61a9d429284251"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a29b70313428a4f1f028f57679c17d748" id="r_a29b70313428a4f1f028f57679c17d748"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html#a29b70313428a4f1f028f57679c17d748">sampleNeutralUnits</a> (std::size_t index) const</td></tr>
+<tr class="memdesc:a29b70313428a4f1f028f57679c17d748"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sample neutral unit data from replay at index.  <br /></td></tr>
+<tr class="separator:a29b70313428a4f1f028f57679c17d748"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a599d6e6a06d032c323ea2d38a0cb6738" id="r_a599d6e6a06d032c323ea2d38a0cb6738"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html#a599d6e6a06d032c323ea2d38a0cb6738">sampleActions</a> (std::size_t index) const</td></tr>
+<tr class="memdesc:a599d6e6a06d032c323ea2d38a0cb6738"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sample action from replay at index.  <br /></td></tr>
+<tr class="separator:a599d6e6a06d032c323ea2d38a0cb6738"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a87271acd03cc84795a5b61448c551437" id="r_a87271acd03cc84795a5b61448c551437"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html#a87271acd03cc84795a5b61448c551437">sampleMinimaps</a> (std::size_t index) const</td></tr>
+<tr class="memdesc:a87271acd03cc84795a5b61448c551437"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sample minimap data from replay at index.  <br /></td></tr>
+<tr class="separator:a87271acd03cc84795a5b61448c551437"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a938cea2e22bfaf82b7efe3a9a7aba60e" id="r_a938cea2e22bfaf82b7efe3a9a7aba60e"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html#a938cea2e22bfaf82b7efe3a9a7aba60e">sampleScalars</a> (std::size_t index) const</td></tr>
+<tr class="memdesc:a938cea2e22bfaf82b7efe3a9a7aba60e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sample scalar data from replay at index.  <br /></td></tr>
+<tr class="separator:a938cea2e22bfaf82b7efe3a9a7aba60e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a96be5d9db7170f1653f299b8474e8503" id="r_a96be5d9db7170f1653f299b8474e8503"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html#a96be5d9db7170f1653f299b8474e8503">size</a> () const noexcept -&gt; std::size_t</td></tr>
 <tr class="memdesc:a96be5d9db7170f1653f299b8474e8503"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of timesteps in the replay.  <br /></td></tr>
 <tr class="separator:a96be5d9db7170f1653f299b8474e8503"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -319,8 +337,8 @@ template&lt;typename ReplayDataType &gt; </div>
 
 </div>
 </div>
-<a id="a4a74bee74e01640b2a7cbf78b1eb6797" name="a4a74bee74e01640b2a7cbf78b1eb6797"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a4a74bee74e01640b2a7cbf78b1eb6797">&#9670;&#160;</a></span>sample()</h2>
+<a id="a599d6e6a06d032c323ea2d38a0cb6738" name="a599d6e6a06d032c323ea2d38a0cb6738"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a599d6e6a06d032c323ea2d38a0cb6738">&#9670;&#160;</a></span>sampleActions()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -331,10 +349,47 @@ template&lt;typename ReplayDataType &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto <a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html">cvt::ReplayParser</a>&lt; ReplayDataType &gt;::sample </td>
+          <td class="memname">auto <a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html">cvt::ReplayParser</a>&lt; ReplayDataType &gt;::sampleActions </td>
           <td>(</td>
           <td class="paramtype">std::size_t&#160;</td>
-          <td class="paramname"><em>timeIdx</em>, </td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sample action from replay at index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>Index from replay to sample from </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>List of actions made by the player in the native struct form </dd></dl>
+
+</div>
+</div>
+<a id="a5f45da1e63e24dc86a36c7e4463ba432" name="a5f45da1e63e24dc86a36c7e4463ba432"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f45da1e63e24dc86a36c7e4463ba432">&#9670;&#160;</a></span>sampleAll()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ReplayDataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html">cvt::ReplayParser</a>&lt; ReplayDataType &gt;::sampleAll </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -359,12 +414,197 @@ template&lt;typename ReplayDataType &gt; </div>
 <p>Get a python dictionary containing features from that timestep. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">timeIdx</td><td>time index to sample </td></tr>
+    <tr><td class="paramname">index</td><td>index of replay sample </td></tr>
     <tr><td class="paramname">unit_alliance</td><td>Whether to group units by alliance in a dictionary (default: false) </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Dictionary containing feature data at that point in time </dd></dl>
+
+</div>
+</div>
+<a id="a87271acd03cc84795a5b61448c551437" name="a87271acd03cc84795a5b61448c551437"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87271acd03cc84795a5b61448c551437">&#9670;&#160;</a></span>sampleMinimaps()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ReplayDataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html">cvt::ReplayParser</a>&lt; ReplayDataType &gt;::sampleMinimaps </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sample minimap data from replay at index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>Index from replay to sample from </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Minimap data transformed into an tensor [C,H,W] of the layers specified by minimapFeatureFlags </dd></dl>
+
+</div>
+</div>
+<a id="a29b70313428a4f1f028f57679c17d748" name="a29b70313428a4f1f028f57679c17d748"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a29b70313428a4f1f028f57679c17d748">&#9670;&#160;</a></span>sampleNeutralUnits()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ReplayDataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html">cvt::ReplayParser</a>&lt; ReplayDataType &gt;::sampleNeutralUnits </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sample neutral unit data from replay at index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>Index from replay to sample from </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Neutral <a class="el" href="../../d4/d9b/structcvt_1_1Unit.html" title="Basic StarCraft II Unit Data.">Unit</a> data transformed into a [N,D] array </dd></dl>
+
+</div>
+</div>
+<a id="a938cea2e22bfaf82b7efe3a9a7aba60e" name="a938cea2e22bfaf82b7efe3a9a7aba60e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a938cea2e22bfaf82b7efe3a9a7aba60e">&#9670;&#160;</a></span>sampleScalars()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ReplayDataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html">cvt::ReplayParser</a>&lt; ReplayDataType &gt;::sampleScalars </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sample scalar data from replay at index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>Index from replay to sample from </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Scalar data transformed into a vector </dd></dl>
+
+</div>
+</div>
+<a id="a5054eaba0d54cf71ec5b3eab42859665" name="a5054eaba0d54cf71ec5b3eab42859665"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5054eaba0d54cf71ec5b3eab42859665">&#9670;&#160;</a></span>sampleUnits()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ReplayDataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html">cvt::ReplayParser</a>&lt; ReplayDataType &gt;::sampleUnits </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sample all unit data from replay at index. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>Index from replay to sample from </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="../../d4/d9b/structcvt_1_1Unit.html" title="Basic StarCraft II Unit Data.">Unit</a> data transformed into an array [N,D] where N is number of units, D is dimensionality of the feature vector of each unit. </dd></dl>
+
+</div>
+</div>
+<a id="ac4bf029202b3788c4f61a9d429284251" name="ac4bf029202b3788c4f61a9d429284251"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4bf029202b3788c4f61a9d429284251">&#9670;&#160;</a></span>sampleUnitsGroupAlliance()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename ReplayDataType &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../dc/d19/classcvt_1_1ReplayParser.html">cvt::ReplayParser</a>&lt; ReplayDataType &gt;::sampleUnitsGroupAlliance </td>
+          <td>(</td>
+          <td class="paramtype">std::size_t&#160;</td>
+          <td class="paramname"><em>index</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Sample unit data from replay at index, grouped into dictionary of alliances. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">index</td><td>Index from replay to sample from </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Dictionary of unit data transformed into a [N,D] array grouped by alliance </dd></dl>
 
 </div>
 </div>
