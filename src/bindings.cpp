@@ -112,9 +112,9 @@ template<typename T> void bindReplayDataInterfaces(py::module &m, const std::str
         .def_property_readonly("path", &cvt::ReplayDatabase<T>::path);
 
     const auto parserName = name + "Parser";
-    py::class_<cvt::ReplayParser<T>>(m, parserName.c_str())
-        .def(py::init<const std::filesystem::path &>(), py::arg("info_path"))
-        .def("sample", &cvt::ReplayParser<T>::sample, py::arg("time_idx"), py::arg("unit_alliance") = false)
+    py::class_<cvt::ReplayParser<T>> parser(m, parserName.c_str());
+    parser.def(py::init<const std::filesystem::path &>(), py::arg("info_path"))
+        .def("sample_all", &cvt::ReplayParser<T>::sampleAll, py::arg("index"), py::arg("unit_alliance") = false)
         .def("parse_replay", &cvt::ReplayParser<T>::parseReplay, py::arg("replay_data"))
         .def("size", &cvt::ReplayParser<T>::size)
         .def("__len__", &cvt::ReplayParser<T>::size)
@@ -125,6 +125,26 @@ template<typename T> void bindReplayDataInterfaces(py::module &m, const std::str
         .def("getMinimapFeatures", &cvt::ReplayParser<T>::getMinimapFeatures)
         .def_property_readonly("data", &cvt::ReplayParser<T>::data, py::return_value_policy::reference_internal)
         .def_property_readonly("info", &cvt::ReplayParser<T>::info, py::return_value_policy::reference_internal);
+
+    using step_data_t = typename T::step_type;
+
+    if constexpr (cvt::HasUnitData<step_data_t>) {
+        parser.def("sample_units", &cvt::ReplayParser<T>::sampleUnits, py::arg("index"));
+        parser.def("sample_units_group_alliance", &cvt::ReplayParser<T>::sampleUnitsGroupAlliance, py::arg("index"));
+        parser.def("sample_neutral_units", &cvt::ReplayParser<T>::sampleNeutralUnits, py::arg("index"));
+    }
+
+    if constexpr (cvt::HasMinimapData<step_data_t>) {
+        parser.def("sample_minimaps", &cvt::ReplayParser<T>::sampleMinimaps, py::arg("index"));
+    }
+
+    if constexpr (cvt::HasScalarData<step_data_t>) {
+        parser.def("sample_scalars", &cvt::ReplayParser<T>::sampleScalars, py::arg("index"));
+    }
+
+    if constexpr (cvt::HasActionData<step_data_t>) {
+        parser.def("sample_actions", &cvt::ReplayParser<T>::sampleActions, py::arg("index"));
+    }
 }
 
 

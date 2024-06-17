@@ -322,6 +322,9 @@ struct MinimapFeatureFlags
  */
 template<typename ReplayDataType> class ReplayParser
 {
+    using feature_t = float;
+    using step_data_t = typename ReplayDataType::step_type;
+
   public:
     explicit ReplayParser(const std::filesystem::path &dataPath) noexcept : upgrade_(dataPath) {}
 
@@ -398,24 +401,22 @@ template<typename ReplayDataType> class ReplayParser
 
     /**
      * @brief Get a python dictionary containing features from that timestep
-     * @param timeIdx time index to sample
+     * @param index index of replay sample
      * @param unit_alliance Whether to group units by alliance in a dictionary (default: false)
      * @return Dictionary containing feature data at that point in time
      */
-    [[nodiscard]] auto sample(std::size_t timeIdx, bool unit_alliance = false) const -> py::dict
+    [[nodiscard]] auto sampleAll(std::size_t index, bool unit_alliance = false) const -> py::dict
     {
-        using feature_t = float;
-        using step_data_t = typename ReplayDataType::step_type;
         py::dict result;
 
         if constexpr (HasUnitData<step_data_t>) {
             // Process Units into feature vectors, maybe in inner dictionary separated by alliance
             if (unit_alliance) {
-                result["units"] = transformUnitsByAlliance<feature_t>(replayData_.data.units[timeIdx]);
+                result["units"] = transformUnitsByAlliance<feature_t>(replayData_.data.units[index]);
             } else {
-                result["units"] = transformUnits<feature_t>(replayData_.data.units[timeIdx]);
+                result["units"] = transformUnits<feature_t>(replayData_.data.units[index]);
             }
-            result["neutral_units"] = transformUnits<feature_t>(replayData_.data.neutralUnits[timeIdx]);
+            result["neutral_units"] = transformUnits<feature_t>(replayData_.data.neutralUnits[index]);
             static_assert(
                 HasActionData<decltype(replayData_.data)> && "If unit data is present, so should action data");
         }
@@ -423,27 +424,95 @@ template<typename ReplayDataType> class ReplayParser
         if constexpr (HasActionData<decltype(replayData_.data)>) {
             // Create python list of actions, but keep in native struct rather than feature vector
             py::list actions;
-            std::ranges::for_each(replayData_.data.actions[timeIdx], [&](const Action &a) { actions.append(a); });
+            std::ranges::for_each(replayData_.data.actions[index], [&](const Action &a) { actions.append(a); });
             result["actions"] = actions;
 
             // Get one-hot active upgrade/research state
-            result["upgrade_state"] = upgrade_.getState<feature_t>(timeIdx);
+            result["upgrade_state"] = upgrade_.getState<feature_t>(index);
         }
 
         if constexpr (HasMinimapData<step_data_t>) {
             // Create feature image or minimap and feature vector of game state scalars (score, vespene, pop army etc.)
             result["minimaps"] =
-                createMinimapFeatures<feature_t>(replayData_, timeIdx, minimapFeatureFlags_, expandPlayerRelative_);
+                createMinimapFeatures<feature_t>(replayData_, index, minimapFeatureFlags_, expandPlayerRelative_);
         }
 
         if constexpr (HasScalarData<step_data_t>) {
-            result["scalars"] = createScalarFeatures<feature_t>(replayData_.data, timeIdx);
+            result["scalars"] = createScalarFeatures<feature_t>(replayData_.data, index);
         }
 
         static_assert((HasScalarData<step_data_t> || HasMinimapData<step_data_t> || HasUnitData<step_data_t>
-                       || HasActionData<decltype(replayData_.data)>)&&"At least one data type should be present");
+                          || HasActionData<decltype(replayData_.data)>)
+                      && "At least one data type should be present");
 
         return result;
+    }
+
+    /**
+     * @brief Sample all unit data from replay at index
+     * @param index Index from replay to sample from
+     * @return Unit data transformed into an array [N,D] where N is number of units, D is dimensionality of the feature
+     * vector of each unit.
+     */
+    [[nodiscard]] auto sampleUnits(std::size_t index) const
+        requires HasUnitData<step_data_t>
+    {
+        return transformUnits<feature_t>(replayData_.data.units[index]);
+    }
+
+    /**
+     * @brief Sample unit data from replay at index, grouped into dictionary of alliances
+     * @param index Index from replay to sample from
+     * @return Dictionary of unit data transformed into a [N,D] array grouped by alliance
+     */
+    [[nodiscard]] auto sampleUnitsGroupAlliance(std::size_t index) const
+        requires HasUnitData<step_data_t>
+    {
+        return transformUnitsByAlliance<feature_t>(replayData_.data.units[index]);
+    }
+
+    /**
+     * @brief Sample neutral unit data from replay at index
+     * @param index Index from replay to sample from
+     * @return Neutral Unit data transformed into a [N,D] array
+     */
+    [[nodiscard]] auto sampleNeutralUnits(std::size_t index) const
+        requires HasUnitData<step_data_t>
+    {
+        return transformUnits<feature_t>(replayData_.data.neutralUnits[index]);
+    }
+
+    /**
+     * @brief Sample action from replay at index
+     * @param index Index from replay to sample from
+     * @return List of actions made by the player in the native struct form
+     */
+    [[nodiscard]] auto sampleActions(std::size_t index) const
+        requires HasActionData<step_data_t>
+    {
+        return replayData_.data.actions[index];
+    }
+
+    /**
+     * @brief Sample minimap data from replay at index
+     * @param index Index from replay to sample from
+     * @return Minimap data transformed into an tensor [C,H,W] of the layers specified by minimapFeatureFlags
+     */
+    [[nodiscard]] auto sampleMinimaps(std::size_t index) const
+        requires HasMinimapData<step_data_t>
+    {
+        return createMinimapFeatures<feature_t>(replayData_, index, minimapFeatureFlags_, expandPlayerRelative_);
+    }
+
+    /**
+     * @brief Sample scalar data from replay at index
+     * @param index Index from replay to sample from
+     * @return Scalar data transformed into a vector
+     */
+    [[nodiscard]] auto sampleScalars(std::size_t index) const
+        requires HasScalarData<step_data_t>
+    {
+        return createScalarFeatures<feature_t>(replayData_.data, index);
     }
 
     /**
