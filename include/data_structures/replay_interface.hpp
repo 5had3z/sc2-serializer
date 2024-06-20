@@ -251,20 +251,12 @@ template<IsSoAType StepDataSoAType> struct ReplayDataTemplateSoA
     [[nodiscard]] auto size() const noexcept -> std::size_t { return data.size(); }
 
     /**
-     * @brief Get constant reference to replay data at step index
+     * @brief Get replay data at step index
      *
      * @param index index of replay observations
-     * @return const StepDataType&
+     * @return StepDataType
      */
-    [[nodiscard]] auto operator[](std::size_t index) const noexcept -> const step_type & { return data[index]; }
-
-    /**
-     * @brief Get reference to replay data at step index
-     *
-     * @param index index of replay observations
-     * @return const StepDataType&
-     */
-    [[nodiscard]] auto operator[](std::size_t index) noexcept -> step_type & { return data[index]; }
+    [[nodiscard]] auto operator[](std::size_t index) const noexcept -> step_type { return data[index]; }
 
     /**
      * @brief Get the unique hash ID of the replay
