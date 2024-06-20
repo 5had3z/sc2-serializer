@@ -54,7 +54,11 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#gen-info-header">gen_info_header</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#gen-info-yaml">gen_info_yaml</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#inspect-replay">inspect_replay</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#inspect-replay">inspect_replay</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#inspect_replay.inspect"><code class="docutils literal notranslate"><span class="pre">inspect()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#inspect_replay.count"><code class="docutils literal notranslate"><span class="pre">count()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="#make-partitions">make_partitions</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#make_partitions.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
 </ul>
@@ -135,6 +139,18 @@
 </section>
 <section id="inspect-replay">
 <h2>inspect_replay<a class="headerlink" href="#inspect-replay" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="inspect_replay.inspect">
+<span class="sig-prename descclassname"><span class="pre">inspect_replay.</span></span><span class="sig-name descname"><span class="pre">inspect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SubCommand</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outfolder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">PosixPath('/home/runner/work/sc2-serializer/sc2-serializer/docs/workspace')</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/inspect_replay.html#inspect"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inspect_replay.inspect" title="Link to this definition"></a></dt>
+<dd><p>Script to poke around and inspect the serialized replay data</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="inspect_replay.count">
+<span class="sig-prename descclassname"><span class="pre">inspect_replay.</span></span><span class="sig-name descname"><span class="pre">count</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/inspect_replay.html#count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inspect_replay.count" title="Link to this definition"></a></dt>
+<dd><p>Count number of replays in a set of shards</p>
+</dd></dl>
+
 </section>
 <section id="make-partitions">
 <h2>make_partitions<a class="headerlink" href="#make-partitions" title="Link to this heading"></a></h2>
