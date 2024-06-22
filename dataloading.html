@@ -69,6 +69,7 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#c-extensions">C++ Extensions</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="scripts.html">Scripts</a></li>
@@ -258,6 +259,66 @@ the requested [scalar, minimap] features and the game outcome from the player PO
 
 </dd></dl>
 
+</section>
+<section id="c-extensions">
+<h2>C++ Extensions<a class="headerlink" href="#c-extensions" title="Link to this heading"></a></h2>
+<p>The header files are included in the library distribution so that you can write additional C++ native functions to process data. An example setup of a PyBind11 CMake project is shown below. You can also use pybind11-stubgen like this project to create type hints for your LSP for any extensions you write. An example build script is provided at the bottom.</p>
+<p>utilities.cpp</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;pybind11/pybind11.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;pybind11/numpy.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;sc2_serializer/data_structures/replay_all.hpp&quot;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">py</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nn">pybind11</span><span class="p">;</span>
+
+<span class="p">[[</span><span class="n">nodiscard</span><span class="p">]]</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">doSomething</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">cvt</span><span class="o">::</span><span class="n">StepDataSoA</span><span class="w"> </span><span class="o">&amp;</span><span class="n">replayData</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="kt">int64_t</span><span class="w"> </span><span class="n">index</span><span class="p">)</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">int32_t</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="o">&amp;</span><span class="n">unitData</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">replayData</span><span class="p">.</span><span class="n">units</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">py</span><span class="o">::</span><span class="n">array_t</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">int32_t</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">PYBIND11_MODULE</span><span class="p">(</span><span class="n">dataset_utils</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">m</span><span class="p">.</span><span class="n">def</span><span class="p">(</span><span class="s">&quot;do_something&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">doSomething</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Do something with replay data&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">py</span><span class="o">::</span><span class="n">arg</span><span class="p">(</span><span class="s">&quot;replay_data&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">py</span><span class="o">::</span><span class="n">arg</span><span class="p">(</span><span class="s">&quot;index&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>CMakeLists.txt</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nb">cmake_minimum_required</span><span class="p">(</span><span class="s">VERSION</span><span class="w"> </span><span class="s">3.21.3</span><span class="w"> </span><span class="s">FATAL_ERROR</span><span class="p">)</span>
+
+<span class="nb">project</span><span class="p">(</span><span class="s">dataset_utils</span><span class="w"> </span><span class="s">LANGUAGES</span><span class="w"> </span><span class="s">CXX</span><span class="p">)</span>
+
+<span class="nb">include</span><span class="p">(</span><span class="s">CPM.cmake</span><span class="p">)</span>
+
+<span class="nb">execute_process</span><span class="p">(</span>
+<span class="s">COMMAND</span>
+<span class="w">    </span><span class="s">python3</span><span class="w"> </span><span class="s">-c</span>
+<span class="w">    </span><span class="s2">&quot;from sc2_serializer import INCLUDE_DIRECTORY; print(INCLUDE_DIRECTORY)&quot;</span>
+<span class="s">OUTPUT_VARIABLE</span><span class="w"> </span><span class="s">SC2_INCLUDE_DIRECTORY</span><span class="p">)</span>
+<span class="nb">string</span><span class="p">(</span><span class="s">STRIP</span><span class="w"> </span><span class="o">${</span><span class="nv">SC2_INCLUDE_DIRECTORY</span><span class="o">}</span><span class="w"> </span><span class="s">SC2_INCLUDE_DIRECTORY</span><span class="p">)</span>
+
+<span class="nb">cpmaddpackage</span><span class="p">(</span><span class="s">NAME</span><span class="w"> </span><span class="s">pybind11</span><span class="w"> </span><span class="s">GITHUB_REPOSITORY</span><span class="w"> </span><span class="s">pybind/pybind11</span><span class="w"> </span><span class="s">VERSION</span><span class="w"> </span><span class="s">2.12.0</span><span class="p">)</span>
+
+<span class="nb">cpmaddpackage</span><span class="p">(</span><span class="s">NAME</span><span class="w"> </span><span class="s">boost_pfr</span><span class="w"> </span><span class="s">GITHUB_REPOSITORY</span><span class="w"> </span><span class="s">boostorg/pfr</span><span class="w"> </span><span class="s">GIT_TAG</span><span class="w"> </span><span class="s">2.1.0</span><span class="p">)</span>
+
+<span class="nb">cpmaddpackage</span><span class="p">(</span><span class="s">GITHUB_REPOSITORY</span><span class="w"> </span><span class="s">gabime/spdlog</span><span class="w"> </span><span class="s">VERSION</span><span class="w"> </span><span class="s">1.12.0</span><span class="w"> </span><span class="s">OPTIONS</span>
+<span class="w">            </span><span class="s2">&quot;SPDLOG_BUILD_PIC ON&quot;</span><span class="p">)</span>
+
+<span class="nb">pybind11_add_module</span><span class="p">(</span><span class="s">dataset_utils</span><span class="w"> </span><span class="s">utilities.cpp</span><span class="p">)</span>
+<span class="nb">target_compile_features</span><span class="p">(</span><span class="s">dataset_utils</span><span class="w"> </span><span class="s">PUBLIC</span><span class="w"> </span><span class="s">cxx_std_23</span><span class="p">)</span>
+<span class="nb">target_link_libraries</span><span class="p">(</span><span class="s">dataset_utils</span><span class="w"> </span><span class="s">PUBLIC</span><span class="w"> </span><span class="s">Boost::pfr</span><span class="w"> </span><span class="s">spdlog::spdlog</span><span class="p">)</span>
+<span class="nb">target_include_directories</span><span class="p">(</span><span class="s">dataset_utils</span><span class="w"> </span><span class="s">PUBLIC</span><span class="w"> </span><span class="o">${</span><span class="nv">SC2_INCLUDE_DIRECTORY</span><span class="o">}</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>build_plugin.sh</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/bin/bash</span>
+cmake<span class="w"> </span>-B<span class="w"> </span>build<span class="w"> </span>-DCMAKE_BUILD_TYPE<span class="o">=</span>Release<span class="w"> </span>-GNinja
+cmake<span class="w"> </span>--build<span class="w"> </span>build<span class="w"> </span>--parallel
+<span class="c1"># Compiled extension is hard coded, this may change in different environments</span>
+pybind11-stubgen<span class="w"> </span>dataset_utils<span class="w"> </span>-o<span class="o">=</span>build<span class="w"> </span>--module-path<span class="o">=</span>build/dataset_utils.cpython-310-x86_64-linux-gnu.so
+black<span class="w"> </span>build/dataset_utils.pyi
+</pre></div>
+</div>
 </section>
 </section>
 
