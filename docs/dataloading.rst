@@ -27,6 +27,8 @@ C++ Extensions
 
 The header files are included in the library distribution so that you can write additional C++ native functions to process data. An example setup of a PyBind11 CMake project is shown below. You can also use pybind11-stubgen like this project to create type hints for your LSP for any extensions you write. An example build script is provided at the bottom.
 
+Best results are achieved with same version of pybind and compiler between sc2-serializer and your custom extension.
+
 utilities.cpp
 
 .. code-block:: c++
@@ -38,15 +40,24 @@ utilities.cpp
 
     namespace py = pybind11;
 
-    [[nodiscard]] auto doSomething(const cvt::StepDataSoA &replayData, std::int64_t index) noexcept -> py::array_t<std::int32_t>
+    [[nodiscard]] auto gatherUnitIds(const cvt::StepDataSoA &replayData,
+        std::int64_t index) noexcept -> py::array_t<cvt::UID>
     {
         const auto &unitData = replayData.units[index];
-        return py::array_t<std::int32_t>();
+        py::array_t<cvt::UID> unitIds(static_cast<py::ssize_t>(unitData.size()));
+        std::ranges::transform(unitData, unitIds.mutable_data(),
+            [](const cvt::Unit &unit) { return unit.id; });
+        return unitIds;
     }
 
     PYBIND11_MODULE(dataset_utils, m)
     {
-        m.def("do_something", &doSomething, "Do something with replay data", py::arg("replay_data"), py::arg("index"));
+        py::module_::import("sc2_serializer._sc2_serializer").attr("StepDataSoA");
+        m.def("gather_unit_ids",
+            &gatherUnitIds,
+            "Get Unit IDs from index in replay data as array",
+            py::arg("replay_data"),
+            py::arg("index"));
     }
 
 CMakeLists.txt

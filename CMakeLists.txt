@@ -182,7 +182,7 @@ if(SC2_PY_READER)
     GITHUB_REPOSITORY
     pybind/pybind11
     VERSION
-    2.11.1)
+    2.12.0)
 
   cpmaddpackage(
     GITHUB_REPOSITORY
