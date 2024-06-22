@@ -79,6 +79,15 @@ pybind11-stubgen _sc2_serializer --module-path build/_sc2_serializer.cpython-310
 
 It is faster to iterate while developing by installing in editable mode, removing pip's compiled version `src/sc2_serializer/_sc2_serializer.cpython-310-x86_64-linux-gnu.so` and symbolically linking to `build/_sc2_serializer.cpython-310-x86_64-linux-gnu.so` instead for incremental builds. You will have manually update the stub with the previously mentioned command if API changes are made.
 
+## Building and Viewing Documentation
+
+The sphinx website can be built and run locally with the following commands, then viewed with a web browser at localhost:8000 (assuming 8000 is default port for python http server).
+
+```bash
+make -C docs html
+python3 -m http.server --directory docs/_build/html
+```
+
 ## Development Dependencies
 
 The [scripts](./scripts/) folder contains a bunch of utilities used for developing and creating a StarCraftII Dataset. Additional dependencies required by these can be installed with the `dev` option when installing the main library (or you can peek [pyproject.toml](pyproject.toml) and install them manually).

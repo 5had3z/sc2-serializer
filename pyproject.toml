@@ -13,7 +13,7 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 
 [tool.setuptools.package-data]
-sc2_serializer = ["*.yaml"]
+sc2_serializer = ["*.yaml", "include/*.hpp"]
 
 [project]
 name = "sc2_serializer"

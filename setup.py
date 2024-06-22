@@ -6,6 +6,7 @@ Based on https://github.com/pybind/cmake_example/blob/master/setup.py
 import os
 import subprocess
 import sys
+from shutil import copytree
 from pathlib import Path
 
 import ninja
@@ -46,6 +47,13 @@ class CMakeBuild(build_ext):
         build_temp = Path(self.build_temp) / ext.name
         if not build_temp.exists():
             build_temp.mkdir(parents=True)
+
+        # Copy data structures to include with package
+        copytree(
+            ext.source_dir / "include",
+            extdir / "include" / "sc2_serializer",
+            dirs_exist_ok=True,
+        )
 
         subprocess.run(
             ["cmake", str(ext.source_dir), *cmake_args], cwd=build_temp, check=True

@@ -14,6 +14,8 @@ from ._sc2_serializer import *  # noqa : F403
 
 GAME_INFO_FILE = (Path(__file__).parent / "game_info.yaml").absolute()
 
+INCLUDE_DIRECTORY = (Path(__file__).parent / "include").absolute()
+
 ReplayDatabase = (
     ReplayDataAllDatabase | ReplayDataNoUnitsDatabase | ReplayDataScalarOnlyDatabase
 )
