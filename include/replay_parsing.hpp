@@ -142,22 +142,14 @@ template<typename T, typename UnitT>
 {
     // Return empty array if no units
     if (units.empty()) { return py::array_t<T>(); }
-    // Lambda wrapper around vectorize to set onehot to true
-    auto vecFn = [](const UnitT &unit) { return vectorize<T>(unit, true); };
 
     // Create numpy array based on unit feature size
-    const auto firstUnitFeats = vecFn(units.front());
-    py::array_t<T> featureArray({ units.size(), firstUnitFeats.size() });
-
-    // Interpret numpy array as contiguous span to copy transformed data
-    std::span<T> rawData(featureArray.mutable_data(), units.size() * firstUnitFeats.size());
-    auto rawDataIt = rawData.begin();
-
-    // Start off by copying the already transformed data, then loop over the rest
-    rawDataIt = std::copy(firstUnitFeats.begin(), firstUnitFeats.end(), rawDataIt);
-    for (const auto &unitFeats : units | std::views::drop(1) | std::views::transform(vecFn)) {
-        rawDataIt = std::copy(unitFeats.begin(), unitFeats.end(), rawDataIt);
-    }
+    const bool expandOneHot{ true };
+    constexpr std::size_t unitDim = getVectorizedSize<UnitT>(expandOneHot);
+    py::array_t<T> featureArray({ units.size(), unitDim });
+    auto rawDataIt = featureArray.mutable_data();
+    // cppcheck-suppress useStlAlgorithm
+    for (const auto &unit : units) { rawDataIt = vectorize(unit, rawDataIt, expandOneHot); }
     return featureArray;
 }
 
@@ -185,25 +177,22 @@ template<typename T>
         return pyDict;
     }
 
-    // Lambda wrapper around vectorize to set onehot to true
-    auto vecFn = [](const Unit &unit) { return vectorize<T>(unit, true); };
-
     std::unordered_map<cvt::Alliance, std::vector<T>> groupedUnitFeatures = { { cvt::Alliance::Self, {} },
         { cvt::Alliance::Ally, {} },
         { cvt::Alliance::Enemy, {} },
         { cvt::Alliance::Neutral, {} } };
 
+    const bool expandOneHot{ true };
     for (auto &&unit : units) {
         auto &group = groupedUnitFeatures.at(unit.alliance);
-        const auto unitFeat = vecFn(unit);
-        std::ranges::copy(unitFeat, std::back_inserter(group));
+        std::ranges::copy(vectorize<T>(unit, expandOneHot), std::back_inserter(group));
     }
 
-    const std::size_t featureSize = vecFn(units.front()).size();
     py::dict pyReturn;
+    constexpr std::size_t unitDim = getVectorizedSize<Unit>(expandOneHot);
     for (auto &&[group, features] : groupedUnitFeatures) {
-        const std::size_t nUnits = features.size() / featureSize;
-        py::array_t<T> pyArray({ nUnits, featureSize });
+        const std::size_t nUnits = features.size() / unitDim;
+        py::array_t<T> pyArray({ nUnits, unitDim });
         std::ranges::copy(features, pyArray.mutable_data());
         pyReturn[py::cast(enum2str.at(group))] = pyArray;
     }

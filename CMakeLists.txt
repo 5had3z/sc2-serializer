@@ -61,7 +61,7 @@ if(MSVC)
     NAME
     Boost
     URL
-    "https://github.com/boostorg/boost/releases/download/boost-1.83.0/boost-1.83.0.zip"
+    "https://github.com/boostorg/boost/releases/download/boost-1.85.0/boost-1.85.0.zip"
     OPTIONS
     "BOOST_INCLUDE_LIBRARIES iostreams\\\\;pfr"
     "BOOST_IOSTREAMS_ENABLE_ZLIB")
@@ -73,7 +73,7 @@ else()
     GITHUB_REPOSITORY
     boostorg/pfr
     GIT_TAG
-    2.1.0)
+    2.2.0)
 
   find_package(Boost REQUIRED COMPONENTS iostreams)
 endif()

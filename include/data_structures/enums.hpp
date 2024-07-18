@@ -18,18 +18,23 @@
 
 namespace cvt {
 
-/**
- * @brief Converts an enum value to a one-hot encoding
- * @tparam E enum type to convert
- * @tparam T element type of output vector
- * @param e enum to convert
- * @return one-hot encoding of enum
- */
-template<typename E, typename T>
-    requires std::is_enum_v<E>
-auto enumToOneHot(E e) noexcept -> std::vector<T>;
 
 namespace detail {
+    /**
+     * @brief Helper type
+     *
+     * @tparam T
+     */
+    template<typename T> struct always_false : std::false_type
+    {
+    };
+
+    /**
+     * @brief Always false type to help printing type info at a compile time error
+     *
+     * @tparam T type to print
+     */
+    template<typename T> constexpr bool always_false_v = always_false<T>::value;
 
 
     /**
@@ -52,96 +57,75 @@ namespace detail {
 
 enum class Alliance : char { Self = 1, Ally = 2, Neutral = 3, Enemy = 4 };
 
-/**
- * @brief Convert alliance value to one-hot encoding
- * @tparam T output value type
- * @param e enum to convert
- * @return one-hot encoding
- */
-template<typename T> auto enumToOneHot(Alliance e) noexcept -> std::vector<T>
-{
-    constexpr std::array vals = std::array{ Alliance::Self, Alliance::Ally, Alliance::Neutral, Alliance::Enemy };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
-}
-
 enum class CloakState : char { Unknown = 0, Cloaked = 1, Detected = 2, UnCloaked = 3, Allied = 4 };
-
-/**
- * @brief Convert cloak state value to one-hot encoding
- * @tparam T output value type
- * @param e enum to convert
- * @return one-hot encoding
- */
-template<typename T> auto enumToOneHot(CloakState e) noexcept -> std::vector<T>
-{
-    constexpr std::array vals = {
-        CloakState::Unknown, CloakState::Cloaked, CloakState::Detected, CloakState::UnCloaked, CloakState::Allied
-    };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
-}
 
 enum class Visibility : char { Visible = 1, Snapshot = 2, Hidden = 3 };
 
-/**
- * @brief Convert visibility value to one-hot encoding
- * @tparam T output value type
- * @param e enum to convert
- * @return one-hot encoding
- */
-template<typename T> auto enumToOneHot(Visibility e) noexcept -> std::vector<T>
-{
-    constexpr std::array vals = { Visibility::Visible, Visibility::Snapshot, Visibility::Hidden };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
-}
-
 enum class AddOn : char { None = 0, Reactor = 1, TechLab = 2 };
 
-/**
- * @brief Convert addon value to one-hot encoding
- * @tparam T output value type
- * @param e enum to convert
- * @return one-hot encoding
- */
-template<typename T> auto enumToOneHot(AddOn e) noexcept -> std::vector<T>
-{
-    constexpr std::array vals = { AddOn::None, AddOn::Reactor, AddOn::TechLab };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
-}
-
 enum class Race : char { Terran, Zerg, Protoss, Random };
-
-/**
- * @brief Convert race value to one-hot encoding
- * @tparam T output value type
- * @param e enum to convert
- * @return one-hot encoding
- */
-template<typename T> auto enumToOneHot(Race e) noexcept -> std::vector<T>
-{
-    constexpr std::array vals = { Race::Terran, Race::Zerg, Race::Protoss, Race::Random };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
-}
 
 enum class Result : char { Win, Loss, Tie, Undecided };
 
 /**
- * @brief Convert result value to one-hot encoding
- * @tparam T output value type
- * @param e enum to convert
- * @return one-hot encoding
+ * @brief Get all the possible values for a particular enum
+ *
+ * @tparam E enum type
+ * @return Array of all possible enum values
  */
-template<typename T> auto enumToOneHot(Result e) noexcept -> std::vector<T>
+template<typename E>
+    requires std::is_enum_v<E>
+[[nodiscard]] consteval auto getEnumValues()
 {
-    constexpr std::array vals = { Result::Win, Result::Loss, Result::Tie, Result::Undecided };
-    static_assert(std::is_sorted(vals.begin(), vals.end()));
-    return detail::enumToOneHot_helper<T>(e, vals);
+    if constexpr (std::same_as<E, Alliance>) {
+        return std::array{ Alliance::Self, Alliance::Ally, Alliance::Neutral, Alliance::Enemy };
+    } else if constexpr (std::same_as<E, CloakState>) {
+        return std::array{
+            CloakState::Unknown, CloakState::Cloaked, CloakState::Detected, CloakState::UnCloaked, CloakState::Allied
+        };
+    } else if constexpr (std::same_as<E, Visibility>) {
+        return std::array{ Visibility::Visible, Visibility::Snapshot, Visibility::Hidden };
+    } else if constexpr (std::same_as<E, AddOn>) {
+        return std::array{ AddOn::None, AddOn::Reactor, AddOn::TechLab };
+    } else if constexpr (std::same_as<E, Race>) {
+        return std::array{ Race::Terran, Race::Zerg, Race::Protoss, Race::Random };
+    } else if constexpr (std::same_as<E, Result>) {
+        return std::array{ Result::Win, Result::Loss, Result::Tie, Result::Undecided };
+    } else {
+        static_assert(detail::always_false_v<E>, "Failed to match type");
+    }
 }
 
+/**
+ * @brief The number of possible values of an enum
+ * @tparam E type of enum
+ * @return Number of possible enum values
+ */
+template<typename E>
+    requires std::is_enum_v<E>
+[[nodiscard]] constexpr auto numEnumValues() -> std::size_t
+{
+    return getEnumValues<E>().size();
+}
+
+/**
+ * @brief Converts an enum value to a one-hot encoding
+ * @tparam E enum type to convert
+ * @tparam T element type of output vector
+ * @param e enum to one-hot encode
+ * @return one-hot encoding of enum
+ */
+template<typename T, typename E>
+    requires std::is_enum_v<E>
+auto enumToOneHot(E e) noexcept -> std::vector<T>
+{
+    constexpr auto enumValues = getEnumValues<E>();
+    static_assert(std::is_sorted(enumValues.begin(), enumValues.end()));
+    auto it = std::ranges::find(enumValues, e);
+    std::vector<T> ret(enumValues.size());
+    ret[std::distance(enumValues.begin(), it)] = static_cast<T>(1);
+    return ret;
+}
 
 }// namespace cvt
 
