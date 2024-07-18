@@ -199,11 +199,21 @@ requires std::is_aggregate_v&lt;T&gt; &amp;&amp; (!std::ranges::range&lt;T&gt;)<
 <tr class="memitem:ab845cb421f2d5fb4676f87176f5e5a29"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#ab845cb421f2d5fb4676f87176f5e5a29">cvt::detail::vectorize_helper</a> (T d, It it, bool onehotEnum) -&gt; It</td></tr>
 <tr class="memdesc:ab845cb421f2d5fb4676f87176f5e5a29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vectorize struct (aggregate type) to data.  <br /></td></tr>
 <tr class="separator:ab845cb421f2d5fb4676f87176f5e5a29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc4be9ed98f5086f436811d9dbb0f9f0" id="r_acc4be9ed98f5086f436811d9dbb0f9f0"><td class="memTemplParams" colspan="2">template&lt;typename S , typename It &gt; <br />
-requires std::is_aggregate_v&lt;S&gt; &amp;&amp; std::is_arithmetic_v&lt;typename It::container_type::value_type&gt;</td></tr>
-<tr class="memitem:acc4be9ed98f5086f436811d9dbb0f9f0"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#acc4be9ed98f5086f436811d9dbb0f9f0">cvt::vectorize</a> (S s, It it, bool onehotEnum=false) -&gt; It</td></tr>
-<tr class="memdesc:acc4be9ed98f5086f436811d9dbb0f9f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vectorize Struct of data to mutable output iterator.  <br /></td></tr>
-<tr class="separator:acc4be9ed98f5086f436811d9dbb0f9f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61943b24f5980d78a69d6167ede4bb01" id="r_a61943b24f5980d78a69d6167ede4bb01"><td class="memTemplParams" colspan="2">template&lt;typename T , bool oneHotEnum&gt; <br />
+requires std::is_aggregate_v&lt;T&gt;</td></tr>
+<tr class="memitem:a61943b24f5980d78a69d6167ede4bb01"><td class="memTemplItemLeft" align="right" valign="top">consteval auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#a61943b24f5980d78a69d6167ede4bb01">cvt::detail::vectorizedSizeHelper</a> () -&gt; std::size_t</td></tr>
+<tr class="memdesc:a61943b24f5980d78a69d6167ede4bb01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does the main lifting for determining the size of a vectorized struct.  <br /></td></tr>
+<tr class="separator:a61943b24f5980d78a69d6167ede4bb01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76" id="r_a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76"><td class="memTemplParams" colspan="2">template&lt;typename S , typename It &gt; <br />
+requires std::is_aggregate_v&lt;S&gt; &amp;&amp; std::is_arithmetic_v&lt;std::iter_value_t&lt;It&gt;&gt;</td></tr>
+<tr class="memitem:a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76">cvt::vectorize</a> (S s, It it, bool onehotEnum=false) -&gt; It</td></tr>
+<tr class="memdesc:a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vectorize Struct of data to mutable output iterator.  <br /></td></tr>
+<tr class="separator:a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acf6632137e06ab0b5a50c620ee520474" id="r_acf6632137e06ab0b5a50c620ee520474"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; <br />
+requires std::is_aggregate_v&lt;T&gt;</td></tr>
+<tr class="memitem:acf6632137e06ab0b5a50c620ee520474"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#acf6632137e06ab0b5a50c620ee520474">cvt::getVectorizedSize</a> (bool onehotEnum) -&gt; std::size_t</td></tr>
+<tr class="memdesc:acf6632137e06ab0b5a50c620ee520474"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of the struct if its vectorized with vectorize.  <br /></td></tr>
+<tr class="separator:acf6632137e06ab0b5a50c620ee520474"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9615af7444dd62ba714d2ff92948273a" id="r_a9615af7444dd62ba714d2ff92948273a"><td class="memTemplParams" colspan="2">template&lt;typename T , typename S &gt; <br />
 requires std::is_aggregate_v&lt;S&gt; &amp;&amp; std::is_arithmetic_v&lt;T&gt;</td></tr>
 <tr class="memitem:a9615af7444dd62ba714d2ff92948273a"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#a9615af7444dd62ba714d2ff92948273a">cvt::vectorize</a> (S s, bool onehotEnum=false) -&gt; std::vector&lt; T &gt;</td></tr>
@@ -369,6 +379,51 @@ template&lt;typename T &gt; </div>
 
 </div>
 </div>
+<a id="acf6632137e06ab0b5a50c620ee520474" name="acf6632137e06ab0b5a50c620ee520474"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acf6632137e06ab0b5a50c620ee520474">&#9670;&#160;</a></span>getVectorizedSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; <br />
+requires std::is_aggregate_v&lt;T&gt;</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto cvt::getVectorizedSize </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>onehotEnum</em></td><td>)</td>
+          <td> -&gt; std::size_t
+</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the size of the struct if its vectorized with vectorize. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type to query </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">onehotEnum</td><td>Flag if oneHotEncodings are expanded or not </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Number of elements of the vectorized type </dd></dl>
+
+</div>
+</div>
 <a id="a6eee9ca9584270bd9e709daf4f1e9c1c" name="a6eee9ca9584270bd9e709daf4f1e9c1c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6eee9ca9584270bd9e709daf4f1e9c1c">&#9670;&#160;</a></span>SoAtoAoS() <span class="overload">[1/2]</span></h2>
 
@@ -507,14 +562,14 @@ requires std::is_aggregate_v&lt;S&gt; &amp;&amp; std::is_arithmetic_v&lt;T&gt;</
 
 </div>
 </div>
-<a id="acc4be9ed98f5086f436811d9dbb0f9f0" name="acc4be9ed98f5086f436811d9dbb0f9f0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acc4be9ed98f5086f436811d9dbb0f9f0">&#9670;&#160;</a></span>vectorize() <span class="overload">[2/2]</span></h2>
+<a id="a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76" name="a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76">&#9670;&#160;</a></span>vectorize() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename S , typename It &gt; <br />
-requires std::is_aggregate_v&lt;S&gt; &amp;&amp; std::is_arithmetic_v&lt;typename It::container_type::value_type&gt;</div>
+requires std::is_aggregate_v&lt;S&gt; &amp;&amp; std::is_arithmetic_v&lt;std::iter_value_t&lt;It&gt;&gt;</div>
       <table class="memname">
         <tr>
           <td class="memname">auto cvt::vectorize </td>
@@ -784,6 +839,37 @@ requires std::is_aggregate_v&lt;T&gt; &amp;&amp; (!std::ranges::range&lt;T&gt;)<
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Incremented output iterator </dd></dl>
+
+</div>
+</div>
+<a id="a61943b24f5980d78a69d6167ede4bb01" name="a61943b24f5980d78a69d6167ede4bb01"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61943b24f5980d78a69d6167ede4bb01">&#9670;&#160;</a></span>vectorizedSizeHelper()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , bool oneHotEnum&gt; <br />
+requires std::is_aggregate_v&lt;T&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">consteval auto cvt::detail::vectorizedSizeHelper </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> -&gt; std::size_t
+    </td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Does the main lifting for determining the size of a vectorized struct. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type to understand vectorization size </td></tr>
+    <tr><td class="paramname">oneHotEnum</td><td>Flag to expand enums to onehot </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>std::size_t The size of the vectorized type </dd></dl>
 
 </div>
 </div>

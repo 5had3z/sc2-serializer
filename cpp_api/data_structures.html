@@ -67,14 +67,12 @@
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt5AddOnE"><code class="docutils literal notranslate"><span class="pre">cvt::AddOn</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt4RaceE"><code class="docutils literal notranslate"><span class="pre">cvt::Race</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt6ResultE"><code class="docutils literal notranslate"><span class="pre">cvt::Result</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt13getEnumValuesEDav"><code class="docutils literal notranslate"><span class="pre">cvt::getEnumValues()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt13numEnumValuesENSt6size_tEv"><code class="docutils literal notranslate"><span class="pre">cvt::numEnumValues()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4I00EN3cvt12enumToOneHotENSt6vectorI1TEE1E"><code class="docutils literal notranslate"><span class="pre">cvt::enumToOneHot()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE8Alliance"><code class="docutils literal notranslate"><span class="pre">cvt::enumToOneHot()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE10CloakState"><code class="docutils literal notranslate"><span class="pre">cvt::enumToOneHot()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE10Visibility"><code class="docutils literal notranslate"><span class="pre">cvt::enumToOneHot()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE5AddOn"><code class="docutils literal notranslate"><span class="pre">cvt::enumToOneHot()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE4Race"><code class="docutils literal notranslate"><span class="pre">cvt::enumToOneHot()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE6Result"><code class="docutils literal notranslate"><span class="pre">cvt::enumToOneHot()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt6detail19enumToOneHot_helperENSt6vectorI1TEEDaRKNSt6ranges5rangeE"><code class="docutils literal notranslate"><span class="pre">cvt::detail::enumToOneHot_helper()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt6detail14always_false_vE"><code class="docutils literal notranslate"><span class="pre">cvt::detail::always_false_v</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt6detail12always_falseE"><code class="docutils literal notranslate"><span class="pre">cvt::detail::always_false</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#units">Units</a><ul>
@@ -192,7 +190,7 @@
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4I00EN3cvt9vectorizeE2It1S2Itb">
-<span id="_CPPv3I00EN3cvt9vectorizeE1S2Itb"></span><span id="_CPPv2I00EN3cvt9vectorizeE1S2Itb"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">S</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">It</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dd/d3a/common_8hpp_1acc4be9ed98f5086f436811d9dbb0f9f0"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">vectorize</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00EN3cvt9vectorizeE2It1S2Itb" title="cvt::vectorize::S"><span class="n"><span class="pre">S</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">s</span></span>, <a class="reference internal" href="#_CPPv4I00EN3cvt9vectorizeE2It1S2Itb" title="cvt::vectorize::It"><span class="n"><span class="pre">It</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">it</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">onehotEnum</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3cvt9vectorizeE2It1S2Itb" title="cvt::vectorize::It"><span class="n"><span class="pre">It</span></span></a><a class="headerlink" href="#_CPPv4I00EN3cvt9vectorizeE2It1S2Itb" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3I00EN3cvt9vectorizeE1S2Itb"></span><span id="_CPPv2I00EN3cvt9vectorizeE1S2Itb"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">S</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">It</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dd/d3a/common_8hpp_1a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">vectorize</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00EN3cvt9vectorizeE2It1S2Itb" title="cvt::vectorize::S"><span class="n"><span class="pre">S</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">s</span></span>, <a class="reference internal" href="#_CPPv4I00EN3cvt9vectorizeE2It1S2Itb" title="cvt::vectorize::It"><span class="n"><span class="pre">It</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">it</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">onehotEnum</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3cvt9vectorizeE2It1S2Itb" title="cvt::vectorize::It"><span class="n"><span class="pre">It</span></span></a><a class="headerlink" href="#_CPPv4I00EN3cvt9vectorizeE2It1S2Itb" title="Link to this definition"></a><br /></dt>
 <dd><p>Vectorize Struct of data to mutable output iterator. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
@@ -210,6 +208,23 @@
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Incremented output iterator </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt17getVectorizedSizeENSt6size_tEb">
+<span id="_CPPv3I0EN3cvt17getVectorizedSizeEb"></span><span id="_CPPv2I0EN3cvt17getVectorizedSizeEb"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dd/d3a/common_8hpp_1acf6632137e06ab0b5a50c620ee520474"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getVectorizedSize</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">onehotEnum</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><a class="headerlink" href="#_CPPv4I0EN3cvt17getVectorizedSizeENSt6size_tEb" title="Link to this definition"></a><br /></dt>
+<dd><p>Get the size of the struct if its vectorized with vectorize. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – Type to query </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>onehotEnum</strong> – Flag if oneHotEncodings are expanded or not </p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of elements of the vectorized type </p>
 </dd>
 </dl>
 </dd></dl>
@@ -967,6 +982,23 @@
 </dl>
 </dd></dl>
 
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0_bEN3cvt6detail20vectorizedSizeHelperENSt6size_tEv">
+<span id="_CPPv3I0_bEN3cvt6detail20vectorizedSizeHelperEv"></span><span id="_CPPv2I0_bEN3cvt6detail20vectorizedSizeHelperEv"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">oneHotEnum</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dd/d3a/common_8hpp_1a61943b24f5980d78a69d6167ede4bb01"></span><span class="k"><span class="pre">consteval</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">vectorizedSizeHelper</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><a class="headerlink" href="#_CPPv4I0_bEN3cvt6detail20vectorizedSizeHelperENSt6size_tEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Does the main lifting for determining the size of a vectorized struct. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> – Type to understand vectorization size </p></li>
+<li><p><strong>oneHotEnum</strong> – Flag to expand enums to onehot </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>std::size_t The size of the vectorized type </p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 </dd></dl>
 
@@ -1243,8 +1275,36 @@
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
 <dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt13getEnumValuesEDav">
+<span id="_CPPv3I0EN3cvt13getEnumValuesEv"></span><span id="_CPPv2I0EN3cvt13getEnumValuesEv"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">E</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dd/d93/enums_8hpp_1abc1466cc9d34708fc0939b6d24b83b6f"></span><span class="k"><span class="pre">consteval</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getEnumValues</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN3cvt13getEnumValuesEDav" title="Link to this definition"></a><br /></dt>
+<dd><p>Get all the possible values for a particular enum. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>E</strong> – enum type </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Array of all possible enum values </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt13numEnumValuesENSt6size_tEv">
+<span id="_CPPv3I0EN3cvt13numEnumValuesEv"></span><span id="_CPPv2I0EN3cvt13numEnumValuesEv"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">E</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dd/d93/enums_8hpp_1a31fc71586903bba83886a5d15f595e49"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">numEnumValues</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><a class="headerlink" href="#_CPPv4I0EN3cvt13numEnumValuesENSt6size_tEv" title="Link to this definition"></a><br /></dt>
+<dd><p>The number of possible values of an enum. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>E</strong> – type of enum </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Number of possible enum values </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4I00EN3cvt12enumToOneHotENSt6vectorI1TEE1E">
-<span id="_CPPv3I00EN3cvt12enumToOneHotE1E"></span><span id="_CPPv2I00EN3cvt12enumToOneHotE1E"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">E</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dd/d93/enums_8hpp_1af4e758f48047e36ad13fda7191d15465"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">enumToOneHot</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00EN3cvt12enumToOneHotENSt6vectorI1TEE1E" title="cvt::enumToOneHot::E"><span class="n"><span class="pre">E</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">e</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3cvt12enumToOneHotENSt6vectorI1TEE1E" title="cvt::enumToOneHot::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I00EN3cvt12enumToOneHotENSt6vectorI1TEE1E" title="Link to this definition"></a><br /></dt>
+<span id="_CPPv3I00EN3cvt12enumToOneHotE1E"></span><span id="_CPPv2I00EN3cvt12enumToOneHotE1E"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">E</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dd/d93/enums_8hpp_1af4e758f48047e36ad13fda7191d15465"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">enumToOneHot</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00EN3cvt12enumToOneHotENSt6vectorI1TEE1E" title="cvt::enumToOneHot::E"><span class="n"><span class="pre">E</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">e</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3cvt12enumToOneHotENSt6vectorI1TEE1E" title="cvt::enumToOneHot::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I00EN3cvt12enumToOneHotENSt6vectorI1TEE1E" title="Link to this definition"></a><br /></dt>
 <dd><p>Converts an enum value to a one-hot encoding. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
@@ -1254,112 +1314,10 @@
 </ul>
 </dd>
 <dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>e</strong> – enum to convert </p>
+<dd class="field-even"><p><strong>e</strong> – enum to one-hot encode </p>
 </dd>
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>one-hot encoding of enum </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE8Alliance">
-<span id="_CPPv3I0EN3cvt12enumToOneHotE8Alliance"></span><span id="_CPPv2I0EN3cvt12enumToOneHotE8Alliance"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dd/d93/enums_8hpp_1a8c04c5dc2d1aa11b001ae3399d4b8af0"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">enumToOneHot</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N3cvt8AllianceE" title="cvt::Alliance"><span class="n"><span class="pre">Alliance</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">e</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE8Alliance" title="cvt::enumToOneHot::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE8Alliance" title="Link to this definition"></a><br /></dt>
-<dd><p>Convert alliance value to one-hot encoding. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>T</strong> – output value type </p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>e</strong> – enum to convert </p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>one-hot encoding </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE10CloakState">
-<span id="_CPPv3I0EN3cvt12enumToOneHotE10CloakState"></span><span id="_CPPv2I0EN3cvt12enumToOneHotE10CloakState"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dd/d93/enums_8hpp_1a36faac5fea96fe1bdff90cf4aa79cba9"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">enumToOneHot</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N3cvt10CloakStateE" title="cvt::CloakState"><span class="n"><span class="pre">CloakState</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">e</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE10CloakState" title="cvt::enumToOneHot::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE10CloakState" title="Link to this definition"></a><br /></dt>
-<dd><p>Convert cloak state value to one-hot encoding. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>T</strong> – output value type </p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>e</strong> – enum to convert </p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>one-hot encoding </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE10Visibility">
-<span id="_CPPv3I0EN3cvt12enumToOneHotE10Visibility"></span><span id="_CPPv2I0EN3cvt12enumToOneHotE10Visibility"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dd/d93/enums_8hpp_1a293d1200fec81cc7274abf9f262b91f5"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">enumToOneHot</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N3cvt10VisibilityE" title="cvt::Visibility"><span class="n"><span class="pre">Visibility</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">e</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE10Visibility" title="cvt::enumToOneHot::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE10Visibility" title="Link to this definition"></a><br /></dt>
-<dd><p>Convert visibility value to one-hot encoding. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>T</strong> – output value type </p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>e</strong> – enum to convert </p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>one-hot encoding </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE5AddOn">
-<span id="_CPPv3I0EN3cvt12enumToOneHotE5AddOn"></span><span id="_CPPv2I0EN3cvt12enumToOneHotE5AddOn"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dd/d93/enums_8hpp_1ae259736e97868d235dd5340dd53d64bd"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">enumToOneHot</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N3cvt5AddOnE" title="cvt::AddOn"><span class="n"><span class="pre">AddOn</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">e</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE5AddOn" title="cvt::enumToOneHot::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE5AddOn" title="Link to this definition"></a><br /></dt>
-<dd><p>Convert addon value to one-hot encoding. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>T</strong> – output value type </p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>e</strong> – enum to convert </p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>one-hot encoding </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE4Race">
-<span id="_CPPv3I0EN3cvt12enumToOneHotE4Race"></span><span id="_CPPv2I0EN3cvt12enumToOneHotE4Race"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dd/d93/enums_8hpp_1a172de9409d9dd6bddd15b961cfc1a29e"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">enumToOneHot</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N3cvt4RaceE" title="cvt::Race"><span class="n"><span class="pre">Race</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">e</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE4Race" title="cvt::enumToOneHot::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE4Race" title="Link to this definition"></a><br /></dt>
-<dd><p>Convert race value to one-hot encoding. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>T</strong> – output value type </p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>e</strong> – enum to convert </p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>one-hot encoding </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE6Result">
-<span id="_CPPv3I0EN3cvt12enumToOneHotE6Result"></span><span id="_CPPv2I0EN3cvt12enumToOneHotE6Result"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dd/d93/enums_8hpp_1ae058fdf2c2b94aaf89740afe7138e79b"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">enumToOneHot</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4N3cvt6ResultE" title="cvt::Result"><span class="n"><span class="pre">Result</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">e</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE6Result" title="cvt::enumToOneHot::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEE6Result" title="Link to this definition"></a><br /></dt>
-<dd><p>Convert result value to one-hot encoding. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>T</strong> – output value type </p>
-</dd>
-<dt class="field-even">Parameters<span class="colon">:</span></dt>
-<dd class="field-even"><p><strong>e</strong> – enum to convert </p>
-</dd>
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>one-hot encoding </p>
 </dd>
 </dl>
 </dd></dl>
@@ -1391,6 +1349,33 @@
 </dd></dl>
 
 </div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-variables">Variables</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt6detail14always_false_vE">
+<span id="_CPPv3I0EN3cvt6detail14always_false_vE"></span><span id="_CPPv2I0EN3cvt6detail14always_false_vE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dd/d93/enums_8hpp_1ad75ee0854764ea233b9815252eb8c308"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">always_false_v</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3cvt6detail12always_falseE" title="cvt::detail::always_false"><span class="n"><span class="pre">always_false</span></span></a><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I0EN3cvt6detail14always_false_vE" title="cvt::detail::always_false_v::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">value</span></span><a class="headerlink" href="#_CPPv4I0EN3cvt6detail14always_false_vE" title="Link to this definition"></a><br /></dt>
+<dd><p>Always false type to help printing type info at a compile time error. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – type to print </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt6detail12always_falseE">
+<span id="_CPPv3I0EN3cvt6detail12always_falseE"></span><span id="_CPPv2I0EN3cvt6detail12always_falseE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="dd/daf/structcvt_1_1detail_1_1always__false"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">always_false</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">false_type</span></span><a class="headerlink" href="#_CPPv4I0EN3cvt6detail12always_falseE" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;enums.hpp&gt;</em></div>
+<p>Helper type. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – </p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </dd></dl>

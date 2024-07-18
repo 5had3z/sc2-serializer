@@ -77,7 +77,8 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">enums.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
@@ -137,6 +138,9 @@ This graph shows which files directly or indirectly include this file:</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/daf/structcvt_1_1detail_1_1always__false.html">cvt::detail::always_false&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Helper type.  <a href="../../dd/daf/structcvt_1_1detail_1_1always__false.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d9a/structfmt_1_1formatter_3_01cvt_1_1Alliance_01_4.html">fmt::formatter&lt; cvt::Alliance &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">fmt formatter specialization for alliance  <a href="../../d5/d9a/structfmt_1_1formatter_3_01cvt_1_1Alliance_01_4.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -199,39 +203,32 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:af4e758f48047e36ad13fda7191d15465" id="r_af4e758f48047e36ad13fda7191d15465"><td class="memTemplParams" colspan="2">template&lt;typename E , typename T &gt; <br />
-requires std::is_enum_v&lt;E&gt;</td></tr>
-<tr class="memitem:af4e758f48047e36ad13fda7191d15465"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d93/enums_8hpp.html#af4e758f48047e36ad13fda7191d15465">cvt::enumToOneHot</a> (E e) noexcept -&gt; std::vector&lt; T &gt;</td></tr>
-<tr class="memdesc:af4e758f48047e36ad13fda7191d15465"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an enum value to a one-hot encoding.  <br /></td></tr>
-<tr class="separator:af4e758f48047e36ad13fda7191d15465"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9a035f8b192c84bee6c0ec1a266e65e3" id="r_a9a035f8b192c84bee6c0ec1a266e65e3"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a9a035f8b192c84bee6c0ec1a266e65e3"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d93/enums_8hpp.html#a9a035f8b192c84bee6c0ec1a266e65e3">cvt::detail::enumToOneHot_helper</a> (auto enumVal, const std::ranges::range auto &amp;enumValues) -&gt; std::vector&lt; T &gt;</td></tr>
 <tr class="memdesc:a9a035f8b192c84bee6c0ec1a266e65e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enum conversion helper that takes an enum value and an array of all possible enum values, finds the index where the enum appears and returns that index.  <br /></td></tr>
 <tr class="separator:a9a035f8b192c84bee6c0ec1a266e65e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8c04c5dc2d1aa11b001ae3399d4b8af0" id="r_a8c04c5dc2d1aa11b001ae3399d4b8af0"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a8c04c5dc2d1aa11b001ae3399d4b8af0"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d93/enums_8hpp.html#a8c04c5dc2d1aa11b001ae3399d4b8af0">cvt::enumToOneHot</a> (Alliance e) noexcept -&gt; std::vector&lt; T &gt;</td></tr>
-<tr class="memdesc:a8c04c5dc2d1aa11b001ae3399d4b8af0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert alliance value to one-hot encoding.  <br /></td></tr>
-<tr class="separator:a8c04c5dc2d1aa11b001ae3399d4b8af0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a36faac5fea96fe1bdff90cf4aa79cba9" id="r_a36faac5fea96fe1bdff90cf4aa79cba9"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a36faac5fea96fe1bdff90cf4aa79cba9"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d93/enums_8hpp.html#a36faac5fea96fe1bdff90cf4aa79cba9">cvt::enumToOneHot</a> (CloakState e) noexcept -&gt; std::vector&lt; T &gt;</td></tr>
-<tr class="memdesc:a36faac5fea96fe1bdff90cf4aa79cba9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert cloak state value to one-hot encoding.  <br /></td></tr>
-<tr class="separator:a36faac5fea96fe1bdff90cf4aa79cba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a293d1200fec81cc7274abf9f262b91f5" id="r_a293d1200fec81cc7274abf9f262b91f5"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a293d1200fec81cc7274abf9f262b91f5"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d93/enums_8hpp.html#a293d1200fec81cc7274abf9f262b91f5">cvt::enumToOneHot</a> (Visibility e) noexcept -&gt; std::vector&lt; T &gt;</td></tr>
-<tr class="memdesc:a293d1200fec81cc7274abf9f262b91f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert visibility value to one-hot encoding.  <br /></td></tr>
-<tr class="separator:a293d1200fec81cc7274abf9f262b91f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae259736e97868d235dd5340dd53d64bd" id="r_ae259736e97868d235dd5340dd53d64bd"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ae259736e97868d235dd5340dd53d64bd"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d93/enums_8hpp.html#ae259736e97868d235dd5340dd53d64bd">cvt::enumToOneHot</a> (AddOn e) noexcept -&gt; std::vector&lt; T &gt;</td></tr>
-<tr class="memdesc:ae259736e97868d235dd5340dd53d64bd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert addon value to one-hot encoding.  <br /></td></tr>
-<tr class="separator:ae259736e97868d235dd5340dd53d64bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a172de9409d9dd6bddd15b961cfc1a29e" id="r_a172de9409d9dd6bddd15b961cfc1a29e"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a172de9409d9dd6bddd15b961cfc1a29e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d93/enums_8hpp.html#a172de9409d9dd6bddd15b961cfc1a29e">cvt::enumToOneHot</a> (Race e) noexcept -&gt; std::vector&lt; T &gt;</td></tr>
-<tr class="memdesc:a172de9409d9dd6bddd15b961cfc1a29e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert race value to one-hot encoding.  <br /></td></tr>
-<tr class="separator:a172de9409d9dd6bddd15b961cfc1a29e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae058fdf2c2b94aaf89740afe7138e79b" id="r_ae058fdf2c2b94aaf89740afe7138e79b"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:ae058fdf2c2b94aaf89740afe7138e79b"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d93/enums_8hpp.html#ae058fdf2c2b94aaf89740afe7138e79b">cvt::enumToOneHot</a> (Result e) noexcept -&gt; std::vector&lt; T &gt;</td></tr>
-<tr class="memdesc:ae058fdf2c2b94aaf89740afe7138e79b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert result value to one-hot encoding.  <br /></td></tr>
-<tr class="separator:ae058fdf2c2b94aaf89740afe7138e79b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc1466cc9d34708fc0939b6d24b83b6f" id="r_abc1466cc9d34708fc0939b6d24b83b6f"><td class="memTemplParams" colspan="2">template&lt;typename E &gt; <br />
+requires std::is_enum_v&lt;E&gt;</td></tr>
+<tr class="memitem:abc1466cc9d34708fc0939b6d24b83b6f"><td class="memTemplItemLeft" align="right" valign="top">consteval auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d93/enums_8hpp.html#abc1466cc9d34708fc0939b6d24b83b6f">cvt::getEnumValues</a> ()</td></tr>
+<tr class="memdesc:abc1466cc9d34708fc0939b6d24b83b6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get all the possible values for a particular enum.  <br /></td></tr>
+<tr class="separator:abc1466cc9d34708fc0939b6d24b83b6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a31fc71586903bba83886a5d15f595e49" id="r_a31fc71586903bba83886a5d15f595e49"><td class="memTemplParams" colspan="2">template&lt;typename E &gt; <br />
+requires std::is_enum_v&lt;E&gt;</td></tr>
+<tr class="memitem:a31fc71586903bba83886a5d15f595e49"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d93/enums_8hpp.html#a31fc71586903bba83886a5d15f595e49">cvt::numEnumValues</a> () -&gt; std::size_t</td></tr>
+<tr class="memdesc:a31fc71586903bba83886a5d15f595e49"><td class="mdescLeft">&#160;</td><td class="mdescRight">The number of possible values of an enum.  <br /></td></tr>
+<tr class="separator:a31fc71586903bba83886a5d15f595e49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af4e758f48047e36ad13fda7191d15465" id="r_af4e758f48047e36ad13fda7191d15465"><td class="memTemplParams" colspan="2">template&lt;typename T , typename E &gt; <br />
+requires std::is_enum_v&lt;E&gt;</td></tr>
+<tr class="memitem:af4e758f48047e36ad13fda7191d15465"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d93/enums_8hpp.html#af4e758f48047e36ad13fda7191d15465">cvt::enumToOneHot</a> (E e) noexcept -&gt; std::vector&lt; T &gt;</td></tr>
+<tr class="memdesc:af4e758f48047e36ad13fda7191d15465"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts an enum value to a one-hot encoding.  <br /></td></tr>
+<tr class="separator:af4e758f48047e36ad13fda7191d15465"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ad75ee0854764ea233b9815252eb8c308" id="r_ad75ee0854764ea233b9815252eb8c308"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
+<tr class="memitem:ad75ee0854764ea233b9815252eb8c308"><td class="memTemplItemLeft" align="right" valign="top">constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d93/enums_8hpp.html#ad75ee0854764ea233b9815252eb8c308">cvt::detail::always_false_v</a> = <a class="el" href="../../dd/daf/structcvt_1_1detail_1_1always__false.html">always_false</a>&lt;T&gt;::value</td></tr>
+<tr class="memdesc:ad75ee0854764ea233b9815252eb8c308"><td class="mdescLeft">&#160;</td><td class="mdescRight">Always false type to help printing type info at a compile time error.  <br /></td></tr>
+<tr class="separator:ad75ee0854764ea233b9815252eb8c308"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Common enums in StarCraft II and accompanying tools such as enum-&gt;string and enum-&gt;one-hot. </p>
@@ -240,145 +237,13 @@ requires std::is_enum_v&lt;E&gt;</td></tr>
 <dl class="section date"><dt>Date</dt><dd>2024-05-27</dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>Copyright (c) 2024 </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="ae259736e97868d235dd5340dd53d64bd" name="ae259736e97868d235dd5340dd53d64bd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae259736e97868d235dd5340dd53d64bd">&#9670;&#160;</a></span>enumToOneHot() <span class="overload">[1/7]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto cvt::enumToOneHot </td>
-          <td>(</td>
-          <td class="paramtype">AddOn&#160;</td>
-          <td class="paramname"><em>e</em></td><td>)</td>
-          <td> -&gt; std::vector&lt;T&gt;
-</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convert addon value to one-hot encoding. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>output value type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">e</td><td>enum to convert </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>one-hot encoding </dd></dl>
-
-</div>
-</div>
-<a id="a8c04c5dc2d1aa11b001ae3399d4b8af0" name="a8c04c5dc2d1aa11b001ae3399d4b8af0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8c04c5dc2d1aa11b001ae3399d4b8af0">&#9670;&#160;</a></span>enumToOneHot() <span class="overload">[2/7]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto cvt::enumToOneHot </td>
-          <td>(</td>
-          <td class="paramtype">Alliance&#160;</td>
-          <td class="paramname"><em>e</em></td><td>)</td>
-          <td> -&gt; std::vector&lt;T&gt;
-</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convert alliance value to one-hot encoding. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>output value type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">e</td><td>enum to convert </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>one-hot encoding </dd></dl>
-
-</div>
-</div>
-<a id="a36faac5fea96fe1bdff90cf4aa79cba9" name="a36faac5fea96fe1bdff90cf4aa79cba9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a36faac5fea96fe1bdff90cf4aa79cba9">&#9670;&#160;</a></span>enumToOneHot() <span class="overload">[3/7]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto cvt::enumToOneHot </td>
-          <td>(</td>
-          <td class="paramtype">CloakState&#160;</td>
-          <td class="paramname"><em>e</em></td><td>)</td>
-          <td> -&gt; std::vector&lt;T&gt;
-</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convert cloak state value to one-hot encoding. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>output value type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">e</td><td>enum to convert </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>one-hot encoding </dd></dl>
-
-</div>
-</div>
 <a id="af4e758f48047e36ad13fda7191d15465" name="af4e758f48047e36ad13fda7191d15465"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af4e758f48047e36ad13fda7191d15465">&#9670;&#160;</a></span>enumToOneHot() <span class="overload">[4/7]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af4e758f48047e36ad13fda7191d15465">&#9670;&#160;</a></span>enumToOneHot()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename E , typename T &gt; <br />
+template&lt;typename T , typename E &gt; <br />
 requires std::is_enum_v&lt;E&gt;</div>
 <table class="mlabels">
   <tr>
@@ -389,7 +254,8 @@ requires std::is_enum_v&lt;E&gt;</div>
           <td>(</td>
           <td class="paramtype">E&#160;</td>
           <td class="paramname"><em>e</em></td><td>)</td>
-          <td> -&gt;  std::vector&lt; T &gt;</td>
+          <td> -&gt; std::vector&lt;T&gt;
+</td>
         </tr>
       </table>
   </td>
@@ -409,143 +275,11 @@ requires std::is_enum_v&lt;E&gt;</div>
 </dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">e</td><td>enum to convert </td></tr>
+    <tr><td class="paramname">e</td><td>enum to one-hot encode </td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>one-hot encoding of enum </dd></dl>
-
-</div>
-</div>
-<a id="a172de9409d9dd6bddd15b961cfc1a29e" name="a172de9409d9dd6bddd15b961cfc1a29e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a172de9409d9dd6bddd15b961cfc1a29e">&#9670;&#160;</a></span>enumToOneHot() <span class="overload">[5/7]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto cvt::enumToOneHot </td>
-          <td>(</td>
-          <td class="paramtype">Race&#160;</td>
-          <td class="paramname"><em>e</em></td><td>)</td>
-          <td> -&gt; std::vector&lt;T&gt;
-</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convert race value to one-hot encoding. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>output value type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">e</td><td>enum to convert </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>one-hot encoding </dd></dl>
-
-</div>
-</div>
-<a id="ae058fdf2c2b94aaf89740afe7138e79b" name="ae058fdf2c2b94aaf89740afe7138e79b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae058fdf2c2b94aaf89740afe7138e79b">&#9670;&#160;</a></span>enumToOneHot() <span class="overload">[6/7]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto cvt::enumToOneHot </td>
-          <td>(</td>
-          <td class="paramtype">Result&#160;</td>
-          <td class="paramname"><em>e</em></td><td>)</td>
-          <td> -&gt; std::vector&lt;T&gt;
-</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convert result value to one-hot encoding. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>output value type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">e</td><td>enum to convert </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>one-hot encoding </dd></dl>
-
-</div>
-</div>
-<a id="a293d1200fec81cc7274abf9f262b91f5" name="a293d1200fec81cc7274abf9f262b91f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a293d1200fec81cc7274abf9f262b91f5">&#9670;&#160;</a></span>enumToOneHot() <span class="overload">[7/7]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto cvt::enumToOneHot </td>
-          <td>(</td>
-          <td class="paramtype">Visibility&#160;</td>
-          <td class="paramname"><em>e</em></td><td>)</td>
-          <td> -&gt; std::vector&lt;T&gt;
-</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convert visibility value to one-hot encoding. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>output value type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">e</td><td>enum to convert </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>one-hot encoding </dd></dl>
 
 </div>
 </div>
@@ -593,6 +327,106 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>vector one-hot encoding of the enum. </dd></dl>
+
+</div>
+</div>
+<a id="abc1466cc9d34708fc0939b6d24b83b6f" name="abc1466cc9d34708fc0939b6d24b83b6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc1466cc9d34708fc0939b6d24b83b6f">&#9670;&#160;</a></span>getEnumValues()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename E &gt; <br />
+requires std::is_enum_v&lt;E&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">consteval auto cvt::getEnumValues </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get all the possible values for a particular enum. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">E</td><td>enum type </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Array of all possible enum values </dd></dl>
+
+</div>
+</div>
+<a id="a31fc71586903bba83886a5d15f595e49" name="a31fc71586903bba83886a5d15f595e49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a31fc71586903bba83886a5d15f595e49">&#9670;&#160;</a></span>numEnumValues()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename E &gt; <br />
+requires std::is_enum_v&lt;E&gt;</div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr auto cvt::numEnumValues </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> -&gt; std::size_t
+</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The number of possible values of an enum. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">E</td><td>type of enum </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Number of possible enum values </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="ad75ee0854764ea233b9815252eb8c308" name="ad75ee0854764ea233b9815252eb8c308"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad75ee0854764ea233b9815252eb8c308">&#9670;&#160;</a></span>always_false_v</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool cvt::detail::always_false_v = always_false&lt;T&gt;::value</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Always false type to help printing type info at a compile time error. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>type to print </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
