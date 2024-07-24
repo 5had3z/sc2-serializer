@@ -29,16 +29,17 @@
 
 namespace cvt {
 
-UpgradeState::UpgradeState(std::filesystem::path dataFile) : dataFile_(std::move(dataFile)) {}
+UpgradeState::UpgradeState(std::filesystem::path dataFile) : dataFile_(std::move(dataFile)) { this->loadInfo(); }
 
 void UpgradeState::setVersion(std::string_view version)
 {
-    assert(version != "" && "Got empty version in setVersion");
-    if (version != gameVersion_) {
-        gameVersion_ = version;
-        this->loadInfo();
+    if (!gameVersion2id2delay_.contains(std::string(version))) {
+        throw std::out_of_range(fmt::format("Game Version not found: {}", version));
     }
+    gameVersion_ = version;
 }
+
+void UpgradeState::setRace(Race race) noexcept { currentRace_ = race; }
 
 void UpgradeState::loadInfo()
 {
@@ -46,22 +47,16 @@ void UpgradeState::loadInfo()
         throw std::runtime_error(fmt::format("Data file does not exist: {}", dataFile_.string()));
     }
     YAML::Node root = YAML::LoadFile(dataFile_.string());
-    auto node =
-        std::ranges::find_if(root, [&](const YAML::Node &n) { return n["version"].as<std::string>() == gameVersion_; });
-    if (node == root.end()) {
-        throw std::runtime_error(fmt::format("Game Version {} not in data file {}", gameVersion_, dataFile_.string()));
-    }
 
-    // Clear current mapping
-    id2delay_.clear();
-
-    const auto &upgrades = (*node)["upgrades"];
-    for (auto &&upgrade : upgrades) {
-        id2delay_[upgrade["ability_id"].as<int>()] = static_cast<int>(upgrade["time"].as<float>());
+    // Load all entries from yaml into memory
+    for (auto &&entry : root) {
+        std::unordered_map<int, int> id2delay = {};
+        for (auto &&upgrade : entry["upgrades"]) {
+            id2delay.emplace(upgrade["ability_id"].as<int>(), static_cast<int>(upgrade["time"].as<float>()));
+        }
+        gameVersion2id2delay_.emplace(entry["version"].as<std::string>(), std::move(id2delay));
     }
 }
-
-void UpgradeState::setRace(Race race) noexcept { currentRace_ = race; }
 
 auto UpgradeState::getValidIds() const -> const std::set<int> &
 {
@@ -83,7 +78,8 @@ auto UpgradeState::getValidRemap() const -> const std::unordered_map<int, std::a
 void UpgradeState::calculateTimes(const std::vector<std::vector<Action>> &playerActions,
     const std::vector<unsigned int> &gameTime)
 {
-    if (id2delay_.empty()) { throw std::logic_error{ "Research info to delay not loaded" }; }
+    auto &id2delay = gameVersion2id2delay_.at(gameVersion_);
+    if (id2delay.empty()) { throw std::logic_error{ "Research info to delay not loaded" }; }
     if (currentRace_ == Race::Random) { throw std::logic_error{ "No race selected" }; }
     if (playerActions.size() != gameTime.size()) {
         throw std::runtime_error{ fmt::format(
@@ -103,10 +99,10 @@ void UpgradeState::calculateTimes(const std::vector<std::vector<Action>> &player
             const auto abilityPtr = raceUpgradeIds.find(action.ability_id);
             if (abilityPtr != raceUpgradeIds.end()) {
                 const std::size_t upgradeIdx = std::distance(raceUpgradeIds.begin(), abilityPtr);
-                if (!id2delay_.contains(action.ability_id)) {
+                if (!id2delay.contains(action.ability_id)) {
                     throw std::out_of_range{ fmt::format("Ability id {} not in id2delay table", action.ability_id) };
                 }
-                upgradeTimes_[upgradeIdx] = gameTime[idx] + id2delay_.at(action.ability_id);
+                upgradeTimes_[upgradeIdx] = gameTime[idx] + id2delay.at(action.ability_id);
                 continue;
             }
 
@@ -118,11 +114,11 @@ void UpgradeState::calculateTimes(const std::vector<std::vector<Action>> &player
                     const std::size_t upgradeIdx =
                         std::distance(raceUpgradeIds.begin(), raceUpgradeIds.find(remapAbilityId));
                     if (upgradeTimes_[upgradeIdx] == maxTime) {
-                        if (!id2delay_.contains(remapAbilityId)) {
+                        if (!id2delay.contains(remapAbilityId)) {
                             throw std::out_of_range{ fmt::format(
                                 "Ability id {} not in id2delay table", remapAbilityId) };
                         }
-                        upgradeTimes_[upgradeIdx] = gameTime[idx] + id2delay_.at(remapAbilityId);
+                        upgradeTimes_[upgradeIdx] = gameTime[idx] + id2delay.at(remapAbilityId);
                         break;
                     }
                 }

@@ -111,7 +111,7 @@ class UpgradeState
     /**
      * @brief Mapping from action/upgrade id to the time it takes to research in game steps.
      */
-    std::unordered_map<int, int> id2delay_{};
+    std::unordered_map<std::string, std::unordered_map<int, int>> gameVersion2id2delay_{};
 
     /**
      * @brief Current race of the player.

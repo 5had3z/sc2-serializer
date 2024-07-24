@@ -19,6 +19,7 @@
 #include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/filter/zlib.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
+#include <spdlog/fmt/chrono.h>
 #include <spdlog/spdlog.h>
 
 #include <filesystem>
@@ -309,6 +310,8 @@ template<HasDBInterface EntryType> class ReplayDatabase
     template<typename T> [[nodiscard]] auto readFromDatabase(std::size_t index, T (*reader)(std::istream &)) const -> T
     {
         namespace bio = boost::iostreams;
+        using clock = std::chrono::high_resolution_clock;
+
         // Check if valid index
         if (index >= entryPtr_.size()) {
             throw std::out_of_range(fmt::format("Index {} exceeds database size {}", index, entryPtr_.size()));
@@ -323,9 +326,9 @@ template<HasDBInterface EntryType> class ReplayDatabase
         filterStream.push(dbStream);
 
         // Load and return the data
-        // using clock = std::chrono::high_resolution_clock;
-        // const auto start = clock::now();
+        // auto start = clock::now();
         T data;
+        // const std::streampos pos_start = dbStream.tellg();
         try {
             data = reader(filterStream);
         } catch (const std::bad_alloc &e) {
@@ -333,10 +336,11 @@ template<HasDBInterface EntryType> class ReplayDatabase
                 gLoggerDB, "Failed to read from {} at index {}, got error: {}", dbPath_.string(), index, e.what());
             throw e;
         }
+        // const std::streampos pos_end = dbStream.tellg();
+        // spdlog::debug("Took {} to load {} bytes",
+        //     std::chrono::duration_cast<std::chrono::microseconds>(clock::now() - start),
+        //     pos_end - pos_start);
         filterStream.reset();
-        // fmt::print("Time Taken to Load: {}ms, Replay Size: {}\n",
-        //     std::chrono::duration_cast<std::chrono::milliseconds>(clock::now() - start).count(),
-        //     data.gameStep.size());
         return data;
     }
 
