@@ -14,9 +14,6 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
-namespace fs = std::filesystem;
-namespace bio = boost::iostreams;
-
 namespace cvt {
 
 std::shared_ptr<spdlog::logger> gLoggerDB = spdlog::stdout_color_mt("ReplayDatabase");
