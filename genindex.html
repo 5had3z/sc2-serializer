@@ -45,6 +45,7 @@
 <li class="toctree-l1"><a class="reference internal" href="dataloading.html">Dataloading</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts.html">Scripts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="benchmark.html">Benchmarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="custom_dataset.html">Applying to New Dataset</a></li>
 <li class="toctree-l1"><a class="reference internal" href="cpp_api/index.html">C++ API</a></li>
 </ul>
 
@@ -106,7 +107,7 @@
 </li>
       <li><a href="scripts.html#replay_sql.create_individual">create_individual() (in module replay_sql)</a>
 </li>
-      <li><a href="cpp_api/data_structures.html#_CPPv43cvt">cvt (C++ type)</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[1]</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[2]</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[3]</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[4]</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[5]</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[6]</a>, <a href="cpp_api/observer.html#_CPPv43cvt">[7]</a>, <a href="cpp_api/replay_parsing.html#_CPPv43cvt">[8]</a>, <a href="cpp_api/serializer.html#_CPPv43cvt">[9]</a>
+      <li><a href="cpp_api/data_structures.html#_CPPv43cvt">cvt (C++ type)</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[1]</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[2]</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[3]</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[4]</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[5]</a>, <a href="cpp_api/data_structures.html#_CPPv43cvt">[6]</a>, <a href="cpp_api/observer.html#_CPPv43cvt">[7]</a>, <a href="cpp_api/replay_parsing.html#_CPPv43cvt">[8]</a>, <a href="cpp_api/serializer.html#_CPPv43cvt">[9]</a>, <a href="cpp_api/soa.html#_CPPv43cvt">[10]</a>, <a href="cpp_api/vectorize.html#_CPPv43cvt">[11]</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt6ActionE">cvt::Action (C++ struct)</a>
 </li>
@@ -159,6 +160,8 @@
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt8Alliance7NeutralE">cvt::Alliance::Neutral (C++ enumerator)</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt8Alliance4SelfE">cvt::Alliance::Self (C++ enumerator)</a>
+</li>
+      <li><a href="cpp_api/soa.html#_CPPv4I00EN3cvt8AoStoSoAE3SoARK3AoS">cvt::AoStoSoA (C++ function)</a>, <a href="cpp_api/soa.html#_CPPv4I00EN3cvt8AoStoSoAE3SoARR3AoS">[1]</a>
 </li>
       <li><a href="cpp_api/observer.html#_CPPv4I0EN3cvt13BaseConverterE">cvt::BaseConverter (C++ class)</a>
 </li>
@@ -274,13 +277,23 @@
 </li>
       <li><a href="cpp_api/serializer.html#_CPPv4I0EN3cvt11deserializeEvR1TRNSt7istreamE">cvt::deserialize (C++ function)</a>, <a href="cpp_api/serializer.html#_CPPv4I0EN3cvt11deserializeEvR1TRNSt7istreamE">[1]</a>, <a href="cpp_api/serializer.html#_CPPv4I_NSt6ranges5rangeEEN3cvt11deserializeEvR1TRNSt7istreamE">[2]</a>, <a href="cpp_api/serializer.html#_CPPv4I_NSt6ranges5rangeEEN3cvt11deserializeEvR1TRNSt7istreamE">[3]</a>
 </li>
-      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt6detailE">cvt::detail (C++ type)</a>
+      <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt6detailE">cvt::detail (C++ type)</a>, <a href="cpp_api/soa.html#_CPPv4N3cvt6detailE">[1]</a>, <a href="cpp_api/vectorize.html#_CPPv4N3cvt6detailE">[2]</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4I0EN3cvt6detail12always_falseE">cvt::detail::always_false (C++ struct)</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4I0EN3cvt6detail14always_false_vE">cvt::detail::always_false_v (C++ member)</a>
 </li>
+      <li><a href="cpp_api/soa.html#_CPPv4I0_NSt6size_tEEN3cvt6detail18assignFromSoAIndexEvRN1T11struct_typeERK1TNSt6size_tE">cvt::detail::assignFromSoAIndex (C++ function)</a>
+</li>
+      <li><a href="cpp_api/soa.html#_CPPv4I0_NSt6size_tEEN3cvt6detail18emplaceBackIntoSoAEvR1TRKN1T11struct_typeE">cvt::detail::emplaceBackIntoSoA (C++ function)</a>
+</li>
       <li><a href="cpp_api/data_structures.html#_CPPv4I0EN3cvt6detail19enumToOneHot_helperENSt6vectorI1TEEDaRKNSt6ranges5rangeE">cvt::detail::enumToOneHot_helper (C++ function)</a>
+</li>
+      <li><a href="cpp_api/soa.html#_CPPv4I_NSt6size_tE0EN3cvt6detail14getStructIndexENSt6size_tEv">cvt::detail::getStructIndex (C++ function)</a>
+</li>
+      <li><a href="cpp_api/vectorize.html#_CPPv4I00EN3cvt6detail16vectorize_helperE2It1T2Itb">cvt::detail::vectorize_helper (C++ function)</a>, <a href="cpp_api/vectorize.html#_CPPv4I00EN3cvt6detail16vectorize_helperE2It1T2Itb">[1]</a>, <a href="cpp_api/vectorize.html#_CPPv4I00EN3cvt6detail16vectorize_helperE2It1T2Itb">[2]</a>, <a href="cpp_api/vectorize.html#_CPPv4I_NSt6ranges5rangeE0EN3cvt6detail16vectorize_helperE2ItRK1T2Itb">[3]</a>
+</li>
+      <li><a href="cpp_api/vectorize.html#_CPPv4I0_bEN3cvt6detail20vectorizedSizeHelperENSt6size_tEv">cvt::detail::vectorizedSizeHelper (C++ function)</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4I00EN3cvt12enumToOneHotENSt6vectorI1TEE1E">cvt::enumToOneHot (C++ function)</a>, <a href="cpp_api/data_structures.html#_CPPv4I0EN3cvt12enumToOneHotENSt6vectorI1TEEN6Action10TargetTypeE">[1]</a>
 </li>
@@ -290,7 +303,11 @@
 </li>
       <li><a href="cpp_api/observer.html#_CPPv4N3cvt13FullConverter6OnStepEv">cvt::FullConverter::OnStep (C++ function)</a>
 </li>
+      <li><a href="cpp_api/soa.html#_CPPv4I_9IsSoATypeEN3cvt19gatherStructAtIndexEN3SoA11struct_typeERK3SoANSt6size_tE">cvt::gatherStructAtIndex (C++ function)</a>
+</li>
       <li><a href="cpp_api/data_structures.html#_CPPv4I0EN3cvt13getEnumValuesEDav">cvt::getEnumValues (C++ function)</a>
+</li>
+      <li><a href="cpp_api/vectorize.html#_CPPv4I0EN3cvt17getVectorizedSizeENSt6size_tEb">cvt::getVectorizedSize (C++ function)</a>
 </li>
       <li><a href="cpp_api/serializer.html#_CPPv4N3cvt13gMaxRangeSizeE">cvt::gMaxRangeSize (C++ member)</a>
 </li>
@@ -572,14 +589,14 @@
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt6Result3WinE">cvt::Result::Win (C++ enumerator)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt5ScoreE">cvt::Score (C++ struct)</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt5Score18collected_mineralsE">cvt::Score::collected_minerals (C++ member)</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt5Score17collected_vespeneE">cvt::Score::collected_vespene (C++ member)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt5Score24collection_rate_mineralsE">cvt::Score::collection_rate_minerals (C++ member)</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt5Score23collection_rate_vespeneE">cvt::Score::collection_rate_vespene (C++ member)</a>
@@ -623,6 +640,8 @@
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt5Score17total_value_unitsE">cvt::Score::total_value_units (C++ member)</a>
 </li>
       <li><a href="cpp_api/serializer.html#_CPPv4I0EN3cvt9serializeEvRK1TRNSt7ostreamE">cvt::serialize (C++ function)</a>, <a href="cpp_api/serializer.html#_CPPv4I0EN3cvt9serializeEvRK1TRNSt7ostreamE">[1]</a>, <a href="cpp_api/serializer.html#_CPPv4I_NSt6ranges5rangeEEN3cvt9serializeEvRK1TRNSt7ostreamE">[2]</a>, <a href="cpp_api/serializer.html#_CPPv4I_NSt6ranges5rangeEEN3cvt9serializeEvRK1TRNSt7ostreamE">[3]</a>
+</li>
+      <li><a href="cpp_api/soa.html#_CPPv4I00EN3cvt8SoAtoAoSE3AoSRK3SoA">cvt::SoAtoAoS (C++ function)</a>, <a href="cpp_api/soa.html#_CPPv4I_9IsSoATypeEN3cvt8SoAtoAoSENSt6vectorIN3SoA11struct_typeEEERK3SoA">[1]</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt8StepDataE">cvt::StepData (C++ struct)</a>
 </li>
@@ -1051,6 +1070,8 @@
       <li><a href="cpp_api/replay_parsing.html#_CPPv4N3cvt12UpgradeState12UpgradeStateENSt10filesystem4pathE">cvt::UpgradeState::UpgradeState (C++ function)</a>
 </li>
       <li><a href="cpp_api/replay_parsing.html#_CPPv4N3cvt12UpgradeState13upgradeTimes_E">cvt::UpgradeState::upgradeTimes_ (C++ member)</a>
+</li>
+      <li><a href="cpp_api/vectorize.html#_CPPv4I00EN3cvt9vectorizeE2It1S2Itb">cvt::vectorize (C++ function)</a>, <a href="cpp_api/vectorize.html#_CPPv4I00EN3cvt9vectorizeENSt6vectorI1TEE1Sb">[1]</a>
 </li>
       <li><a href="cpp_api/data_structures.html#_CPPv4N3cvt10VisibilityE">cvt::Visibility (C++ enum)</a>
 </li>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vectorize &mdash; StarCraft II Serializer  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=86f27845" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=eafc0fe6" />
+
+  
+  
+        <script src="../_static/jquery.js?v=8dae8fb0"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Struct-of-Array Transforms" href="soa.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            StarCraft II Serializer
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Welcome to sc2-serializer’s documentation!</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../replay_data.html">Replay Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../dataloading.html">Dataloading</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../scripts.html">Scripts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../benchmark.html">Benchmarks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../custom_dataset.html">Applying to New Dataset</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">C++ API</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="data_structures.html">Starcraft II Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="observer.html">Observer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="replay_parsing.html">Replay Parsing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="serializer.html">Serialization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="soa.html">Struct-of-Array Transforms</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Vectorize</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv43cvt"><code class="docutils literal notranslate"><span class="pre">cvt</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt17getVectorizedSizeENSt6size_tEb"><code class="docutils literal notranslate"><span class="pre">cvt::getVectorizedSize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I00EN3cvt9vectorizeE2It1S2Itb"><code class="docutils literal notranslate"><span class="pre">cvt::vectorize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I00EN3cvt9vectorizeENSt6vectorI1TEE1Sb"><code class="docutils literal notranslate"><span class="pre">cvt::vectorize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt6detailE"><code class="docutils literal notranslate"><span class="pre">cvt::detail</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">StarCraft II Serializer</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">C++ API</a></li>
+      <li class="breadcrumb-item active">Vectorize</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/cpp_api/vectorize.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="vectorize">
+<span id="api-vectorize"></span><h1>Vectorize<a class="headerlink" href="#vectorize" title="Link to this heading"></a></h1>
+<p>Automatically convert some struct S to a vector of homogeneous data type, optionally expanding enum values to one-hot encodings. Useful for writing unit data or score data to numpy arrays for ML training. </p>
+<p><dl class="simple">
+<dt><strong>Author</strong></dt><dd><p>Bryce Ferenczi </p>
+</dd>
+<dt><strong>Version</strong></dt><dd><p>0.1 </p>
+</dd>
+<dt><strong>Date</strong></dt><dd><p>2024-08-10</p>
+</dd>
+<dt><strong>Copyright</strong></dt><dd><p>Copyright (c) 2024 </p>
+</dd>
+</dl>
+</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv43cvt">
+<span id="_CPPv33cvt"></span><span id="_CPPv23cvt"></span><span id="cvt"></span><span class="target" id="df/d0d/namespacecvt"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cvt</span></span></span><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt17getVectorizedSizeENSt6size_tEb">
+<span id="_CPPv3I0EN3cvt17getVectorizedSizeEb"></span><span id="_CPPv2I0EN3cvt17getVectorizedSizeEb"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d4/d74/vectorize_8hpp_1acf6632137e06ab0b5a50c620ee520474"></span><span class="k"><span class="pre">constexpr</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getVectorizedSize</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">onehotEnum</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><a class="headerlink" href="#_CPPv4I0EN3cvt17getVectorizedSizeENSt6size_tEb" title="Link to this definition"></a><br /></dt>
+<dd><p>Get the size of the struct if its vectorized with vectorize. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>T</strong> – Type to query </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>onehotEnum</strong> – Flag if oneHotEncodings are expanded or not </p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Number of elements of the vectorized type </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN3cvt9vectorizeE2It1S2Itb">
+<span id="_CPPv3I00EN3cvt9vectorizeE1S2Itb"></span><span id="_CPPv2I00EN3cvt9vectorizeE1S2Itb"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">S</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">It</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d4/d74/vectorize_8hpp_1a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">vectorize</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00EN3cvt9vectorizeE2It1S2Itb" title="cvt::vectorize::S"><span class="n"><span class="pre">S</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">s</span></span>, <a class="reference internal" href="#_CPPv4I00EN3cvt9vectorizeE2It1S2Itb" title="cvt::vectorize::It"><span class="n"><span class="pre">It</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">it</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">onehotEnum</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3cvt9vectorizeE2It1S2Itb" title="cvt::vectorize::It"><span class="n"><span class="pre">It</span></span></a><a class="headerlink" href="#_CPPv4I00EN3cvt9vectorizeE2It1S2Itb" title="Link to this definition"></a><br /></dt>
+<dd><p>Vectorize Struct of data to mutable output iterator. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>S</strong> – struct type </p></li>
+<li><p><strong>It</strong> – output iterator type </p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>s</strong> – Struct data to vectorize </p></li>
+<li><p><strong>it</strong> – Output iterator </p></li>
+<li><p><strong>onehotEnum</strong> – Flag to expand enum types to onehot encoding (default: false) </p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Incremented output iterator </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN3cvt9vectorizeENSt6vectorI1TEE1Sb">
+<span id="_CPPv3I00EN3cvt9vectorizeE1Sb"></span><span id="_CPPv2I00EN3cvt9vectorizeE1Sb"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">S</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d4/d74/vectorize_8hpp_1a9615af7444dd62ba714d2ff92948273a"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">vectorize</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00EN3cvt9vectorizeENSt6vectorI1TEE1Sb" title="cvt::vectorize::S"><span class="n"><span class="pre">S</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">s</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">onehotEnum</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv4I00EN3cvt9vectorizeENSt6vectorI1TEE1Sb" title="cvt::vectorize::T"><span class="n"><span class="pre">T</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4I00EN3cvt9vectorizeENSt6vectorI1TEE1Sb" title="Link to this definition"></a><br /></dt>
+<dd><p>Vectorize Struct of data to vector. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> – Output arithmetic type of vector </p></li>
+<li><p><strong>S</strong> – Struct type to vectorize </p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>s</strong> – struct data to vectorize </p></li>
+<li><p><strong>onehotEnum</strong> – Flag to expand enum types to onehot encoding (default: false) </p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Vectorized struct data as type T </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt6detailE">
+<span id="_CPPv3N3cvt6detailE"></span><span id="_CPPv2N3cvt6detailE"></span><span id="cvt::detail"></span><span class="target" id="d6/dc5/namespacecvt_1_1detail"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">detail</span></span></span><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I00EN3cvt6detail16vectorize_helperE2It1T2Itb">
+<span id="_CPPv3I00EN3cvt6detail16vectorize_helperE1T2Itb"></span><span id="_CPPv2I00EN3cvt6detail16vectorize_helperE1T2Itb"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">It</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d4/d74/vectorize_8hpp_1abdc517e7119b71637b07bb6fc50baa6e"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">vectorize_helper</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00EN3cvt6detail16vectorize_helperE2It1T2Itb" title="cvt::detail::vectorize_helper::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">d</span></span>, <a class="reference internal" href="#_CPPv4I00EN3cvt6detail16vectorize_helperE2It1T2Itb" title="cvt::detail::vectorize_helper::It"><span class="n"><span class="pre">It</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">it</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">onehotEnum</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3cvt6detail16vectorize_helperE2It1T2Itb" title="cvt::detail::vectorize_helper::It"><span class="n"><span class="pre">It</span></span></a><a class="headerlink" href="#_CPPv4I00EN3cvt6detail16vectorize_helperE2It1T2Itb" title="Link to this definition"></a><br /></dt>
+<dd><p>Vectorize single arithmetic element by writing to output iterator It and incrementing. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> – Arithmetic type </p></li>
+<li><p><strong>It</strong> – Output iterator type </p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>d</strong> – Data to vectorize </p></li>
+<li><p><strong>it</strong> – Output iterator </p></li>
+<li><p><strong>onehotEnum</strong> – flag to expand enum types to onehot </p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Incremented output iterator </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I_NSt6ranges5rangeE0EN3cvt6detail16vectorize_helperE2ItRK1T2Itb">
+<span id="_CPPv3I_NSt6ranges5rangeE0EN3cvt6detail16vectorize_helperERK1T2Itb"></span><span id="_CPPv2I_NSt6ranges5rangeE0EN3cvt6detail16vectorize_helperERK1T2Itb"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ranges</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">range</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">It</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d4/d74/vectorize_8hpp_1a71b5c0b0fd969c5702160baef6348957"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">vectorize_helper</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I_NSt6ranges5rangeE0EN3cvt6detail16vectorize_helperE2ItRK1T2Itb" title="cvt::detail::vectorize_helper::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">d</span></span>, <a class="reference internal" href="#_CPPv4I_NSt6ranges5rangeE0EN3cvt6detail16vectorize_helperE2ItRK1T2Itb" title="cvt::detail::vectorize_helper::It"><span class="n"><span class="pre">It</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">it</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">onehotEnum</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I_NSt6ranges5rangeE0EN3cvt6detail16vectorize_helperE2ItRK1T2Itb" title="cvt::detail::vectorize_helper::It"><span class="n"><span class="pre">It</span></span></a><a class="headerlink" href="#_CPPv4I_NSt6ranges5rangeE0EN3cvt6detail16vectorize_helperE2ItRK1T2Itb" title="Link to this definition"></a><br /></dt>
+<dd><p>Vectorize range of arithmetic elements by writing to and incrementing output iterator. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> – Range type </p></li>
+<li><p><strong>It</strong> – Output iterator type </p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>d</strong> – Range data to vectorize </p></li>
+<li><p><strong>it</strong> – Output iterator </p></li>
+<li><p><strong>onehotEnum</strong> – flag to expand enum types to onehot </p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Incremented output iterator </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">It</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d4/d74/vectorize_8hpp_1af6a3165ada69cfc71cffda640524d5b7"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">vectorize_helper</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00EN3cvt6detail16vectorize_helperE2It1T2Itb" title="cvt::detail::vectorize_helper::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">d</span></span>, <a class="reference internal" href="#_CPPv4I00EN3cvt6detail16vectorize_helperE2It1T2Itb" title="cvt::detail::vectorize_helper::It"><span class="n"><span class="pre">It</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">it</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">onehotEnum</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3cvt6detail16vectorize_helperE2It1T2Itb" title="cvt::detail::vectorize_helper::It"><span class="n"><span class="pre">It</span></span></a><br /></dt>
+<dd><p>Vectorize enum type and optionally expand to onehot encoding to and incrementing output iterator. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> – Enum type </p></li>
+<li><p><strong>It</strong> – Output iterator type </p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>d</strong> – Enum data to vectorize </p></li>
+<li><p><strong>it</strong> – Output iterator </p></li>
+<li><p><strong>onehotEnum</strong> – flag to expand enum types to onehot </p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Incremented output iterator </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp">
+<span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">It</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d4/d74/vectorize_8hpp_1ab845cb421f2d5fb4676f87176f5e5a29"></span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">vectorize_helper</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv4I00EN3cvt6detail16vectorize_helperE2It1T2Itb" title="cvt::detail::vectorize_helper::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">d</span></span>, <a class="reference internal" href="#_CPPv4I00EN3cvt6detail16vectorize_helperE2It1T2Itb" title="cvt::detail::vectorize_helper::It"><span class="n"><span class="pre">It</span></span></a><span class="w"> </span><span class="n sig-param"><span class="pre">it</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">onehotEnum</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I00EN3cvt6detail16vectorize_helperE2It1T2Itb" title="cvt::detail::vectorize_helper::It"><span class="n"><span class="pre">It</span></span></a><br /></dt>
+<dd><p>Vectorize struct (aggregate type) to data. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> – Struct type </p></li>
+<li><p><strong>It</strong> – Output iterator type </p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>d</strong> – Struct to vectorize </p></li>
+<li><p><strong>it</strong> – Output iterator </p></li>
+<li><p><strong>onehotEnum</strong> – flag to expand enum types to onehot </p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Incremented output iterator </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0_bEN3cvt6detail20vectorizedSizeHelperENSt6size_tEv">
+<span id="_CPPv3I0_bEN3cvt6detail20vectorizedSizeHelperEv"></span><span id="_CPPv2I0_bEN3cvt6detail20vectorizedSizeHelperEv"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">oneHotEnum</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d4/d74/vectorize_8hpp_1a61943b24f5980d78a69d6167ede4bb01"></span><span class="k"><span class="pre">consteval</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">vectorizedSizeHelper</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">size_t</span></span><a class="headerlink" href="#_CPPv4I0_bEN3cvt6detail20vectorizedSizeHelperENSt6size_tEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Does the main lifting for determining the size of a vectorized struct. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>T</strong> – Type to understand vectorization size </p></li>
+<li><p><strong>oneHotEnum</strong> – Flag to expand enums to onehot </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>std::size_t The size of the vectorized type </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="soa.html" class="btn btn-neutral float-left" title="Struct-of-Array Transforms" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2020, Bryce Ferenczi.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

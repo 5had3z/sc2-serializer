@@ -26,4 +26,5 @@ Table of Contents
     dataloading
     scripts
     benchmark
+    custom_dataset
     cpp_api/index
