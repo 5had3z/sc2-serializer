@@ -135,7 +135,7 @@ auto enumToOneHot(E e) noexcept -> std::vector<T>
  */
 template<> struct fmt::formatter<cvt::Alliance> : formatter<string_view>
 {
-    auto format(cvt::Alliance a, format_context &ctx) const
+    auto format(cvt::Alliance a, format_context &ctx) const -> format_context::iterator
     {
         string_view ret = "Invalid";
         switch (a) {
@@ -162,7 +162,7 @@ template<> struct fmt::formatter<cvt::Alliance> : formatter<string_view>
  */
 template<> struct fmt::formatter<cvt::CloakState> : formatter<string_view>
 {
-    auto format(cvt::CloakState c, format_context &ctx) const
+    auto format(cvt::CloakState c, format_context &ctx) const -> format_context::iterator
     {
         string_view ret = "Invalid";
         switch (c) {
@@ -192,7 +192,7 @@ template<> struct fmt::formatter<cvt::CloakState> : formatter<string_view>
 template<> struct fmt::formatter<cvt::Visibility> : formatter<string_view>
 {
     // auto format(cvt::Visibility v, format_context &ctx) const;
-    auto format(cvt::Visibility v, format_context &ctx) const
+    auto format(cvt::Visibility v, format_context &ctx) const -> format_context::iterator
     {
         string_view ret = "Invalid";
         switch (v) {
@@ -215,7 +215,7 @@ template<> struct fmt::formatter<cvt::Visibility> : formatter<string_view>
  */
 template<> struct fmt::formatter<cvt::AddOn> : formatter<string_view>
 {
-    auto format(cvt::AddOn a, format_context &ctx) const
+    auto format(cvt::AddOn a, format_context &ctx) const -> format_context::iterator
     {
         string_view ret = "Invalid";
         switch (a) {
@@ -238,7 +238,7 @@ template<> struct fmt::formatter<cvt::AddOn> : formatter<string_view>
  */
 template<> struct fmt::formatter<cvt::Race> : formatter<string_view>
 {
-    auto format(cvt::Race r, format_context &ctx) const
+    auto format(cvt::Race r, format_context &ctx) const -> format_context::iterator
     {
         string_view ret = "Invalid";
         switch (r) {
@@ -264,7 +264,7 @@ template<> struct fmt::formatter<cvt::Race> : formatter<string_view>
  */
 template<> struct fmt::formatter<cvt::Result> : formatter<string_view>
 {
-    auto format(cvt::Result r, format_context &ctx) const
+    auto format(cvt::Result r, format_context &ctx) const -> format_context::iterator
     {
         string_view ret = "Invalid";
         switch (r) {

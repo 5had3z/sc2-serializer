@@ -39,12 +39,11 @@ jobs:
         run: |
           export CC="/usr/bin/gcc-${{ matrix.gcc-version }}"
           export CXX="/usr/bin/g++-${{ matrix.gcc-version }}"
-          cmake -B /home/runner/work/sc2-serializer/build -G Ninja -DSC2_PY_READER=OFF -DSC2_TESTS=ON -DBUILD_API_EXAMPLES=OFF
+          cmake -B /home/runner/work/sc2-serializer/build -G Ninja -DSC2_PY_READER=OFF -DSC2_TESTS=ON -DBUILD_API_EXAMPLES=OFF -DBUILD_API_TESTS=OFF
       - name: Build and run tests
         run: |
           cmake --build /home/runner/work/sc2-serializer/build --parallel --config Release
-          /home/runner/work/sc2-serializer/build/test_database
-          /home/runner/work/sc2-serializer/build/test_readwrite
+          /home/runner/work/sc2-serializer/build/sc2_tests
       - name: Archive build artifacts
         uses: actions/upload-artifact@v4
         with:

@@ -3,6 +3,15 @@
 
 #include <gtest/gtest.h>
 
+TEST(AutoVectorTest, OneHotEnum)
+{
+    ASSERT_EQ(cvt::numEnumValues<cvt::Alliance>(), 4uz);
+    auto e = cvt::Alliance::Ally;
+    auto oneHot = cvt::enumToOneHot<float>(e);
+    std::vector<float> expected = { 0.f, 1.f, 0.f, 0.f };
+    ASSERT_EQ(oneHot, expected);
+}
+
 TEST(AutoVectorTest, NeutralUnit)
 {
     cvt::NeutralUnit unit;

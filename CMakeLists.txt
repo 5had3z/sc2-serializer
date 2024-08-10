@@ -31,7 +31,7 @@ cpmaddpackage(
   GITHUB_REPOSITORY
   jarro2783/cxxopts
   VERSION
-  2.2.1
+  3.2.0
   OPTIONS
   "CXXOPTS_BUILD_EXAMPLES NO"
   "CXXOPTS_BUILD_TESTS NO"
@@ -41,7 +41,7 @@ cpmaddpackage(
   GITHUB_REPOSITORY
   gabime/spdlog
   VERSION
-  1.12.0
+  1.14.1
   OPTIONS
   "SPDLOG_BUILD_PIC ON")
 

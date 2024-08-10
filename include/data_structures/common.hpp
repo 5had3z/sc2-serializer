@@ -300,4 +300,28 @@ template<typename T> auto enumToOneHot(Action::TargetType e) noexcept -> std::ve
     return detail::enumToOneHot_helper<T>(e, vals);
 }
 
+
 }// namespace cvt
+
+/**
+ * @brief fmt formatter specialization for cvt::Action::TargetType
+ */
+template<> struct fmt::formatter<cvt::Action::TargetType> : formatter<string_view>
+{
+    auto format(cvt::Action::TargetType a, format_context &ctx) const -> format_context::iterator
+    {
+        string_view ret = "Invalid";
+        switch (a) {
+        case cvt::Action::TargetType::Self:
+            ret = "Self";
+            break;
+        case cvt::Action::TargetType::OtherUnit:
+            ret = "OtherUnit";
+            break;
+        case cvt::Action::TargetType::Position:
+            ret = "Position";
+            break;
+        }
+        return formatter<string_view>::format(ret, ctx);
+    }
+};
