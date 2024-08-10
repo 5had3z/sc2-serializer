@@ -12,6 +12,9 @@
 
 #include <boost/pfr.hpp>
 
+#include <algorithm>
+#include <cassert>
+
 namespace cvt {
 
 /**

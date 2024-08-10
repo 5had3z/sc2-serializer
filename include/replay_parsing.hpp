@@ -14,7 +14,7 @@
 
 #include "data_structures/replay_interface.hpp"
 #include "data_structures/units.hpp"
-#include "data_structures/vectorize.hpp"
+#include "vectorize.hpp"
 
 #include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>

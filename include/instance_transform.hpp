@@ -11,9 +11,9 @@
  */
 #pragma once
 
-#include "common.hpp"
 #include "soa.hpp"
 
+#include <algorithm>
 #include <ranges>
 
 namespace cvt {

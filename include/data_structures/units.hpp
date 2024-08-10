@@ -12,9 +12,9 @@
  */
 #pragma once
 
+#include "../soa.hpp"
 #include "common.hpp"
 #include "enums.hpp"
-#include "soa.hpp"
 
 #include <ranges>
 

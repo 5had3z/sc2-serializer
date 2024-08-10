@@ -1,5 +1,5 @@
 #include "data_structures/units.hpp"
-#include "data_structures/vectorize.hpp"
+#include "vectorize.hpp"
 
 #include <gtest/gtest.h>
 

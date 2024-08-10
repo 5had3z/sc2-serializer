@@ -1,6 +1,8 @@
-#include "data_structures/units.hpp"
+#include "soa.hpp"
 
 #include <gtest/gtest.h>
+
+#include <ranges>
 
 /**
  * @brief Simple baseline struct for unit testing
@@ -44,7 +46,7 @@ TEST(SoATransforms, SameOrder)
 {
     std::vector<A> aos{ { 1, 2, 3 }, { 3, 4, 4 }, { 5, 6, 8 } };
     auto soa = cvt::AoStoSoA<ASoA>(aos);
-    for (auto idx : std::ranges::iota_view{ 0UL, aos.size() }) { ASSERT_EQ(soa[idx], aos[idx]); }
+    for (auto idx : std::ranges::iota_view{ 0uz, aos.size() }) { ASSERT_EQ(soa[idx], aos[idx]); }
     std::vector<float> a{ 1, 3, 5 };
     std::vector<int> b{ 2, 4, 6 };
     ASSERT_EQ(soa.a, a);
@@ -58,7 +60,7 @@ TEST(SoATransforms, DiffOrder)
 {
     std::vector<A> aos{ { 1, 2, 4 }, { 3, 4, 9 }, { 5, 6, 3 } };
     auto soa = cvt::AoStoSoA<ASoA2>(aos);
-    for (auto idx : std::ranges::iota_view{ 0UL, aos.size() }) { ASSERT_EQ(soa[idx], aos[idx]); }
+    for (auto idx : std::ranges::iota_view{ 0uz, aos.size() }) { ASSERT_EQ(soa[idx], aos[idx]); }
     std::vector<float> a{ 1, 3, 5 };
     std::vector<int> b{ 2, 4, 6 };
     ASSERT_EQ(soa.a, a);

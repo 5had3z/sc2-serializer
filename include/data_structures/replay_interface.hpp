@@ -10,8 +10,8 @@
  */
 #pragma once
 
+#include "../soa.hpp"
 #include "common.hpp"
-#include "soa.hpp"
 
 namespace cvt {
 

@@ -11,7 +11,7 @@
  */
 #pragma once
 
-#include "enums.hpp"
+#include "data_structures/enums.hpp"
 
 #include <boost/pfr.hpp>
 
