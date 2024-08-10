@@ -90,10 +90,13 @@ Directory dependency graph for data_structures:</div>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="files" name="files"></a>
 Files</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dd/d3a/common_8hpp.html">common.hpp</a></td></tr>
-<tr class="memdesc:dd/d3a/common_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is one of "those" files that just contains a few bits and bobs such as data-vectorization, action, position, image data structures etc, etc. <br /></td></tr>
+<tr class="memdesc:dd/d3a/common_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is one of "those" files that just contains a few bits and bobs such as action, position, image data structures etc. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="dd/d93/enums_8hpp.html">enums.hpp</a></td></tr>
 <tr class="memdesc:dd/d93/enums_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Common enums in StarCraft II and accompanying tools such as enum-&gt;string and enum-&gt;one-hot. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="d5/de4/instance__transform_8hpp.html">instance_transform.hpp</a></td></tr>
+<tr class="memdesc:d5/de4/instance__transform_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instance-major transformation code for unit data which improves data compression and reduces file size from unit data by ~70%. This is done by using a lambda that sorts flattented units by their id. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="d7/dbe/replay__all_8hpp.html">replay_all.hpp</a></td></tr>
 <tr class="memdesc:d7/dbe/replay__all_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replay data structure for recording and deserializing all observation data. <br /></td></tr>
@@ -107,8 +110,14 @@ Files</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="db/d6e/replay__scalars_8hpp.html">replay_scalars.hpp</a></td></tr>
 <tr class="memdesc:db/d6e/replay__scalars_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Replay observation data that only contains scalar (score and economy) data. Is compatible with reading ReplayData and ReplayDataNoUnits as the ordering of the data is the same, we just stop reading before minimap data. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="de/df4/soa_8hpp.html">soa.hpp</a></td></tr>
+<tr class="memdesc:de/df4/soa_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">SoA&lt;-&gt;AoS conversion code as well as IsSoAType concept. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="de/d06/units_8hpp.html">units.hpp</a></td></tr>
-<tr class="memdesc:de/d06/units_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unit data structures for StarCraft II. NeutralUnits are treated specially as many properties such as buffs and cloak_state are never utilized, so we save precious bytes and make a smaller structure especially for neutral structures. This file also contains the instance-major transformation code for unit data which improves data compression and reduces file size from unit data by ~70%. <br /></td></tr>
+<tr class="memdesc:de/d06/units_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unit data structures for StarCraft II. NeutralUnits are treated specially as many properties such as buffs and cloak_state are never utilized, so we save precious bytes and make a smaller structure especially for neutral structures. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="d4/d74/vectorize_8hpp.html">vectorize.hpp</a></td></tr>
+<tr class="memdesc:d4/d74/vectorize_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Automatically convert some struct S to a vector of homogeneous data type, optionally expanding enum values to one-hot encodings. Useful for writing unit data or score data to numpy arrays for ML training. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->

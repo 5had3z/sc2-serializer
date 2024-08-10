@@ -1,8 +1,8 @@
 var searchData=
 [
   ['reassignresourceid_0',['reassignResourceId',['../d4/dc4/classcvt_1_1BaseConverter.html#a8f041c5517fa98572a159405e3b94074',1,'cvt::BaseConverter']]],
-  ['recoverflattenedsortedunits_1',['recoverFlattenedSortedUnits',['../de/d06/units_8hpp.html#a12bf9a817fdaa1ada75bfa956651c83f',1,'cvt']]],
-  ['recoverflattenedsortedunits2_2',['recoverFlattenedSortedUnits2',['../de/d06/units_8hpp.html#ad8b8c24f460a62c8bb9bb9987b63e657',1,'cvt']]],
+  ['recoverflattenedsorteddata_1',['recoverFlattenedSortedData',['../d5/de4/instance__transform_8hpp.html#ab311944a5f94b0f472ab161c81deb9e9',1,'cvt']]],
+  ['recoverflattenedsorteddata2_2',['recoverFlattenedSortedData2',['../d5/de4/instance__transform_8hpp.html#a66003a0f8cda158794b66bc2892cd941',1,'cvt']]],
   ['reduce_3',['reduce',['../d8/d0b/classcvt_1_1CircularBuffer.html#a70c8aad3b8a930497a5909c527d976f5',1,'cvt::CircularBuffer']]],
   ['replay_5fall_2ehpp_4',['replay_all.hpp',['../d7/dbe/replay__all_8hpp.html',1,'']]],
   ['replay_5finterface_2ehpp_5',['replay_interface.hpp',['../d0/d04/replay__interface_8hpp.html',1,'']]],

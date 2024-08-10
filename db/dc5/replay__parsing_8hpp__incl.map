@@ -1,50 +1,56 @@
 <map id="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/replay_parsing.hpp" name="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/replay_parsing.hpp">
-<area shape="rect" id="Node000001" title="Set of tools for parsing replay data into a more amenable form for machine learning...." alt="" coords="697,5,898,60"/>
-<area shape="rect" id="Node000002" href="$d0/d04/replay__interface_8hpp.html" title="Common interface and utilities for replay data structures." alt="" coords="136,108,304,148"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="697,51,318,110,317,105,696,46"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="5,350,91,375"/>
-<area shape="poly" id="edge20_Node000001_Node000006" title=" " alt="" coords="697,41,532,50,345,64,184,84,129,96,99,110,78,134,63,162,53,193,47,225,43,287,47,336,42,336,38,287,42,224,48,192,58,160,74,131,96,106,127,91,183,79,344,59,531,44,696,35"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="115,350,171,375"/>
-<area shape="poly" id="edge21_Node000001_Node000007" title=" " alt="" coords="697,40,537,49,358,63,205,83,153,96,126,110,109,136,100,165,97,196,100,228,115,289,134,337,129,339,110,291,95,229,92,196,95,164,104,133,122,106,151,91,204,78,357,57,537,44,696,35"/>
-<area shape="rect" id="Node000011" title=" " alt="" coords="565,269,619,295"/>
-<area shape="poly" id="edge26_Node000001_Node000011" title=" " alt="" coords="698,62,661,82,630,110,610,145,598,185,594,223,593,256,588,255,588,223,593,184,605,143,626,106,658,78,695,57"/>
-<area shape="rect" id="Node000012" href="$de/d06/units_8hpp.html" title="Unit data structures for StarCraft II. NeutralUnits are treated specially as many properties such as ..." alt="" coords="328,115,515,141"/>
-<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="697,61,482,115,480,109,696,56"/>
-<area shape="rect" id="Node000013" title=" " alt="" coords="499,196,565,221"/>
-<area shape="poly" id="edge24_Node000001_Node000013" title=" " alt="" coords="697,55,639,77,611,92,586,110,570,127,558,146,542,184,537,182,553,143,566,123,582,106,608,87,637,72,695,50"/>
-<area shape="rect" id="Node000014" title=" " alt="" coords="640,115,781,141"/>
-<area shape="poly" id="edge16_Node000001_Node000014" title=" " alt="" coords="775,62,733,107,729,103,771,58"/>
-<area shape="rect" id="Node000015" title=" " alt="" coords="806,115,965,141"/>
-<area shape="poly" id="edge17_Node000001_Node000015" title=" " alt="" coords="824,58,867,103,863,107,820,62"/>
-<area shape="rect" id="Node000016" title=" " alt="" coords="989,115,1120,141"/>
-<area shape="poly" id="edge18_Node000001_Node000016" title=" " alt="" coords="871,58,1011,108,1009,113,869,63"/>
-<area shape="rect" id="Node000017" title=" " alt="" coords="1145,115,1269,141"/>
-<area shape="poly" id="edge19_Node000001_Node000017" title=" " alt="" coords="899,53,1133,105,1150,109,1148,115,1131,111,898,58"/>
-<area shape="rect" id="Node000018" title=" " alt="" coords="1293,115,1352,141"/>
-<area shape="poly" id="edge22_Node000001_Node000018" title=" " alt="" coords="899,39,1079,61,1181,80,1282,105,1289,108,1287,113,1281,111,1180,85,1078,66,898,44"/>
-<area shape="rect" id="Node000019" title=" " alt="" coords="1376,115,1467,141"/>
-<area shape="poly" id="edge23_Node000001_Node000019" title=" " alt="" coords="898,39,1114,62,1240,81,1365,105,1377,109,1376,114,1363,111,1239,86,1113,67,898,44"/>
-<area shape="rect" id="Node000020" title=" " alt="" coords="1491,115,1533,141"/>
-<area shape="poly" id="edge25_Node000001_Node000020" title=" " alt="" coords="898,37,1210,63,1367,82,1431,93,1479,105,1483,107,1481,112,1478,111,1430,98,1366,87,1209,68,898,43"/>
-<area shape="rect" id="Node000021" title=" " alt="" coords="1558,115,1650,141"/>
-<area shape="poly" id="edge27_Node000001_Node000021" title=" " alt="" coords="898,35,1028,42,1191,55,1369,75,1546,105,1560,109,1559,114,1545,111,1368,81,1190,60,1028,47,898,40"/>
-<area shape="rect" id="Node000003" href="$dd/d3a/common_8hpp.html" title="This is one of &quot;those&quot; files that just contains a few bits and bobs such as data&#45;vectorization,..." alt="" coords="368,196,475,221"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="269,146,380,188,378,193,267,151"/>
-<area shape="rect" id="Node000004" href="$dd/d93/enums_8hpp.html" title="Common enums in StarCraft II and accompanying tools such as enum&#45;&gt;string and enum&#45;&gt;one&#45;hot." alt="" coords="149,269,243,295"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="386,224,246,268,245,263,384,219"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="437,350,499,375"/>
-<area shape="poly" id="edge11_Node000003_Node000008" title=" " alt="" coords="440,219,463,240,482,268,487,286,487,304,480,337,475,336,482,304,482,287,478,270,459,243,437,223"/>
-<area shape="rect" id="Node000009" title=" " alt="" coords="268,269,375,295"/>
-<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="407,224,350,263,347,259,404,219"/>
-<area shape="rect" id="Node000010" title=" " alt="" coords="399,269,468,295"/>
-<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="426,221,432,255,426,256,421,222"/>
-<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="450,219,554,262,552,267,448,224"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="195,343,343,383"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="209,293,244,331,240,334,205,297"/>
-<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="175,297,83,346,81,341,173,292"/>
-<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="190,296,161,340,156,337,186,293"/>
-<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="236,292,424,346,423,351,235,297"/>
-<area shape="poly" id="edge13_Node000012_Node000003" title=" " alt="" coords="424,141,424,182,419,182,419,141"/>
-<area shape="poly" id="edge14_Node000012_Node000004" title=" " alt="" coords="406,143,226,264,223,259,403,138"/>
-<area shape="poly" id="edge15_Node000012_Node000013" title=" " alt="" coords="439,139,506,186,503,190,436,143"/>
+<area shape="rect" id="Node000001" title="Set of tools for parsing replay data into a more amenable form for machine learning...." alt="" coords="685,5,887,60"/>
+<area shape="rect" id="Node000002" href="$d0/d04/replay__interface_8hpp.html" title="Common interface and utilities for replay data structures." alt="" coords="161,108,329,148"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="685,53,343,110,342,105,685,47"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="611,350,697,375"/>
+<area shape="poly" id="edge26_Node000001_Node000006" title=" " alt="" coords="749,62,725,84,706,109,680,169,665,233,658,291,656,336,651,336,653,291,660,232,675,168,701,107,721,80,745,58"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="579,269,633,295"/>
+<area shape="poly" id="edge31_Node000001_Node000010" title=" " alt="" coords="723,62,690,83,661,110,639,146,625,186,611,256,605,255,619,184,635,144,657,106,686,79,720,58"/>
+<area shape="rect" id="Node000013" href="$de/d06/units_8hpp.html" title="Unit data structures for StarCraft II. NeutralUnits are treated specially as many properties such as ..." alt="" coords="353,115,539,141"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="691,63,501,114,500,109,690,57"/>
+<area shape="rect" id="Node000014" title=" " alt="" coords="523,196,590,221"/>
+<area shape="poly" id="edge29_Node000001_Node000014" title=" " alt="" coords="691,63,649,83,610,110,595,127,583,146,566,184,562,182,579,144,591,124,607,106,646,78,689,58"/>
+<area shape="rect" id="Node000015" href="$d4/d74/vectorize_8hpp.html" title="Automatically convert some struct S to a vector of homogeneous data type, optionally expanding enum v..." alt="" coords="5,196,220,221"/>
+<area shape="poly" id="edge18_Node000001_Node000015" title=" " alt="" coords="685,36,546,39,388,50,312,59,245,72,189,89,150,110,136,125,127,144,117,183,112,182,122,142,132,122,147,106,187,84,244,67,312,54,387,44,545,34,685,30"/>
+<area shape="rect" id="Node000017" title=" " alt="" coords="715,115,857,141"/>
+<area shape="poly" id="edge22_Node000001_Node000017" title=" " alt="" coords="789,60,789,101,783,101,783,60"/>
+<area shape="rect" id="Node000018" title=" " alt="" coords="881,115,1040,141"/>
+<area shape="poly" id="edge23_Node000001_Node000018" title=" " alt="" coords="836,58,929,107,926,111,834,62"/>
+<area shape="rect" id="Node000019" title=" " alt="" coords="1065,115,1195,141"/>
+<area shape="poly" id="edge24_Node000001_Node000019" title=" " alt="" coords="883,57,1075,109,1074,114,882,63"/>
+<area shape="rect" id="Node000020" title=" " alt="" coords="1220,115,1344,141"/>
+<area shape="poly" id="edge25_Node000001_Node000020" title=" " alt="" coords="887,47,1039,73,1208,105,1226,109,1225,115,1207,111,1038,78,886,52"/>
+<area shape="rect" id="Node000021" title=" " alt="" coords="1369,115,1427,141"/>
+<area shape="poly" id="edge27_Node000001_Node000021" title=" " alt="" coords="887,35,987,43,1105,56,1232,76,1357,105,1364,108,1362,113,1356,111,1231,81,1104,61,986,48,887,41"/>
+<area shape="rect" id="Node000022" title=" " alt="" coords="1451,115,1542,141"/>
+<area shape="poly" id="edge28_Node000001_Node000022" title=" " alt="" coords="887,36,1140,58,1290,78,1440,105,1453,109,1452,114,1439,111,1290,83,1139,64,887,42"/>
+<area shape="rect" id="Node000023" title=" " alt="" coords="1566,115,1609,141"/>
+<area shape="poly" id="edge30_Node000001_Node000023" title=" " alt="" coords="887,36,1050,45,1242,60,1424,80,1498,92,1555,105,1558,107,1557,112,1553,111,1497,97,1423,85,1242,65,1049,50,887,41"/>
+<area shape="rect" id="Node000003" href="$dd/d3a/common_8hpp.html" title="This is one of &quot;those&quot; files that just contains a few bits and bobs such as action,..." alt="" coords="393,196,499,221"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="294,146,405,188,403,193,292,151"/>
+<area shape="rect" id="Node000011" href="$de/df4/soa_8hpp.html" title="SoA&lt;&#45;&gt;AoS conversion code as well as IsSoAType concept." alt="" coords="244,196,317,221"/>
+<area shape="poly" id="edge11_Node000002_Node000011" title=" " alt="" coords="256,147,272,182,267,184,251,149"/>
+<area shape="rect" id="Node000004" href="$dd/d93/enums_8hpp.html" title="Common enums in StarCraft II and accompanying tools such as enum&#45;&gt;string and enum&#45;&gt;one&#45;hot." alt="" coords="308,269,403,295"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="433,223,383,263,379,258,430,219"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="489,350,552,375"/>
+<area shape="poly" id="edge10_Node000003_Node000008" title=" " alt="" coords="465,219,490,240,511,268,522,303,524,336,519,336,517,304,506,271,486,244,462,223"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="427,269,497,295"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="451,221,459,256,454,257,446,222"/>
+<area shape="poly" id="edge9_Node000003_Node000010" title=" " alt="" coords="473,219,568,261,566,266,471,224"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="293,343,441,383"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="360,294,365,329,360,329,354,295"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="399,292,598,344,597,349,398,297"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="213,350,269,375"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="340,297,270,344,267,340,337,293"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="381,292,485,342,483,347,378,297"/>
+<area shape="rect" id="Node000012" title=" " alt="" coords="177,269,283,295"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="274,223,248,260,244,257,270,220"/>
+<area shape="poly" id="edge14_Node000013_Node000003" title=" " alt="" coords="449,141,449,182,443,182,443,141"/>
+<area shape="poly" id="edge15_Node000013_Node000004" title=" " alt="" coords="433,143,407,167,383,197,370,227,362,256,357,255,365,225,378,195,403,163,429,139"/>
+<area shape="poly" id="edge16_Node000013_Node000011" title=" " alt="" coords="423,143,318,193,316,188,421,138"/>
+<area shape="poly" id="edge17_Node000013_Node000014" title=" " alt="" coords="464,139,530,186,527,190,461,143"/>
+<area shape="poly" id="edge19_Node000015_Node000004" title=" " alt="" coords="152,219,304,263,302,268,151,224"/>
+<area shape="poly" id="edge20_Node000015_Node000012" title=" " alt="" coords="133,219,200,260,198,264,130,224"/>
+<area shape="rect" id="Node000016" title=" " alt="" coords="60,269,152,295"/>
+<area shape="poly" id="edge21_Node000015_Node000016" title=" " alt="" coords="114,222,111,256,106,256,109,221"/>
 </map>

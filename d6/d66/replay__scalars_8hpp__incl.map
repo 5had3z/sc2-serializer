@@ -1,28 +1,29 @@
 <map id="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/data_structures/replay_scalars.hpp" name="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/data_structures/replay_scalars.hpp">
-<area shape="rect" id="Node000001" title="Replay observation data that only contains scalar (score and economy) data. Is compatible with readin..." alt="" coords="330,5,509,75"/>
-<area shape="rect" id="Node000002" href="$d1/d31/serialize_8hpp.html" title="Generic Serialisation and Deserialisation Methods. A combination of C++20 Concepts and Requires claus..." alt="" coords="185,123,302,148"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="357,77,279,118,276,114,355,72"/>
-<area shape="rect" id="Node000006" href="$d0/d04/replay__interface_8hpp.html" title="Common interface and utilities for replay data structures." alt="" coords="341,123,497,148"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="422,75,422,109,417,109,417,75"/>
-<area shape="rect" id="Node000015" title=" " alt="" coords="522,123,589,148"/>
-<area shape="poly" id="edge16_Node000001_Node000015" title=" " alt="" coords="470,73,528,112,525,117,467,77"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="127,269,234,295"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="218,150,188,169,175,182,164,197,160,212,161,227,170,256,165,258,155,228,155,211,160,195,171,179,185,165,215,146"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="174,196,254,221"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="241,149,226,184,222,182,236,147"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="278,196,358,221"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="257,146,298,185,294,188,253,150"/>
-<area shape="rect" id="Node000007" href="$dd/d3a/common_8hpp.html" title="This is one of &quot;those&quot; files that just contains a few bits and bobs such as data&#45;vectorization,..." alt="" coords="382,196,489,221"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="425,148,432,182,427,183,419,149"/>
-<area shape="poly" id="edge12_Node000007_Node000003" title=" " alt="" coords="395,224,235,268,234,263,394,219"/>
+<area shape="rect" id="Node000001" title="Replay observation data that only contains scalar (score and economy) data. Is compatible with readin..." alt="" coords="231,5,410,75"/>
+<area shape="rect" id="Node000002" href="$d1/d31/serialize_8hpp.html" title="Generic Serialisation and Deserialisation Methods. A combination of C++20 Concepts and Requires claus..." alt="" coords="79,123,197,148"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,77,174,119,171,114,254,72"/>
+<area shape="rect" id="Node000006" href="$d0/d04/replay__interface_8hpp.html" title="Common interface and utilities for replay data structures." alt="" coords="243,123,399,148"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="323,75,323,109,318,109,318,75"/>
+<area shape="rect" id="Node000016" title=" " alt="" coords="423,123,490,148"/>
+<area shape="poly" id="edge17_Node000001_Node000016" title=" " alt="" coords="371,73,430,112,427,117,368,77"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="78,269,185,295"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="116,150,88,170,75,182,66,197,63,214,70,231,84,246,101,260,97,264,80,250,66,234,58,215,61,195,71,179,84,166,113,146"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="75,196,155,221"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="137,149,126,184,121,182,132,148"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="179,196,259,221"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="153,146,198,185,194,189,149,150"/>
+<area shape="rect" id="Node000007" href="$dd/d3a/common_8hpp.html" title="This is one of &quot;those&quot; files that just contains a few bits and bobs such as action,..." alt="" coords="382,196,489,221"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="340,146,406,186,404,191,338,150"/>
+<area shape="rect" id="Node000015" href="$de/df4/soa_8hpp.html" title="SoA&lt;&#45;&gt;AoS conversion code as well as IsSoAType concept." alt="" coords="284,196,357,221"/>
+<area shape="poly" id="edge15_Node000006_Node000015" title=" " alt="" coords="323,148,323,182,318,182,318,148"/>
 <area shape="rect" id="Node000008" href="$dd/d93/enums_8hpp.html" title="Common enums in StarCraft II and accompanying tools such as enum&#45;&gt;string and enum&#45;&gt;one&#45;hot." alt="" coords="267,269,361,295"/>
 <area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="417,224,347,265,344,260,414,219"/>
 <area shape="rect" id="Node000012" title=" " alt="" coords="368,350,431,375"/>
-<area shape="poly" id="edge15_Node000007_Node000012" title=" " alt="" coords="435,222,408,337,403,336,430,221"/>
+<area shape="poly" id="edge14_Node000007_Node000012" title=" " alt="" coords="435,222,408,337,403,336,430,221"/>
 <area shape="rect" id="Node000013" title=" " alt="" coords="437,269,506,295"/>
-<area shape="poly" id="edge13_Node000007_Node000013" title=" " alt="" coords="444,220,462,256,457,258,439,223"/>
+<area shape="poly" id="edge12_Node000007_Node000013" title=" " alt="" coords="444,220,462,256,457,258,439,223"/>
 <area shape="rect" id="Node000014" title=" " alt="" coords="530,269,583,295"/>
-<area shape="poly" id="edge14_Node000007_Node000014" title=" " alt="" coords="456,219,527,260,524,265,453,224"/>
+<area shape="poly" id="edge13_Node000007_Node000014" title=" " alt="" coords="456,219,527,260,524,265,453,224"/>
 <area shape="rect" id="Node000009" title=" " alt="" coords="5,343,153,383"/>
 <area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="281,297,150,341,148,336,279,292"/>
 <area shape="rect" id="Node000010" title=" " alt="" coords="178,350,263,375"/>
@@ -30,4 +31,5 @@
 <area shape="rect" id="Node000011" title=" " alt="" coords="287,350,343,375"/>
 <area shape="poly" id="edge10_Node000008_Node000011" title=" " alt="" coords="317,295,318,336,312,336,312,295"/>
 <area shape="poly" id="edge11_Node000008_Node000012" title=" " alt="" coords="328,293,378,339,375,342,325,297"/>
+<area shape="poly" id="edge16_Node000015_Node000003" title=" " alt="" coords="291,224,176,267,174,262,289,219"/>
 </map>

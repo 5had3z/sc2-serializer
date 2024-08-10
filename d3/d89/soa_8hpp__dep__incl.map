@@ -1,0 +1,25 @@
+<map id="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/data_structures/soa.hpp" name="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/data_structures/soa.hpp">
+<area shape="rect" id="Node000001" title="SoA&lt;&#45;&gt;AoS conversion code as well as IsSoAType concept." alt="" coords="687,5,865,75"/>
+<area shape="rect" id="Node000002" href="$d5/de4/instance__transform_8hpp.html" title="Instance&#45;major transformation code for unit data which improves data compression and reduces file siz..." alt="" coords="890,123,1070,192"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="849,79,922,120,919,125,846,84"/>
+<area shape="rect" id="Node000004" href="$d0/d04/replay__interface_8hpp.html" title="Common interface and utilities for replay data structures." alt="" coords="448,123,627,192"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="695,83,608,125,606,120,693,78"/>
+<area shape="rect" id="Node000010" href="$de/d06/units_8hpp.html" title="Unit data structures for StarCraft II. NeutralUnits are treated specially as many properties such as ..." alt="" coords="687,123,865,192"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="779,89,779,122,773,122,773,89"/>
+<area shape="rect" id="Node000003" href="$d7/dbe/replay__all_8hpp.html" title="Replay data structure for recording and deserializing all observation data." alt="" coords="891,240,1069,309"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="983,206,983,240,977,240,977,206"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="641,183,891,248,890,253,640,188"/>
+<area shape="rect" id="Node000005" href="$d2/df9/replay__minimaps_8hpp.html" title="Replay observation data that only contains scalar (score and economy) and minimap data...." alt="" coords="411,240,589,309"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="525,206,513,241,508,239,520,204"/>
+<area shape="rect" id="Node000006" href="$db/d6e/replay__scalars_8hpp.html" title="Replay observation data that only contains scalar (score and economy) data. Is compatible with readin..." alt="" coords="5,240,184,309"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="435,183,320,210,197,243,185,246,183,241,195,237,319,205,434,178"/>
+<area shape="rect" id="Node000007" href="$df/da2/database_8hpp.html" title="Database framework for reading and writing serialized replay data. ReplayDatabase is templated on any..." alt="" coords="208,247,387,302"/>
+<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="456,200,353,250,351,245,454,196"/>
+<area shape="rect" id="Node000009" href="$d5/d1d/replay__parsing_8hpp.html" title="Set of tools for parsing replay data into a more amenable form for machine learning...." alt="" coords="614,247,815,302"/>
+<area shape="poly" id="edge9_Node000004_Node000009" title=" " alt="" coords="602,197,676,245,673,250,599,202"/>
+<area shape="rect" id="Node000008" href="$d6/da0/observer_8hpp.html" title="Contains StarCraft II game observation classes. Each variant saves observations at different rates to..." alt="" coords="485,357,664,412"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="378,304,508,355,506,360,376,309"/>
+<area shape="poly" id="edge11_Node000010_Node000003" title=" " alt="" coords="849,197,922,237,919,242,846,201"/>
+<area shape="poly" id="edge12_Node000010_Node000008" title=" " alt="" coords="814,202,829,228,839,256,841,284,830,311,804,330,764,347,665,371,664,366,762,342,802,326,826,308,836,284,834,257,824,230,810,205"/>
+<area shape="poly" id="edge13_Node000010_Node000009" title=" " alt="" coords="754,206,731,248,726,246,749,203"/>
+</map>

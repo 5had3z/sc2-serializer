@@ -76,17 +76,15 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#concepts">Concepts</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle"><div class="title">common.hpp File Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
-<p>This is one of "those" files that just contains a few bits and bobs such as data-vectorization, action, position, image data structures etc, etc.  
+<p>This is one of "those" files that just contains a few bits and bobs such as action, position, image data structures etc.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="../../dd/d93/enums_8hpp.html">enums.hpp</a>&quot;</code><br />
-<code>#include &lt;boost/pfr.hpp&gt;</code><br />
 <code>#include &lt;cassert&gt;</code><br />
 <code>#include &lt;span&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
@@ -95,17 +93,15 @@ Include dependency graph for common.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="../../d3/dec/common_8hpp__incl.png" border="0" usemap="#a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2common_8hpp" alt=""/></div>
 <map name="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2common_8hpp" id="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2common_8hpp">
-<area shape="rect" title="This is one of &quot;those&quot; files that just contains a few bits and bobs such as data&#45;vectorization,..." alt="" coords="401,5,579,75"/>
+<area shape="rect" title="This is one of &quot;those&quot; files that just contains a few bits and bobs such as action,..." alt="" coords="346,5,525,75"/>
 <area shape="rect" href="../../dd/d93/enums_8hpp.html" title="Common enums in StarCraft II and accompanying tools such as enum&#45;&gt;string and enum&#45;&gt;one&#45;hot." alt="" coords="267,123,361,148"/>
-<area shape="poly" title=" " alt="" coords="428,77,349,118,347,114,425,72"/>
+<area shape="poly" title=" " alt="" coords="393,77,342,116,339,112,390,73"/>
 <area shape="rect" title=" " alt="" coords="368,203,431,229"/>
-<area shape="poly" title=" " alt="" coords="460,76,427,124,414,158,406,190,401,189,409,156,422,121,456,73"/>
-<area shape="rect" title=" " alt="" coords="437,123,543,148"/>
-<area shape="poly" title=" " alt="" coords="493,75,493,109,487,109,487,75"/>
-<area shape="rect" title=" " alt="" coords="567,123,637,148"/>
-<area shape="poly" title=" " alt="" coords="532,73,579,111,576,116,529,77"/>
-<area shape="rect" title=" " alt="" coords="661,123,714,148"/>
-<area shape="poly" title=" " alt="" coords="562,72,652,114,649,119,560,77"/>
+<area shape="poly" title=" " alt="" coords="431,75,407,190,402,189,426,74"/>
+<area shape="rect" title=" " alt="" coords="437,123,506,148"/>
+<area shape="poly" title=" " alt="" coords="451,74,464,109,459,111,446,76"/>
+<area shape="rect" title=" " alt="" coords="530,123,583,148"/>
+<area shape="poly" title=" " alt="" coords="481,73,532,112,529,116,478,77"/>
 <area shape="rect" title=" " alt="" coords="5,196,153,236"/>
 <area shape="poly" title=" " alt="" coords="281,151,150,194,148,189,279,145"/>
 <area shape="rect" title=" " alt="" coords="178,203,263,229"/>
@@ -120,26 +116,29 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="../../d7/d3a/common_8hpp__dep__incl.png" border="0" usemap="#a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2common_8hppdep" alt=""/></div>
 <map name="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2common_8hppdep" id="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2common_8hppdep">
-<area shape="rect" title="This is one of &quot;those&quot; files that just contains a few bits and bobs such as data&#45;vectorization,..." alt="" coords="243,5,422,75"/>
-<area shape="rect" href="../../d0/d04/replay__interface_8hpp.html" title="Common interface and utilities for replay data structures." alt="" coords="350,123,528,192"/>
-<area shape="poly" title=" " alt="" coords="375,83,410,121,406,124,371,87"/>
-<area shape="rect" href="../../de/d06/units_8hpp.html" title="Unit data structures for StarCraft II. NeutralUnits are treated specially as many properties such as ..." alt="" coords="142,123,320,192"/>
-<area shape="poly" title=" " alt="" coords="295,87,263,124,259,121,291,83"/>
-<area shape="rect" href="../../d7/dbe/replay__all_8hpp.html" title="Replay data structure for recording and deserializing all observation data." alt="" coords="31,240,210,309"/>
-<area shape="poly" title=" " alt="" coords="337,198,211,244,209,239,335,193"/>
-<area shape="rect" href="../../d2/df9/replay__minimaps_8hpp.html" title="Replay observation data that only contains scalar (score and economy) and minimap data...." alt="" coords="663,240,842,309"/>
-<area shape="poly" title=" " alt="" coords="542,193,664,238,662,243,540,198"/>
-<area shape="rect" href="../../db/d6e/replay__scalars_8hpp.html" title="Replay observation data that only contains scalar (score and economy) data. Is compatible with readin..." alt="" coords="866,240,1044,309"/>
-<area shape="poly" title=" " alt="" coords="542,173,690,200,854,237,866,241,865,246,853,243,689,205,541,178"/>
-<area shape="rect" href="../../df/da2/database_8hpp.html" title="Database framework for reading and writing serialized replay data. ReplayDatabase is templated on any..." alt="" coords="460,247,639,302"/>
-<area shape="poly" title=" " alt="" coords="483,200,526,245,522,249,479,204"/>
-<area shape="rect" href="../../d5/d1d/replay__parsing_8hpp.html" title="Set of tools for parsing replay data into a more amenable form for machine learning...." alt="" coords="234,247,436,302"/>
-<area shape="poly" title=" " alt="" coords="401,204,361,249,357,245,397,201"/>
-<area shape="rect" href="../../d6/da0/observer_8hpp.html" title="Contains StarCraft II game observation classes. Each variant saves observations at different rates to..." alt="" coords="182,357,360,412"/>
-<area shape="poly" title=" " alt="" coords="470,309,339,360,338,355,468,304"/>
-<area shape="poly" title=" " alt="" coords="191,204,154,242,151,238,187,200"/>
-<area shape="poly" title=" " alt="" coords="129,175,98,185,69,199,42,218,21,242,11,259,8,275,11,291,21,308,45,326,84,342,182,366,180,371,82,347,42,330,17,311,6,293,3,275,6,257,17,238,39,214,66,195,96,180,127,170"/>
-<area shape="poly" title=" " alt="" coords="273,201,313,245,309,249,269,204"/>
+<area shape="rect" title="This is one of &quot;those&quot; files that just contains a few bits and bobs such as action,..." alt="" coords="687,5,865,75"/>
+<area shape="rect" href="../../d5/de4/instance__transform_8hpp.html" title="Instance&#45;major transformation code for unit data which improves data compression and reduces file siz..." alt="" coords="890,123,1070,192"/>
+<area shape="poly" title=" " alt="" coords="849,79,922,120,919,125,846,84"/>
+<area shape="rect" href="../../d0/d04/replay__interface_8hpp.html" title="Common interface and utilities for replay data structures." alt="" coords="448,123,627,192"/>
+<area shape="poly" title=" " alt="" coords="695,83,608,125,606,120,693,78"/>
+<area shape="rect" href="../../de/d06/units_8hpp.html" title="Unit data structures for StarCraft II. NeutralUnits are treated specially as many properties such as ..." alt="" coords="687,123,865,192"/>
+<area shape="poly" title=" " alt="" coords="779,89,779,122,773,122,773,89"/>
+<area shape="rect" href="../../d7/dbe/replay__all_8hpp.html" title="Replay data structure for recording and deserializing all observation data." alt="" coords="891,240,1069,309"/>
+<area shape="poly" title=" " alt="" coords="983,206,983,240,977,240,977,206"/>
+<area shape="poly" title=" " alt="" coords="641,183,891,248,890,253,640,188"/>
+<area shape="rect" href="../../d2/df9/replay__minimaps_8hpp.html" title="Replay observation data that only contains scalar (score and economy) and minimap data...." alt="" coords="411,240,589,309"/>
+<area shape="poly" title=" " alt="" coords="525,206,513,241,508,239,520,204"/>
+<area shape="rect" href="../../db/d6e/replay__scalars_8hpp.html" title="Replay observation data that only contains scalar (score and economy) data. Is compatible with readin..." alt="" coords="5,240,184,309"/>
+<area shape="poly" title=" " alt="" coords="435,183,320,210,197,243,185,246,183,241,195,237,319,205,434,178"/>
+<area shape="rect" href="../../df/da2/database_8hpp.html" title="Database framework for reading and writing serialized replay data. ReplayDatabase is templated on any..." alt="" coords="208,247,387,302"/>
+<area shape="poly" title=" " alt="" coords="456,200,353,250,351,245,454,196"/>
+<area shape="rect" href="../../d5/d1d/replay__parsing_8hpp.html" title="Set of tools for parsing replay data into a more amenable form for machine learning...." alt="" coords="614,247,815,302"/>
+<area shape="poly" title=" " alt="" coords="602,197,676,245,673,250,599,202"/>
+<area shape="rect" href="../../d6/da0/observer_8hpp.html" title="Contains StarCraft II game observation classes. Each variant saves observations at different rates to..." alt="" coords="485,357,664,412"/>
+<area shape="poly" title=" " alt="" coords="378,304,508,355,506,360,376,309"/>
+<area shape="poly" title=" " alt="" coords="849,197,922,237,919,242,846,201"/>
+<area shape="poly" title=" " alt="" coords="814,202,829,228,839,256,841,284,830,311,804,330,764,347,665,371,664,366,762,342,802,326,826,308,836,284,834,257,824,230,810,205"/>
+<area shape="poly" title=" " alt="" coords="754,206,731,248,726,246,749,203"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -164,12 +163,6 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="../../df/d2a/unioncvt_1_1Action_1_1Target.html" title="Target data is either a position or another Unit ID. For example the target of moving units could be ...">Target</a> data is either a position or another <a class="el" href="../../d4/d9b/structcvt_1_1Unit.html" title="Basic StarCraft II Unit Data.">Unit</a> ID. For example the target of moving units could be a position on the minimap, or another unit to attack.  <a href="../../df/d2a/unioncvt_1_1Action_1_1Target.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
-Concepts</h2></td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d4f/conceptcvt_1_1IsSoAType.html">cvt::IsSoAType</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concept that checks if a struct is a Struct-of-Arrays type if it has the original struct_type defined. <br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:aeb92d518614d01f9ee7a343499028c02" id="r_aeb92d518614d01f9ee7a343499028c02"><td class="memItemLeft" align="right" valign="top"><a id="aeb92d518614d01f9ee7a343499028c02" name="aeb92d518614d01f9ee7a343499028c02"></a>
@@ -179,162 +172,18 @@ typedef std::uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>cvt:
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:abdc517e7119b71637b07bb6fc50baa6e" id="r_abdc517e7119b71637b07bb6fc50baa6e"><td class="memTemplParams" colspan="2">template&lt;typename T , typename It &gt; <br />
-requires std::is_arithmetic_v&lt;T&gt;</td></tr>
-<tr class="memitem:abdc517e7119b71637b07bb6fc50baa6e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#abdc517e7119b71637b07bb6fc50baa6e">cvt::detail::vectorize_helper</a> (T d, It it, bool onehotEnum) -&gt; It</td></tr>
-<tr class="memdesc:abdc517e7119b71637b07bb6fc50baa6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vectorize single arithmetic element by writing to output iterator It and incrementing.  <br /></td></tr>
-<tr class="separator:abdc517e7119b71637b07bb6fc50baa6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71b5c0b0fd969c5702160baef6348957" id="r_a71b5c0b0fd969c5702160baef6348957"><td class="memTemplParams" colspan="2">template&lt;std::ranges::range T, typename It &gt; <br />
-requires std::is_arithmetic_v&lt;std::ranges::range_value_t&lt;T&gt;&gt;</td></tr>
-<tr class="memitem:a71b5c0b0fd969c5702160baef6348957"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#a71b5c0b0fd969c5702160baef6348957">cvt::detail::vectorize_helper</a> (const T &amp;d, It it, bool onehotEnum) -&gt; It</td></tr>
-<tr class="memdesc:a71b5c0b0fd969c5702160baef6348957"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vectorize range of arithmetic elements by writing to and incrementing output iterator.  <br /></td></tr>
-<tr class="separator:a71b5c0b0fd969c5702160baef6348957"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6a3165ada69cfc71cffda640524d5b7" id="r_af6a3165ada69cfc71cffda640524d5b7"><td class="memTemplParams" colspan="2">template&lt;typename T , typename It &gt; <br />
-requires std::is_enum_v&lt;T&gt;</td></tr>
-<tr class="memitem:af6a3165ada69cfc71cffda640524d5b7"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#af6a3165ada69cfc71cffda640524d5b7">cvt::detail::vectorize_helper</a> (T d, It it, bool onehotEnum) -&gt; It</td></tr>
-<tr class="memdesc:af6a3165ada69cfc71cffda640524d5b7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vectorize enum type and optionally expand to onehot encoding to and incrementing output iterator.  <br /></td></tr>
-<tr class="separator:af6a3165ada69cfc71cffda640524d5b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab845cb421f2d5fb4676f87176f5e5a29" id="r_ab845cb421f2d5fb4676f87176f5e5a29"><td class="memTemplParams" colspan="2">template&lt;typename T , typename It &gt; <br />
-requires std::is_aggregate_v&lt;T&gt; &amp;&amp; (!std::ranges::range&lt;T&gt;)</td></tr>
-<tr class="memitem:ab845cb421f2d5fb4676f87176f5e5a29"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#ab845cb421f2d5fb4676f87176f5e5a29">cvt::detail::vectorize_helper</a> (T d, It it, bool onehotEnum) -&gt; It</td></tr>
-<tr class="memdesc:ab845cb421f2d5fb4676f87176f5e5a29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vectorize struct (aggregate type) to data.  <br /></td></tr>
-<tr class="separator:ab845cb421f2d5fb4676f87176f5e5a29"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a61943b24f5980d78a69d6167ede4bb01" id="r_a61943b24f5980d78a69d6167ede4bb01"><td class="memTemplParams" colspan="2">template&lt;typename T , bool oneHotEnum&gt; <br />
-requires std::is_aggregate_v&lt;T&gt;</td></tr>
-<tr class="memitem:a61943b24f5980d78a69d6167ede4bb01"><td class="memTemplItemLeft" align="right" valign="top">consteval auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#a61943b24f5980d78a69d6167ede4bb01">cvt::detail::vectorizedSizeHelper</a> () -&gt; std::size_t</td></tr>
-<tr class="memdesc:a61943b24f5980d78a69d6167ede4bb01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Does the main lifting for determining the size of a vectorized struct.  <br /></td></tr>
-<tr class="separator:a61943b24f5980d78a69d6167ede4bb01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76" id="r_a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76"><td class="memTemplParams" colspan="2">template&lt;typename S , typename It &gt; <br />
-requires std::is_aggregate_v&lt;S&gt; &amp;&amp; std::is_arithmetic_v&lt;std::iter_value_t&lt;It&gt;&gt;</td></tr>
-<tr class="memitem:a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76">cvt::vectorize</a> (S s, It it, bool onehotEnum=false) -&gt; It</td></tr>
-<tr class="memdesc:a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vectorize Struct of data to mutable output iterator.  <br /></td></tr>
-<tr class="separator:a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acf6632137e06ab0b5a50c620ee520474" id="r_acf6632137e06ab0b5a50c620ee520474"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; <br />
-requires std::is_aggregate_v&lt;T&gt;</td></tr>
-<tr class="memitem:acf6632137e06ab0b5a50c620ee520474"><td class="memTemplItemLeft" align="right" valign="top">constexpr auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#acf6632137e06ab0b5a50c620ee520474">cvt::getVectorizedSize</a> (bool onehotEnum) -&gt; std::size_t</td></tr>
-<tr class="memdesc:acf6632137e06ab0b5a50c620ee520474"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of the struct if its vectorized with vectorize.  <br /></td></tr>
-<tr class="separator:acf6632137e06ab0b5a50c620ee520474"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9615af7444dd62ba714d2ff92948273a" id="r_a9615af7444dd62ba714d2ff92948273a"><td class="memTemplParams" colspan="2">template&lt;typename T , typename S &gt; <br />
-requires std::is_aggregate_v&lt;S&gt; &amp;&amp; std::is_arithmetic_v&lt;T&gt;</td></tr>
-<tr class="memitem:a9615af7444dd62ba714d2ff92948273a"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#a9615af7444dd62ba714d2ff92948273a">cvt::vectorize</a> (S s, bool onehotEnum=false) -&gt; std::vector&lt; T &gt;</td></tr>
-<tr class="memdesc:a9615af7444dd62ba714d2ff92948273a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vectorize Struct of data to vector.  <br /></td></tr>
-<tr class="separator:a9615af7444dd62ba714d2ff92948273a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adf772d5c2d42bcd3b712ef6a2543c176" id="r_adf772d5c2d42bcd3b712ef6a2543c176"><td class="memTemplParams" colspan="2">template&lt;typename AoS , typename SoA &gt; </td></tr>
-<tr class="memitem:adf772d5c2d42bcd3b712ef6a2543c176"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#adf772d5c2d42bcd3b712ef6a2543c176">cvt::AoStoSoA</a> (AoS &amp;&amp;aos) noexcept -&gt; SoA</td></tr>
-<tr class="memdesc:adf772d5c2d42bcd3b712ef6a2543c176"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert AoS to SoA.  <br /></td></tr>
-<tr class="separator:adf772d5c2d42bcd3b712ef6a2543c176"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaf66c5f6f32ae7c7d286ffcb002d1dd7" id="r_aaf66c5f6f32ae7c7d286ffcb002d1dd7"><td class="memTemplParams" colspan="2">template&lt;typename AoS , typename SoA &gt; </td></tr>
-<tr class="memitem:aaf66c5f6f32ae7c7d286ffcb002d1dd7"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#aaf66c5f6f32ae7c7d286ffcb002d1dd7">cvt::AoStoSoA</a> (const AoS &amp;aos) noexcept -&gt; SoA</td></tr>
-<tr class="memdesc:aaf66c5f6f32ae7c7d286ffcb002d1dd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert AoS to SoA.  <br /></td></tr>
-<tr class="separator:aaf66c5f6f32ae7c7d286ffcb002d1dd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6eee9ca9584270bd9e709daf4f1e9c1c" id="r_a6eee9ca9584270bd9e709daf4f1e9c1c"><td class="memTemplParams" colspan="2">template&lt;typename SoA , typename AoS &gt; </td></tr>
-<tr class="memitem:a6eee9ca9584270bd9e709daf4f1e9c1c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#a6eee9ca9584270bd9e709daf4f1e9c1c">cvt::SoAtoAoS</a> (const SoA &amp;soa) noexcept -&gt; AoS</td></tr>
-<tr class="memdesc:a6eee9ca9584270bd9e709daf4f1e9c1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert SoA to AoS.  <br /></td></tr>
-<tr class="separator:a6eee9ca9584270bd9e709daf4f1e9c1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2135a4d11324ff9b33e5ba306c60bd0" id="r_ad2135a4d11324ff9b33e5ba306c60bd0"><td class="memTemplParams" colspan="2">template&lt;IsSoAType SoA&gt; </td></tr>
-<tr class="memitem:ad2135a4d11324ff9b33e5ba306c60bd0"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#ad2135a4d11324ff9b33e5ba306c60bd0">cvt::SoAtoAoS</a> (const SoA &amp;soa) noexcept -&gt; std::vector&lt; typename SoA::struct_type &gt;</td></tr>
-<tr class="memdesc:ad2135a4d11324ff9b33e5ba306c60bd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert SoA to AoS which is basic std::vector of the original struct_type.  <br /></td></tr>
-<tr class="separator:ad2135a4d11324ff9b33e5ba306c60bd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9ecb61a3a5f7f40439603496194ae514" id="r_a9ecb61a3a5f7f40439603496194ae514"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
 <tr class="memitem:a9ecb61a3a5f7f40439603496194ae514"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../dd/d3a/common_8hpp.html#a9ecb61a3a5f7f40439603496194ae514">cvt::enumToOneHot</a> (<a class="el" href="../../dd/d36/structcvt_1_1Action.html#ac18bb9a0326efb687c31fed8e7f6e861">Action::TargetType</a> e) noexcept -&gt; std::vector&lt; T &gt;</td></tr>
 <tr class="memdesc:a9ecb61a3a5f7f40439603496194ae514"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert enum to onehot for target type.  <br /></td></tr>
 <tr class="separator:a9ecb61a3a5f7f40439603496194ae514"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>This is one of "those" files that just contains a few bits and bobs such as data-vectorization, action, position, image data structures etc, etc. </p>
+<div class="textblock"><p>This is one of "those" files that just contains a few bits and bobs such as action, position, image data structures etc. </p>
 <dl class="section author"><dt>Author</dt><dd>Bryce Ferenczi </dd></dl>
 <dl class="section version"><dt>Version</dt><dd>0.1 </dd></dl>
 <dl class="section date"><dt>Date</dt><dd>2024-05-27</dd></dl>
 <dl class="section copyright"><dt>Copyright</dt><dd>Copyright (c) 2024 </dd></dl>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a id="adf772d5c2d42bcd3b712ef6a2543c176" name="adf772d5c2d42bcd3b712ef6a2543c176"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adf772d5c2d42bcd3b712ef6a2543c176">&#9670;&#160;</a></span>AoStoSoA() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename AoS , typename SoA &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto cvt::AoStoSoA </td>
-          <td>(</td>
-          <td class="paramtype">AoS &amp;&amp;&#160;</td>
-          <td class="paramname"><em>aos</em></td><td>)</td>
-          <td> -&gt;  SoA</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convert AoS to SoA. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">AoS</td><td>incoming AoS type </td></tr>
-    <tr><td class="paramname">SoA</td><td>outgoing SoA type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">aos</td><td>input data </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>transformed aos to soa </dd></dl>
-
-</div>
-</div>
-<a id="aaf66c5f6f32ae7c7d286ffcb002d1dd7" name="aaf66c5f6f32ae7c7d286ffcb002d1dd7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaf66c5f6f32ae7c7d286ffcb002d1dd7">&#9670;&#160;</a></span>AoStoSoA() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename AoS , typename SoA &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto cvt::AoStoSoA </td>
-          <td>(</td>
-          <td class="paramtype">const AoS &amp;&#160;</td>
-          <td class="paramname"><em>aos</em></td><td>)</td>
-          <td> -&gt;  SoA</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convert AoS to SoA. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">AoS</td><td>incoming AoS type </td></tr>
-    <tr><td class="paramname">SoA</td><td>outgoing SoA type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">aos</td><td>input data </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>transformed aos to soa </dd></dl>
-
-</div>
-</div>
 <a id="a9ecb61a3a5f7f40439603496194ae514" name="a9ecb61a3a5f7f40439603496194ae514"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a9ecb61a3a5f7f40439603496194ae514">&#9670;&#160;</a></span>enumToOneHot()</h2>
 
@@ -376,500 +225,6 @@ template&lt;typename T &gt; </div>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>One hot encoding vector of target type </dd></dl>
-
-</div>
-</div>
-<a id="acf6632137e06ab0b5a50c620ee520474" name="acf6632137e06ab0b5a50c620ee520474"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acf6632137e06ab0b5a50c620ee520474">&#9670;&#160;</a></span>getVectorizedSize()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; <br />
-requires std::is_aggregate_v&lt;T&gt;</div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">constexpr auto cvt::getVectorizedSize </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>onehotEnum</em></td><td>)</td>
-          <td> -&gt; std::size_t
-</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Get the size of the struct if its vectorized with vectorize. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>Type to query </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">onehotEnum</td><td>Flag if oneHotEncodings are expanded or not </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Number of elements of the vectorized type </dd></dl>
-
-</div>
-</div>
-<a id="a6eee9ca9584270bd9e709daf4f1e9c1c" name="a6eee9ca9584270bd9e709daf4f1e9c1c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6eee9ca9584270bd9e709daf4f1e9c1c">&#9670;&#160;</a></span>SoAtoAoS() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename SoA , typename AoS &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto cvt::SoAtoAoS </td>
-          <td>(</td>
-          <td class="paramtype">const SoA &amp;&#160;</td>
-          <td class="paramname"><em>soa</em></td><td>)</td>
-          <td> -&gt;  AoS</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convert SoA to AoS. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">SoA</td><td>incoming SoA type </td></tr>
-    <tr><td class="paramname">AoS</td><td>outgoing AoS type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">soa</td><td>input data </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>transformed soa to aos </dd></dl>
-
-</div>
-</div>
-<a id="ad2135a4d11324ff9b33e5ba306c60bd0" name="ad2135a4d11324ff9b33e5ba306c60bd0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad2135a4d11324ff9b33e5ba306c60bd0">&#9670;&#160;</a></span>SoAtoAoS() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;IsSoAType SoA&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto cvt::SoAtoAoS </td>
-          <td>(</td>
-          <td class="paramtype">const SoA &amp;&#160;</td>
-          <td class="paramname"><em>soa</em></td><td>)</td>
-          <td> -&gt; std::vector&lt;typename SoA::struct_type&gt;
-</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Convert SoA to AoS which is basic std::vector of the original struct_type. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">SoA</td><td>incoming SoA type </td></tr>
-    <tr><td class="paramname">AoS</td><td>outgoing AoS type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">soa</td><td>input data </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>transformed soa to aos </dd></dl>
-
-</div>
-</div>
-<a id="a9615af7444dd62ba714d2ff92948273a" name="a9615af7444dd62ba714d2ff92948273a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9615af7444dd62ba714d2ff92948273a">&#9670;&#160;</a></span>vectorize() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T , typename S &gt; <br />
-requires std::is_aggregate_v&lt;S&gt; &amp;&amp; std::is_arithmetic_v&lt;T&gt;</div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto cvt::vectorize </td>
-          <td>(</td>
-          <td class="paramtype">S&#160;</td>
-          <td class="paramname"><em>s</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>onehotEnum</em> = <code>false</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> -&gt; std::vector&lt;T&gt;
-</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Vectorize Struct of data to vector. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>Output arithmetic type of vector </td></tr>
-    <tr><td class="paramname">S</td><td>Struct type to vectorize </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">s</td><td>struct data to vectorize </td></tr>
-    <tr><td class="paramname">onehotEnum</td><td>Flag to expand enum types to onehot encoding (default: false) </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Vectorized struct data as type T </dd></dl>
-
-</div>
-</div>
-<a id="a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76" name="a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3c6cf1ae7ab6b7cc673e0f2b8ea1ae76">&#9670;&#160;</a></span>vectorize() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename S , typename It &gt; <br />
-requires std::is_aggregate_v&lt;S&gt; &amp;&amp; std::is_arithmetic_v&lt;std::iter_value_t&lt;It&gt;&gt;</div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto cvt::vectorize </td>
-          <td>(</td>
-          <td class="paramtype">S&#160;</td>
-          <td class="paramname"><em>s</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">It&#160;</td>
-          <td class="paramname"><em>it</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>onehotEnum</em> = <code>false</code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> -&gt; It
-</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Vectorize Struct of data to mutable output iterator. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">S</td><td>struct type </td></tr>
-    <tr><td class="paramname">It</td><td>output iterator type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">s</td><td>Struct data to vectorize </td></tr>
-    <tr><td class="paramname">it</td><td>Output iterator </td></tr>
-    <tr><td class="paramname">onehotEnum</td><td>Flag to expand enum types to onehot encoding (default: false) </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Incremented output iterator </dd></dl>
-
-</div>
-</div>
-<a id="a71b5c0b0fd969c5702160baef6348957" name="a71b5c0b0fd969c5702160baef6348957"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a71b5c0b0fd969c5702160baef6348957">&#9670;&#160;</a></span>vectorize_helper() <span class="overload">[1/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;std::ranges::range T, typename It &gt; <br />
-requires std::is_arithmetic_v&lt;std::ranges::range_value_t&lt;T&gt;&gt;</div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto cvt::detail::vectorize_helper </td>
-          <td>(</td>
-          <td class="paramtype">const T &amp;&#160;</td>
-          <td class="paramname"><em>d</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">It&#160;</td>
-          <td class="paramname"><em>it</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>onehotEnum</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> -&gt; It
-    </td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Vectorize range of arithmetic elements by writing to and incrementing output iterator. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>Range type </td></tr>
-    <tr><td class="paramname">It</td><td>Output iterator type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">d</td><td>Range data to vectorize </td></tr>
-    <tr><td class="paramname">it</td><td>Output iterator </td></tr>
-    <tr><td class="paramname">onehotEnum</td><td>flag to expand enum types to onehot </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Incremented output iterator </dd></dl>
-
-</div>
-</div>
-<a id="abdc517e7119b71637b07bb6fc50baa6e" name="abdc517e7119b71637b07bb6fc50baa6e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abdc517e7119b71637b07bb6fc50baa6e">&#9670;&#160;</a></span>vectorize_helper() <span class="overload">[2/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T , typename It &gt; <br />
-requires std::is_arithmetic_v&lt;T&gt;</div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto cvt::detail::vectorize_helper </td>
-          <td>(</td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>d</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">It&#160;</td>
-          <td class="paramname"><em>it</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>onehotEnum</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> -&gt; It
-    </td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Vectorize single arithmetic element by writing to output iterator It and incrementing. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>Arithmetic type </td></tr>
-    <tr><td class="paramname">It</td><td>Output iterator type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">d</td><td>Data to vectorize </td></tr>
-    <tr><td class="paramname">it</td><td>Output iterator </td></tr>
-    <tr><td class="paramname">onehotEnum</td><td>flag to expand enum types to onehot </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Incremented output iterator </dd></dl>
-
-</div>
-</div>
-<a id="af6a3165ada69cfc71cffda640524d5b7" name="af6a3165ada69cfc71cffda640524d5b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6a3165ada69cfc71cffda640524d5b7">&#9670;&#160;</a></span>vectorize_helper() <span class="overload">[3/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T , typename It &gt; <br />
-requires std::is_enum_v&lt;T&gt;</div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto cvt::detail::vectorize_helper </td>
-          <td>(</td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>d</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">It&#160;</td>
-          <td class="paramname"><em>it</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>onehotEnum</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> -&gt; It
-    </td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Vectorize enum type and optionally expand to onehot encoding to and incrementing output iterator. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>Enum type </td></tr>
-    <tr><td class="paramname">It</td><td>Output iterator type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">d</td><td>Enum data to vectorize </td></tr>
-    <tr><td class="paramname">it</td><td>Output iterator </td></tr>
-    <tr><td class="paramname">onehotEnum</td><td>flag to expand enum types to onehot </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Incremented output iterator </dd></dl>
-
-</div>
-</div>
-<a id="ab845cb421f2d5fb4676f87176f5e5a29" name="ab845cb421f2d5fb4676f87176f5e5a29"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab845cb421f2d5fb4676f87176f5e5a29">&#9670;&#160;</a></span>vectorize_helper() <span class="overload">[4/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T , typename It &gt; <br />
-requires std::is_aggregate_v&lt;T&gt; &amp;&amp; (!std::ranges::range&lt;T&gt;)</div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto cvt::detail::vectorize_helper </td>
-          <td>(</td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>d</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">It&#160;</td>
-          <td class="paramname"><em>it</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>onehotEnum</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> -&gt; It
-    </td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Vectorize struct (aggregate type) to data. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>Struct type </td></tr>
-    <tr><td class="paramname">It</td><td>Output iterator type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">d</td><td>Struct to vectorize </td></tr>
-    <tr><td class="paramname">it</td><td>Output iterator </td></tr>
-    <tr><td class="paramname">onehotEnum</td><td>flag to expand enum types to onehot </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Incremented output iterator </dd></dl>
-
-</div>
-</div>
-<a id="a61943b24f5980d78a69d6167ede4bb01" name="a61943b24f5980d78a69d6167ede4bb01"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a61943b24f5980d78a69d6167ede4bb01">&#9670;&#160;</a></span>vectorizedSizeHelper()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T , bool oneHotEnum&gt; <br />
-requires std::is_aggregate_v&lt;T&gt;</div>
-      <table class="memname">
-        <tr>
-          <td class="memname">consteval auto cvt::detail::vectorizedSizeHelper </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> -&gt; std::size_t
-    </td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Does the main lifting for determining the size of a vectorized struct. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>Type to understand vectorization size </td></tr>
-    <tr><td class="paramname">oneHotEnum</td><td>Flag to expand enums to onehot </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>std::size_t The size of the vectorized type </dd></dl>
 
 </div>
 </div>
