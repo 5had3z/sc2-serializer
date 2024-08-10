@@ -1,15 +1,17 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,173,89,198"/>
-<area shape="rect" id="Node000001" href="$d9/d8e/structfmt_1_1formatter_3_01cvt_1_1AddOn_01_4.html" title="fmt formatter specialization for addon" alt="" coords="137,5,288,45"/>
-<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="58,159,89,107,111,80,136,55,154,43,157,48,139,59,115,83,93,110,63,162"/>
-<area shape="rect" id="Node000002" href="$d5/d9a/structfmt_1_1formatter_3_01cvt_1_1Alliance_01_4.html" title="fmt formatter specialization for alliance" alt="" coords="137,69,288,109"/>
-<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="74,162,136,119,160,107,162,112,139,124,77,166"/>
-<area shape="rect" id="Node000003" href="$d1/dc9/structfmt_1_1formatter_3_01cvt_1_1CloakState_01_4.html" title="fmt formatter specialization for cloak state" alt="" coords="137,133,288,173"/>
-<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="102,172,136,165,137,171,103,177"/>
-<area shape="rect" id="Node000004" href="$de/df5/structfmt_1_1formatter_3_01cvt_1_1Race_01_4.html" title="fmt formatter specialization for race" alt="" coords="137,197,288,237"/>
-<area shape="poly" id="edge4_Node000000_Node000004" title=" " alt="" coords="103,193,137,200,136,205,102,199"/>
-<area shape="rect" id="Node000005" href="$d1/d8b/structfmt_1_1formatter_3_01cvt_1_1Result_01_4.html" title="fmt formatter specialization for result" alt="" coords="137,261,288,301"/>
-<area shape="poly" id="edge5_Node000000_Node000005" title=" " alt="" coords="77,205,139,247,162,259,160,264,136,252,74,209"/>
-<area shape="rect" id="Node000006" href="$d3/d9f/structfmt_1_1formatter_3_01cvt_1_1Visibility_01_4.html" title="fmt formatter specialization for visibility" alt="" coords="137,325,288,365"/>
-<area shape="poly" id="edge6_Node000000_Node000006" title=" " alt="" coords="63,209,93,260,115,287,139,311,157,323,154,327,136,315,111,291,89,263,58,212"/>
+<area shape="rect" id="Node000000" title=" " alt="" coords="5,205,89,230"/>
+<area shape="rect" id="Node000001" href="$de/df8/structfmt_1_1formatter_3_01cvt_1_1Action_1_1TargetType_01_4.html" title="fmt formatter specialization for cvt::Action::TargetType" alt="" coords="137,5,301,45"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="54,191,83,124,106,88,136,55,153,43,156,48,139,59,111,91,88,127,59,193"/>
+<area shape="rect" id="Node000002" href="$d9/d8e/structfmt_1_1formatter_3_01cvt_1_1AddOn_01_4.html" title="fmt formatter specialization for addon" alt="" coords="144,69,295,109"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="64,192,95,155,136,119,157,107,160,112,139,124,99,159,68,195"/>
+<area shape="rect" id="Node000003" href="$d5/d9a/structfmt_1_1formatter_3_01cvt_1_1Alliance_01_4.html" title="fmt formatter specialization for alliance" alt="" coords="144,133,295,173"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="94,197,164,171,166,176,96,202"/>
+<area shape="rect" id="Node000004" href="$d1/dc9/structfmt_1_1formatter_3_01cvt_1_1CloakState_01_4.html" title="fmt formatter specialization for cloak state" alt="" coords="144,197,295,237"/>
+<area shape="poly" id="edge4_Node000000_Node000004" title=" " alt="" coords="103,215,144,215,144,220,103,220"/>
+<area shape="rect" id="Node000005" href="$de/df5/structfmt_1_1formatter_3_01cvt_1_1Race_01_4.html" title="fmt formatter specialization for race" alt="" coords="144,261,295,301"/>
+<area shape="poly" id="edge5_Node000000_Node000005" title=" " alt="" coords="96,232,166,259,164,264,94,237"/>
+<area shape="rect" id="Node000006" href="$d1/d8b/structfmt_1_1formatter_3_01cvt_1_1Result_01_4.html" title="fmt formatter specialization for result" alt="" coords="144,325,295,365"/>
+<area shape="poly" id="edge6_Node000000_Node000006" title=" " alt="" coords="68,239,99,276,139,311,160,323,157,328,136,316,95,280,64,243"/>
+<area shape="rect" id="Node000007" href="$d3/d9f/structfmt_1_1formatter_3_01cvt_1_1Visibility_01_4.html" title="fmt formatter specialization for visibility" alt="" coords="144,389,295,429"/>
+<area shape="poly" id="edge7_Node000000_Node000007" title=" " alt="" coords="59,242,88,308,111,344,139,375,156,387,153,391,136,379,106,347,83,310,54,244"/>
 </map>
