@@ -303,10 +303,10 @@ template<typename ReplayT> struct DatabaseInterface
     [[nodiscard]] static auto getHeaderImpl(std::istream &dbStream) -> ReplayInfo;
 
     /**
-     * @brief Retrieves the hash ID entry from the database stream at the specified entry position.
+     * @brief Retrieves the Replay hash and Player ID entry from the database stream at the specified entry position.
      * @param dbStream The input file stream of the database.
      * @param entry The position of the entry in the database stream.
-     * @return A pair containing the hash ID string and the associated 32-bit unsigned integer.
+     * @return A pair containing the hash string of the replay and the ID of the POV Player.
      */
     [[nodiscard]] static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>;
 
