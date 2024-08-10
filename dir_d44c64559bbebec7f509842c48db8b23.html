@@ -99,6 +99,9 @@ Files</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="df/da2/database_8hpp.html">database.hpp</a></td></tr>
 <tr class="memdesc:df/da2/database_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Database framework for reading and writing serialized replay data. ReplayDatabase is templated on any type which fulfills the interface concept HasDBInterface, i.e. a specialization is defined for that type to enable reading/writing the main data and any metadata associated with the replay. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="d5/de4/instance__transform_8hpp.html">instance_transform.hpp</a></td></tr>
+<tr class="memdesc:d5/de4/instance__transform_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Instance-major transformation code for unit data which improves data compression and reduces file size from unit data by ~70%. This is done by using a lambda that sorts flattented units by their id. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="d6/da0/observer_8hpp.html">observer.hpp</a></td></tr>
 <tr class="memdesc:d6/da0/observer_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains StarCraft II game observation classes. Each variant saves observations at different rates to balance between verbosity and dataset size. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -107,6 +110,12 @@ Files</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="d1/d31/serialize_8hpp.html">serialize.hpp</a></td></tr>
 <tr class="memdesc:d1/d31/serialize_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic Serialisation and Deserialisation Methods. A combination of C++20 Concepts and Requires clauses are used to automatically determine how to (de)serialize data. <a href="https://www.boost.org/doc/libs/master/doc/html/boost_pfr.html">Boost PFR</a> is used to iterate over non-trivial structures. Underlying data is ideally trivially copyable or some range which can be copied element-by-element. This will not work properly with pointer-like objects. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="de/df4/soa_8hpp.html">soa.hpp</a></td></tr>
+<tr class="memdesc:de/df4/soa_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">SoA&lt;-&gt;AoS conversion code as well as IsSoAType concept. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top"><span class="icondoc"></span>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="d4/d74/vectorize_8hpp.html">vectorize.hpp</a></td></tr>
+<tr class="memdesc:d4/d74/vectorize_8hpp"><td class="mdescLeft">&#160;</td><td class="mdescRight">Automatically convert some struct S to a vector of homogeneous data type, optionally expanding enum values to one-hot encodings. Useful for writing unit data or score data to numpy arrays for ML training. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->

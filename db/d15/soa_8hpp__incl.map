@@ -1,5 +1,9 @@
-<map id="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/data_structures/soa.hpp" name="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/data_structures/soa.hpp">
-<area shape="rect" id="Node000001" title="SoA&lt;&#45;&gt;AoS conversion code as well as IsSoAType concept." alt="" coords="5,5,184,75"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="41,123,148,148"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,75,97,109,92,109,92,75"/>
+<map id="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/soa.hpp" name="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/soa.hpp">
+<area shape="rect" id="Node000001" title="SoA&lt;&#45;&gt;AoS conversion code as well as IsSoAType concept." alt="" coords="89,5,268,60"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,108,112,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,62,88,102,85,98,140,58"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="136,108,221,133"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="181,60,181,94,176,94,176,60"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="245,108,315,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="211,58,258,97,254,101,208,62"/>
 </map>

@@ -1,17 +1,17 @@
-<map id="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/data_structures/vectorize.hpp" name="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/data_structures/vectorize.hpp">
-<area shape="rect" id="Node000001" title="Automatically convert some struct S to a vector of homogeneous data type, optionally expanding enum v..." alt="" coords="303,5,482,75"/>
-<area shape="rect" id="Node000002" href="$dd/d93/enums_8hpp.html" title="Common enums in StarCraft II and accompanying tools such as enum&#45;&gt;string and enum&#45;&gt;one&#45;hot." alt="" coords="220,123,315,148"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="349,77,296,116,293,112,346,73"/>
-<area shape="rect" id="Node000007" title=" " alt="" coords="339,123,446,148"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="395,75,395,109,390,109,390,75"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="471,123,563,148"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="439,73,492,112,489,116,436,77"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="5,196,153,236"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="241,150,138,193,136,188,239,146"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="178,203,263,229"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="263,150,237,193,232,190,258,147"/>
-<area shape="rect" id="Node000005" title=" " alt="" coords="287,203,343,229"/>
-<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="277,147,303,190,299,193,272,150"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="368,203,431,229"/>
-<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="288,146,370,194,367,199,285,150"/>
+<map id="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/vectorize.hpp" name="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/vectorize.hpp">
+<area shape="rect" id="Node000001" title="Automatically convert some struct S to a vector of homogeneous data type, optionally expanding enum v..." alt="" coords="355,5,534,60"/>
+<area shape="rect" id="Node000002" href="$dd/d93/enums_8hpp.html" title="Common enums in StarCraft II and accompanying tools such as enum&#45;&gt;string and enum&#45;&gt;one&#45;hot." alt="" coords="168,108,367,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="392,62,305,104,302,100,389,58"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="391,108,498,133"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="447,60,447,94,442,94,442,60"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="523,108,615,133"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="484,58,542,98,539,102,481,62"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="5,181,153,221"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="241,136,138,178,136,174,239,131"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="178,189,263,214"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="263,135,237,178,232,175,258,132"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="287,189,343,214"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="277,132,303,176,299,178,272,135"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="368,189,431,214"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="288,131,370,179,367,184,285,136"/>
 </map>

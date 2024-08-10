@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>sc2-serializer: /home/runner/work/sc2-serializer/sc2-serializer/include/data_structures/instance_transform.hpp File Reference</title>
+<title>sc2-serializer: /home/runner/work/sc2-serializer/sc2-serializer/include/instance_transform.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="../../dir_ebed218ca042e0cae3861bf18b14f766.html">data_structures</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -83,48 +83,36 @@ $(function() {
 
 <p>Instance-major transformation code for unit data which improves data compression and reduces file size from unit data by ~70%. This is done by using a lambda that sorts flattented units by their id.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../dd/d3a/common_8hpp.html">common.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../de/df4/soa_8hpp.html">soa.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../de/df4/soa_8hpp.html">soa.hpp</a>&quot;</code><br />
+<code>#include &lt;algorithm&gt;</code><br />
 <code>#include &lt;ranges&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for instance_transform.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="../../d4/d7a/instance__transform_8hpp__incl.png" border="0" usemap="#a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2instance__transform_8hpp" alt=""/></div>
-<map name="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2instance__transform_8hpp" id="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2instance__transform_8hpp">
-<area shape="rect" title="Instance&#45;major transformation code for unit data which improves data compression and reduces file siz..." alt="" coords="533,5,713,75"/>
-<area shape="rect" href="../../dd/d3a/common_8hpp.html" title="This is one of &quot;those&quot; files that just contains a few bits and bobs such as action,..." alt="" coords="418,123,525,148"/>
-<area shape="poly" title=" " alt="" coords="570,77,503,118,500,113,567,73"/>
-<area shape="rect" href="../../de/df4/soa_8hpp.html" title="SoA&lt;&#45;&gt;AoS conversion code as well as IsSoAType concept." alt="" coords="587,123,660,148"/>
-<area shape="poly" title=" " alt="" coords="626,75,626,109,621,109,621,75"/>
-<area shape="rect" title=" " alt="" coords="685,123,751,148"/>
-<area shape="poly" title=" " alt="" coords="659,73,698,111,695,115,656,77"/>
-<area shape="rect" href="../../dd/d93/enums_8hpp.html" title="Common enums in StarCraft II and accompanying tools such as enum&#45;&gt;string and enum&#45;&gt;one&#45;hot." alt="" coords="267,196,361,221"/>
-<area shape="poly" title=" " alt="" coords="447,150,353,193,351,188,445,146"/>
-<area shape="rect" title=" " alt="" coords="368,277,431,302"/>
-<area shape="poly" title=" " alt="" coords="462,150,444,171,427,197,414,231,406,263,401,262,409,229,422,195,440,168,458,147"/>
-<area shape="rect" title=" " alt="" coords="437,196,506,221"/>
-<area shape="poly" title=" " alt="" coords="474,148,474,182,469,182,469,148"/>
-<area shape="rect" title=" " alt="" coords="530,196,583,221"/>
-<area shape="poly" title=" " alt="" coords="487,146,534,185,531,189,483,150"/>
-<area shape="rect" title=" " alt="" coords="5,269,153,309"/>
-<area shape="poly" title=" " alt="" coords="281,224,150,267,148,262,279,219"/>
-<area shape="rect" title=" " alt="" coords="178,277,263,302"/>
-<area shape="poly" title=" " alt="" coords="302,224,247,270,243,266,299,219"/>
-<area shape="rect" title=" " alt="" coords="287,277,343,302"/>
-<area shape="poly" title=" " alt="" coords="317,221,318,263,312,263,312,222"/>
-<area shape="poly" title=" " alt="" coords="328,220,378,265,375,269,325,223"/>
-<area shape="rect" title=" " alt="" coords="607,196,714,221"/>
-<area shape="poly" title=" " alt="" coords="632,147,651,183,646,185,627,150"/>
+<div class="center"><img src="../../d4/d7a/instance__transform_8hpp__incl.png" border="0" usemap="#a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2instance__transform_8hpp" alt=""/></div>
+<map name="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2instance__transform_8hpp" id="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2instance__transform_8hpp">
+<area shape="rect" title="Instance&#45;major transformation code for unit data which improves data compression and reduces file siz..." alt="" coords="150,5,381,60"/>
+<area shape="rect" href="../../de/df4/soa_8hpp.html" title="SoA&lt;&#45;&gt;AoS conversion code as well as IsSoAType concept." alt="" coords="147,108,221,133"/>
+<area shape="poly" title=" " alt="" coords="242,62,207,100,203,96,239,58"/>
+<area shape="rect" title=" " alt="" coords="229,181,315,207"/>
+<area shape="poly" title=" " alt="" coords="269,60,274,168,268,168,264,60"/>
+<area shape="rect" title=" " alt="" coords="303,108,369,133"/>
+<area shape="poly" title=" " alt="" coords="289,58,320,96,316,99,285,62"/>
+<area shape="rect" title=" " alt="" coords="5,181,112,207"/>
+<area shape="poly" title=" " alt="" coords="165,136,92,177,90,172,163,131"/>
+<area shape="poly" title=" " alt="" coords="200,131,249,170,245,175,196,135"/>
+<area shape="rect" title=" " alt="" coords="136,181,205,207"/>
+<area shape="poly" title=" " alt="" coords="184,134,178,168,173,167,179,133"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="../../db/d17/instance__transform_8hpp__dep__incl.png" border="0" usemap="#a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2instance__transform_8hppdep" alt=""/></div>
-<map name="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2instance__transform_8hppdep" id="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2instance__transform_8hppdep">
-<area shape="rect" title="Instance&#45;major transformation code for unit data which improves data compression and reduces file siz..." alt="" coords="5,5,185,75"/>
-<area shape="rect" href="../../d7/dbe/replay__all_8hpp.html" title="Replay data structure for recording and deserializing all observation data." alt="" coords="6,123,185,192"/>
-<area shape="poly" title=" " alt="" coords="98,89,98,122,93,122,93,89"/>
+<div class="center"><img src="../../db/d17/instance__transform_8hpp__dep__incl.png" border="0" usemap="#a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2instance__transform_8hppdep" alt=""/></div>
+<map name="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2instance__transform_8hppdep" id="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2instance__transform_8hppdep">
+<area shape="rect" title="Instance&#45;major transformation code for unit data which improves data compression and reduces file siz..." alt="" coords="5,5,236,60"/>
+<area shape="rect" href="../../d7/dbe/replay__all_8hpp.html" title="Replay data structure for recording and deserializing all observation data." alt="" coords="31,108,210,177"/>
+<area shape="poly" title=" " alt="" coords="123,74,123,108,118,108,118,74"/>
 </map>
 </div>
 </div><table class="memberdecls">

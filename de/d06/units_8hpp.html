@@ -82,40 +82,42 @@ $(function() {
 
 <p>Unit data structures for StarCraft II. NeutralUnits are treated specially as many properties such as buffs and cloak_state are never utilized, so we save precious bytes and make a smaller structure especially for neutral structures.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../dd/d3a/common_8hpp.html">common.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../de/df4/soa_8hpp.html">../soa.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../dd/d3a/common_8hpp.html">common.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../dd/d93/enums_8hpp.html">enums.hpp</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="../../de/df4/soa_8hpp.html">soa.hpp</a>&quot;</code><br />
 <code>#include &lt;ranges&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for units.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="../../d9/d1f/units_8hpp__incl.png" border="0" usemap="#a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2units_8hpp" alt=""/></div>
 <map name="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2units_8hpp" id="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2units_8hpp">
-<area shape="rect" title="Unit data structures for StarCraft II. NeutralUnits are treated specially as many properties such as ..." alt="" coords="422,5,601,75"/>
-<area shape="rect" href="../../dd/d3a/common_8hpp.html" title="This is one of &quot;those&quot; files that just contains a few bits and bobs such as action,..." alt="" coords="401,123,507,148"/>
-<area shape="poly" title=" " alt="" coords="493,76,471,112,466,109,488,73"/>
-<area shape="rect" href="../../dd/d93/enums_8hpp.html" title="Common enums in StarCraft II and accompanying tools such as enum&#45;&gt;string and enum&#45;&gt;one&#45;hot." alt="" coords="267,196,361,221"/>
-<area shape="poly" title=" " alt="" coords="456,77,390,125,359,156,333,187,329,183,355,152,387,121,453,73"/>
-<area shape="rect" href="../../de/df4/soa_8hpp.html" title="SoA&lt;&#45;&gt;AoS conversion code as well as IsSoAType concept." alt="" coords="532,123,605,148"/>
-<area shape="poly" title=" " alt="" coords="534,73,557,109,552,112,530,76"/>
-<area shape="rect" title=" " alt="" coords="630,123,697,148"/>
-<area shape="poly" title=" " alt="" coords="568,73,634,113,631,118,565,77"/>
-<area shape="poly" title=" " alt="" coords="433,150,350,192,348,187,430,146"/>
-<area shape="rect" title=" " alt="" coords="368,277,431,302"/>
-<area shape="poly" title=" " alt="" coords="450,149,427,197,407,264,402,262,422,195,445,147"/>
-<area shape="rect" title=" " alt="" coords="437,196,506,221"/>
-<area shape="poly" title=" " alt="" coords="459,148,468,182,463,184,454,149"/>
-<area shape="rect" title=" " alt="" coords="530,196,583,221"/>
-<area shape="poly" title=" " alt="" coords="472,146,530,186,527,190,469,150"/>
-<area shape="rect" title=" " alt="" coords="5,269,153,309"/>
-<area shape="poly" title=" " alt="" coords="281,224,150,267,148,262,279,219"/>
-<area shape="rect" title=" " alt="" coords="178,277,263,302"/>
-<area shape="poly" title=" " alt="" coords="302,224,247,270,243,266,299,219"/>
-<area shape="rect" title=" " alt="" coords="287,277,343,302"/>
-<area shape="poly" title=" " alt="" coords="317,221,318,263,312,263,312,222"/>
-<area shape="poly" title=" " alt="" coords="328,220,378,265,375,269,325,223"/>
-<area shape="rect" title=" " alt="" coords="607,196,714,221"/>
-<area shape="poly" title=" " alt="" coords="585,146,637,185,633,190,582,150"/>
+<area shape="rect" title="Unit data structures for StarCraft II. NeutralUnits are treated specially as many properties such as ..." alt="" coords="227,5,405,75"/>
+<area shape="rect" href="../../de/df4/soa_8hpp.html" title="SoA&lt;&#45;&gt;AoS conversion code as well as IsSoAType concept." alt="" coords="144,123,229,148"/>
+<area shape="poly" title=" " alt="" coords="271,77,216,116,213,112,268,73"/>
+<area shape="rect" href="../../dd/d3a/common_8hpp.html" title="This is one of &quot;those&quot; files that just contains a few bits and bobs such as action,..." alt="" coords="308,123,415,148"/>
+<area shape="poly" title=" " alt="" coords="335,74,352,109,347,111,330,76"/>
+<area shape="rect" href="../../dd/d93/enums_8hpp.html" title="Common enums in StarCraft II and accompanying tools such as enum&#45;&gt;string and enum&#45;&gt;one&#45;hot." alt="" coords="281,196,375,221"/>
+<area shape="poly" title=" " alt="" coords="305,75,297,110,299,147,315,183,310,185,293,149,292,110,300,74"/>
+<area shape="rect" title=" " alt="" coords="439,123,505,148"/>
+<area shape="poly" title=" " alt="" coords="374,72,442,113,439,118,371,77"/>
+<area shape="rect" title=" " alt="" coords="5,196,112,221"/>
+<area shape="poly" title=" " alt="" coords="167,150,93,191,91,187,165,146"/>
+<area shape="rect" title=" " alt="" coords="63,277,148,302"/>
+<area shape="poly" title=" " alt="" coords="183,149,120,266,116,263,178,147"/>
+<area shape="rect" title=" " alt="" coords="187,196,256,221"/>
+<area shape="poly" title=" " alt="" coords="195,147,212,182,207,185,190,150"/>
+<area shape="poly" title=" " alt="" coords="340,150,257,192,255,187,338,146"/>
+<area shape="poly" title=" " alt="" coords="358,149,342,185,337,183,353,147"/>
+<area shape="rect" title=" " alt="" coords="426,277,489,302"/>
+<area shape="poly" title=" " alt="" coords="371,147,445,263,440,266,366,149"/>
+<area shape="rect" title=" " alt="" coords="451,196,504,221"/>
+<area shape="poly" title=" " alt="" coords="381,146,448,186,445,191,379,150"/>
+<area shape="poly" title=" " alt="" coords="297,224,151,275,150,270,295,219"/>
+<area shape="rect" title=" " alt="" coords="173,269,321,309"/>
+<area shape="poly" title=" " alt="" coords="318,223,278,262,274,258,314,220"/>
+<area shape="rect" title=" " alt="" coords="345,277,401,302"/>
+<area shape="poly" title=" " alt="" coords="337,220,362,263,357,266,332,223"/>
+<area shape="poly" title=" " alt="" coords="348,219,428,267,425,272,346,224"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">

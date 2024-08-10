@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>sc2-serializer: /home/runner/work/sc2-serializer/sc2-serializer/include/data_structures/soa.hpp File Reference</title>
+<title>sc2-serializer: /home/runner/work/sc2-serializer/sc2-serializer/include/soa.hpp File Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -70,7 +70,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><a class="el" href="../../dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="../../dir_ebed218ca042e0cae3861bf18b14f766.html">data_structures</a></li>  </ul>
+<li class="navelem"><a class="el" href="../../dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -84,44 +84,50 @@ $(function() {
 <p>SoA&lt;-&gt;AoS conversion code as well as IsSoAType concept.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;boost/pfr.hpp&gt;</code><br />
+<code>#include &lt;algorithm&gt;</code><br />
+<code>#include &lt;cassert&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for soa.hpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="../../db/d15/soa_8hpp__incl.png" border="0" usemap="#a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2soa_8hpp" alt=""/></div>
-<map name="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2soa_8hpp" id="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2soa_8hpp">
-<area shape="rect" title="SoA&lt;&#45;&gt;AoS conversion code as well as IsSoAType concept." alt="" coords="5,5,184,75"/>
-<area shape="rect" title=" " alt="" coords="41,123,148,148"/>
-<area shape="poly" title=" " alt="" coords="97,75,97,109,92,109,92,75"/>
+<div class="center"><img src="../../db/d15/soa_8hpp__incl.png" border="0" usemap="#a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2soa_8hpp" alt=""/></div>
+<map name="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2soa_8hpp" id="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2soa_8hpp">
+<area shape="rect" title="SoA&lt;&#45;&gt;AoS conversion code as well as IsSoAType concept." alt="" coords="89,5,268,60"/>
+<area shape="rect" title=" " alt="" coords="5,108,112,133"/>
+<area shape="poly" title=" " alt="" coords="144,62,88,102,85,98,140,58"/>
+<area shape="rect" title=" " alt="" coords="136,108,221,133"/>
+<area shape="poly" title=" " alt="" coords="181,60,181,94,176,94,176,60"/>
+<area shape="rect" title=" " alt="" coords="245,108,315,133"/>
+<area shape="poly" title=" " alt="" coords="211,58,258,97,254,101,208,62"/>
 </map>
 </div>
 </div><div class="textblock"><div class="dynheader">
 This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
-<div class="center"><img src="../../d3/d89/soa_8hpp__dep__incl.png" border="0" usemap="#a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2soa_8hppdep" alt=""/></div>
-<map name="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2soa_8hppdep" id="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2soa_8hppdep">
-<area shape="rect" title="SoA&lt;&#45;&gt;AoS conversion code as well as IsSoAType concept." alt="" coords="687,5,865,75"/>
-<area shape="rect" href="../../d5/de4/instance__transform_8hpp.html" title="Instance&#45;major transformation code for unit data which improves data compression and reduces file siz..." alt="" coords="890,123,1070,192"/>
-<area shape="poly" title=" " alt="" coords="849,79,922,120,919,125,846,84"/>
-<area shape="rect" href="../../d0/d04/replay__interface_8hpp.html" title="Common interface and utilities for replay data structures." alt="" coords="448,123,627,192"/>
-<area shape="poly" title=" " alt="" coords="695,83,608,125,606,120,693,78"/>
-<area shape="rect" href="../../de/d06/units_8hpp.html" title="Unit data structures for StarCraft II. NeutralUnits are treated specially as many properties such as ..." alt="" coords="687,123,865,192"/>
-<area shape="poly" title=" " alt="" coords="779,89,779,122,773,122,773,89"/>
-<area shape="rect" href="../../d7/dbe/replay__all_8hpp.html" title="Replay data structure for recording and deserializing all observation data." alt="" coords="891,240,1069,309"/>
-<area shape="poly" title=" " alt="" coords="983,206,983,240,977,240,977,206"/>
-<area shape="poly" title=" " alt="" coords="641,183,891,248,890,253,640,188"/>
-<area shape="rect" href="../../d2/df9/replay__minimaps_8hpp.html" title="Replay observation data that only contains scalar (score and economy) and minimap data...." alt="" coords="411,240,589,309"/>
-<area shape="poly" title=" " alt="" coords="525,206,513,241,508,239,520,204"/>
-<area shape="rect" href="../../db/d6e/replay__scalars_8hpp.html" title="Replay observation data that only contains scalar (score and economy) data. Is compatible with readin..." alt="" coords="5,240,184,309"/>
-<area shape="poly" title=" " alt="" coords="435,183,320,210,197,243,185,246,183,241,195,237,319,205,434,178"/>
-<area shape="rect" href="../../df/da2/database_8hpp.html" title="Database framework for reading and writing serialized replay data. ReplayDatabase is templated on any..." alt="" coords="208,247,387,302"/>
-<area shape="poly" title=" " alt="" coords="456,200,353,250,351,245,454,196"/>
-<area shape="rect" href="../../d5/d1d/replay__parsing_8hpp.html" title="Set of tools for parsing replay data into a more amenable form for machine learning...." alt="" coords="614,247,815,302"/>
-<area shape="poly" title=" " alt="" coords="602,197,676,245,673,250,599,202"/>
-<area shape="rect" href="../../d6/da0/observer_8hpp.html" title="Contains StarCraft II game observation classes. Each variant saves observations at different rates to..." alt="" coords="485,357,664,412"/>
-<area shape="poly" title=" " alt="" coords="378,304,508,355,506,360,376,309"/>
-<area shape="poly" title=" " alt="" coords="849,197,922,237,919,242,846,201"/>
-<area shape="poly" title=" " alt="" coords="814,202,829,228,839,256,841,284,830,311,804,330,764,347,665,371,664,366,762,342,802,326,826,308,836,284,834,257,824,230,810,205"/>
-<area shape="poly" title=" " alt="" coords="754,206,731,248,726,246,749,203"/>
+<div class="center"><img src="../../d3/d89/soa_8hpp__dep__incl.png" border="0" usemap="#a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2soa_8hppdep" alt=""/></div>
+<map name="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2soa_8hppdep" id="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2soa_8hppdep">
+<area shape="rect" title="SoA&lt;&#45;&gt;AoS conversion code as well as IsSoAType concept." alt="" coords="256,5,435,60"/>
+<area shape="rect" href="../../d0/d04/replay__interface_8hpp.html" title="Common interface and utilities for replay data structures." alt="" coords="486,108,664,177"/>
+<area shape="poly" title=" " alt="" coords="415,64,504,105,502,110,413,68"/>
+<area shape="rect" href="../../de/d06/units_8hpp.html" title="Unit data structures for StarCraft II. NeutralUnits are treated specially as many properties such as ..." alt="" coords="27,108,206,177"/>
+<area shape="poly" title=" " alt="" coords="278,68,189,110,187,105,276,64"/>
+<area shape="rect" href="../../d5/de4/instance__transform_8hpp.html" title="Instance&#45;major transformation code for unit data which improves data compression and reduces file siz..." alt="" coords="230,115,461,170"/>
+<area shape="poly" title=" " alt="" coords="348,74,348,115,343,115,343,74"/>
+<area shape="rect" href="../../d7/dbe/replay__all_8hpp.html" title="Replay data structure for recording and deserializing all observation data." alt="" coords="256,225,435,295"/>
+<area shape="poly" title=" " alt="" coords="497,186,414,228,411,223,494,181"/>
+<area shape="rect" href="../../d2/df9/replay__minimaps_8hpp.html" title="Replay observation data that only contains scalar (score and economy) and minimap data...." alt="" coords="662,225,840,295"/>
+<area shape="poly" title=" " alt="" coords="639,183,701,223,698,227,636,187"/>
+<area shape="rect" href="../../db/d6e/replay__scalars_8hpp.html" title="Replay observation data that only contains scalar (score and economy) data. Is compatible with readin..." alt="" coords="864,225,1043,295"/>
+<area shape="poly" title=" " alt="" coords="678,171,853,223,865,227,863,232,851,228,677,176"/>
+<area shape="rect" href="../../df/da2/database_8hpp.html" title="Database framework for reading and writing serialized replay data. ReplayDatabase is templated on any..." alt="" coords="459,233,638,287"/>
+<area shape="poly" title=" " alt="" coords="567,192,557,233,552,232,561,190"/>
+<area shape="rect" href="../../d5/d1d/replay__parsing_8hpp.html" title="Set of tools for parsing replay data into a more amenable form for machine learning...." alt="" coords="30,233,232,287"/>
+<area shape="poly" title=" " alt="" coords="473,180,357,205,245,228,217,235,216,230,244,223,356,200,472,175"/>
+<area shape="rect" href="../../d6/da0/observer_8hpp.html" title="Contains StarCraft II game observation classes. Each variant saves observations at different rates to..." alt="" coords="180,343,359,397"/>
+<area shape="poly" title=" " alt="" coords="469,295,338,345,336,340,467,290"/>
+<area shape="poly" title=" " alt="" coords="197,181,280,223,277,228,194,186"/>
+<area shape="poly" title=" " alt="" coords="51,188,33,206,20,227,12,245,8,261,10,277,20,293,44,311,83,327,180,351,179,357,81,332,41,316,16,296,5,278,3,261,7,244,15,224,29,203,47,184"/>
+<area shape="poly" title=" " alt="" coords="125,191,130,232,125,233,120,192"/>
+<area shape="poly" title=" " alt="" coords="348,183,348,225,343,225,343,183"/>
 </map>
 </div>
 </div><table class="memberdecls">
