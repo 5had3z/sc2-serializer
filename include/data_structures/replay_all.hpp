@@ -11,10 +11,9 @@
 #pragma once
 
 #include "../serialize.hpp"
+#include "instance_transform.hpp"
 #include "replay_interface.hpp"
 #include "units.hpp"
-
-#include <ranges>
 
 namespace cvt {
 
@@ -85,24 +84,7 @@ struct StepDataSoA
      */
     [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> StepData
     {
-        StepData stepData;
-        stepData.gameStep = gameStep[idx];
-        stepData.minearals = minearals[idx];
-        stepData.vespene = vespene[idx];
-        stepData.popMax = popMax[idx];
-        stepData.popArmy = popArmy[idx];
-        stepData.popWorkers = popWorkers[idx];
-        stepData.score = score[idx];
-        stepData.visibility = visibility[idx];
-        stepData.creep = creep[idx];
-        stepData.player_relative = player_relative[idx];
-        stepData.alerts = alerts[idx];
-        stepData.buildable = buildable[idx];
-        stepData.pathable = pathable[idx];
-        stepData.actions = actions[idx];
-        stepData.units = units[idx];
-        stepData.neutralUnits = neutralUnits[idx];
-        return stepData;
+        return gatherStructAtIndex(*this, idx);
     }
 
     /**
@@ -127,43 +109,6 @@ using ReplayData = ReplayDataTemplate<StepData>;
 using ReplayDataSoA = ReplayDataTemplateSoA<StepDataSoA>;
 
 static_assert(std::same_as<ReplayDataSoA::struct_type, ReplayData>);
-
-/**
- * @brief Convert array-of-structures to structure-of-arrays
- *
- * @tparam Range range type of StepData
- * @param aos data to transform
- * @return StepDataSoA transposed data
- */
-template<std::ranges::range Range>
-    requires std::same_as<std::ranges::range_value_t<Range>, StepData>
-auto AoStoSoA(Range &&aos) noexcept -> StepDataSoA
-{
-    StepDataSoA soa;
-
-    // Preallocate for expected size
-    boost::pfr::for_each_field(soa, [&](auto &field) { field.reserve(aos.size()); });
-
-    for (auto &&step : aos) {
-        soa.gameStep.emplace_back(step.gameStep);
-        soa.minearals.emplace_back(step.minearals);
-        soa.vespene.emplace_back(step.vespene);
-        soa.popMax.emplace_back(step.popMax);
-        soa.popArmy.emplace_back(step.popArmy);
-        soa.popWorkers.emplace_back(step.popWorkers);
-        soa.score.emplace_back(step.score);
-        soa.visibility.emplace_back(step.visibility);
-        soa.creep.emplace_back(step.creep);
-        soa.player_relative.emplace_back(step.player_relative);
-        soa.alerts.emplace_back(step.alerts);
-        soa.buildable.emplace_back(step.buildable);
-        soa.pathable.emplace_back(step.pathable);
-        soa.actions.emplace_back(step.actions);
-        soa.units.emplace_back(step.units);
-        soa.neutralUnits.emplace_back(step.neutralUnits);
-    }
-    return soa;
-}
 
 /**
  * @brief Database interface implementation for ReplayDataSoA
@@ -202,14 +147,14 @@ template<> struct DatabaseInterface<ReplayDataSoA>
         deserialize(result.data.pathable, dbStream);
         deserialize(result.data.actions, dbStream);
         {
-            FlattenedUnits2<UnitSoA> units;
+            FlattenedData2<UnitSoA> units;
             deserialize(units, dbStream);
-            result.data.units = recoverFlattenedSortedUnits2(units);
+            result.data.units = recoverFlattenedSortedData2(units);
         }
         {
-            FlattenedUnits2<NeutralUnitSoA> units;
+            FlattenedData2<NeutralUnitSoA> units;
             deserialize(units, dbStream);
-            result.data.neutralUnits = recoverFlattenedSortedUnits2(units);
+            result.data.neutralUnits = recoverFlattenedSortedData2(units);
         }
         return result;
     }
@@ -231,8 +176,10 @@ template<> struct DatabaseInterface<ReplayDataSoA>
         serialize(d.data.buildable, dbStream);
         serialize(d.data.pathable, dbStream);
         serialize(d.data.actions, dbStream);
-        serialize(flattenAndSortUnits2<UnitSoA>(d.data.units), dbStream);
-        serialize(flattenAndSortUnits2<NeutralUnitSoA>(d.data.neutralUnits), dbStream);
+
+        auto cmp = [](auto &&a, auto &&b) { return a.second.id < b.second.id; };
+        serialize(flattenAndSortData2<UnitSoA>(d.data.units, cmp), dbStream);
+        serialize(flattenAndSortData2<NeutralUnitSoA>(d.data.neutralUnits, cmp), dbStream);
         return true;
     }
 };

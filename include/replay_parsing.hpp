@@ -14,6 +14,7 @@
 
 #include "data_structures/replay_interface.hpp"
 #include "data_structures/units.hpp"
+#include "data_structures/vectorize.hpp"
 
 #include <pybind11/numpy.h>
 #include <pybind11/pybind11.h>
@@ -21,13 +22,11 @@
 #include <spdlog/spdlog.h>
 
 #include <algorithm>
-#include <array>
 #include <bitset>
 #include <filesystem>
 #include <ranges>
 #include <set>
 #include <span>
-#include <type_traits>
 
 
 namespace py = pybind11;

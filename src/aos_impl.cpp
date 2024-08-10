@@ -1,8 +1,7 @@
 /**
  * @file array_struct_impl.cpp
  * @author Bryce Ferenczi
- * @brief Specialisation implementations for AoS<->SoA for structures to prevent redefinition errors if it were in the
- * header files.
+ * @brief Special implementations for AoS<->SoA where a sub-component of the struct is the actual AoS part.
  * @version 0.1
  * @date 2024-05-28
  *
@@ -18,7 +17,7 @@ template<> auto AoStoSoA(const ReplayData &aos) noexcept -> ReplayDataSoA
 {
     ReplayDataSoA soa;
     soa.header = aos.header;
-    soa.data = AoStoSoA(aos.data);
+    soa.data = AoStoSoA<StepDataSoA>(aos.data);
     return soa;
 }
 

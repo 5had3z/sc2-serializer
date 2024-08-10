@@ -105,7 +105,7 @@ if(SC2_CONVERTER)
     src/database.cpp
     src/observer_utils.cpp
     src/observer.cpp
-    src/array_struct_impl.cpp)
+    src/aos_impl.cpp)
   target_compile_features(replay_converter PUBLIC cxx_std_23)
   target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS})
   target_link_libraries(
@@ -223,22 +223,15 @@ if(SC2_TESTS)
     "gtest_force_shared_crt")
 
   if(SC2_CONVERTER)
-    add_executable(test_readwrite test/test_readwrite.cpp)
+    file(GLOB TEST_SRC ${PROJECT_SOURCE_DIR}/test/*.cpp)
+    add_executable(sc2_tests ${TEST_SRC})
     target_link_libraries(
-      test_readwrite
+      sc2_tests
       replay_converter
       gtest
       gtest_main)
-
-    add_executable(test_database test/test_database.cpp)
-    target_link_libraries(
-      test_database
-      replay_converter
-      gtest
-      gtest_main)
-
-    add_test(ReadWrite test_readwrite)
-    add_test(Database test_database)
+    include(GoogleTest)
+    gtest_discover_tests(sc2_tests)
   endif()
 endif()
 

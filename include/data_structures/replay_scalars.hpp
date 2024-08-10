@@ -65,15 +65,7 @@ struct StepDataNoUnitsMinimapSoA
      */
     [[nodiscard]] auto operator[](std::size_t idx) const noexcept -> StepDataNoUnitsMinimap
     {
-        StepDataNoUnitsMinimap stepData;
-        stepData.gameStep = gameStep[idx];
-        stepData.minearals = minearals[idx];
-        stepData.vespene = vespene[idx];
-        stepData.popMax = popMax[idx];
-        stepData.popArmy = popArmy[idx];
-        stepData.popWorkers = popWorkers[idx];
-        stepData.score = score[idx];
-        return stepData;
+        return gatherStructAtIndex(*this, idx);
     }
 
     /**

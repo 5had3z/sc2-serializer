@@ -3,7 +3,7 @@
  * @author Bryce Ferenczi
  * @brief This program is used for analysing and benchmarking file sizes. One function writes each of the individual
  * data components of a SC2 replay to separate files so we can see the contribution of units, minimaps, scores etc.
- * Another function this preforms is to write the unit data in various forms. From this we can check which
+ * Another function this performs is to write the unit data in various forms. From this we can check which
  * rearrangement of the unit data structure reults in the smallest file. This is also timed so we can check for
  * associated computational overhead.
  * @version 0.1
@@ -108,16 +108,16 @@ void writeReplayStructures(const cvt::ReplayDataSoA &data, const fs::path &outDi
 /**
  * @brief Write units to disk in various forms
  * @tparam UnitT Basic type of unit
- * @tparam UnitSoAT Structure of arrays variant of unit
+ * @tparam SoA Structure of arrays variant of unit
  * @tparam Transform Function to convert AoS to SoA
  * @param unitData replay data for units (n timesteps * n units per timestep)
  * @param outDir output directory to write data
  * @param prefix prefix for files
  * @param AoStoSoA instance of aos to soa transform function
  */
-template<typename UnitT, typename UnitSoAT>
+template<typename UnitT, typename SoA>
 void implWriteUnitT(const std::vector<std::vector<UnitT>> &unitData, const fs::path &outDir, std::string_view prefix)
-    requires std::is_same_v<UnitT, typename UnitSoAT::struct_type>
+    requires std::is_same_v<UnitT, typename SoA::struct_type>
 {
     using AoS = std::vector<UnitT>;
     // Array-of-Array-of-Structures
@@ -125,8 +125,8 @@ void implWriteUnitT(const std::vector<std::vector<UnitT>> &unitData, const fs::p
 
     // Array-of-Structure-of-Arrays
     {
-        std::vector<UnitSoAT> units;
-        std::ranges::transform(unitData, std::back_inserter(units), [](const AoS &u) { return cvt::AoStoSoA(u); });
+        std::vector<SoA> units;
+        std::ranges::transform(unitData, std::back_inserter(units), [](const AoS &u) { return cvt::AoStoSoA<SoA>(u); });
         writeData(units, outDir / fmt::format("{}_aosoa.bin", prefix));
     }
 
@@ -135,16 +135,17 @@ void implWriteUnitT(const std::vector<std::vector<UnitT>> &unitData, const fs::p
         std::vector<UnitT> unitFlatten;
         for (auto &&units : unitData) { std::ranges::copy(units, std::back_inserter(unitFlatten)); }
         // Write sorted by time and observation api
-        writeData(cvt::AoStoSoA(unitFlatten), outDir / fmt::format("{}_sofa.bin", prefix));
+        writeData(cvt::AoStoSoA<SoA>(unitFlatten), outDir / fmt::format("{}_sofa.bin", prefix));
 
         // Write sorted by unit id (and then time by stable sorting)
         std::ranges::stable_sort(unitFlatten, [](const UnitT &a, const UnitT &b) { return a.id < b.id; });
-        writeData(cvt::AoStoSoA(unitFlatten), outDir / fmt::format("{}_sorted_sofa.bin", prefix));
+        writeData(cvt::AoStoSoA<SoA>(unitFlatten), outDir / fmt::format("{}_sorted_sofa.bin", prefix));
     }
     // Structure-of-Flattened-Arrays Index Variants
     {
-        writeData(cvt::flattenAndSortUnits<UnitSoAT>(unitData), outDir / fmt::format("{}_sorted_sofa1.bin", prefix));
-        writeData(cvt::flattenAndSortUnits2<UnitSoAT>(unitData), outDir / fmt::format("{}_sorted_sofa3.bin", prefix));
+        auto cmp = [](auto &&a, auto &&b) { return a.second.id < b.second.id; };
+        writeData(cvt::flattenAndSortData<SoA>(unitData, cmp), outDir / fmt::format("{}_sorted_sofa1.bin", prefix));
+        writeData(cvt::flattenAndSortData2<SoA>(unitData, cmp), outDir / fmt::format("{}_sorted_sofa3.bin", prefix));
     }
 }
 
@@ -171,7 +172,7 @@ struct bench_timing
 static bench_timing timingUnits{};
 static bench_timing timingNeutralUnits{};
 
-template<typename UnitT, typename UnitSoAT>
+template<typename UnitT, typename SoA>
 void implBenchmarkUnit(const std::vector<std::vector<UnitT>> &unitData, bench_timing &timing)
 {
     const auto tempFile = fs::current_path() / "temp.bin";
@@ -182,14 +183,15 @@ void implBenchmarkUnit(const std::vector<std::vector<UnitT>> &unitData, bench_ti
         timing.readAoS.emplace_back(clk::now() - begin);
     }
 
-    const auto flatten = cvt::flattenAndSortUnits2<UnitSoAT>(unitData);
+    const auto flatten =
+        cvt::flattenAndSortData2<SoA>(unitData, [](auto &&a, auto &&b) { return a.second.id < b.second.id; });
     writeData(flatten, tempFile, false);
     {
         auto begin = clk::now();
-        const auto tmp = readData<cvt::FlattenedUnits2<UnitSoAT>>(tempFile);
+        const auto tmp = readData<cvt::FlattenedData2<SoA>>(tempFile);
         timing.readSoA.emplace_back(clk::now() - begin);
         begin = clk::now();
-        const auto recovered = cvt::recoverFlattenedSortedUnits2<UnitSoAT>(tmp);
+        const auto recovered = cvt::recoverFlattenedSortedData2<SoA>(tmp);
         timing.recover.emplace_back(clk::now() - begin);
     }
 

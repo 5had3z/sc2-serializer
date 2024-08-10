@@ -6,7 +6,10 @@ from sc2_serializer.example import SC2Dataset
 from sc2_serializer.sampler import BasicSampler, SQLSampler
 from sc2_serializer import get_database_and_parser, StepDataSoA
 
-_DEFAULT_REPLAYS = "/mnt/datasets/sc2-tournament"
+if "SC2_TEST_DB" in os.environ:
+    _DEFAULT_REPLAYS = Path(os.environ["SC2_TEST_DB"]).parent
+else:
+    _DEFAULT_REPLAYS = "/mnt/datasets/sc2-tournament"
 
 
 @pytest.mark.parametrize("has_units", [True, False])

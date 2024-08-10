@@ -11,6 +11,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "soa.hpp"
 
 namespace cvt {
 

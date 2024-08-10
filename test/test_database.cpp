@@ -114,7 +114,7 @@ auto createReplay(int seed) -> cvt::ReplayDataSoA
 
     // Add a hash "name" to it
     replay_.header.replayHash = "FooBarBaz";
-    return cvt::AoStoSoA<cvt::ReplayData, cvt::ReplayDataSoA>(replay_);
+    return cvt::AoStoSoA<cvt::ReplayDataSoA, cvt::ReplayData>(replay_);
 }
 
 class DatabaseTest : public testing::Test
@@ -236,39 +236,46 @@ template<typename Sink> void AbslStringify(Sink &sink, NeutralUnit unit)
 
 }// namespace cvt
 
+template<typename T>
+[[nodiscard]] auto sortByUnitId(const std::pair<std::uint32_t, T> &a, const std::pair<std::uint32_t, T> &b) -> bool
+{
+    return a.second.id < b.second.id;
+}
 
-TEST(UnitSoA, DISABLED_ConversionToAndFrom)
+TEST(UnitSoA, ConversionToAndFrom)
 {
     auto dbPath = std::getenv("SC2_TEST_DB");
-    ASSERT_NE(dbPath, nullptr);
+    if (dbPath == nullptr) { GTEST_SKIP(); }
     cvt::ReplayDatabase<cvt::ReplayDataSoA> db(dbPath);
     const auto replayData = db.getEntry(0);
     {
-        const auto flattened = cvt::flattenAndSortUnits<cvt::UnitSoA>(replayData.data.units);
-        const auto recovered = cvt::recoverFlattenedSortedUnits<cvt::UnitSoA>(flattened);
+        const auto flattened = cvt::flattenAndSortData<cvt::UnitSoA>(replayData.data.units, sortByUnitId<cvt::Unit>);
+        const auto recovered = cvt::recoverFlattenedSortedData<cvt::UnitSoA>(flattened);
         UnitSetEqualityVec(replayData.data.units, recovered);
     }
     {
-        const auto flattened = cvt::flattenAndSortUnits<cvt::NeutralUnitSoA>(replayData.data.neutralUnits);
-        const auto recovered = cvt::recoverFlattenedSortedUnits<cvt::NeutralUnitSoA>(flattened);
+        const auto flattened =
+            cvt::flattenAndSortData<cvt::NeutralUnitSoA>(replayData.data.neutralUnits, sortByUnitId<cvt::NeutralUnit>);
+        const auto recovered = cvt::recoverFlattenedSortedData<cvt::NeutralUnitSoA>(flattened);
         UnitSetEqualityVec(replayData.data.neutralUnits, recovered);
     }
 }
 
-TEST(UnitSoA, DISABLED_ConversionToAndFrom2)
+TEST(UnitSoA, ConversionToAndFrom2)
 {
     auto dbPath = std::getenv("SC2_TEST_DB");
-    ASSERT_NE(dbPath, nullptr);
+    if (dbPath == nullptr) { GTEST_SKIP(); }
     cvt::ReplayDatabase<cvt::ReplayDataSoA> db(dbPath);
     const auto replayData = db.getEntry(0);
     {
-        const auto flattened = cvt::flattenAndSortUnits2<cvt::UnitSoA>(replayData.data.units);
-        const auto recovered = cvt::recoverFlattenedSortedUnits2<cvt::UnitSoA>(flattened);
+        const auto flattened = cvt::flattenAndSortData2<cvt::UnitSoA>(replayData.data.units, sortByUnitId<cvt::Unit>);
+        const auto recovered = cvt::recoverFlattenedSortedData2<cvt::UnitSoA>(flattened);
         UnitSetEqualityVec(replayData.data.units, recovered);
     }
     {
-        const auto flattened = cvt::flattenAndSortUnits2<cvt::NeutralUnitSoA>(replayData.data.neutralUnits);
-        const auto recovered = cvt::recoverFlattenedSortedUnits2<cvt::NeutralUnitSoA>(flattened);
+        const auto flattened =
+            cvt::flattenAndSortData2<cvt::NeutralUnitSoA>(replayData.data.neutralUnits, sortByUnitId<cvt::NeutralUnit>);
+        const auto recovered = cvt::recoverFlattenedSortedData2<cvt::NeutralUnitSoA>(flattened);
         UnitSetEqualityVec(replayData.data.neutralUnits, recovered);
     }
 }

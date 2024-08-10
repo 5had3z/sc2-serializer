@@ -63,8 +63,8 @@ template<> void BaseConverter<ReplayDataSoA>::OnGameEnd()
     const auto duration =
         std::chrono::duration_cast<std::chrono::duration<float>>(std::chrono::high_resolution_clock::now() - start_);
     SPDLOG_INFO("Replay ended, conversion duration: {:.1f}s", duration.count());
-    // Transform SoA to AoS and Write to database
-    writeSuccess_ = database_.addEntry(AoStoSoA<ReplayDataSoA::struct_type, ReplayDataSoA>(replayData_));
+    // Transform AoS to SoA and Write to database
+    writeSuccess_ = database_.addEntry(AoStoSoA<ReplayDataSoA, ReplayData>(replayData_));
 }
 
 template<> void BaseConverter<ReplayDataSoA>::copyHeightMapData() noexcept
