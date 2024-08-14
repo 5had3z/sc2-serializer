@@ -84,7 +84,6 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#interface">Interface</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt17DatabaseInterfaceE"><code class="docutils literal notranslate"><span class="pre">cvt::DatabaseInterface</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN3cvt18ReplayDataTemplateE"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayDataTemplate</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4I_9IsSoATypeEN3cvt21ReplayDataTemplateSoAE"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayDataTemplateSoA</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#_CPPv4N3cvt10ReplayInfoE"><code class="docutils literal notranslate"><span class="pre">cvt::ReplayInfo</span></code></a></li>
@@ -1773,93 +1772,6 @@
 <dt class="sig sig-object cpp">
 <span class="target" id="df/d0d/namespacecvt"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cvt</span></span></span><br /></dt>
 <dd><dl class="cpp struct">
-<dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt17DatabaseInterfaceE">
-<span id="_CPPv3I0EN3cvt17DatabaseInterfaceE"></span><span id="_CPPv2I0EN3cvt17DatabaseInterfaceE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayT</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="d1/d1c/structcvt_1_1DatabaseInterface"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DatabaseInterface</span></span></span><a class="headerlink" href="#_CPPv4I0EN3cvt17DatabaseInterfaceE" title="Link to this definition"></a><br /></dt>
-<dd><div class="docutils container">
-<em>#include &lt;replay_interface.hpp&gt;</em></div>
-<p>Interface that tells database how to read/write replay data structure. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Template Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>ReplayT</strong> – replay data structure to read/write from database. </p>
-</dd>
-</dl>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
-<dl class="cpp type">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt17DatabaseInterface10value_typeE">
-<span id="_CPPv3N3cvt17DatabaseInterface10value_typeE"></span><span id="_CPPv2N3cvt17DatabaseInterface10value_typeE"></span><span class="target" id="d1/d1c/structcvt_1_1DatabaseInterface_1ab5f2f390032e381723b89ad5e65cd6b5"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">value_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3cvt17DatabaseInterfaceE" title="cvt::DatabaseInterface::ReplayT"><span class="n"><span class="pre">ReplayT</span></span></a><a class="headerlink" href="#_CPPv4N3cvt17DatabaseInterface10value_typeE" title="Link to this definition"></a><br /></dt>
-<dd><p>Datatype of replay. </p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt17DatabaseInterface13getHeaderImplERNSt7istreamE">
-<span id="_CPPv3N3cvt17DatabaseInterface13getHeaderImplERNSt7istreamE"></span><span id="_CPPv2N3cvt17DatabaseInterface13getHeaderImplERNSt7istreamE"></span><span id="cvt::DatabaseInterface::getHeaderImpl__isR"></span><span class="target" id="d1/d1c/structcvt_1_1DatabaseInterface_1a5c370d647916cebb74698dfef45c3267"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getHeaderImpl</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">istream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">dbStream</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3cvt10ReplayInfoE" title="cvt::ReplayInfo"><span class="n"><span class="pre">ReplayInfo</span></span></a><a class="headerlink" href="#_CPPv4N3cvt17DatabaseInterface13getHeaderImplERNSt7istreamE" title="Link to this definition"></a><br /></dt>
-<dd><p>Retrieves the header information from a replay entry. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>dbStream</strong> – Input file stream of the database </p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Struct that contains information about the replay </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt17DatabaseInterface13getHashIdImplERNSt7istreamE">
-<span id="_CPPv3N3cvt17DatabaseInterface13getHashIdImplERNSt7istreamE"></span><span id="_CPPv2N3cvt17DatabaseInterface13getHashIdImplERNSt7istreamE"></span><span id="cvt::DatabaseInterface::getHashIdImpl__isR"></span><span class="target" id="d1/d1c/structcvt_1_1DatabaseInterface_1a2545f4a4d4808dccabecb0d7dd6079c1"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getHashIdImpl</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">istream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">dbStream</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3cvt17DatabaseInterface13getHashIdImplERNSt7istreamE" title="Link to this definition"></a><br /></dt>
-<dd><p>Retrieves the Replay hash and Player ID entry from the database stream at the specified entry position. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>dbStream</strong> – The input file stream of the database. </p></li>
-<li><p><strong>entry</strong> – The position of the entry in the database stream. </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>A pair containing the hash string of the replay and the ID of the POV Player. </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt17DatabaseInterface12getEntryImplERNSt7istreamE">
-<span id="_CPPv3N3cvt17DatabaseInterface12getEntryImplERNSt7istreamE"></span><span id="_CPPv2N3cvt17DatabaseInterface12getEntryImplERNSt7istreamE"></span><span id="cvt::DatabaseInterface::getEntryImpl__isR"></span><span class="target" id="d1/d1c/structcvt_1_1DatabaseInterface_1ac049a47494671648e688588db973f91e"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getEntryImpl</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">istream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">dbStream</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3cvt17DatabaseInterfaceE" title="cvt::DatabaseInterface::ReplayT"><span class="n"><span class="pre">ReplayT</span></span></a><a class="headerlink" href="#_CPPv4N3cvt17DatabaseInterface12getEntryImplERNSt7istreamE" title="Link to this definition"></a><br /></dt>
-<dd><p>Defines how to read the entry from the database. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>dbStream</strong> – Input stream to read the replay data from </p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Replay data read from the </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt17DatabaseInterface12addEntryImplERK7ReplayTRNSt7ostreamE">
-<span id="_CPPv3N3cvt17DatabaseInterface12addEntryImplERK7ReplayTRNSt7ostreamE"></span><span id="_CPPv2N3cvt17DatabaseInterface12addEntryImplERK7ReplayTRNSt7ostreamE"></span><span id="cvt::DatabaseInterface::addEntryImpl__ReplayTCR.osR"></span><span class="target" id="d1/d1c/structcvt_1_1DatabaseInterface_1a8451f1fcf04949047643c52cb0d6f8d8"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">addEntryImpl</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3cvt17DatabaseInterfaceE" title="cvt::DatabaseInterface::ReplayT"><span class="n"><span class="pre">ReplayT</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">replay</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ostream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">dbStream</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">noexcept</span></span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><a class="headerlink" href="#_CPPv4N3cvt17DatabaseInterface12addEntryImplERK7ReplayTRNSt7ostreamE" title="Link to this definition"></a><br /></dt>
-<dd><p>Defines how to write the replay structure to the file. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>replay</strong> – Replay data structure to write to the stream </p></li>
-<li><p><strong>dbStream</strong> – Output stream to write the replay structure to </p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Success flag, true if writing completed without issues. </p>
-</dd>
-</dl>
-</dd></dl>
-
-</div>
-</dd></dl>
-
-<dl class="cpp struct">
 <dt class="sig sig-object cpp" id="_CPPv4I0EN3cvt18ReplayDataTemplateE">
 <span id="_CPPv3I0EN3cvt18ReplayDataTemplateE"></span><span id="_CPPv2I0EN3cvt18ReplayDataTemplateE"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">StepDataType</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="df/d79/structcvt_1_1ReplayDataTemplate"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ReplayDataTemplate</span></span></span><a class="headerlink" href="#_CPPv4I0EN3cvt18ReplayDataTemplateE" title="Link to this definition"></a><br /></dt>
 <dd><div class="docutils container">
@@ -2019,6 +1931,12 @@
 <dt class="sig sig-object cpp" id="_CPPv4N3cvt21ReplayDataTemplateSoA11struct_typeE">
 <span id="_CPPv3N3cvt21ReplayDataTemplateSoA11struct_typeE"></span><span id="_CPPv2N3cvt21ReplayDataTemplateSoA11struct_typeE"></span><span class="target" id="d4/de6/structcvt_1_1ReplayDataTemplateSoA_1ada185f07c364ead2c79f34a9d67c101c"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">struct_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN3cvt18ReplayDataTemplateE" title="cvt::ReplayDataTemplate"><span class="n"><span class="pre">ReplayDataTemplate</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I_9IsSoATypeEN3cvt21ReplayDataTemplateSoAE" title="cvt::ReplayDataTemplateSoA::StepDataSoAType"><span class="n"><span class="pre">StepDataSoAType</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">struct_type</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3cvt21ReplayDataTemplateSoA11struct_typeE" title="Link to this definition"></a><br /></dt>
 <dd><p>AoS equivalent struct type. </p>
+</dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt21ReplayDataTemplateSoA11header_typeE">
+<span id="_CPPv3N3cvt21ReplayDataTemplateSoA11header_typeE"></span><span id="_CPPv2N3cvt21ReplayDataTemplateSoA11header_typeE"></span><span class="target" id="d4/de6/structcvt_1_1ReplayDataTemplateSoA_1a389bc0e595af407487ba449c254d8d1c"></span><span class="k"><span class="pre">using</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">header_type</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N3cvt10ReplayInfoE" title="cvt::ReplayInfo"><span class="n"><span class="pre">ReplayInfo</span></span></a><a class="headerlink" href="#_CPPv4N3cvt21ReplayDataTemplateSoA11header_typeE" title="Link to this definition"></a><br /></dt>
+<dd><p>Header that contains metadata about the replay. </p>
 </dd></dl>
 
 </div>
@@ -2268,8 +2186,8 @@
 <dd></dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt17DatabaseInterfaceI13ReplayDataSoAE13getHashIdImplERNSt7istreamE">
-<span id="_CPPv3N3cvt17DatabaseInterfaceI13ReplayDataSoAE13getHashIdImplERNSt7istreamE"></span><span id="_CPPv2N3cvt17DatabaseInterfaceI13ReplayDataSoAE13getHashIdImplERNSt7istreamE"></span><span id="cvt::DatabaseInterface:ReplayDataSoA:::getHashIdImpl__isR"></span><span class="target" id="d5/db8/structcvt_1_1DatabaseInterface_3_01ReplayDataSoA_01_4_1af18318b8fb2a3dc89dd4fae60d640f38"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getHashIdImpl</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">istream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">dbStream</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3cvt17DatabaseInterfaceI13ReplayDataSoAE13getHashIdImplERNSt7istreamE" title="Link to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt17DatabaseInterfaceI13ReplayDataSoAE15getEntryUIDImplERNSt7istreamE">
+<span id="_CPPv3N3cvt17DatabaseInterfaceI13ReplayDataSoAE15getEntryUIDImplERNSt7istreamE"></span><span id="_CPPv2N3cvt17DatabaseInterfaceI13ReplayDataSoAE15getEntryUIDImplERNSt7istreamE"></span><span id="cvt::DatabaseInterface:ReplayDataSoA:::getEntryUIDImpl__isR"></span><span class="target" id="d5/db8/structcvt_1_1DatabaseInterface_3_01ReplayDataSoA_01_4_1a3aeefe1683ae261ece6558c26ef2ccb4"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getEntryUIDImpl</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">istream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">dbStream</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><a class="headerlink" href="#_CPPv4N3cvt17DatabaseInterfaceI13ReplayDataSoAE15getEntryUIDImplERNSt7istreamE" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
@@ -2598,8 +2516,8 @@
 <dd></dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt17DatabaseInterfaceI20ReplayDataSoANoUnitsE13getHashIdImplERNSt7istreamE">
-<span id="_CPPv3N3cvt17DatabaseInterfaceI20ReplayDataSoANoUnitsE13getHashIdImplERNSt7istreamE"></span><span id="_CPPv2N3cvt17DatabaseInterfaceI20ReplayDataSoANoUnitsE13getHashIdImplERNSt7istreamE"></span><span id="cvt::DatabaseInterface:ReplayDataSoANoUnits:::getHashIdImpl__isR"></span><span class="target" id="dd/ddd/structcvt_1_1DatabaseInterface_3_01ReplayDataSoANoUnits_01_4_1a232fb84b0e0df0cfab04e5da035b31ea"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getHashIdImpl</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">istream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">dbStream</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3cvt17DatabaseInterfaceI20ReplayDataSoANoUnitsE13getHashIdImplERNSt7istreamE" title="Link to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt17DatabaseInterfaceI20ReplayDataSoANoUnitsE15getEntryUIDImplERNSt7istreamE">
+<span id="_CPPv3N3cvt17DatabaseInterfaceI20ReplayDataSoANoUnitsE15getEntryUIDImplERNSt7istreamE"></span><span id="_CPPv2N3cvt17DatabaseInterfaceI20ReplayDataSoANoUnitsE15getEntryUIDImplERNSt7istreamE"></span><span id="cvt::DatabaseInterface:ReplayDataSoANoUnits:::getEntryUIDImpl__isR"></span><span class="target" id="dd/ddd/structcvt_1_1DatabaseInterface_3_01ReplayDataSoANoUnits_01_4_1a07b10dd7e47015a8209c800d3e72aabb"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getEntryUIDImpl</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">istream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">dbStream</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><a class="headerlink" href="#_CPPv4N3cvt17DatabaseInterfaceI20ReplayDataSoANoUnitsE15getEntryUIDImplERNSt7istreamE" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">
@@ -2888,8 +2806,8 @@
 <dd></dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N3cvt17DatabaseInterfaceI27ReplayDataSoANoUnitsMiniMapE13getHashIdImplERNSt7istreamE">
-<span id="_CPPv3N3cvt17DatabaseInterfaceI27ReplayDataSoANoUnitsMiniMapE13getHashIdImplERNSt7istreamE"></span><span id="_CPPv2N3cvt17DatabaseInterfaceI27ReplayDataSoANoUnitsMiniMapE13getHashIdImplERNSt7istreamE"></span><span id="cvt::DatabaseInterface:ReplayDataSoANoUnitsMiniMap:::getHashIdImpl__isR"></span><span class="target" id="d9/df5/structcvt_1_1DatabaseInterface_3_01ReplayDataSoANoUnitsMiniMap_01_4_1a7c4ebbffb8d3131b31128d96ba1738b0"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getHashIdImpl</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">istream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">dbStream</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">uint32_t</span></span><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv4N3cvt17DatabaseInterfaceI27ReplayDataSoANoUnitsMiniMapE13getHashIdImplERNSt7istreamE" title="Link to this definition"></a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N3cvt17DatabaseInterfaceI27ReplayDataSoANoUnitsMiniMapE15getEntryUIDImplERNSt7istreamE">
+<span id="_CPPv3N3cvt17DatabaseInterfaceI27ReplayDataSoANoUnitsMiniMapE15getEntryUIDImplERNSt7istreamE"></span><span id="_CPPv2N3cvt17DatabaseInterfaceI27ReplayDataSoANoUnitsMiniMapE15getEntryUIDImplERNSt7istreamE"></span><span id="cvt::DatabaseInterface:ReplayDataSoANoUnitsMiniMap:::getEntryUIDImpl__isR"></span><span class="target" id="d9/df5/structcvt_1_1DatabaseInterface_3_01ReplayDataSoANoUnitsMiniMap_01_4_1a9ba4c19b15ad4a36af1a79d17d107cde"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">auto</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getEntryUIDImpl</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">istream</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">dbStream</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="o"><span class="pre">-&gt;</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><a class="headerlink" href="#_CPPv4N3cvt17DatabaseInterfaceI27ReplayDataSoANoUnitsMiniMapE15getEntryUIDImplERNSt7istreamE" title="Link to this definition"></a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp function">

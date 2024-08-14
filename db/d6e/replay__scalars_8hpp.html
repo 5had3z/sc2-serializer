@@ -83,7 +83,7 @@ $(function() {
 
 <p>Replay observation data that only contains scalar (score and economy) data. Is compatible with reading ReplayData and ReplayDataNoUnits as the ordering of the data is the same, we just stop reading before minimap data.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="../../d1/d31/serialize_8hpp.html">../serialize.hpp</a>&quot;</code><br />
+<div class="textblock"><code>#include &quot;<a class="el" href="../../df/da2/database_8hpp.html">../database.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d0/d04/replay__interface_8hpp.html">replay_interface.hpp</a>&quot;</code><br />
 <code>#include &lt;ranges&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
@@ -91,41 +91,64 @@ Include dependency graph for replay_scalars.hpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="../../d6/d66/replay__scalars_8hpp__incl.png" border="0" usemap="#a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2replay__scalars_8hpp" alt=""/></div>
 <map name="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2replay__scalars_8hpp" id="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2data__structures_2replay__scalars_8hpp">
-<area shape="rect" title="Replay observation data that only contains scalar (score and economy) data. Is compatible with readin..." alt="" coords="223,5,401,75"/>
-<area shape="rect" href="../../d1/d31/serialize_8hpp.html" title="Generic Serialisation and Deserialisation Methods. A combination of C++20 Concepts and Requires claus..." alt="" coords="68,123,185,148"/>
-<area shape="poly" title=" " alt="" coords="246,77,163,119,161,114,244,72"/>
-<area shape="rect" href="../../d0/d04/replay__interface_8hpp.html" title="Common interface and utilities for replay data structures." alt="" coords="234,123,390,148"/>
-<area shape="poly" title=" " alt="" coords="315,75,315,109,309,109,309,75"/>
-<area shape="rect" title=" " alt="" coords="415,123,481,148"/>
-<area shape="poly" title=" " alt="" coords="363,73,421,112,418,117,360,77"/>
-<area shape="rect" title=" " alt="" coords="5,269,112,295"/>
-<area shape="poly" title=" " alt="" coords="103,150,74,170,62,182,52,197,47,211,46,226,52,255,46,256,41,227,42,210,47,195,57,179,71,165,100,146"/>
-<area shape="rect" title=" " alt="" coords="61,196,141,221"/>
-<area shape="poly" title=" " alt="" coords="125,149,112,184,107,182,120,147"/>
-<area shape="rect" title=" " alt="" coords="165,196,245,221"/>
-<area shape="poly" title=" " alt="" coords="141,146,184,185,181,189,138,150"/>
-<area shape="rect" href="../../de/df4/soa_8hpp.html" title="SoA&lt;&#45;&gt;AoS conversion code as well as IsSoAType concept." alt="" coords="269,196,355,221"/>
-<area shape="poly" title=" " alt="" coords="315,148,315,182,309,182,309,148"/>
-<area shape="rect" href="../../dd/d3a/common_8hpp.html" title="This is one of &quot;those&quot; files that just contains a few bits and bobs such as action,..." alt="" coords="379,196,485,221"/>
-<area shape="poly" title=" " alt="" coords="333,146,402,186,399,191,330,150"/>
-<area shape="poly" title=" " alt="" coords="272,224,114,268,112,263,271,219"/>
-<area shape="rect" title=" " alt="" coords="144,350,229,375"/>
-<area shape="poly" title=" " alt="" coords="305,223,207,341,203,338,301,220"/>
-<area shape="rect" title=" " alt="" coords="280,269,349,295"/>
-<area shape="poly" title=" " alt="" coords="315,222,316,256,311,256,310,222"/>
-<area shape="poly" title=" " alt="" coords="415,224,347,264,344,260,412,219"/>
-<area shape="rect" href="../../dd/d93/enums_8hpp.html" title="Common enums in StarCraft II and accompanying tools such as enum&#45;&gt;string and enum&#45;&gt;one&#45;hot." alt="" coords="381,269,475,295"/>
-<area shape="poly" title=" " alt="" coords="434,222,432,256,427,256,429,222"/>
-<area shape="rect" title=" " alt="" coords="507,350,570,375"/>
-<area shape="poly" title=" " alt="" coords="447,220,490,268,512,303,530,336,525,338,508,305,486,271,443,223"/>
-<area shape="rect" title=" " alt="" coords="551,269,604,295"/>
-<area shape="poly" title=" " alt="" coords="457,219,543,261,540,266,454,224"/>
-<area shape="poly" title=" " alt="" coords="393,297,243,345,235,348,233,343,242,340,391,292"/>
-<area shape="rect" title=" " alt="" coords="254,343,402,383"/>
-<area shape="poly" title=" " alt="" coords="415,297,365,336,361,332,412,293"/>
-<area shape="rect" title=" " alt="" coords="427,350,483,375"/>
-<area shape="poly" title=" " alt="" coords="434,294,449,336,444,338,429,296"/>
-<area shape="poly" title=" " alt="" coords="446,293,512,340,509,344,443,297"/>
+<area shape="rect" title="Replay observation data that only contains scalar (score and economy) data. Is compatible with readin..." alt="" coords="850,5,1029,75"/>
+<area shape="rect" href="../../df/da2/database_8hpp.html" title="Database framework for reading and writing serialized replay data. ReplayDatabase is templated on any..." alt="" coords="878,123,1001,148"/>
+<area shape="poly" title=" " alt="" coords="942,75,942,109,937,109,937,75"/>
+<area shape="rect" href="../../d0/d04/replay__interface_8hpp.html" title="Common interface and utilities for replay data structures." alt="" coords="139,196,307,236"/>
+<area shape="poly" title=" " alt="" coords="850,66,314,195,313,190,849,60"/>
+<area shape="rect" title=" " alt="" coords="1882,203,1949,229"/>
+<area shape="poly" title=" " alt="" coords="1029,47,1189,65,1399,94,1635,136,1755,163,1871,193,1878,196,1877,201,1869,199,1753,168,1634,142,1398,99,1188,70,1028,52"/>
+<area shape="poly" title=" " alt="" coords="878,143,638,162,482,178,321,199,320,193,482,173,638,157,878,138"/>
+<area shape="rect" href="../../d1/d31/serialize_8hpp.html" title="Generic Serialisation and Deserialisation Methods. A combination of C++20 Concepts and Requires claus..." alt="" coords="671,203,776,229"/>
+<area shape="poly" title=" " alt="" coords="909,151,768,201,767,196,907,146"/>
+<area shape="rect" title=" " alt="" coords="774,284,854,309"/>
+<area shape="poly" title=" " alt="" coords="908,150,873,169,856,182,841,198,831,215,825,234,818,270,813,269,819,232,827,212,837,194,852,178,870,165,906,146"/>
+<area shape="rect" title=" " alt="" coords="852,196,1027,236"/>
+<area shape="poly" title=" " alt="" coords="942,148,942,182,937,182,937,148"/>
+<area shape="rect" title=" " alt="" coords="1051,196,1212,236"/>
+<area shape="poly" title=" " alt="" coords="968,146,1074,188,1072,193,966,150"/>
+<area shape="rect" title=" " alt="" coords="1237,196,1418,236"/>
+<area shape="poly" title=" " alt="" coords="996,145,1223,191,1222,196,995,151"/>
+<area shape="rect" title=" " alt="" coords="1442,203,1594,229"/>
+<area shape="poly" title=" " alt="" coords="1001,140,1193,160,1430,193,1456,198,1455,203,1430,199,1192,166,1000,145"/>
+<area shape="rect" title=" " alt="" coords="1619,203,1743,229"/>
+<area shape="poly" title=" " alt="" coords="1001,136,1265,153,1435,169,1606,193,1627,198,1626,203,1606,199,1435,175,1265,158,1001,142"/>
+<area shape="rect" title=" " alt="" coords="1767,203,1858,229"/>
+<area shape="poly" title=" " alt="" coords="1001,133,1138,135,1326,143,1540,161,1649,175,1756,193,1770,197,1769,202,1755,199,1648,180,1539,166,1325,148,1137,140,1001,139"/>
+<area shape="rect" title=" " alt="" coords="332,203,405,229"/>
+<area shape="poly" title=" " alt="" coords="878,141,672,157,545,174,419,199,409,201,407,196,417,193,544,168,672,152,878,136"/>
+<area shape="rect" title=" " alt="" coords="430,203,507,229"/>
+<area shape="poly" title=" " alt="" coords="878,144,715,162,617,178,520,199,510,201,508,196,519,193,616,173,714,157,877,139"/>
+<area shape="poly" title=" " alt="" coords="1001,135,1189,141,1441,152,1690,169,1793,180,1871,193,1880,196,1878,201,1869,199,1792,185,1689,174,1440,157,1189,146,1001,141"/>
+<area shape="rect" title=" " alt="" coords="531,203,646,229"/>
+<area shape="poly" title=" " alt="" coords="881,151,659,199,644,202,642,197,657,193,880,145"/>
+<area shape="rect" href="../../de/df4/soa_8hpp.html" title="SoA&lt;&#45;&gt;AoS conversion code as well as IsSoAType concept." alt="" coords="355,284,441,309"/>
+<area shape="poly" title=" " alt="" coords="266,234,361,276,359,281,264,238"/>
+<area shape="rect" href="../../dd/d3a/common_8hpp.html" title="This is one of &quot;those&quot; files that just contains a few bits and bobs such as action,..." alt="" coords="170,284,277,309"/>
+<area shape="poly" title=" " alt="" coords="226,236,226,270,221,270,221,236"/>
+<area shape="rect" title=" " alt="" coords="499,357,606,383"/>
+<area shape="poly" title=" " alt="" coords="424,307,516,349,514,354,422,312"/>
+<area shape="rect" title=" " alt="" coords="369,438,454,463"/>
+<area shape="poly" title=" " alt="" coords="403,309,411,357,414,424,409,424,406,358,398,310"/>
+<area shape="rect" title=" " alt="" coords="327,357,397,383"/>
+<area shape="poly" title=" " alt="" coords="394,311,376,346,372,344,390,308"/>
+<area shape="poly" title=" " alt="" coords="247,307,328,349,326,353,244,312"/>
+<area shape="rect" href="../../dd/d93/enums_8hpp.html" title="Common enums in StarCraft II and accompanying tools such as enum&#45;&gt;string and enum&#45;&gt;one&#45;hot." alt="" coords="157,357,252,383"/>
+<area shape="poly" title=" " alt="" coords="223,310,214,345,209,344,218,309"/>
+<area shape="rect" title=" " alt="" coords="259,438,321,463"/>
+<area shape="poly" title=" " alt="" coords="235,308,266,356,279,391,288,424,282,425,274,393,261,359,231,311"/>
+<area shape="rect" title=" " alt="" coords="79,357,133,383"/>
+<area shape="poly" title=" " alt="" coords="206,312,138,352,136,348,203,307"/>
+<area shape="poly" title=" " alt="" coords="236,380,369,431,368,436,234,385"/>
+<area shape="rect" title=" " alt="" coords="5,431,153,471"/>
+<area shape="poly" title=" " alt="" coords="188,385,123,425,120,421,185,381"/>
+<area shape="rect" title=" " alt="" coords="178,438,234,463"/>
+<area shape="poly" title=" " alt="" coords="208,383,208,424,203,424,202,383"/>
+<area shape="poly" title=" " alt="" coords="219,381,269,427,265,430,215,385"/>
+<area shape="poly" title=" " alt="" coords="712,231,578,350,574,346,709,227"/>
+<area shape="rect" title=" " alt="" coords="670,284,750,309"/>
+<area shape="poly" title=" " alt="" coords="724,229,717,271,712,270,719,228"/>
+<area shape="poly" title=" " alt="" coords="738,227,792,273,789,277,735,231"/>
 </map>
 </div>
 </div><table class="memberdecls">

@@ -76,6 +76,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#concepts">Concepts</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle"><div class="title">database.hpp File Reference</div></div>
@@ -163,15 +164,30 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="../../d5/ddf/database_8hpp__dep__incl.png" border="0" usemap="#a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2database_8hppdep" alt=""/></div>
 <map name="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2database_8hppdep" id="a_2home_2runner_2work_2sc2-serializer_2sc2-serializer_2include_2database_8hppdep">
-<area shape="rect" title="Database framework for reading and writing serialized replay data. ReplayDatabase is templated on any..." alt="" coords="5,5,184,60"/>
-<area shape="rect" href="../../d6/da0/observer_8hpp.html" title="Contains StarCraft II game observation classes. Each variant saves observations at different rates to..." alt="" coords="5,108,184,163"/>
-<area shape="poly" title=" " alt="" coords="97,74,97,108,92,108,92,74"/>
+<area shape="rect" title="Database framework for reading and writing serialized replay data. ReplayDatabase is templated on any..." alt="" coords="309,5,488,60"/>
+<area shape="rect" href="../../d7/dbe/replay__all_8hpp.html" title="Replay data structure for recording and deserializing all observation data." alt="" coords="5,108,184,177"/>
+<area shape="poly" title=" " alt="" coords="313,67,185,112,183,107,311,62"/>
+<area shape="rect" href="../../d2/df9/replay__minimaps_8hpp.html" title="Replay observation data that only contains scalar (score and economy) and minimap data...." alt="" coords="208,108,387,177"/>
+<area shape="poly" title=" " alt="" coords="366,72,331,110,327,106,362,69"/>
+<area shape="rect" href="../../db/d6e/replay__scalars_8hpp.html" title="Replay observation data that only contains scalar (score and economy) data. Is compatible with readin..." alt="" coords="411,108,589,177"/>
+<area shape="poly" title=" " alt="" coords="435,69,470,106,466,110,431,72"/>
+<area shape="rect" href="../../d6/da0/observer_8hpp.html" title="Contains StarCraft II game observation classes. Each variant saves observations at different rates to..." alt="" coords="613,115,792,170"/>
+<area shape="poly" title=" " alt="" coords="487,62,630,113,628,118,485,67"/>
 </map>
 </div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html">cvt::DatabaseInterface&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interface that tells database how to read/write replay data structure.  <a href="../../d1/d1c/structcvt_1_1DatabaseInterface.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dad/classcvt_1_1ReplayDatabase.html">cvt::ReplayDatabase&lt; EntryType &gt;</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="concepts" name="concepts"></a>
+Concepts</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">concept &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/d73/conceptcvt_1_1HasDBInterface.html">cvt::HasDBInterface</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Concept that checks if a database interface can be constructed from a replay data structure. <br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>

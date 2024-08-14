@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>sc2-serializer: cvt::DatabaseInterface&lt; ReplayT &gt; Struct Template Reference</title>
+<title>sc2-serializer: cvt::DatabaseInterface&lt; T &gt; Struct Template Reference</title>
 <link href="../../tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="../../jquery.js"></script>
 <script type="text/javascript" src="../../dynsections.js"></script>
@@ -78,40 +78,44 @@ $(function() {
 <a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="../../d6/d87/structcvt_1_1DatabaseInterface-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">cvt::DatabaseInterface&lt; ReplayT &gt; Struct Template Reference</div></div>
+  <div class="headertitle"><div class="title">cvt::DatabaseInterface&lt; T &gt; Struct Template Reference</div></div>
 </div><!--header-->
 <div class="contents">
 
 <p>Interface that tells database how to read/write replay data structure.  
  <a href="../../d1/d1c/structcvt_1_1DatabaseInterface.html#details">More...</a></p>
 
-<p><code>#include &lt;replay_interface.hpp&gt;</code></p>
+<p><code>#include &lt;database.hpp&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ab5f2f390032e381723b89ad5e65cd6b5" id="r_ab5f2f390032e381723b89ad5e65cd6b5"><td class="memItemLeft" align="right" valign="top"><a id="ab5f2f390032e381723b89ad5e65cd6b5" name="ab5f2f390032e381723b89ad5e65cd6b5"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = ReplayT</td></tr>
-<tr class="memdesc:ab5f2f390032e381723b89ad5e65cd6b5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Datatype of replay. <br /></td></tr>
-<tr class="separator:ab5f2f390032e381723b89ad5e65cd6b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2696d76c19a27cc906cf5e937c4d439d" id="r_a2696d76c19a27cc906cf5e937c4d439d"><td class="memItemLeft" align="right" valign="top"><a id="a2696d76c19a27cc906cf5e937c4d439d" name="a2696d76c19a27cc906cf5e937c4d439d"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>value_type</b> = T</td></tr>
+<tr class="memdesc:a2696d76c19a27cc906cf5e937c4d439d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Datatype of replay. <br /></td></tr>
+<tr class="separator:a2696d76c19a27cc906cf5e937c4d439d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ef9d6f2e85f4ee588a97c4424e6f6a6" id="r_a8ef9d6f2e85f4ee588a97c4424e6f6a6"><td class="memItemLeft" align="right" valign="top"><a id="a8ef9d6f2e85f4ee588a97c4424e6f6a6" name="a8ef9d6f2e85f4ee588a97c4424e6f6a6"></a>
+using&#160;</td><td class="memItemRight" valign="bottom"><b>header_type</b> = typename T::header_type</td></tr>
+<tr class="memdesc:a8ef9d6f2e85f4ee588a97c4424e6f6a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Type that contains metadata of an entry. <br /></td></tr>
+<tr class="separator:a8ef9d6f2e85f4ee588a97c4424e6f6a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a5c370d647916cebb74698dfef45c3267" id="r_a5c370d647916cebb74698dfef45c3267"><td class="memItemLeft" align="right" valign="top">static auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html#a5c370d647916cebb74698dfef45c3267">getHeaderImpl</a> (std::istream &amp;dbStream) -&gt; <a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html">ReplayInfo</a></td></tr>
-<tr class="memdesc:a5c370d647916cebb74698dfef45c3267"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the header information from a replay entry.  <br /></td></tr>
-<tr class="separator:a5c370d647916cebb74698dfef45c3267"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2545f4a4d4808dccabecb0d7dd6079c1" id="r_a2545f4a4d4808dccabecb0d7dd6079c1"><td class="memItemLeft" align="right" valign="top">static auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html#a2545f4a4d4808dccabecb0d7dd6079c1">getHashIdImpl</a> (std::istream &amp;dbStream) -&gt; std::pair&lt; std::string, std::uint32_t &gt;</td></tr>
-<tr class="memdesc:a2545f4a4d4808dccabecb0d7dd6079c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the Replay hash and Player ID entry from the database stream at the specified entry position.  <br /></td></tr>
-<tr class="separator:a2545f4a4d4808dccabecb0d7dd6079c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac049a47494671648e688588db973f91e" id="r_ac049a47494671648e688588db973f91e"><td class="memItemLeft" align="right" valign="top">static auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html#ac049a47494671648e688588db973f91e">getEntryImpl</a> (std::istream &amp;dbStream) -&gt; ReplayT</td></tr>
-<tr class="memdesc:ac049a47494671648e688588db973f91e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines how to read the entry from the database.  <br /></td></tr>
-<tr class="separator:ac049a47494671648e688588db973f91e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8451f1fcf04949047643c52cb0d6f8d8" id="r_a8451f1fcf04949047643c52cb0d6f8d8"><td class="memItemLeft" align="right" valign="top">static auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html#a8451f1fcf04949047643c52cb0d6f8d8">addEntryImpl</a> (const ReplayT &amp;replay, std::ostream &amp;dbStream) noexcept -&gt; bool</td></tr>
-<tr class="memdesc:a8451f1fcf04949047643c52cb0d6f8d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines how to write the replay structure to the file.  <br /></td></tr>
-<tr class="separator:a8451f1fcf04949047643c52cb0d6f8d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2b484838e508181992ecb7075ee3fa2" id="r_ad2b484838e508181992ecb7075ee3fa2"><td class="memItemLeft" align="right" valign="top">static auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html#ad2b484838e508181992ecb7075ee3fa2">getHeaderImpl</a> (std::istream &amp;dbStream) -&gt; <a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html#a8ef9d6f2e85f4ee588a97c4424e6f6a6">header_type</a></td></tr>
+<tr class="memdesc:ad2b484838e508181992ecb7075ee3fa2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the header information from a replay entry.  <br /></td></tr>
+<tr class="separator:ad2b484838e508181992ecb7075ee3fa2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3a55d9b33f9ccc42ff5d1be02baf7a77" id="r_a3a55d9b33f9ccc42ff5d1be02baf7a77"><td class="memItemLeft" align="right" valign="top">static auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html#a3a55d9b33f9ccc42ff5d1be02baf7a77">getEntryUIDImpl</a> (std::istream &amp;dbStream) -&gt; std::string</td></tr>
+<tr class="memdesc:a3a55d9b33f9ccc42ff5d1be02baf7a77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves a unique identifier of the entry in the database. For example, this could be a concatenation of the the Replay Hash and the POV Player's ID.  <br /></td></tr>
+<tr class="separator:a3a55d9b33f9ccc42ff5d1be02baf7a77"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a84420fc2a5047d04bfb6825038d4dfdd" id="r_a84420fc2a5047d04bfb6825038d4dfdd"><td class="memItemLeft" align="right" valign="top">static auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html#a84420fc2a5047d04bfb6825038d4dfdd">getEntryImpl</a> (std::istream &amp;dbStream) -&gt; <a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html#a2696d76c19a27cc906cf5e937c4d439d">value_type</a></td></tr>
+<tr class="memdesc:a84420fc2a5047d04bfb6825038d4dfdd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines how to read the entry from the database.  <br /></td></tr>
+<tr class="separator:a84420fc2a5047d04bfb6825038d4dfdd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aecf40aedfc4272ef2c50e3745ce10210" id="r_aecf40aedfc4272ef2c50e3745ce10210"><td class="memItemLeft" align="right" valign="top">static auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html#aecf40aedfc4272ef2c50e3745ce10210">addEntryImpl</a> (const <a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html#a2696d76c19a27cc906cf5e937c4d439d">value_type</a> &amp;replay, std::ostream &amp;dbStream) noexcept -&gt; bool</td></tr>
+<tr class="memdesc:aecf40aedfc4272ef2c50e3745ce10210"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines how to write the replay structure to the file.  <br /></td></tr>
+<tr class="separator:aecf40aedfc4272ef2c50e3745ce10210"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><div class="compoundTemplParams">template&lt;typename ReplayT&gt;<br />
-struct cvt::DatabaseInterface&lt; ReplayT &gt;</div><p>Interface that tells database how to read/write replay data structure. </p>
+<div class="textblock"><div class="compoundTemplParams">template&lt;typename T&gt;<br />
+struct cvt::DatabaseInterface&lt; T &gt;</div><p>Interface that tells database how to read/write replay data structure. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">ReplayT</td><td>replay data structure to read/write from database. </td></tr>
@@ -119,21 +123,21 @@ struct cvt::DatabaseInterface&lt; ReplayT &gt;</div><p>Interface that tells data
   </dd>
 </dl>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a8451f1fcf04949047643c52cb0d6f8d8" name="a8451f1fcf04949047643c52cb0d6f8d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8451f1fcf04949047643c52cb0d6f8d8">&#9670;&#160;</a></span>addEntryImpl()</h2>
+<a id="aecf40aedfc4272ef2c50e3745ce10210" name="aecf40aedfc4272ef2c50e3745ce10210"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aecf40aedfc4272ef2c50e3745ce10210">&#9670;&#160;</a></span>addEntryImpl()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ReplayT &gt; </div>
+template&lt;typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static auto <a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html">cvt::DatabaseInterface</a>&lt; ReplayT &gt;::addEntryImpl </td>
+          <td class="memname">static auto <a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html">cvt::DatabaseInterface</a>&lt; T &gt;::addEntryImpl </td>
           <td>(</td>
-          <td class="paramtype">const ReplayT &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html#a2696d76c19a27cc906cf5e937c4d439d">value_type</a> &amp;&#160;</td>
           <td class="paramname"><em>replay</em>, </td>
         </tr>
         <tr>
@@ -167,23 +171,23 @@ template&lt;typename ReplayT &gt; </div>
 
 </div>
 </div>
-<a id="ac049a47494671648e688588db973f91e" name="ac049a47494671648e688588db973f91e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac049a47494671648e688588db973f91e">&#9670;&#160;</a></span>getEntryImpl()</h2>
+<a id="a84420fc2a5047d04bfb6825038d4dfdd" name="a84420fc2a5047d04bfb6825038d4dfdd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84420fc2a5047d04bfb6825038d4dfdd">&#9670;&#160;</a></span>getEntryImpl()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ReplayT &gt; </div>
+template&lt;typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static auto <a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html">cvt::DatabaseInterface</a>&lt; ReplayT &gt;::getEntryImpl </td>
+          <td class="memname">static auto <a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html">cvt::DatabaseInterface</a>&lt; T &gt;::getEntryImpl </td>
           <td>(</td>
           <td class="paramtype">std::istream &amp;&#160;</td>
           <td class="paramname"><em>dbStream</em></td><td>)</td>
-          <td> -&gt;  ReplayT</td>
+          <td> -&gt;  <a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html#a2696d76c19a27cc906cf5e937c4d439d">value_type</a></td>
         </tr>
       </table>
   </td>
@@ -204,23 +208,23 @@ template&lt;typename ReplayT &gt; </div>
 
 </div>
 </div>
-<a id="a2545f4a4d4808dccabecb0d7dd6079c1" name="a2545f4a4d4808dccabecb0d7dd6079c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2545f4a4d4808dccabecb0d7dd6079c1">&#9670;&#160;</a></span>getHashIdImpl()</h2>
+<a id="a3a55d9b33f9ccc42ff5d1be02baf7a77" name="a3a55d9b33f9ccc42ff5d1be02baf7a77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a55d9b33f9ccc42ff5d1be02baf7a77">&#9670;&#160;</a></span>getEntryUIDImpl()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ReplayT &gt; </div>
+template&lt;typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static auto <a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html">cvt::DatabaseInterface</a>&lt; ReplayT &gt;::getHashIdImpl </td>
+          <td class="memname">static auto <a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html">cvt::DatabaseInterface</a>&lt; T &gt;::getEntryUIDImpl </td>
           <td>(</td>
           <td class="paramtype">std::istream &amp;&#160;</td>
           <td class="paramname"><em>dbStream</em></td><td>)</td>
-          <td> -&gt;  std::pair&lt; std::string, std::uint32_t &gt;</td>
+          <td> -&gt;  std::string</td>
         </tr>
       </table>
   </td>
@@ -230,7 +234,7 @@ template&lt;typename ReplayT &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Retrieves the Replay hash and Player ID entry from the database stream at the specified entry position. </p>
+<p>Retrieves a unique identifier of the entry in the database. For example, this could be a concatenation of the the Replay Hash and the POV Player's ID. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">dbStream</td><td>The input file stream of the database. </td></tr>
@@ -238,27 +242,27 @@ template&lt;typename ReplayT &gt; </div>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A pair containing the hash string of the replay and the ID of the POV Player. </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A string the represents a unique identifier of the entry. </dd></dl>
 
 </div>
 </div>
-<a id="a5c370d647916cebb74698dfef45c3267" name="a5c370d647916cebb74698dfef45c3267"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5c370d647916cebb74698dfef45c3267">&#9670;&#160;</a></span>getHeaderImpl()</h2>
+<a id="ad2b484838e508181992ecb7075ee3fa2" name="ad2b484838e508181992ecb7075ee3fa2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2b484838e508181992ecb7075ee3fa2">&#9670;&#160;</a></span>getHeaderImpl()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;typename ReplayT &gt; </div>
+template&lt;typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static auto <a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html">cvt::DatabaseInterface</a>&lt; ReplayT &gt;::getHeaderImpl </td>
+          <td class="memname">static auto <a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html">cvt::DatabaseInterface</a>&lt; T &gt;::getHeaderImpl </td>
           <td>(</td>
           <td class="paramtype">std::istream &amp;&#160;</td>
           <td class="paramname"><em>dbStream</em></td><td>)</td>
-          <td> -&gt;  <a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html">ReplayInfo</a></td>
+          <td> -&gt;  <a class="el" href="../../d1/d1c/structcvt_1_1DatabaseInterface.html#a8ef9d6f2e85f4ee588a97c4424e6f6a6">header_type</a></td>
         </tr>
       </table>
   </td>
@@ -280,7 +284,7 @@ template&lt;typename ReplayT &gt; </div>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/home/runner/work/sc2-serializer/sc2-serializer/include/data_structures/<a class="el" href="../../d0/d04/replay__interface_8hpp.html">replay_interface.hpp</a></li>
+<li>/home/runner/work/sc2-serializer/sc2-serializer/include/<a class="el" href="../../df/da2/database_8hpp.html">database.hpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

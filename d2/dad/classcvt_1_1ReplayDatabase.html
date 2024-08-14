@@ -101,12 +101,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a3c0194920882cbc160245e5a80187259" id="r_a3c0194920882cbc160245e5a80187259"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dad/classcvt_1_1ReplayDatabase.html#a3c0194920882cbc160245e5a80187259">getHeader</a> (std::size_t index) const -&gt; <a class="el" href="../../d7/dff/structcvt_1_1ReplayInfo.html">ReplayInfo</a></td></tr>
 <tr class="memdesc:a3c0194920882cbc160245e5a80187259"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves replay header information from the database.  <br /></td></tr>
 <tr class="separator:a3c0194920882cbc160245e5a80187259"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0fc0bf1cde71931bfd902860e0c862d8" id="r_a0fc0bf1cde71931bfd902860e0c862d8"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dad/classcvt_1_1ReplayDatabase.html#a0fc0bf1cde71931bfd902860e0c862d8">getHashId</a> (std::size_t index) const -&gt; std::pair&lt; std::string, std::uint32_t &gt;</td></tr>
-<tr class="memdesc:a0fc0bf1cde71931bfd902860e0c862d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the hash and player id at the specified index.  <br /></td></tr>
-<tr class="separator:a0fc0bf1cde71931bfd902860e0c862d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2bf8be6f25d177f5a70fb7da9598d91f" id="r_a2bf8be6f25d177f5a70fb7da9598d91f"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dad/classcvt_1_1ReplayDatabase.html#a2bf8be6f25d177f5a70fb7da9598d91f">getHashes</a> () const -&gt; std::unordered_set&lt; std::string &gt;</td></tr>
-<tr class="memdesc:a2bf8be6f25d177f5a70fb7da9598d91f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return an set of hash+playerId entries in the database.  <br /></td></tr>
-<tr class="separator:a2bf8be6f25d177f5a70fb7da9598d91f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49575508c6b3487d0d78e2cbbe4171f1" id="r_a49575508c6b3487d0d78e2cbbe4171f1"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dad/classcvt_1_1ReplayDatabase.html#a49575508c6b3487d0d78e2cbbe4171f1">getEntryUID</a> (std::size_t index) const -&gt; std::string</td></tr>
+<tr class="memdesc:a49575508c6b3487d0d78e2cbbe4171f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieves the UID of an entry in the database.  <br /></td></tr>
+<tr class="separator:a49575508c6b3487d0d78e2cbbe4171f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07c9b3c8b6658bf1774b324197280b30" id="r_a07c9b3c8b6658bf1774b324197280b30"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dad/classcvt_1_1ReplayDatabase.html#a07c9b3c8b6658bf1774b324197280b30">getAllUIDs</a> () const -&gt; std::unordered_set&lt; std::string &gt;</td></tr>
+<tr class="memdesc:a07c9b3c8b6658bf1774b324197280b30"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return a set of all UIDs in the database.  <br /></td></tr>
+<tr class="separator:a07c9b3c8b6658bf1774b324197280b30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae904d976a213c8ee762f7e08e1b9a769" id="r_ae904d976a213c8ee762f7e08e1b9a769"><td class="memItemLeft" align="right" valign="top">auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/dad/classcvt_1_1ReplayDatabase.html#ae904d976a213c8ee762f7e08e1b9a769">open</a> (std::filesystem::path dbPath) -&gt; bool</td></tr>
 <tr class="memdesc:ae904d976a213c8ee762f7e08e1b9a769"><td class="mdescLeft">&#160;</td><td class="mdescRight">Opens a replay database at the specified path, will make a new one if it doesn't already exist.  <br /></td></tr>
 <tr class="separator:ae904d976a213c8ee762f7e08e1b9a769"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -255,6 +255,37 @@ template&lt;HasDBInterface EntryType&gt; </div>
 
 </div>
 </div>
+<a id="a07c9b3c8b6658bf1774b324197280b30" name="a07c9b3c8b6658bf1774b324197280b30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07c9b3c8b6658bf1774b324197280b30">&#9670;&#160;</a></span>getAllUIDs()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;HasDBInterface EntryType&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto <a class="el" href="../../d2/dad/classcvt_1_1ReplayDatabase.html">cvt::ReplayDatabase</a>&lt; EntryType &gt;::getAllUIDs </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const -&gt; std::unordered_set&lt;std::string&gt;
+    </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return a set of all UIDs in the database. </p>
+<dl class="section return"><dt>Returns</dt><dd>Unordered set of std::string </dd></dl>
+
+</div>
+</div>
 <a id="a24910c2daabcef09842d215561eb76e3" name="a24910c2daabcef09842d215561eb76e3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a24910c2daabcef09842d215561eb76e3">&#9670;&#160;</a></span>getEntry()</h2>
 
@@ -291,8 +322,8 @@ template&lt;HasDBInterface EntryType&gt; </div>
 
 </div>
 </div>
-<a id="a2bf8be6f25d177f5a70fb7da9598d91f" name="a2bf8be6f25d177f5a70fb7da9598d91f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2bf8be6f25d177f5a70fb7da9598d91f">&#9670;&#160;</a></span>getHashes()</h2>
+<a id="a49575508c6b3487d0d78e2cbbe4171f1" name="a49575508c6b3487d0d78e2cbbe4171f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49575508c6b3487d0d78e2cbbe4171f1">&#9670;&#160;</a></span>getEntryUID()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -303,42 +334,11 @@ template&lt;HasDBInterface EntryType&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">auto <a class="el" href="../../d2/dad/classcvt_1_1ReplayDatabase.html">cvt::ReplayDatabase</a>&lt; EntryType &gt;::getHashes </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const -&gt; std::unordered_set&lt;std::string&gt;
-    </td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Return an set of hash+playerId entries in the database. </p>
-<dl class="section return"><dt>Returns</dt><dd>Unordered set of std::string of concatenated hash and playerId </dd></dl>
-
-</div>
-</div>
-<a id="a0fc0bf1cde71931bfd902860e0c862d8" name="a0fc0bf1cde71931bfd902860e0c862d8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0fc0bf1cde71931bfd902860e0c862d8">&#9670;&#160;</a></span>getHashId()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;HasDBInterface EntryType&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">auto <a class="el" href="../../d2/dad/classcvt_1_1ReplayDatabase.html">cvt::ReplayDatabase</a>&lt; EntryType &gt;::getHashId </td>
+          <td class="memname">auto <a class="el" href="../../d2/dad/classcvt_1_1ReplayDatabase.html">cvt::ReplayDatabase</a>&lt; EntryType &gt;::getEntryUID </td>
           <td>(</td>
           <td class="paramtype">std::size_t&#160;</td>
           <td class="paramname"><em>index</em></td><td>)</td>
-          <td> const -&gt; std::pair&lt;std::string, std::uint32_t&gt;
+          <td> const -&gt; std::string
     </td>
         </tr>
       </table>
@@ -349,7 +349,7 @@ template&lt;HasDBInterface EntryType&gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Retrieves the hash and player id at the specified index. </p>
+<p>Retrieves the UID of an entry in the database. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">index</td><td>The index of the data to retrieve. </td></tr>
