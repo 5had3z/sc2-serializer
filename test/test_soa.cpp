@@ -27,6 +27,7 @@ struct ASoA
     std::vector<double> c;
 
     auto operator[](std::size_t index) const noexcept -> struct_type { return cvt::gatherStructAtIndex(*this, index); }
+    auto size() const noexcept -> std::size_t { return a.size(); }
 };
 
 /**
@@ -40,6 +41,7 @@ struct ASoA2
     std::vector<double> c;
 
     auto operator[](std::size_t index) const noexcept -> struct_type { return cvt::gatherStructAtIndex(*this, index); }
+    auto size() const noexcept -> std::size_t { return a.size(); }
 };
 
 TEST(SoATransforms, SameOrder)

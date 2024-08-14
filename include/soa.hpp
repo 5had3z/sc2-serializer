@@ -18,13 +18,16 @@
 namespace cvt {
 
 /**
- * @brief Concept that checks if a struct is a Struct-of-Arrays type if it has the original struct_type defined and
- * operator[index] to gather data from SoA format to a struct.
+ * @brief Concept that checks if a struct is a Struct-of-Arrays type if:
+ *  - it has the original struct_type defined
+ *  - operator[index] to gather data from SoA format to a struct
+ *  - size() returns the number of entries in the SoA
  */
 template<typename T>
 concept IsSoAType = requires(T x) {
     typename T::struct_type;
     { x[std::size_t{}] } -> std::same_as<typename T::struct_type>;
+    { x.size() } -> std::same_as<std::size_t>;
 };
 
 namespace detail {
@@ -146,13 +149,11 @@ template<IsSoAType SoA> [[nodiscard]] auto SoAtoAoS(const SoA &soa) noexcept -> 
     std::vector<typename SoA::struct_type> aos{};
 
     // Ensure SoA is all equally sized
-    std::vector<std::size_t> sizes;
-    boost::pfr::for_each_field(soa, [&](auto &field) { sizes.push_back(field.size()); });
-    assert(std::all_of(sizes.begin(), sizes.end(), [sz = sizes.front()](std::size_t s) { return s == sz; }));
-    aos.resize(sizes.front());
+    boost::pfr::for_each_field(soa, [&](auto &field) { assert(field.size() == soa.size()); });
+    aos.resize(soa.size());
 
     // Copy data element-by-element
-    for (std::size_t idx = 0; idx < sizes.front(); ++idx) { aos[idx] = soa[idx]; }
+    for (std::size_t idx = 0; idx < soa.size(); ++idx) { aos[idx] = soa[idx]; }
     return aos;
 }
 
