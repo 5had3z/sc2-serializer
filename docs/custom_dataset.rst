@@ -19,24 +19,40 @@ Serialized Database
 
     namespace cvt {
 
+    struct EntryMeta {
+        std::string location;
+        float some_property;
+    };
+
     struct MyDatasetEntry {
-        ReplayInfo header;
+        using header_type = EntryMeta;
+
+        EntryMeta header;
         std::vector<float> timeseriesA;
         std::vector<float> timeseriesB;
     };
 
     template<> struct DatabaseInterface<MyDatasetEntry> {
 
-        static auto getHeaderImpl(std::istream &dbStream) -> ReplayInfo
+        static auto getHeaderImpl(std::istream &dbStream) -> EntryMeta
         {
-            ReplayInfo result;
+            EntryMeta result;
             deserialize(result, dbStream);
             return result;
-        };
+        }
+
+        static auto getEntryImpl(std::istream &dbStream) -> MyDatasetEntry
+        {
+            MyDatasetEntry data;
+            deserialize(data, dbStream);
+            return data;
+        }
 
         // Implement other methods
 
     };
+
+    using CustomDatabase = ReplayDatabase<MyDatasetEntry>;
 
     } // namespace cvt
 
