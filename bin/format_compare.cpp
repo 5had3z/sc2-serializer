@@ -228,13 +228,13 @@ void printStats(const bench_timing &timing, std::string_view prefix)
         std::views::zip_transform([](auto a, auto b) { return a + b; }, timing.readSoA, timing.recover);
     const auto [total_mean, total_var] = mean_var(soaTotal);
 
-    fmt::print("{} Results:\n AoS: {}\n SoA: {}\n Recover: {}\n",
+    fmt::println("{} Results:\n AoS: {}\n SoA: {}\n Recover: {}",
         prefix,
         timing.readAoS | std::views::transform(to_ms),
         timing.readSoA | std::views::transform(to_ms),
         timing.recover | std::views::transform(to_ms));
 
-    fmt::print("Summary\n AoS Read: {}({}),\n SoA Read: {}({})\n SoA Decode: {}({})\n SoA Total: {}({})\n",
+    fmt::println("Summary\n AoS Read: {}({}),\n SoA Read: {}({})\n SoA Decode: {}({})\n SoA Total: {}({})",
         aos_mean,
         aos_var,
         soa_mean,
@@ -267,20 +267,20 @@ int main(int argc, char *argv[])
     const auto cliOpts = cliParser.parse(argc, argv);
 
     if (cliOpts.count("help")) {
-        fmt::print("{}\n", cliParser.help());
+        fmt::println("{}", cliParser.help());
         return 0;
     }
 
     const fs::path databasePath = cliOpts["input"].as<std::string>();
     if (!fs::exists(databasePath)) {
-        fmt::print("Database does not exist: {}\n", databasePath.string());
+        fmt::println("Database does not exist: {}", databasePath.string());
         return -1;
     }
 
     const fs::path writeFolder = cliOpts["output"].as<std::string>();
     if (!fs::exists(writeFolder)) {
         if (!fs::create_directory(writeFolder)) {
-            fmt::print("Unable to create output directory {}\n", writeFolder.string());
+            fmt::println("Unable to create output directory {}", writeFolder.string());
             return -1;
         }
     }
@@ -292,7 +292,7 @@ int main(int argc, char *argv[])
     const bool benchFlag = cliOpts["benchmark"].as<bool>();
 
     if (!(unitFlag | compFlag | metaFlag | benchFlag)) {
-        fmt::print("No comparison flags set!\n{}", cliParser.help());
+        fmt::println("No comparison flags set!\n{}", cliParser.help());
         return -1;
     }
 
@@ -303,7 +303,7 @@ int main(int argc, char *argv[])
         if (compFlag) { writeComponents(replayData.data, writeFolder); }
         if (metaFlag) { writeReplayStructures(replayData, writeFolder); }
         if (benchFlag) { benchmarkUnitFormatting(replayData.data); }
-        fmt::print("Completed {} of {} Replays\n", idx + 1, database.size());
+        fmt::println("Completed {} of {} Replays", idx + 1, database.size());
     }
 
     if (benchFlag) {

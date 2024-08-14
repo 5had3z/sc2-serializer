@@ -438,15 +438,15 @@ auto main(int argc, char *argv[]) -> int
         if (cvtType == "full") { return std::make_unique<cvt::FullConverter<ReplayDataType>>(); }
         if (cvtType == "action") { return std::make_unique<cvt::ActionConverter<ReplayDataType>>(); }
         if (cvtType == "strided") {
-            auto converter = std::make_unique<cvt::StridedConverter<ReplayDataType>>();
+            auto converter_ = std::make_unique<cvt::StridedConverter<ReplayDataType>>();
             if (cliOpts["stride"].count() == 0) {
                 SPDLOG_ERROR("Strided converter used but no --stride set");
                 return nullptr;
             }
-            converter->SetStride(cliOpts["stride"].as<std::size_t>());
-            converter->SetActionSaving(cliOpts["save-actions"].count());
-            if (converter->ActionsAreSaved()) { SPDLOG_INFO("Strided Converter is Saving Actions"); }
-            return converter;
+            converter_->SetStride(cliOpts["stride"].as<std::size_t>());
+            converter_->SetActionSaving(cliOpts["save-actions"].count());
+            if (converter_->ActionsAreSaved()) { SPDLOG_INFO("Strided Converter is Saving Actions"); }
+            return converter_;
         }
         SPDLOG_ERROR("Got invalid --converter='{}', require [full|action|strided]", cvtType);
         return nullptr;

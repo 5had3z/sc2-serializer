@@ -232,7 +232,7 @@ class Observer : public sc2::ReplayObserver
     std::unordered_map<sc2::Tag, ResourceObs> resourceQty_;
     bool hasResourceInit{ false };
 
-    bool IgnoreReplay(const sc2::ReplayInfo &replay_info, uint32_t & /*player_id*/) final { return false; }
+    bool IgnoreReplay(const sc2::ReplayInfo & /*replay_info*/, uint32_t & /*player_id*/) final { return false; }
 };
 
 int main(int argc, char *argv[])
@@ -243,7 +243,7 @@ int main(int argc, char *argv[])
     cliopts.add_options()
       ("r,replays", "path to folder of replays", cxxopts::value<std::string>())
       ("g,game", "path to game executable", cxxopts::value<std::string>())
-      ("p,player", "Player perspective to use (0,1,2) where 0 is neutral observer", cxxopts::value<int>()->default_value("1"));
+      ("p,player", "Player perspective to use (0,1,2) where 0 is neutral observer", cxxopts::value<uint32_t>()->default_value("1"));
     // clang-format on
     auto result = cliopts.parse(argc, argv);
 
@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    auto playerId = result["player"].as<int>();
+    auto playerId = result["player"].as<uint32_t>();
     if (playerId < 0 || playerId > 2) {
         SPDLOG_ERROR("Player id should be 0, 1 or 2, got {}", playerId);
         return -1;

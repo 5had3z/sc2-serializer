@@ -87,7 +87,7 @@ struct Image
      * @brief Number of elements in the image
      * @return Number of elements in the image
      */
-    [[nodiscard]] auto nelem() const noexcept -> std::size_t { return _h * _w; }
+    [[nodiscard]] auto nelem() const noexcept -> std::size_t { return static_cast<std::size_t>(_h * _w); }
 
     /**
      * @brief Resize the underlying data buffer to new height and width

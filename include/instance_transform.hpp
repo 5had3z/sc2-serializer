@@ -141,7 +141,7 @@ template<IsSoAType SoA, typename Comp>
     }
 
     // Significantly better compressibility when sorted by unit (and implicitly time)
-    std::ranges::stable_sort(flatStepData, [](const StepS &a, const StepS &b) { return a.second.id < b.second.id; });
+    std::ranges::stable_sort(flatStepData, comp);
 
     // Create flattened SoA
     FlattenedData2<SoA> result;

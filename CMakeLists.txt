@@ -12,16 +12,32 @@ option(SC2_TESTS "Build the test suite" ON)
 option(SC2_SANITIZERS "Build with sanitizers enabled" OFF)
 
 if(MSVC)
-  set(_WARNING_OPTIONS "/W4 /w14640 /w14242 /w14263 /w14265 /w14456 /w14928")
-  set(_COMPILE_OPTIONS
-      "$<$<CONFIG:Debug>:/Od;/Zi;${WARNING_OPTIONS}>" "$<$<CONFIG:Release>:/O2;/arch:AVX2;${WARNING_OPTIONS}>"
-      "$<$<CONFIG:RelWithDebInfo>:/O2;/arch:AVX2;/Zi;${WARNING_OPTIONS}>")
+  set(WARNING_OPTIONS
+      /W4
+      /w14640
+      /w14242
+      /w14263
+      /w14265
+      /w14456
+      /w14928)
+  set(COMPILE_OPTIONS
+      $<$<CONFIG:Debug>:/Od;/Zi;${WARNING_OPTIONS}> $<$<CONFIG:Release>:/O2;/arch:AVX2;${WARNING_OPTIONS}>
+      $<$<CONFIG:RelWithDebInfo>:/O2;/arch:AVX2;/Zi;${WARNING_OPTIONS}>)
 else()
-  set(_WARNING_OPTIONS "-Wall;-Wfatal-errors;-Wextra;-Wshadow;-Wcast-align;-Wpedantic;
-    -Wconversion;-Wsign-conversion;-Wnull-dereference;-Wdouble-promotion")
-  set(_COMPILE_OPTIONS
-      "$<$<CONFIG:Debug>:-O0;-g;${WARNING_OPTIONS}>" "$<$<CONFIG:Release>:-O3;-march=native;${WARNING_OPTIONS}>"
-      "$<$<CONFIG:RelWithDebInfo>:-O3;-march=native;-g;${WARNING_OPTIONS}>")
+  set(WARNING_OPTIONS
+      -Wall
+      -Wfatal-errors
+      -Wextra
+      -Wshadow
+      -Wcast-align
+      -Wpedantic
+      -Wconversion
+      -Wsign-conversion
+      -Wnull-dereference
+      -Wdouble-promotion)
+  set(COMPILE_OPTIONS
+      $<$<CONFIG:Debug>:-O0;-g;${WARNING_OPTIONS}> $<$<CONFIG:Release>:-O3;-march=native;${WARNING_OPTIONS}>
+      $<$<CONFIG:RelWithDebInfo>:-O3;-march=native;-g;${WARNING_OPTIONS}>)
 endif()
 
 # ---- Add Dependencies ----
@@ -107,7 +123,7 @@ if(SC2_CONVERTER)
     src/observer.cpp
     src/aos_impl.cpp)
   target_compile_features(replay_converter PUBLIC cxx_std_23)
-  target_compile_options(replay_converter PUBLIC ${_COMPILE_OPTIONS})
+  target_compile_options(replay_converter PUBLIC ${COMPILE_OPTIONS})
   target_link_libraries(
     replay_converter
     PUBLIC sc2api
@@ -202,7 +218,7 @@ if(SC2_PY_READER)
            Boost::pfr
            Boost::iostreams
            yaml-cpp)
-  target_compile_options(_sc2_serializer PUBLIC ${_COMPILE_OPTIONS})
+  target_compile_options(_sc2_serializer PUBLIC ${COMPILE_OPTIONS})
   target_include_directories(_sc2_serializer PUBLIC include)
 endif()
 
@@ -241,7 +257,7 @@ find_package(OpenCV COMPONENTS core imgcodecs)
 if(SC2_CONVERTER AND OpenCV_FOUND)
   add_executable(game_exp bin/experiment.cpp)
   target_compile_features(game_exp PRIVATE cxx_std_23)
-  target_compile_options(game_exp PUBLIC ${_COMPILE_OPTIONS})
+  target_compile_options(game_exp PUBLIC ${COMPILE_OPTIONS})
   target_link_libraries(
     game_exp
     PUBLIC sc2api
@@ -252,7 +268,8 @@ if(SC2_CONVERTER AND OpenCV_FOUND)
            Boost::pfr
            opencv_core
            opencv_imgcodecs)
-  target_include_directories(game_exp SYSTEM PRIVATE include 3rdparty/s2client-api/include
+  target_include_directories(game_exp PRIVATE include)
+  target_include_directories(game_exp SYSTEM PRIVATE 3rdparty/s2client-api/include
                                                      ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated)
 elseif(SC2_CONVERTER)
   message("OpenCV Not Found, Not Building game_exp")
@@ -261,16 +278,21 @@ endif()
 if(SC2_CONVERTER)
   add_executable(format_compare bin/format_compare.cpp)
   target_compile_features(format_compare PUBLIC cxx_std_23)
-  target_compile_options(format_compare PUBLIC ${_COMPILE_OPTIONS})
+  target_compile_options(format_compare PUBLIC ${COMPILE_OPTIONS})
   target_link_libraries(format_compare PUBLIC replay_converter cxxopts)
 
   add_executable(format_converter bin/format_converter.cpp)
   target_compile_features(format_converter PUBLIC cxx_std_23)
-  target_compile_options(format_converter PUBLIC ${_COMPILE_OPTIONS})
+  target_compile_options(format_converter PUBLIC ${COMPILE_OPTIONS})
   target_link_libraries(format_converter PUBLIC replay_converter cxxopts)
 
   add_executable(fix_lut bin/fix_lut.cpp)
   target_compile_features(fix_lut PUBLIC cxx_std_23)
-  target_compile_options(fix_lut PUBLIC ${_COMPILE_OPTIONS})
+  target_compile_options(fix_lut PUBLIC ${COMPILE_OPTIONS})
   target_link_libraries(fix_lut PUBLIC replay_converter cxxopts)
+
+  add_executable(example_custom bin/custom_example.cpp)
+  target_compile_features(example_custom PUBLIC cxx_std_23)
+  target_compile_options(example_custom PUBLIC ${COMPILE_OPTIONS})
+  target_link_libraries(example_custom PUBLIC replay_converter cxxopts)
 endif()
