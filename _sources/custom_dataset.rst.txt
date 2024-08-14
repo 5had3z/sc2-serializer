@@ -15,7 +15,7 @@ Serialized Database
 
 .. code-block:: c++
 
-    #include "replay_interface.hpp"
+    #include "database.hpp"
 
     namespace cvt {
 

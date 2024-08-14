@@ -89,7 +89,7 @@
 <section id="serialized-database">
 <h2>Serialized Database<a class="headerlink" href="#serialized-database" title="Link to this heading"></a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">ReplayDatabase</span></code> is templated on a which specializes the <code class="docutils literal notranslate"><span class="pre">DatabaseInterface</span></code> type, hence fulfils the <code class="docutils literal notranslate"><span class="pre">HasDBInterface</span></code> concept. This <code class="docutils literal notranslate"><span class="pre">DatabaseInterface</span></code> defines how to read and write that type to the database, as well as other utilities such as only reading the header to get <code class="docutils literal notranslate"><span class="pre">ReplayInfo</span></code> metadata. The metadata/header is relatively hard-coded into the <code class="docutils literal notranslate"><span class="pre">DatabaseInterface</span></code>, it is up to the user to modify that as appropriate.</p>
-<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;replay_interface.hpp&quot;</span>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;database.hpp&quot;</span>
 
 <span class="k">namespace</span><span class="w"> </span><span class="nn">cvt</span><span class="w"> </span><span class="p">{</span>
 
