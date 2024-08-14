@@ -93,24 +93,40 @@
 
 <span class="k">namespace</span><span class="w"> </span><span class="nn">cvt</span><span class="w"> </span><span class="p">{</span>
 
+<span class="k">struct</span><span class="w"> </span><span class="nc">EntryMeta</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">location</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">some_property</span><span class="p">;</span>
+<span class="p">};</span>
+
 <span class="k">struct</span><span class="w"> </span><span class="nc">MyDatasetEntry</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">ReplayInfo</span><span class="w"> </span><span class="n">header</span><span class="p">;</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">header_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EntryMeta</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">EntryMeta</span><span class="w"> </span><span class="n">header</span><span class="p">;</span>
 <span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">timeseriesA</span><span class="p">;</span>
 <span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">timeseriesB</span><span class="p">;</span>
 <span class="p">};</span>
 
 <span class="k">template</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">DatabaseInterface</span><span class="o">&lt;</span><span class="n">MyDatasetEntry</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
 
-<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">getHeaderImpl</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">dbStream</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">ReplayInfo</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">getHeaderImpl</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">dbStream</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">EntryMeta</span>
 <span class="w">    </span><span class="p">{</span>
-<span class="w">        </span><span class="n">ReplayInfo</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="w">        </span><span class="n">EntryMeta</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
 <span class="w">        </span><span class="n">deserialize</span><span class="p">(</span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="n">dbStream</span><span class="p">);</span>
 <span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
-<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">getEntryImpl</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">dbStream</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">MyDatasetEntry</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">MyDatasetEntry</span><span class="w"> </span><span class="n">data</span><span class="p">;</span>
+<span class="w">        </span><span class="n">deserialize</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">dbStream</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">data</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="c1">// Implement other methods</span>
 
 <span class="p">};</span>
+
+<span class="k">using</span><span class="w"> </span><span class="n">CustomDatabase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ReplayDatabase</span><span class="o">&lt;</span><span class="n">MyDatasetEntry</span><span class="o">&gt;</span><span class="p">;</span>
 
 <span class="p">}</span><span class="w"> </span><span class="c1">// namespace cvt</span>
 </pre></div>
