@@ -48,7 +48,13 @@
 <li class="toctree-l1"><a class="reference internal" href="dataloading.html">Dataloading</a></li>
 <li class="toctree-l1"><a class="reference internal" href="scripts.html">Scripts</a></li>
 <li class="toctree-l1"><a class="reference internal" href="benchmark.html">Benchmarks</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Applying to New Dataset</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Applying to New Dataset</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#serialized-database">Serialized Database</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#automatic-struct-to-vector-and-enums">Automatic Struct to Vector and Enums</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#struct-of-array-array-of-struct">Struct-of-Array &lt;-&gt; Array-of-Struct</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#instance-transform-flattenandsortdata-2">Instance Transform (flattenAndSortData(2))</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="cpp_api/index.html">C++ API</a></li>
 </ul>
 
@@ -78,7 +84,89 @@
              
   <section id="applying-to-new-dataset">
 <span id="custom-dataset"></span><h1>Applying to New Dataset<a class="headerlink" href="#applying-to-new-dataset" title="Link to this heading"></a></h1>
-<p>Much of the code has been written with templates such that there are plenty of customization points where you can make modifications to fit your needs. For example, ReplayDatabase is templated on some type, which specializes the DatabaseInterface type, hence fulfils the HasDBInterface concept. This DatabaseInterface defines how to read and write that type to the database, as well as other utilities such as only reading the header to get ReplayInfo metadata.</p>
+<p>Much of the code has been written with templates so there are plenty of customization points where you can make simple modifications to fit your needs.</p>
+<section id="serialized-database">
+<h2>Serialized Database<a class="headerlink" href="#serialized-database" title="Link to this heading"></a></h2>
+<p><cite>ReplayDatabase</cite> is templated on a which specializes the <cite>DatabaseInterface</cite> type, hence fulfils the <cite>HasDBInterface</cite> concept. This <cite>DatabaseInterface</cite> defines how to read and write that type to the database, as well as other utilities such as only reading the header to get <cite>ReplayInfo</cite> metadata. The metadata/header is relatively hard-coded into the <cite>DatabaseInterface</cite>, it is up to the user to modify that as appropriate.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;replay_interface.hpp&quot;</span>
+
+<span class="k">namespace</span><span class="w"> </span><span class="nn">cvt</span><span class="w"> </span><span class="p">{</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">MyDatasetEntry</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">ReplayInfo</span><span class="w"> </span><span class="n">header</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">timeseriesA</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">timeseriesB</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">template</span><span class="o">&lt;&gt;</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">DatabaseInterface</span><span class="o">&lt;</span><span class="n">MyDatasetEntry</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">auto</span><span class="w"> </span><span class="n">getHeaderImpl</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">istream</span><span class="w"> </span><span class="o">&amp;</span><span class="n">dbStream</span><span class="p">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">ReplayInfo</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ReplayInfo</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="w">        </span><span class="n">deserialize</span><span class="p">(</span><span class="n">result</span><span class="p">,</span><span class="w"> </span><span class="n">dbStream</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="c1">// Implement other methods</span>
+
+<span class="p">};</span>
+
+<span class="p">}</span><span class="w"> </span><span class="c1">// namespace cvt</span>
+</pre></div>
+</div>
+</section>
+<section id="automatic-struct-to-vector-and-enums">
+<h2>Automatic Struct to Vector and Enums<a class="headerlink" href="#automatic-struct-to-vector-and-enums" title="Link to this heading"></a></h2>
+<p>This process is automated for most common datatypes (struct, vector, enum, numeric) and is applied recursively. Enums that need the auto one-hot encoding transform must be added to the chain of <cite>if constexpr</cite> in <cite>getEnumValues()</cite> in <cite>enums.hpp</cite>. Then any struct that contains the enum can be vectorized with a one-hot encoding of that enum. Mapping types haven’t been implemented as there hasn’t been a use case for it yet.</p>
+</section>
+<section id="struct-of-array-array-of-struct">
+<h2>Struct-of-Array &lt;-&gt; Array-of-Struct<a class="headerlink" href="#struct-of-array-array-of-struct" title="Link to this heading"></a></h2>
+<p>A <em>Struct-of-Arrays</em> representation of the target <em>Struct</em> that fulfils the <cite>IsSoAType</cite> concept must be defined with identical names between the members for the automatic <cite>AoStoSoA</cite> and <cite>SoAtoAoS</cite> to function correctly. <cite>cvt::gatherStructAtIndex</cite> can be used when defining <cite>operator[]</cite> in the SoA type to automate gathering data from each of the vectors in the <em>SoA</em>.</p>
+<p>A simple example of a struct <cite>A</cite> and its SoA is shown below. This method only applies top level struct, and is not recursive, hence <cite>ASoA</cite> contains <cite>std::vector&lt;B&gt;</cite>. The field names can be out-of-order between <cite>A</cite> and <cite>ASoA</cite>. At compile-time fields are matched by name rather than by index. Hence, there must be a 1-to-1 mapping between field (you should get a compile-time error otherwise). Note, there is no check for identical types between names, only that one is assignable to another.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">B</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">A</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="w">    </span><span class="n">B</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">ASoA</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">using</span><span class="w"> </span><span class="n">struct_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">B</span><span class="o">&gt;</span><span class="w"> </span><span class="n">c</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="k">operator</span><span class="p">[](</span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="n">index</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">struct_type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">cvt</span><span class="o">::</span><span class="n">gatherStructAtIndex</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">index</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">size</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">noexcept</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="kt">size_t</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">size</span><span class="p">();</span><span class="w"> </span><span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>Specialized <em>SoA&lt;-&gt;AoS</em> transforms can be defined if the automated process isn’t appropriate. For example <cite>ReplayData</cite> and <cite>ReplayDataSoA</cite> is a struct containing a header and the replay data. Hence, we plainly copy the Header data, and perform the transform on the replay observation data (see <cite>aos_impl.cpp</cite>).</p>
+</section>
+<section id="instance-transform-flattenandsortdata-2">
+<h2>Instance Transform (flattenAndSortData(2))<a class="headerlink" href="#instance-transform-flattenandsortdata-2" title="Link to this heading"></a></h2>
+<p>The transform that converts the time-major representation of the units to an instance-major <em>SoA</em> is <cite>flattenAndSortData</cite> and recovers back to the time-major is <cite>recoverFlattenedSortedData</cite>. The <em>v2</em> of these functions (suffixed by 2), further compresses the time indices as [start,count] pairs. This didn’t have a significant impact to final filesize, but the work was done for a more sophisticated algorithm so it might as well be used.</p>
+<p>These functions accept any <cite>IsSoAType</cite> and use a user-defined <cite>Comp</cite> function which enables sorting of any underlying <em>struct</em> by any field. This comparison function applies the comparison on a StepIndex and Struct pair, hence using <cite>.second</cite> is needed to access your struct. The code for sorting the SC2 Unit observation data is shown below. The recovery will not return the same order of units in each timestep (the inner std::vector), but they will still be the same set of units in each timestep.</p>
+<div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="k">auto</span><span class="w"> </span><span class="n">getInstanceSortedUnits</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">Unit</span><span class="o">&gt;&gt;&amp;</span><span class="w"> </span><span class="n">units</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Full type in lambda for verbosity, but you are encouraged to use auto...</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">byInstanceId</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[](</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">uint32_t</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">pair</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="kt">uint32_t</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">b</span><span class="p">.</span><span class="n">second</span><span class="p">.</span><span class="n">id</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">cvt</span><span class="o">::</span><span class="n">flattenAndSortData</span><span class="o">&lt;</span><span class="n">cvt</span><span class="o">::</span><span class="n">UnitSoA</span><span class="o">&gt;</span><span class="p">(</span><span class="n">replayData</span><span class="p">.</span><span class="n">data</span><span class="p">.</span><span class="n">units</span><span class="p">,</span><span class="w"> </span><span class="n">byInstanceId</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
 </section>
 
 
