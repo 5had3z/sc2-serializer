@@ -10,7 +10,7 @@
  */
 #pragma once
 
-#include "../serialize.hpp"
+#include "../database.hpp"
 #include "instance_transform.hpp"
 #include "replay_interface.hpp"
 #include "units.hpp"
@@ -122,10 +122,10 @@ template<> struct DatabaseInterface<ReplayDataSoA>
         return result;
     }
 
-    static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>
+    static auto getEntryUIDImpl(std::istream &dbStream) -> std::string
     {
         const auto replayInfo = DatabaseInterface::getHeaderImpl(dbStream);
-        return std::make_pair(replayInfo.replayHash, replayInfo.playerId);
+        return replayInfo.replayHash + std::to_string(replayInfo.playerId);
     }
 
     static auto getEntryImpl(std::istream &dbStream) -> ReplayDataSoA

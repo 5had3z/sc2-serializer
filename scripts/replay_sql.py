@@ -128,9 +128,9 @@ class SC2Replay(Dataset):
                 "parse_success": False,
             }
             try:
-                hash_, id_ = self.db_handle.getHashIdEntry(db_index)
-                data["playerId"] = id_
-                data["replayHash"] = hash_
+                header = self.db_handle.getHeader(db_index)
+                data["playerId"] = header.playerId
+                data["replayHash"] = header.replayHash
             except MemoryError:
                 pass
 

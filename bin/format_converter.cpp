@@ -110,14 +110,12 @@ int main(int argc, char *argv[])
     // if (!fs::exists(hashStepFile)) { fmt::print("ERROR: Hash-Step file doesn't exist: {}\n", hashStepFile.string());
     // } const auto hash_steps = read_hash_steps_file(hashStepFile);
 
-    auto already_converted = dest.getHashes();
+    auto already_converted = dest.getAllUIDs();
     const auto print_modulo = source.size() / 10;
     for (std::size_t idx = 0; idx < source.size(); ++idx) {
         SrcFormat oldReplayData;
         try {
-            const auto [old_hash, old_id] = source.getHashId(idx);
-            const auto old_hashid = old_hash + std::to_string(old_id);
-            if (already_converted.contains(old_hashid)) { continue; }
+            if (already_converted.contains(source.getEntryUID(idx))) { continue; }
             oldReplayData = source.getEntry(idx);
         } catch (const std::bad_alloc &err) {
             SPDLOG_ERROR("Skipping index {}, due to read failure", idx);

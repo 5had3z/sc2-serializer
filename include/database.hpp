@@ -42,6 +42,64 @@ void setReplayDBLoggingLevel(spdlog::level::level_enum lvl) noexcept;
  */
 extern std::shared_ptr<spdlog::logger> gLoggerDB;
 
+
+/**
+ * @brief Interface that tells database how to read/write replay data structure.
+ * @tparam ReplayT replay data structure to read/write from database.
+ */
+template<typename T> struct DatabaseInterface
+{
+    /**
+     * @brief Datatype of replay
+     */
+    using value_type = T;
+
+    /**
+     * @brief Type that contains metadata of an entry
+     */
+    using header_type = typename T::header_type;
+
+    /**
+     * @brief Retrieves the header information from a replay entry
+     * @param dbStream Input file stream of the database
+     * @return Struct that contains information about the replay
+     */
+    [[nodiscard]] static auto getHeaderImpl(std::istream &dbStream) -> header_type;
+
+    /**
+     * @brief Retrieves a unique identifier of the entry in the database. For example, this could be a concatenation of
+     * the the Replay Hash and the POV Player's ID.
+     * @param dbStream The input file stream of the database.
+     * @param entry The position of the entry in the database stream.
+     * @return A string the represents a unique identifier of the entry.
+     */
+    [[nodiscard]] static auto getEntryUIDImpl(std::istream &dbStream) -> std::string;
+
+    /**
+     * @brief Defines how to read the entry from the database
+     * @param dbStream Input stream to read the replay data from
+     * @return Replay data read from the
+     */
+    [[nodiscard]] static auto getEntryImpl(std::istream &dbStream) -> value_type;
+
+
+    /**
+     * @brief Defines how to write the replay structure to the file
+     * @param replay Replay data structure to write to the stream
+     * @param dbStream Output stream to write the replay structure to
+     * @return Success flag, true if writing completed without issues.
+     */
+    [[maybe_unused]] static auto addEntryImpl(const value_type &replay, std::ostream &dbStream) noexcept -> bool;
+};
+
+/**
+ * @brief Concept that checks if a database interface can be constructed from a replay data structure
+ *
+ * @tparam T data structure of the replay
+ */
+template<typename T>
+concept HasDBInterface = requires { typename DatabaseInterface<T>; };
+
 /**
  * @brief
  * @tparam T is a DatabaseIO Type that implements interactions with the database
@@ -150,26 +208,23 @@ template<HasDBInterface EntryType> class ReplayDatabase
     }
 
     /**
-     * @brief Retrieves the hash and player id at the specified index.
+     * @brief Retrieves the UID of an entry in the database.
      * @param index The index of the data to retrieve.
      * @return A pair containing the replay hash and player id.
      */
-    [[nodiscard]] auto getHashId(std::size_t index) const -> std::pair<std::string, std::uint32_t>
+    [[nodiscard]] auto getEntryUID(std::size_t index) const -> std::string
     {
-        return this->readFromDatabase(index, DatabaseInterface<EntryType>::getHashIdImpl);
+        return this->readFromDatabase(index, DatabaseInterface<EntryType>::getEntryUIDImpl);
     }
 
     /**
-     * @brief Return an set of hash+playerId entries in the database
-     * @return Unordered set of std::string of concatenated hash and playerId
+     * @brief Return a set of all UIDs in the database.
+     * @return Unordered set of std::string
      */
-    [[nodiscard]] auto getHashes() const -> std::unordered_set<std::string>
+    [[nodiscard]] auto getAllUIDs() const -> std::unordered_set<std::string>
     {
         std::unordered_set<std::string> replayHashes{};
-        for (auto &&idx : std::views::iota(std::size_t{ 0 }, this->size())) {
-            auto [hash, id] = this->getHashId(idx);
-            replayHashes.insert(hash + std::to_string(id));
-        }
+        for (auto &&idx : std::views::iota(0uz, this->size())) { replayHashes.insert(this->getEntryUID(idx)); }
         return replayHashes;
     }
 

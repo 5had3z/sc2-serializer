@@ -55,16 +55,15 @@ auto mergeDb(cvt::ReplayDatabase<T> &target,
 {
     const std::size_t nItems = source.size();
     for (std::size_t idx = 0; idx < nItems; ++idx) {
-        // Deserialize hash id quickly to check for duplicate before whole replay
-        const auto [hash, id] = source.getHashId(idx);
-        const auto hashId = hash + std::to_string(id);
+        // Deserialize UID quickly to check for duplicate before whole replay
+        const auto hashId = source.getEntryUID(idx);
         if (knownHashes.contains(hashId)) {
-            SPDLOG_WARN("Skipping existing replay {},{}", hash, id);
+            SPDLOG_WARN("Skipping existing replay {}", hashId);
             continue;
         }
         const ReplayDataType replayData = source.getEntry(idx);
         if (replayData.data.gameStep[0] > 1000) {
-            SPDLOG_WARN("Skipping replay {},{} with initial step {}", hash, id, replayData.data.gameStep[0]);
+            SPDLOG_WARN("Skipping replay {} with initial step {}", hashId, replayData.data.gameStep[0]);
             continue;
         }
         const bool ok = target.addEntry(replayData);
@@ -134,7 +133,7 @@ int main(int argc, char *argv[])
     std::unordered_set<std::string> knownHashes{};
     if (strat == Stratergy::Replace) { fs::remove(outFile); }
     replayDb.open(outFile);
-    if (strat == Stratergy::Merge) { knownHashes = replayDb.getHashes(); }
+    if (strat == Stratergy::Merge) { knownHashes = replayDb.getAllUIDs(); }
 
     bool ok = true;
     if (cliOpts["folder"].count() && cliOpts["file"].count()) {

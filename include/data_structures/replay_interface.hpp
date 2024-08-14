@@ -225,6 +225,11 @@ template<IsSoAType StepDataSoAType> struct ReplayDataTemplateSoA
     using struct_type = ReplayDataTemplate<typename StepDataSoAType::struct_type>;
 
     /**
+     * @brief Header that contains metadata about the replay.
+     */
+    using header_type = ReplayInfo;
+
+    /**
      * @brief Replay metadata
      */
     ReplayInfo header;
@@ -283,56 +288,5 @@ template<IsSoAType StepDataSoAType> struct ReplayDataTemplateSoA
      */
     [[nodiscard]] auto getPlayerId() const noexcept -> std::uint32_t { return header.playerId; }
 };
-
-/**
- * @brief Interface that tells database how to read/write replay data structure.
- * @tparam ReplayT replay data structure to read/write from database.
- */
-template<typename ReplayT> struct DatabaseInterface
-{
-    /**
-     * @brief Datatype of replay
-     */
-    using value_type = ReplayT;
-
-    /**
-     * @brief Retrieves the header information from a replay entry
-     * @param dbStream Input file stream of the database
-     * @return Struct that contains information about the replay
-     */
-    [[nodiscard]] static auto getHeaderImpl(std::istream &dbStream) -> ReplayInfo;
-
-    /**
-     * @brief Retrieves the Replay hash and Player ID entry from the database stream at the specified entry position.
-     * @param dbStream The input file stream of the database.
-     * @param entry The position of the entry in the database stream.
-     * @return A pair containing the hash string of the replay and the ID of the POV Player.
-     */
-    [[nodiscard]] static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>;
-
-    /**
-     * @brief Defines how to read the entry from the database
-     * @param dbStream Input stream to read the replay data from
-     * @return Replay data read from the
-     */
-    [[nodiscard]] static auto getEntryImpl(std::istream &dbStream) -> ReplayT;
-
-
-    /**
-     * @brief Defines how to write the replay structure to the file
-     * @param replay Replay data structure to write to the stream
-     * @param dbStream Output stream to write the replay structure to
-     * @return Success flag, true if writing completed without issues.
-     */
-    [[maybe_unused]] static auto addEntryImpl(const ReplayT &replay, std::ostream &dbStream) noexcept -> bool;
-};
-
-/**
- * @brief Concept that checks if a database interface can be constructed from a replay data structure
- *
- * @tparam T data structure of the replay
- */
-template<typename T>
-concept HasDBInterface = requires { typename DatabaseInterface<T>; };
 
 }// namespace cvt

@@ -60,7 +60,7 @@ template<typename DataSoA> class BaseConverter : public sc2::ReplayObserver
     auto loadDB(const std::filesystem::path &path) -> bool
     {
         auto result = database_.open(path);
-        if (result) { knownHashes_ = database_.getHashes(); }
+        if (result) { knownHashes_ = database_.getAllUIDs(); }
         return result;
     }
 

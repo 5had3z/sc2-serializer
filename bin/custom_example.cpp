@@ -111,49 +111,60 @@ struct ObservationTimeseriesSoA
     }
 };
 
-template<> struct cvt::DatabaseInterface<ObservationTimeseriesSoA>
+struct DataEntry
 {
-    // cppcheck-suppress constParameterReference
-    static auto getHeaderImpl(std::istream &dbStream) -> cvt::ReplayInfo
+    using header_type = std::string;
+
+    std::string hash;
+
+    ObservationTimeseriesSoA data;
+
+    [[nodiscard]] auto size() const noexcept -> std::size_t { return data.size(); }
+
+    [[nodiscard]] auto operator[](std::size_t index) const noexcept -> Observation { return data[index]; }
+};
+
+template<> struct cvt::DatabaseInterface<DataEntry>
+{
+    static auto getHeaderImpl(std::istream &dbStream) -> std::string
     {
-        // no-op since we don't use the header
-        return cvt::ReplayInfo{};
+        std::string hash;
+        cvt::deserialize(hash, dbStream);
+        return hash;
     }
 
-    // cppcheck-suppress constParameterReference
-    static auto getHashIdImpl(std::istream &dbStream) -> std::pair<std::string, std::uint32_t>
-    {
-        // fudge the output
-        return { "this-is-a-test", 123 };
-    }
+    // Our "uid" is the same as the header for this simple example
+    static auto getEntryUIDImpl(std::istream &dbStream) -> std::string { return getHeaderImpl(dbStream); }
 
-    static auto getEntryImpl(std::istream &dbStream) -> ObservationTimeseriesSoA
+    static auto getEntryImpl(std::istream &dbStream) -> DataEntry
     {
-        ObservationTimeseriesSoA result;
+        DataEntry result;
+        cvt::deserialize(result.hash, dbStream);
         {
             cvt::FlattenedData2<PedestrianSoA> peds;
             cvt::deserialize(peds, dbStream);
-            result.peds = cvt::recoverFlattenedSortedData2(peds);
+            result.data.peds = cvt::recoverFlattenedSortedData2(peds);
         }
         {
             cvt::FlattenedData2<RobotSoA> robs;
             cvt::deserialize(robs, dbStream);
-            result.robs = cvt::recoverFlattenedSortedData2(robs);
+            result.data.robs = cvt::recoverFlattenedSortedData2(robs);
         }
         return result;
     }
 
-    static auto addEntryImpl(const ObservationTimeseriesSoA &d, std::ostream &dbStream) noexcept -> bool
+    static auto addEntryImpl(const DataEntry &d, std::ostream &dbStream) noexcept -> bool
     {
+        cvt::serialize(d.hash, dbStream);
         // Both peds and robs have same 'uid' property we want to sort by, so we can use the same lambda
         auto cmpFn = [](auto &&a, auto &&b) { return a.second.uid < b.second.uid; };
-        cvt::serialize(flattenAndSortData2<PedestrianSoA>(d.peds, cmpFn), dbStream);
-        cvt::serialize(flattenAndSortData2<RobotSoA>(d.robs, cmpFn), dbStream);
+        cvt::serialize(flattenAndSortData2<PedestrianSoA>(d.data.peds, cmpFn), dbStream);
+        cvt::serialize(flattenAndSortData2<RobotSoA>(d.data.robs, cmpFn), dbStream);
         return true;
     }
 };
 
-using CustomDatabase = cvt::ReplayDatabase<ObservationTimeseriesSoA>;
+using CustomDatabase = cvt::ReplayDatabase<DataEntry>;
 
 void printStepMeta(const Observation &obs)
 {
@@ -230,9 +241,9 @@ int main(int argc, char *argv[])
             printStepMeta(read_data[idx]);
         }
     } else if (opts.count("duration")) {
-        auto some_data = generateRandomData(opts["duration"].as<std::size_t>());
-        auto soa_form = cvt::AoStoSoA<ObservationTimeseriesSoA>(some_data);
-        database.addEntry(soa_form);
+        auto aos = generateRandomData(opts["duration"].as<std::size_t>());
+        auto soa = cvt::AoStoSoA<ObservationTimeseriesSoA>(aos);
+        database.addEntry(DataEntry{ "lkasdfkljh", soa });
     }
 
     return 0;
