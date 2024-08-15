@@ -14,6 +14,7 @@
 #include "data_structures/enums.hpp"
 
 #include <boost/pfr.hpp>
+#include <spdlog/fmt/fmt.h>
 
 #include <type_traits>
 
@@ -106,21 +107,17 @@ namespace detail {
     {
         T d{};// Make plane prototype for pfr::for_each_field
         std::size_t sum{ 0 };
-        boost::pfr::for_each_field(d, [&sum](auto field) {
-            using field_type = decltype(field);
-            if constexpr (std::is_arithmetic_v<field_type>) {
+        boost::pfr::for_each_field(d, [&sum]<typename F>(F field) {
+            if constexpr (std::is_arithmetic_v<F>) {
                 sum += 1;
-            } else if constexpr (std::is_enum_v<field_type> && oneHotEnum) {
-                sum += numEnumValues<field_type>();
-            } else if constexpr (std::is_enum_v<field_type> && !oneHotEnum) {
+            } else if constexpr (std::is_enum_v<F> && oneHotEnum) {
+                sum += numEnumValues<F>();
+            } else if constexpr (std::is_enum_v<F>) {
                 sum += 1;
-            } else if constexpr (std::is_aggregate_v<field_type>) {
-                sum += vectorizedSizeHelper<field_type, oneHotEnum>();
+            } else if constexpr (std::is_aggregate_v<F>) {
+                sum += vectorizedSizeHelper<F, oneHotEnum>();
             } else {
-                // This compile time assertion is triggered in MSVC with Arg=cvt::Alliance with is clearly an enum.
-#ifndef _WIN32
-                static_assert(always_false_v<field_type>, "Failed to match type");
-#endif
+                static_assert(always_false_v<F> && "Failed to match type");
             }
         });
 
@@ -178,10 +175,10 @@ template<typename T, typename S>
 {
     std::vector<T> out(getVectorizedSize<S>(onehotEnum));
     const auto end = vectorize(s, out.begin(), onehotEnum);
-    const auto writtenSize = std::distance(out.begin(), end);
+    const auto writtenSize = static_cast<std::size_t>(std::distance(out.begin(), end));
     if (writtenSize != out.size()) {
-        throw std::out_of_range("Expected vectorization with size " + std::to_string(out.size()) + " but got "
-                                + std::to_string(writtenSize));
+        throw std::out_of_range(fmt::format(
+            "Expected vectorization for {} of to be size {} but got {}", typeid(S).name(), out.size(), writtenSize));
     }
     return out;
 }
