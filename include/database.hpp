@@ -224,7 +224,9 @@ template<HasDBInterface EntryType> class ReplayDatabase
     [[nodiscard]] auto getAllUIDs() const -> std::unordered_set<std::string>
     {
         std::unordered_set<std::string> replayHashes{};
-        for (auto &&idx : std::views::iota(0uz, this->size())) { replayHashes.insert(this->getEntryUID(idx)); }
+        for (auto &&idx : std::views::iota(std::size_t(0), this->size())) {
+            replayHashes.insert(this->getEntryUID(idx));
+        }
         return replayHashes;
     }
 

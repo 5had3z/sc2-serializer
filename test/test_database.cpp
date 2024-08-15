@@ -191,7 +191,7 @@ TEST_F(DatabaseTest, CreateDB)
 void testReplayEquality(const cvt::ReplayDataSoA &a, const cvt::ReplayDataSoA &b)
 {
     ASSERT_EQ(a.header, b.header);
-    for (auto idx = 0uz; idx < a.size(); ++idx) {
+    for (std::size_t idx = 0; idx < a.size(); ++idx) {
         auto a_ = a.data[idx];
         auto b_ = b.data[idx];
         if (a_ != b_) {

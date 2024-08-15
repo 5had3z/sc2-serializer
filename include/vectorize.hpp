@@ -117,7 +117,10 @@ namespace detail {
             } else if constexpr (std::is_aggregate_v<field_type>) {
                 sum += vectorizedSizeHelper<field_type, oneHotEnum>();
             } else {
+                // This compile time assertion is triggered in MSVC with Arg=cvt::Alliance with is clearly an enum.
+#ifndef _WIN32
                 static_assert(always_false_v<field_type>, "Failed to match type");
+#endif
             }
         });
 

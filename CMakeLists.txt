@@ -77,7 +77,7 @@ if(MSVC)
     NAME
     Boost
     URL
-    "https://github.com/boostorg/boost/releases/download/boost-1.85.0/boost-1.85.0.zip"
+    "https://github.com/boostorg/boost/releases/download/boost-1.86.0/boost-1.86.0-cmake.zip"
     OPTIONS
     "BOOST_INCLUDE_LIBRARIES iostreams\\\\;pfr"
     "BOOST_IOSTREAMS_ENABLE_ZLIB")

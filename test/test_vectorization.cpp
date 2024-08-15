@@ -5,7 +5,7 @@
 
 TEST(AutoVectorTest, OneHotEnum)
 {
-    ASSERT_EQ(cvt::numEnumValues<cvt::Alliance>(), 4uz);
+    ASSERT_EQ(cvt::numEnumValues<cvt::Alliance>(), std::size_t(4));
     auto e = cvt::Alliance::Ally;
     auto oneHot = cvt::enumToOneHot<float>(e);
     std::vector<float> expected = { 0.f, 1.f, 0.f, 0.f };
@@ -16,7 +16,7 @@ TEST(AutoVectorTest, NeutralUnit)
 {
     cvt::NeutralUnit unit;
     unit.id = 1;
-    unit.pos = { 1.1, 1.2, 1.3 };
+    unit.pos = { 1.1f, 1.2f, 1.3f };
     unit.observation = cvt::Visibility::Snapshot;
     unit.contents = 12098;
     unit.heading = 3.1f;
@@ -52,7 +52,7 @@ TEST(AutoVectorTest, Unit)
     unit.alliance = cvt::Alliance::Self;
     unit.cloak_state = cvt::CloakState::Detected;
     unit.energy = 100;
-    unit.pos = { 1.1, 1.2, 1.3 };
+    unit.pos = { 1.1f, 1.2f, 1.3f };
     unit.heading = 1.3f;
     unit.build_progress = 1.f;
     unit.is_flying = true;

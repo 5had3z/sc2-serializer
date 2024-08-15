@@ -180,11 +180,11 @@ void printStepMeta(const Observation &obs)
     std::uniform_int_distribution<> dist(5, 10);
     std::normal_distribution<float> norm(0, 1);
 
-    for (auto i : std::ranges::iota_view{ 0uz, static_cast<std::size_t>(dist(gen)) }) {
+    for (auto i : std::ranges::iota_view{ 0, dist(gen) }) {
         obs.peds.emplace_back(i, norm(gen), 1.f + static_cast<float>(i), 2.f, 3.f + norm(gen), i % 3 == 0, false);
     }
 
-    for (auto i : std::ranges::iota_view{ 0uz, static_cast<std::size_t>(dist(gen)) }) {
+    for (auto i : std::ranges::iota_view{ 0, dist(gen) }) {
         obs.robs.emplace_back(i, i % 4 + 6, i % 3 + 2, norm(gen) * 30, norm(gen) + i, i, 1.f, 1.f, !(i % 4), false);
     }
 
@@ -194,7 +194,7 @@ void printStepMeta(const Observation &obs)
 [[nodiscard]] auto generateRandomData(std::size_t duration) -> ObservationTimeseries
 {
     ObservationTimeseries data;
-    for (auto it : std::ranges::iota_view{ 0uz, duration }) {
+    for (auto it : std::ranges::iota_view{ 0, static_cast<int>(duration) }) {
         fmt::println("Generating Step {}", it);
         auto obs = makeRandomObservation();
         printStepMeta(obs);
@@ -236,7 +236,7 @@ int main(int argc, char *argv[])
     fmt::println("Database has {} entries", database.size());
     if (opts.count("index")) {
         auto read_data = database.getEntry(opts["index"].as<std::size_t>());
-        for (auto idx : std::ranges::iota_view{ 0uz, read_data.size() }) {
+        for (auto idx : std::ranges::iota_view{ std::size_t(0), read_data.size() }) {
             fmt::println("Reading Step {}", idx);
             printStepMeta(read_data[idx]);
         }
