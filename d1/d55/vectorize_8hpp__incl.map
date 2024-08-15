@@ -1,11 +1,13 @@
 <map id="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/vectorize.hpp" name="/home/runner/work/sc2&#45;serializer/sc2&#45;serializer/include/vectorize.hpp">
-<area shape="rect" id="Node000001" title="Automatically convert some struct S to a vector of homogeneous data type, optionally expanding enum v..." alt="" coords="355,5,534,60"/>
+<area shape="rect" id="Node000001" title="Automatically convert some struct S to a vector of homogeneous data type, optionally expanding enum v..." alt="" coords="426,5,605,60"/>
 <area shape="rect" id="Node000002" href="$dd/d93/enums_8hpp.html" title="Common enums in StarCraft II and accompanying tools such as enum&#45;&gt;string and enum&#45;&gt;one&#45;hot." alt="" coords="168,108,367,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="392,62,305,104,302,100,389,58"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="440,63,314,106,313,101,439,58"/>
 <area shape="rect" id="Node000007" title=" " alt="" coords="391,108,498,133"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="447,60,447,94,442,94,442,60"/>
-<area shape="rect" id="Node000008" title=" " alt="" coords="523,108,615,133"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="484,58,542,98,539,102,481,62"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="496,62,465,99,461,96,492,58"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="522,108,653,133"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="539,58,571,96,567,99,535,62"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="677,108,769,133"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="580,58,684,100,682,105,578,63"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="5,181,153,221"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="241,136,138,178,136,174,239,131"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="178,189,263,214"/>
