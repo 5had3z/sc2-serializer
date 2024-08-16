@@ -126,6 +126,8 @@ struct DataEntry
 
 template<> struct cvt::DatabaseInterface<DataEntry>
 {
+    using header_type = std::string;
+
     static auto getHeaderImpl(std::istream &dbStream) -> std::string
     {
         std::string hash;

@@ -14,7 +14,6 @@
 
 #include "../soa.hpp"
 #include "common.hpp"
-#include "enums.hpp"
 
 #include <ranges>
 

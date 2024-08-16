@@ -13,7 +13,6 @@
 
 #pragma once
 
-#include "data_structures/replay_interface.hpp"
 #include "serialize.hpp"
 
 #include <boost/iostreams/device/file.hpp>
@@ -202,7 +201,7 @@ template<HasDBInterface EntryType> class ReplayDatabase
      * @param index Index to read from database
      * @return ReplayInfo at index
      */
-    [[nodiscard]] auto getHeader(std::size_t index) const -> ReplayInfo
+    [[nodiscard]] auto getHeader(std::size_t index) const
     {
         return this->readFromDatabase(index, DatabaseInterface<EntryType>::getHeaderImpl);
     }

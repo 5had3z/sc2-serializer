@@ -11,7 +11,7 @@
 #pragma once
 
 #include "../database.hpp"
-#include "instance_transform.hpp"
+#include "../instance_transform.hpp"
 #include "replay_interface.hpp"
 #include "units.hpp"
 
