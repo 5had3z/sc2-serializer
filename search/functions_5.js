@@ -7,7 +7,7 @@ var searchData=
   ['getentryuid_4',['getEntryUID',['../d2/dad/classcvt_1_1ReplayDatabase.html#a49575508c6b3487d0d78e2cbbe4171f1',1,'cvt::ReplayDatabase']]],
   ['getentryuidimpl_5',['getEntryUIDImpl',['../d1/d1c/structcvt_1_1DatabaseInterface.html#a3a55d9b33f9ccc42ff5d1be02baf7a77',1,'cvt::DatabaseInterface']]],
   ['getenumvalues_6',['getEnumValues',['../dd/d93/enums_8hpp.html#abc1466cc9d34708fc0939b6d24b83b6f',1,'cvt']]],
-  ['getheader_7',['getHeader',['../d2/dad/classcvt_1_1ReplayDatabase.html#a3c0194920882cbc160245e5a80187259',1,'cvt::ReplayDatabase']]],
+  ['getheader_7',['getHeader',['../d2/dad/classcvt_1_1ReplayDatabase.html#a18eb447bcb5b2e4a8fd202ed21efb1aa',1,'cvt::ReplayDatabase']]],
   ['getheaderimpl_8',['getHeaderImpl',['../d1/d1c/structcvt_1_1DatabaseInterface.html#ad2b484838e508181992ecb7075ee3fa2',1,'cvt::DatabaseInterface']]],
   ['getminimapfeatures_9',['getMinimapFeatures',['../dc/d19/classcvt_1_1ReplayParser.html#a9f0ff2292ac76862bc4b09f7386a90e4',1,'cvt::ReplayParser']]],
   ['getoffset_10',['getOffset',['../db/deb/structcvt_1_1MinimapFeatureFlags.html#a1d75ee4bcb21b9bf6b988e11d2bc80d5',1,'cvt::MinimapFeatureFlags']]],
