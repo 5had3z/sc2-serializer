@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Convert folders of replays in parallel"""
 
 import concurrent.futures as fut

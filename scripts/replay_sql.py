@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""Utilities to create the metadata sqlite database
+commonly used for filtering poor quality replays"""
 
 import os
 import shutil

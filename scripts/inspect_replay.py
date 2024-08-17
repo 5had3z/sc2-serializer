@@ -148,10 +148,7 @@ def inspect(
     file: Annotated[Path, typer.Option(help="SC2Replays file")],
     command: Annotated[SubCommand, typer.Option(help="Thing to run on data")],
     idx: Annotated[int, typer.Option(help="Replay Index")] = 0,
-    outfolder: Annotated[
-        Path, typer.Option(help="Directory to write data")
-    ] = Path.cwd()
-    / "workspace",
+    outfolder: Annotated[Path, typer.Option(help="Results dir")] = Path("."),
 ):
     """Script to poke around and inspect the serialized replay data"""
     db, parser = get_database_and_parser(parse_units=True, parse_minimaps=True)

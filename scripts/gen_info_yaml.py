@@ -1,20 +1,23 @@
 #!/usr/bin/env python3
 """
 Use PySC2 and run over each game version in a folder and write out
-information about different upgrades.
+information about different upgrades. This is the ``game_info.yaml``.
 
 PySC2 doesn't recognise properly that a Version object is passed to it,
 and falsely rejects good version requests, hence a small change in
 pysc2.run_configs.lib.RunConfig where the init checks if version is an
 instance of Version as shown below.
 
-class RunConfig(object):
-  def __init__(self, ......)
-    ....
-    if not isinstance(version, Version):
-      self.version = self._get_version(version)
-    else:
-      self.version = version
+.. code-block:: python
+
+    class RunConfig(object):
+        def __init__(self, ...)
+            ...
+            if not isinstance(version, Version):
+                self.version = self._get_version(version)
+            else:
+                self.version = version
+
 """
 import os
 import platform

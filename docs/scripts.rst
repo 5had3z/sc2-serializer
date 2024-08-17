@@ -3,65 +3,65 @@
 Scripts
 =======
 
-Various helper scripts are included in the complete source code but not included in the python library, since they mostly deal with the dataset generation, rather than dataloading.
+Various helper scripts are included in the source code but not included in the ``sc2-serializer`` library, as they mostly deal with the dataset generation, rather than dataloading.
 
 find_all_versions
 -----------------
 
-.. autofunction:: find_all_versions.compare_replays_and_game
-
-.. autofunction:: find_all_versions.write_replay_versions
+.. automodule:: find_all_versions
+    :members:
 
 
 gen_info_header
 ---------------
 
-Generates generated_info.hpp
+.. automodule:: gen_info_header
+    :members: main
 
 
 gen_info_yaml
 -------------
 
-Generates game_info.yaml
+.. automodule:: gen_info_yaml
 
 
 inspect_replay
 --------------
 
-.. autofunction:: inspect_replay.inspect
-
-.. autofunction:: inspect_replay.count
+.. automodule:: inspect_replay
+    :members: inspect, count
 
 
 make_partitions
 ---------------
 
-.. autofunction:: make_partitions.main
+.. automodule:: make_partitions
+    :members: main
 
 
 merge_info_yaml
 ---------------
 
-.. autofunction:: merge_info_yaml.main
+.. automodule:: merge_info_yaml
+    :members: main
 
 
 replay_parallel
 ---------------
 
-.. autofunction:: replay_parallel.main
+.. automodule:: replay_parallel
+    :members: main
 
 
 replay_sql
 ----------
 
-.. autofunction:: replay_sql.create
-
-.. autofunction:: replay_sql.create_individual
-
-.. autofunction:: replay_sql.merge
+.. automodule:: replay_sql
+    :members: create, create_individual, merge
 
 
 review_resources
 ----------------
 
-.. autofunction:: review_resources.main
+.. automodule:: review_resources
+    :members: main

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-Script that creates the partition files
-for running conversions in parallel.
+Script that creates the partition files for running conversions in parallel.
 """
 from dataclasses import dataclass, field
 from pathlib import Path

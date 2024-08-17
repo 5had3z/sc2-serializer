@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+"""Utilities to gather information about SC2
+versions in replays and installed game."""
+
 from pathlib import Path
 from typing import Annotated
 
@@ -8,7 +12,7 @@ from utils.replay_version import get_replay_file_version_info
 app = typer.Typer()
 
 
-def get_versions_in_tree(root: Path):
+def _get_versions_in_tree(root: Path):
     """
     Recursively query all the sc2 replays in a directory and return a set of all versions present
     Also returns a mapping from unique versions to a replay with that version.
@@ -34,13 +38,14 @@ def get_versions_in_tree(root: Path):
 
 @app.command()
 def compare_replays_and_game(
-    replays: Annotated[Path, typer.Option()], game: Annotated[Path, typer.Option()]
+    replays: Annotated[Path, typer.Option(help="Path to SC2 Replays")],
+    game: Annotated[Path, typer.Option(help="Path to 'Versions' folder of SC2")],
 ):
     """Compare versions of replays with versions of the game verision currently present"""
     assert game.name == "Versions", f"Should point to the Versions folder, got {game}"
     current_bases = {folder.name[len("base") :] for folder in game.glob("Base*")}
     print("Game Build Versions: \n", current_bases)
-    version_file_map = get_versions_in_tree(replays)
+    version_file_map = _get_versions_in_tree(replays)
 
     missing_versions = {
         k: v for k, v in version_file_map.items() if k[2] not in current_bases
@@ -63,12 +68,12 @@ def compare_replays_and_game(
 
 @app.command()
 def write_replay_versions(
-    replays: Annotated[Path, typer.Option()],
-    output: Annotated[Path, typer.Option()],
+    replays: Annotated[Path, typer.Option(help="Path to SC2 Replays")],
+    output: Annotated[Path, typer.Option(help="Output .csv to write results")],
 ):
     """Write all the game,data,build versions found in folder of replays to a csv"""
     assert output.suffix == ".csv", f"Output should be a .csv file, got {output.suffix}"
-    version_file_map = get_versions_in_tree(replays)
+    version_file_map = _get_versions_in_tree(replays)
 
     with open(output, "w", encoding="utf-8") as out:
         out.write("game,data,build\n")
