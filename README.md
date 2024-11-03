@@ -23,18 +23,6 @@ To use the StarCraftII replay observer for converting replays, you will need to 
 git submodule update --init --recursive
 ```
 
-This the observer also relies on a python script to query game version information when launching replays. This python script uses [mpyq](https://github.com/eagleflo/mpyq), which can be installed with
-```bash
-pip3 install mpyq
-```
-
-If you need to manually select a target python instance when compiling for linux during cmake configure step, you can set `-DPython3_EXECUTABLE=/usr/bin/python3.10`. If using vscode this can also be achieved by adding the below in `.vscode/settings.json`:
-```json
-"cmake.configureSettings": {
-    "Python3_EXECUTABLE": "/usr/bin/python3.10"
-}
-```
-
 
 ### Linux
 

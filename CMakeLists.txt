@@ -96,21 +96,6 @@ endif()
 
 # ---- Main Library Components ----
 if(SC2_CONVERTER)
-
-  find_package(Python3 COMPONENTS Interpreter Development)
-  message(STATUS "Python: version=${Python3_VERSION} interpreter=${Python3_EXECUTABLE}")
-
-  if(NOT (Python3_FOUND AND Python3_Development_FOUND))
-    string(
-      JOIN
-      "\n"
-      errmsg
-      "  Python3 and/or development libs not found."
-      "  - Python3_FOUND=${Python3_FOUND}"
-      "  - Python3_Development_FOUND=${Python3_Development_FOUND}")
-    message(FATAL_ERROR ${errmsg})
-  endif()
-
   find_package(TBB REQUIRED)
 
   # Add submodule path
@@ -145,19 +130,25 @@ if(SC2_CONVERTER)
     target_link_options(replay_converter PUBLIC -fsanitize=address,leak,undefined)
   endif()
 
+  cpmaddpackage(
+    GITHUB_REPOSITORY
+    ladislav-zezula/StormLib
+    VERSION
+    9.30)
+  cpmaddpackage(
+    GITHUB_REPOSITORY
+    nlohmann/json
+    VERSION
+    3.11.3)
+
   add_executable(sc2_converter bin/sc2_converter.cpp)
   target_link_libraries(
     sc2_converter
     PUBLIC replay_converter
            cxxopts
            spdlog::spdlog
-           ${Python_LIBRARIES}
-           Python3::Python)
-  target_include_directories(sc2_converter PUBLIC ${Python3_INCLUDE_DIRS})
-
-  if(MSVC)
-    target_link_directories(sc2_converter PUBLIC ${Python3_INCLUDE_DIRS}\\..\\libs)
-  endif()
+           StormLib::storm
+           nlohmann_json::nlohmann_json)
 
   add_executable(sc2_merger bin/sc2_merger.cpp src/database.cpp)
   target_compile_features(sc2_merger PUBLIC cxx_std_23)
@@ -169,24 +160,12 @@ if(SC2_CONVERTER)
            Boost::pfr
            Boost::iostreams)
 
-  # Copy version getter to build folder
-  add_custom_command(
-    TARGET replay_converter
-    POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/scripts/utils/replay_version.py
-            $<TARGET_FILE_DIR:replay_converter>)
-
   if(MSVC)
     # Copy zlibd.dll to the build directory
     add_custom_command(
       TARGET replay_converter
       POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:ZLIB::ZLIB> $<TARGET_FILE_DIR:replay_converter>)
-
-    add_custom_command(
-      TARGET replay_converter
-      POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:Python3::Python> $<TARGET_FILE_DIR:replay_converter>)
   endif()
 endif()
 
