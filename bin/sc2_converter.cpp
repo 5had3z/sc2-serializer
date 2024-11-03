@@ -1,18 +1,7 @@
 #include <cxxopts.hpp>
+#include <nlohmann/json.hpp>
 #include <spdlog/fmt/fmt.h>
 #include <spdlog/spdlog.h>
-
-#if defined(_WIN32)
-#ifdef _DEBUG
-#undef _DEBUG
-#include <python.h>
-#define _DEBUG
-#else
-#include <python.h>
-#endif
-#elif defined(__linux__)
-#include <Python.h>
-#endif
 
 #include <chrono>
 #include <filesystem>
@@ -32,9 +21,12 @@
 #include <unistd.h>
 #endif
 
+#include <StormLib.h>
+
 namespace fs = std::filesystem;
 using namespace std::string_literals;
 using clk = std::chrono::high_resolution_clock;
+using json = nlohmann::json;
 
 /**
  * @brief Add known bad replays from file to converter's knownHashes
@@ -113,79 +105,55 @@ std::string getExecutablePath()
     return executablePath;
 }
 
-
-auto getDataVersion(const fs::path &replayPath) -> std::optional<std::tuple<std::string, std::string, std::string>>
+auto extractLocaleFromMPQ(HANDLE mpqArchive, const SFILE_FIND_DATA &fileData) -> std::optional<std::string>
 {
-    PyObject *pName, *pModule, *pFunction, *pArgs, *pResult;
-
-    Py_Initialize();
-
-    if (!Py_IsInitialized()) {
-        SPDLOG_WARN("Failed to initialize Python.");
+    HANDLE openedLocaleFile;
+    if (!SFileOpenFileEx(mpqArchive, fileData.cFileName, SFILE_OPEN_FROM_MPQ, &openedLocaleFile)) {
+        SPDLOG_ERROR("Couldn't open file within MPQ Archive");
         return std::nullopt;
     }
 
-    auto result = [&]() -> std::optional<std::tuple<std::string, std::string, std::string>> {
-        // Load the Python module
-        PyObject *sysPath = PySys_GetObject("path");
-        PyList_Append(sysPath, (PyUnicode_FromString(getExecutablePath().c_str())));
+    std::string localeFileBuffer(fileData.dwFileSize, '\0');
+    DWORD bytesRead;
+    if (!SFileReadFile(openedLocaleFile, localeFileBuffer.data(), localeFileBuffer.size(), &bytesRead, nullptr)) {
+        SPDLOG_ERROR("Failed to read file inside MPQ Archive");
+        return std::nullopt;
+    }
 
-        pName = PyUnicode_DecodeFSDefault("replay_version");
-        pModule = PyImport_Import(pName);
-        Py_XDECREF(pName);
-        if (PyErr_Occurred()) {
-            PyErr_Print();
-            return std::nullopt;
-        }
+    SFileCloseFile(openedLocaleFile);
+    return localeFileBuffer;
+}
 
-        if (pModule) {
-            pFunction = PyObject_GetAttrString(pModule, "get_replay_file_version_info");
 
-            if (PyCallable_Check(pFunction)) {
-                pArgs = PyTuple_Pack(1, PyUnicode_DecodeFSDefault(replayPath.string().c_str()));
-                pResult = PyObject_CallObject(pFunction, pArgs);
-                if (PyErr_Occurred()) {
-                    PyErr_Print();
-                    return std::nullopt;
-                }
+auto getDataVersion(const fs::path &replayPath) -> std::optional<std::tuple<std::string, std::string, std::string>>
+{
+    std::string replayPathStr = replayPath.string();// Need to make copy that is char as windows is wchar_t
 
-                if (pResult) {
+    HANDLE MPQArchive;
+    if (!SFileOpenArchive(replayPathStr.c_str(), 0, 0, &MPQArchive)) {
+        SPDLOG_WARN("Failed to open file");
+        return std::nullopt;
+    }
 
-                    PyObject *pItem1 = PyTuple_GetItem(pResult, 0);
-                    const char *resultStr1 = PyUnicode_AsUTF8(pItem1);
-                    std::string gameVersion(resultStr1);
+    SFILE_FIND_DATA foundLocaleFileData;
+    HANDLE searchHandle = SFileFindFirstFile(MPQArchive, "replay.gamemetadata.json", &foundLocaleFileData, nullptr);
+    if (searchHandle == nullptr) {
+        SPDLOG_WARN("Failed to find replay.gamemetadata.json in MPQ archive");
+        return std::nullopt;
+    }
 
-                    PyObject *pItem2 = PyTuple_GetItem(pResult, 1);
-                    const char *resultStr2 = PyUnicode_AsUTF8(pItem2);
-                    std::string dataVersion(resultStr2);
+    auto serialData = extractLocaleFromMPQ(MPQArchive, foundLocaleFileData);
+    if (!serialData.has_value()) { return std::nullopt; }
+    json data = json::parse(serialData.value());
 
-                    PyObject *pItem3 = PyTuple_GetItem(pResult, 2);
-                    const char *resultStr3 = PyUnicode_AsUTF8(pItem3);
-                    std::string build_version(resultStr3);
+    auto gameVersion = data["GameVersion"].template get<std::string>();
+    auto lastSection = std::ranges::find_last(gameVersion, '.');
+    gameVersion.resize(
+        gameVersion.size() - std::distance(lastSection.begin(), lastSection.end()));// Truncate last section from string
+    auto dataVersion = data["DataVersion"].template get<std::string>();
+    auto buildVersion = data["BaseBuild"].template get<std::string>().substr(4);
 
-                    return std::make_tuple(gameVersion, dataVersion, build_version);
-                } else {
-                    PyErr_Print();
-                    return std::nullopt;
-                }
-
-                Py_XDECREF(pArgs);
-            } else {
-                SPDLOG_WARN("Function not callable");
-                return std::nullopt;
-            }
-
-            Py_XDECREF(pFunction);
-            Py_XDECREF(pModule);
-        } else {
-            SPDLOG_WARN("Module not loaded");
-            return std::nullopt;
-        }
-    }();
-
-    // Finalize the Python interpreter
-    Py_Finalize();
-    return result;
+    return std::make_tuple(gameVersion, dataVersion, buildVersion);
 }
 
 #ifdef _WIN32
