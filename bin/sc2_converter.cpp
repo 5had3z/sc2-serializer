@@ -125,7 +125,8 @@ auto extractLocaleFromMPQ(HANDLE mpqArchive, const SFILE_FIND_DATA &fileData) ->
 }
 
 
-auto getDataVersion(const fs::path &replayPath) -> std::optional<std::tuple<std::string, std::string, std::string>>
+auto getDataVersion(
+    const fs::path &replayPath) noexcept -> std::optional<std::tuple<std::string, std::string, std::string>>
 {
     std::string replayPathStr = replayPath.string();// Need to make copy that is char as windows is wchar_t
 
@@ -139,11 +140,17 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::tuple<std:
     HANDLE searchHandle = SFileFindFirstFile(MPQArchive, "replay.gamemetadata.json", &foundLocaleFileData, nullptr);
     if (searchHandle == nullptr) {
         SPDLOG_WARN("Failed to find replay.gamemetadata.json in MPQ archive");
+        SFileCloseArchive(MPQArchive);
         return std::nullopt;
     }
 
     auto serialData = extractLocaleFromMPQ(MPQArchive, foundLocaleFileData);
-    if (!serialData.has_value()) { return std::nullopt; }
+    if (!serialData.has_value()) {
+        SPDLOG_WARN("Unable to extract from MPQ");
+        SFileCloseFile(searchHandle);
+        SFileCloseArchive(MPQArchive);
+        return std::nullopt;
+    }
     json data = json::parse(serialData.value());
 
     auto gameVersion = data["GameVersion"].template get<std::string>();
@@ -152,6 +159,9 @@ auto getDataVersion(const fs::path &replayPath) -> std::optional<std::tuple<std:
         gameVersion.size() - std::distance(lastSection.begin(), lastSection.end()));// Truncate last section from string
     auto dataVersion = data["DataVersion"].template get<std::string>();
     auto buildVersion = data["BaseBuild"].template get<std::string>().substr(4);
+
+    SFileCloseFile(searchHandle);
+    SFileCloseArchive(MPQArchive);
 
     return std::make_tuple(gameVersion, dataVersion, buildVersion);
 }
