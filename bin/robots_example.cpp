@@ -12,8 +12,8 @@
 #include <cxxopts.hpp>
 #include <spdlog/fmt/fmt.h>
 
-#include "database.hpp"
-#include "instance_transform.hpp"
+#include <database.hpp>
+#include <instance_transform.hpp>
 
 #include <algorithm>
 #include <random>

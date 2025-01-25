@@ -32,7 +32,7 @@ namespace detail {
      */
     template<typename T, typename It>
         requires std::is_arithmetic_v<T>
-    auto vectorize_helper(T d, It it, bool onehotEnum) -> It
+    auto vectorize_helper(T d, It it, bool) -> It
     {
         *it++ = static_cast<std::iter_value_t<It>>(d);
         return it;
@@ -49,7 +49,7 @@ namespace detail {
      */
     template<std::ranges::range T, typename It>
         requires std::is_arithmetic_v<std::ranges::range_value_t<T>>
-    auto vectorize_helper(const T &d, It it, bool onehotEnum) -> It
+    auto vectorize_helper(const T &d, It it, bool) -> It
     {
         return std::ranges::transform(d, it, [](auto e) { return static_cast<std::iter_value_t<It>>(e); }).out;
     }
@@ -107,7 +107,7 @@ namespace detail {
     {
         T d{};// Make plane prototype for pfr::for_each_field
         std::size_t sum{ 0 };
-        boost::pfr::for_each_field(d, [&sum]<typename F>(F field) {
+        boost::pfr::for_each_field(d, [&sum]<typename F>(F) {
             if constexpr (std::is_arithmetic_v<F>) {
                 sum += 1;
             } else if constexpr (std::is_enum_v<F> && oneHotEnum) {
