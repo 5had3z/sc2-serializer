@@ -278,8 +278,14 @@ if(SC2_CONVERTER)
 endif()
 
 if(SC2_WOMD_EXAMPLE)
-  pybind11_add_module(_womd_binding womd/womd_binding.cpp)
+  pybind11_add_module(_womd_binding womd/womd_binding.cpp src/database.cpp)
   target_compile_features(_womd_binding PUBLIC cxx_std_23)
-  target_link_libraries(_womd_binding PUBLIC replay_converter)
+  target_link_libraries(
+    _womd_binding
+    PUBLIC spdlog::spdlog
+           Boost::pfr
+           Boost::iostreams
+           yaml-cpp)
   target_compile_options(_womd_binding PUBLIC ${COMPILE_OPTIONS})
+  target_include_directories(_womd_binding PUBLIC include)
 endif()
