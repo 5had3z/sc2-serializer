@@ -123,16 +123,16 @@ This graph shows which files directly or indirectly include this file:</div>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:abdc517e7119b71637b07bb6fc50baa6e" id="r_abdc517e7119b71637b07bb6fc50baa6e"><td class="memTemplParams" colspan="2">template&lt;typename T , typename It &gt; <br />
+<tr class="memitem:a0eb517846129e071409eee2989ce000f" id="r_a0eb517846129e071409eee2989ce000f"><td class="memTemplParams" colspan="2">template&lt;typename T , typename It &gt; <br />
 requires std::is_arithmetic_v&lt;T&gt;</td></tr>
-<tr class="memitem:abdc517e7119b71637b07bb6fc50baa6e"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d4/d74/vectorize_8hpp.html#abdc517e7119b71637b07bb6fc50baa6e">cvt::detail::vectorize_helper</a> (T d, It it, bool onehotEnum) -&gt; It</td></tr>
-<tr class="memdesc:abdc517e7119b71637b07bb6fc50baa6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vectorize single arithmetic element by writing to output iterator It and incrementing.  <br /></td></tr>
-<tr class="separator:abdc517e7119b71637b07bb6fc50baa6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71b5c0b0fd969c5702160baef6348957" id="r_a71b5c0b0fd969c5702160baef6348957"><td class="memTemplParams" colspan="2">template&lt;std::ranges::range T, typename It &gt; <br />
+<tr class="memitem:a0eb517846129e071409eee2989ce000f"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d4/d74/vectorize_8hpp.html#a0eb517846129e071409eee2989ce000f">cvt::detail::vectorize_helper</a> (T d, It it, bool) -&gt; It</td></tr>
+<tr class="memdesc:a0eb517846129e071409eee2989ce000f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vectorize single arithmetic element by writing to output iterator It and incrementing.  <br /></td></tr>
+<tr class="separator:a0eb517846129e071409eee2989ce000f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85753ccb9725d0c37ecea19f4290a5e1" id="r_a85753ccb9725d0c37ecea19f4290a5e1"><td class="memTemplParams" colspan="2">template&lt;std::ranges::range T, typename It &gt; <br />
 requires std::is_arithmetic_v&lt;std::ranges::range_value_t&lt;T&gt;&gt;</td></tr>
-<tr class="memitem:a71b5c0b0fd969c5702160baef6348957"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d4/d74/vectorize_8hpp.html#a71b5c0b0fd969c5702160baef6348957">cvt::detail::vectorize_helper</a> (const T &amp;d, It it, bool onehotEnum) -&gt; It</td></tr>
-<tr class="memdesc:a71b5c0b0fd969c5702160baef6348957"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vectorize range of arithmetic elements by writing to and incrementing output iterator.  <br /></td></tr>
-<tr class="separator:a71b5c0b0fd969c5702160baef6348957"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a85753ccb9725d0c37ecea19f4290a5e1"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d4/d74/vectorize_8hpp.html#a85753ccb9725d0c37ecea19f4290a5e1">cvt::detail::vectorize_helper</a> (const T &amp;d, It it, bool) -&gt; It</td></tr>
+<tr class="memdesc:a85753ccb9725d0c37ecea19f4290a5e1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Vectorize range of arithmetic elements by writing to and incrementing output iterator.  <br /></td></tr>
+<tr class="separator:a85753ccb9725d0c37ecea19f4290a5e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af6a3165ada69cfc71cffda640524d5b7" id="r_af6a3165ada69cfc71cffda640524d5b7"><td class="memTemplParams" colspan="2">template&lt;typename T , typename It &gt; <br />
 requires std::is_enum_v&lt;T&gt;</td></tr>
 <tr class="memitem:af6a3165ada69cfc71cffda640524d5b7"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d4/d74/vectorize_8hpp.html#af6a3165ada69cfc71cffda640524d5b7">cvt::detail::vectorize_helper</a> (T d, It it, bool onehotEnum) -&gt; It</td></tr>
@@ -321,8 +321,8 @@ requires std::is_aggregate_v&lt;S&gt; &amp;&amp; std::is_arithmetic_v&lt;std::it
 
 </div>
 </div>
-<a id="a71b5c0b0fd969c5702160baef6348957" name="a71b5c0b0fd969c5702160baef6348957"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a71b5c0b0fd969c5702160baef6348957">&#9670;&#160;</a></span>vectorize_helper() <span class="overload">[1/4]</span></h2>
+<a id="a85753ccb9725d0c37ecea19f4290a5e1" name="a85753ccb9725d0c37ecea19f4290a5e1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85753ccb9725d0c37ecea19f4290a5e1">&#9670;&#160;</a></span>vectorize_helper() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -346,7 +346,7 @@ requires std::is_arithmetic_v&lt;std::ranges::range_value_t&lt;T&gt;&gt;</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>onehotEnum</em>&#160;</td>
+          <td class="paramname">&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -377,64 +377,8 @@ requires std::is_arithmetic_v&lt;std::ranges::range_value_t&lt;T&gt;&gt;</div>
 
 </div>
 </div>
-<a id="abdc517e7119b71637b07bb6fc50baa6e" name="abdc517e7119b71637b07bb6fc50baa6e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abdc517e7119b71637b07bb6fc50baa6e">&#9670;&#160;</a></span>vectorize_helper() <span class="overload">[2/4]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T , typename It &gt; <br />
-requires std::is_arithmetic_v&lt;T&gt;</div>
-      <table class="memname">
-        <tr>
-          <td class="memname">auto cvt::detail::vectorize_helper </td>
-          <td>(</td>
-          <td class="paramtype">T&#160;</td>
-          <td class="paramname"><em>d</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">It&#160;</td>
-          <td class="paramname"><em>it</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>onehotEnum</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> -&gt; It
-    </td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Vectorize single arithmetic element by writing to output iterator It and incrementing. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>Arithmetic type </td></tr>
-    <tr><td class="paramname">It</td><td>Output iterator type </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">d</td><td>Data to vectorize </td></tr>
-    <tr><td class="paramname">it</td><td>Output iterator </td></tr>
-    <tr><td class="paramname">onehotEnum</td><td>flag to expand enum types to onehot </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>Incremented output iterator </dd></dl>
-
-</div>
-</div>
 <a id="af6a3165ada69cfc71cffda640524d5b7" name="af6a3165ada69cfc71cffda640524d5b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6a3165ada69cfc71cffda640524d5b7">&#9670;&#160;</a></span>vectorize_helper() <span class="overload">[3/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af6a3165ada69cfc71cffda640524d5b7">&#9670;&#160;</a></span>vectorize_helper() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -490,7 +434,7 @@ requires std::is_enum_v&lt;T&gt;</div>
 </div>
 </div>
 <a id="ab845cb421f2d5fb4676f87176f5e5a29" name="ab845cb421f2d5fb4676f87176f5e5a29"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab845cb421f2d5fb4676f87176f5e5a29">&#9670;&#160;</a></span>vectorize_helper() <span class="overload">[4/4]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#ab845cb421f2d5fb4676f87176f5e5a29">&#9670;&#160;</a></span>vectorize_helper() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -536,6 +480,62 @@ requires std::is_aggregate_v&lt;T&gt; &amp;&amp; (!std::ranges::range&lt;T&gt;)<
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">d</td><td>Struct to vectorize </td></tr>
+    <tr><td class="paramname">it</td><td>Output iterator </td></tr>
+    <tr><td class="paramname">onehotEnum</td><td>flag to expand enum types to onehot </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Incremented output iterator </dd></dl>
+
+</div>
+</div>
+<a id="a0eb517846129e071409eee2989ce000f" name="a0eb517846129e071409eee2989ce000f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0eb517846129e071409eee2989ce000f">&#9670;&#160;</a></span>vectorize_helper() <span class="overload">[4/4]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T , typename It &gt; <br />
+requires std::is_arithmetic_v&lt;T&gt;</div>
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cvt::detail::vectorize_helper </td>
+          <td>(</td>
+          <td class="paramtype">T&#160;</td>
+          <td class="paramname"><em>d</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">It&#160;</td>
+          <td class="paramname"><em>it</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> -&gt; It
+    </td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Vectorize single arithmetic element by writing to output iterator It and incrementing. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Arithmetic type </td></tr>
+    <tr><td class="paramname">It</td><td>Output iterator type </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">d</td><td>Data to vectorize </td></tr>
     <tr><td class="paramname">it</td><td>Output iterator </td></tr>
     <tr><td class="paramname">onehotEnum</td><td>flag to expand enum types to onehot </td></tr>
   </table>
