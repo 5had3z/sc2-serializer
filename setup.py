@@ -6,8 +6,8 @@ Based on https://github.com/pybind/cmake_example/blob/master/setup.py
 import os
 import subprocess
 import sys
-from shutil import copytree
 from pathlib import Path
+from shutil import copytree, move
 
 import ninja
 from setuptools import Extension, setup
@@ -33,16 +33,34 @@ class CMakeBuild(build_ext):
         extdir = ext_fullpath.parent.resolve()
 
         cmake_args = [
-            f"-DCMAKE_BUILD_TYPE={'Debug' if self.debug else 'Release'}",
             f"-DPYTHON_EXECUTABLE={sys.executable}",
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}{os.sep}",
-            f"-DCMAKE_MAKE_PROGRAM:FILEPATH={Path(ninja.BIN_DIR)/'ninja'}",
-            "-GNinja",
             "-DSC2_TESTS=OFF",
             "-DSC2_CONVERTER=OFF",
         ]
 
+        if os.name == "nt":
+            cmake_args.extend(
+                [
+                    "-GVisual Studio 17 2022",
+                    "-A",
+                    "x64",
+                    f"-DCMAKE_RUNTIME_OUTPUT_DIRECTORY={extdir}{os.sep}",
+                ]
+            )
+        else:
+            cmake_args.extend(
+                [
+                    f"-DCMAKE_BUILD_TYPE={'Debug' if self.debug else 'Release'}",
+                    f"-DCMAKE_MAKE_PROGRAM:FILEPATH={Path(ninja.BIN_DIR)/'ninja'}",
+                    "-GNinja",
+                ]
+            )
+
         build_args = ["--parallel"]
+
+        if os.name == "nt":
+            build_args.extend(["--config", "Release"])
 
         build_temp = Path(self.build_temp) / ext.name
         if not build_temp.exists():
@@ -61,6 +79,15 @@ class CMakeBuild(build_ext):
         subprocess.run(
             ["cmake", "--build", ".", *build_args], cwd=build_temp, check=True
         )
+
+        if os.name == "nt":  # Clean up silly MSVC directory structure
+            for lib in (extdir / "Release").iterdir():
+                if lib.name in {"zlib.dll", ext_fullpath.name}:
+                    move(lib, extdir / lib.name)
+                else:
+                    lib.unlink()
+            (extdir / "Release").rmdir()
+
         subprocess.run(
             [
                 "pybind11-stubgen",
