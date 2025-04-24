@@ -73,14 +73,6 @@ if(MSVC)
 
   add_library(ZLIB::ZLIB ALIAS zlib)
   include_directories(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR})
-  function(add_zlib_copy_command target_name)
-    if(MSVC) # Copy zlibd.dll to the build directory
-      add_custom_command(
-        TARGET ${target_name}
-        POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:ZLIB::ZLIB> $<TARGET_FILE_DIR:${target_name}>)
-    endif()
-  endfunction()
 
   cpmaddpackage(
     NAME
@@ -102,6 +94,15 @@ else()
 
   find_package(Boost REQUIRED COMPONENTS iostreams)
 endif()
+
+function(add_zlib_copy_command target_name)
+  if(MSVC) # Copy zlibd.dll to the build directory
+    add_custom_command(
+      TARGET ${target_name}
+      POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:ZLIB::ZLIB> $<TARGET_FILE_DIR:${target_name}>)
+  endif()
+endfunction()
 
 # ---- Main Library Components ----
 if(SC2_CONVERTER)
