@@ -73,6 +73,14 @@ if(MSVC)
 
   add_library(ZLIB::ZLIB ALIAS zlib)
   include_directories(${zlib_SOURCE_DIR} ${zlib_BINARY_DIR})
+  function(add_zlib_copy_command target_name)
+    if(MSVC) # Copy zlibd.dll to the build directory
+      add_custom_command(
+        TARGET ${target_name}
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:ZLIB::ZLIB> $<TARGET_FILE_DIR:${target_name}>)
+    endif()
+  endfunction()
 
   cpmaddpackage(
     NAME
@@ -125,6 +133,7 @@ if(SC2_CONVERTER)
            3rdparty/s2client-api/include
            ${PROJECT_BINARY_DIR}/3rdparty/s2client-api/generated
            ${Python_INCLUDE_DIRS})
+  add_zlib_copy_command(replay_converter)
 
   if(SC2_SANITIZERS AND NOT MSVC)
     target_compile_options(replay_converter PUBLIC -fsanitize=address,leak,undefined)
@@ -160,14 +169,6 @@ if(SC2_CONVERTER)
            cxxopts
            Boost::pfr
            Boost::iostreams)
-
-  if(MSVC)
-    # Copy zlibd.dll to the build directory
-    add_custom_command(
-      TARGET replay_converter
-      POST_BUILD
-      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:ZLIB::ZLIB> $<TARGET_FILE_DIR:replay_converter>)
-  endif()
 endif()
 
 if(SC2_PY_READER)
@@ -198,6 +199,7 @@ if(SC2_PY_READER)
            Boost::pfr
            Boost::iostreams
            yaml-cpp)
+  add_zlib_copy_command(_sc2_serializer)
   target_compile_options(_sc2_serializer PUBLIC ${COMPILE_OPTIONS})
   target_include_directories(_sc2_serializer PUBLIC include)
 endif()

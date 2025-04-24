@@ -40,14 +40,7 @@ class CMakeBuild(build_ext):
         ]
 
         if os.name == "nt":
-            cmake_args.extend(
-                [
-                    "-GVisual Studio 17 2022",
-                    "-A",
-                    "x64",
-                    f"-DCMAKE_RUNTIME_OUTPUT_DIRECTORY={extdir}{os.sep}",
-                ]
-            )
+            cmake_args.extend(["-GVisual Studio 17 2022", "-A", "x64"])
         else:
             cmake_args.extend(
                 [
