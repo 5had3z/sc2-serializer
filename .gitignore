@@ -159,6 +159,7 @@ dmypy.json
 .pyre/
 
 build
+build-cpp
 write_data
 workspace
 src/sc2_serializer/_sc2_serializer.pyi

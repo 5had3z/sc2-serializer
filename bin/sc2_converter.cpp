@@ -125,8 +125,8 @@ auto extractLocaleFromMPQ(HANDLE mpqArchive, const SFILE_FIND_DATA &fileData) ->
 }
 
 
-auto getDataVersion(
-    const fs::path &replayPath) noexcept -> std::optional<std::tuple<std::string, std::string, std::string>>
+auto getDataVersion(const fs::path &replayPath) noexcept
+    -> std::optional<std::tuple<std::string, std::string, std::string>>
 {
     std::string replayPathStr = replayPath.string();// Need to make copy that is char as windows is wchar_t
 
@@ -361,13 +361,28 @@ auto main(int argc, char *argv[]) -> int
       ("perflog", "Path to log time taken for replay observation.", cxxopts::value<std::string>())
       ("h,help", "Show this help.");
     // clang-format on
-    const auto cliOpts = cliParser.parse(argc, argv);
+
+    const cxxopts::ParseResult cliOpts = [&]() {
+        try {
+            return cliParser.parse(argc, argv);
+        } catch (const cxxopts::exceptions::parsing &e) {
+            SPDLOG_ERROR("Error parsing options: {}", e.what());
+            return cxxopts::ParseResult{};
+        }
+    }();
+
+    // Returning from failure to parse
+    if (cliOpts.begin() == cliOpts.end()) { return -1; }
 
     if (cliOpts.count("help")) {
         fmt::print("{}", cliParser.help());
         return 0;
     }
 
+    if (cliOpts["replays"].count() == 0) {
+        SPDLOG_ERROR("Replay(s) path not specified, use --replays=[path] which can be a file or folder");
+        return -1;
+    }
     const auto replayPath = cliOpts["replays"].as<std::string>();
     if (!std::filesystem::exists(replayPath)) {
         SPDLOG_ERROR("Replay path doesn't exist: {}", replayPath);
@@ -375,6 +390,10 @@ auto main(int argc, char *argv[]) -> int
     }
     SPDLOG_INFO("Found replay path: {}", replayPath);
 
+    if (cliOpts["game"].count() == 0) {
+        SPDLOG_ERROR("Game path not specified, use --game=[path] which should be the 'Versions' folder");
+        return -1;
+    }
     const auto gamePath = cliOpts["game"].as<std::string>();
     if (!std::filesystem::exists(gamePath)) {
         SPDLOG_ERROR("Game path doesn't exist: {}", gamePath);
@@ -387,7 +406,7 @@ auto main(int argc, char *argv[]) -> int
     if (tmp == nullptr) {
         SPDLOG_INFO("POD_NAME not in ENV, not appending index suffix");
     } else {
-        std::string_view s(tmp);
+        const std::string_view s(tmp);
         // Extract the substring from the last delimiter to the end
         podIndex = s.substr(s.find_last_of('-') + 1);
         if (cliOpts["offset"].count()) {// Add offset to pod index if specified
@@ -396,6 +415,10 @@ auto main(int argc, char *argv[]) -> int
         SPDLOG_INFO("POD_NAME found, using index suffix: {}", podIndex.value());
     }
 
+    if (cliOpts["output"].count() == 0) {
+        SPDLOG_ERROR("Output path not specified, use --output=[path]");
+        return -1;
+    }
     const auto dbPath = [&]() {
         auto ret = fs::path(cliOpts["output"].as<std::string>());
         if (podIndex.has_value()) { ret.replace_filename(ret.stem().string() + "_" + podIndex.value()); }
@@ -411,6 +434,10 @@ auto main(int argc, char *argv[]) -> int
         }
     }
 
+    if (cliOpts["converter"].count() == 0) {
+        SPDLOG_ERROR("No converter type specified, use --converter=[action|full|strided]");
+        return -1;
+    }
     using ReplayDataType = cvt::ReplayDataSoA;
     auto converter = [&](const std::string &cvtType) -> std::unique_ptr<cvt::BaseConverter<ReplayDataType>> {
         if (cvtType == "full") { return std::make_unique<cvt::FullConverter<ReplayDataType>>(); }
