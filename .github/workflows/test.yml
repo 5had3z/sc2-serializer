@@ -20,15 +20,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y g++-${{ matrix.gcc-version }} gcc-${{ matrix.gcc-version }}
           sudo apt-get install -y cmake ninja-build libboost-iostreams1.74-dev libtbb-dev
-      - name: Download Artifact from Previous Workflow
-        uses: dawidd6/action-download-artifact@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          workflow: test.yml # Replace with your actual workflow file name
-          workflow_conclusion: success # Replace with the desired workflow conclusion
-          name: build
-          path: /home/runner/work/sc2-serializer/build/ # extract to build folder
-        continue-on-error: true # Continue even if artifacts are not found
+      # - name: Download Artifact from Previous Workflow
+      #   uses: dawidd6/action-download-artifact@v3
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
+      #     workflow: test.yml # Replace with your actual workflow file name
+      #     workflow_conclusion: success # Replace with the desired workflow conclusion
+      #     name: build
+      #     path: /home/runner/work/sc2-serializer/build/ # extract to build folder
+      #   continue-on-error: true # Continue even if artifacts are not found
       - name: Fix python setup issues
         run: |
           sudo apt-get purge -y python3-setuptools
