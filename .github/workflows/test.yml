@@ -51,7 +51,9 @@ jobs:
           path: /home/runner/work/sc2-serializer/build
         if: success()
       - name: Ensure pybind11-stubgen installed
-        run: pip install git+https://github.com/5had3z/pybind11-stubgen.git black
+        run: |
+          pip install "setuptools<66"
+          pip install git+https://github.com/5had3z/pybind11-stubgen.git black
       - name: Run python building
         run: pip install .
       - name: Check the python imports
