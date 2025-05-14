@@ -49,7 +49,6 @@ COPY --from=builder \
     /app/build/sc2_converter \
     /app/build/sc2_merger \
     /app/build/format_converter \
-    /app/build/replay_version.py \
     /app/
 
 ENTRYPOINT [ "./sc2_converter" ]
