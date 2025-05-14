@@ -2,6 +2,7 @@
 """
 Analyse how the resources in the map change over time.
 """
+
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Annotated
@@ -22,7 +23,7 @@ class Resource:
     qty: np.ndarray
 
     @classmethod
-    def from_line(cls, line: str):
+    def from_line(cls, line: str) -> "Resource":
         elems = [e.strip() for e in line.split(",")]
         gid = int(elems[0])
         position = np.array([float(e) for e in elems[1:4]])
@@ -30,16 +31,16 @@ class Resource:
         return cls(gid, position, qty)
 
 
-def from_experiment(file: Path):
+def from_experiment(file: Path) -> list[Resource]:
     """Read file generated from bin/experiment.cpp"""
     resources: list[Resource] = []
-    with open(file, "r", encoding="utf-8") as f:
+    with open(file, encoding="utf-8") as f:
         while line := f.readline():
             resources.append(Resource.from_line(line))
     return resources
 
 
-def from_database(file: Path, idx: int):
+def from_database(file: Path, idx: int) -> list[Resource]:
     """Read from proper database"""
     temp: dict[int, list[int]] = {}
     db = sc2_serializer.ReplayDatabase(file)
@@ -63,7 +64,7 @@ def from_database(file: Path, idx: int):
     return resources
 
 
-def find_later_additions(file: Path, idx: int):
+def find_later_additions(file: Path, idx: int) -> None:
     db = sc2_serializer.ReplayDatabase(file)
     replay_data = db.getEntry(idx)
 
@@ -91,7 +92,7 @@ def find_later_additions(file: Path, idx: int):
 def main(
     file: Annotated[Path, typer.Option(help=".txt or .SC2Replays file to read")],
     idx: Annotated[int, typer.Option(help="Index to sample from .SC2Replays")] = 0,
-):
+) -> None:
     """Plot how the resources are changing over time. Good to check our modifications
     with visibility and default values are working as expected"""
     if not file.exists():

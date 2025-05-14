@@ -2,6 +2,7 @@
 """
 Script that creates the partition files for running conversions in parallel.
 """
+
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Annotated
@@ -26,7 +27,7 @@ class Partition:
     files: list[ReplayFile] = field(default_factory=list)
     size: int = 0
 
-    def append(self, file: ReplayFile):
+    def append(self, file: ReplayFile) -> None:
         """Add replay file to partition"""
         self.files.append(file)
         self.size += file.size
@@ -37,7 +38,7 @@ def main(
     folder: Annotated[Path, typer.Option(help="Path to folder of .SC2Replay files")],
     output: Annotated[Path, typer.Option(help="Folder to write the partition files")],
     num: Annotated[int, typer.Option(help="Number of partitions to generate")],
-):
+) -> None:
     """
     Read folder or SC2 Replay files and generate a set of files that
     contain an even size distribution of SC2 replay filenames
@@ -47,11 +48,11 @@ def main(
     if not output.exists():
         output.mkdir(parents=True)
 
-    all_files = list(
+    all_files = [
         ReplayFile(f, f.stat().st_size)
         for f in folder.iterdir()
         if f.suffix == ".SC2Replay"
-    )
+    ]
     print(f"Found {len(all_files)} files")
     all_files.sort(key=lambda x: x.size, reverse=True)
 

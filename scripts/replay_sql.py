@@ -5,8 +5,10 @@ commonly used for filtering poor quality replays"""
 import os
 import shutil
 import sqlite3
+import sys
+from collections.abc import Callable, Iterator
 from pathlib import Path
-from typing import Annotated, Any, Callable, Literal
+from typing import Annotated, Any, Literal
 
 import torch
 import typer
@@ -113,7 +115,7 @@ class SC2Replay(Dataset):
         return self.n_replays
 
     # @profile
-    def __getitem__(self, index: int):
+    def __getitem__(self, index: int) -> dict[str, Any]:
         file_index = upper_bound(self._accumulated_replays, index)
         if not self.db_handle.load(self.replays[file_index]):
             raise FileNotFoundError
@@ -159,12 +161,12 @@ class SC2Replay(Dataset):
             **data,
         }
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[dict[str, Any]]:
         for index in range(len(self)):
             yield self[index]
 
 
-def add_to_database(cursor: sqlite3.Cursor, data_dict: dict[str, Any]):
+def add_to_database(cursor: sqlite3.Cursor, data_dict: dict[str, Any]) -> None:
     """Add data yielded from dataloader to database"""
     columns = ", ".join(data_dict.keys())
     placeholders = ", ".join("?" for _ in data_dict.values())
@@ -182,7 +184,7 @@ def make_database(
     additional_columns: dict[str, SQL_TYPES],
     features: dict[str, SQL_TYPES],
     lambda_columns: dict[str, tuple[SQL_TYPES, LambdaFunctionType]],
-):
+) -> sqlite3.Connection:
     """Create database of replay metadata"""
     if path.exists():
         print(f"Removing existing database to start anew: {path}")
@@ -197,9 +199,9 @@ def make_database(
     # Create a table with the specified headings and data types
     create_table_sql = f"""
         CREATE TABLE game_data (
-            {', '.join(f"{column} {datatype}" for column, datatype in additional_columns.items())},
-            {', '.join(f"{column} {datatype}" for column, datatype in features.items())},
-            {', '.join(f"{column} {datatype}" for column, (datatype, _) in lambda_columns.items())}
+            {", ".join(f"{column} {datatype}" for column, datatype in additional_columns.items())},
+            {", ".join(f"{column} {datatype}" for column, datatype in features.items())},
+            {", ".join(f"{column} {datatype}" for column, (datatype, _) in lambda_columns.items())}
         )
     """
     cursor.execute(create_table_sql)
@@ -207,7 +209,7 @@ def make_database(
     return conn
 
 
-def make_standard(workspace: Path, name: str):
+def make_standard(workspace: Path, name: str) -> tuple[SC2Replay, sqlite3.Connection]:
     """Create dataset and sql from standard replay dataset"""
     dataset = SC2Replay(
         Path(os.environ["DATAPATH"]), set(FEATURES.keys()), LAMBDA_COLUMNS
@@ -218,7 +220,9 @@ def make_standard(workspace: Path, name: str):
     return dataset, conn
 
 
-def make_kubernetes(workspace: Path, name: str, pod_offset: int):
+def make_kubernetes(
+    workspace: Path, name: str, pod_offset: int
+) -> tuple[SC2Replay, sqlite3.Connection]:
     """Create sql database per pod index, replay database must be indexed"""
     number = int(os.environ["POD_NAME"].split("-")[-1]) + pod_offset
     dataset = SC2Replay(
@@ -235,7 +239,7 @@ def make_kubernetes(workspace: Path, name: str, pod_offset: int):
         print(f"Found existing file: {db_file} with size {file_size_mb}MB")
         if file_size_mb > 1:
             print("skipping file which exists....")
-            exit()
+            sys.exit()
 
     conn = make_database(db_file, ADDITIONAL_COLUMNS, FEATURES, LAMBDA_COLUMNS)
     return dataset, conn
@@ -247,7 +251,7 @@ def create(
     workers: Annotated[int, typer.Option()] = 0,
     name: Annotated[str, typer.Option()] = "gamedata",
     pod_offset: Annotated[int, typer.Option(help="Apply offset to k8s pod index")] = 0,
-):
+) -> None:
     """
     Standard creation function to create sql database from dataloader
     Replay database(s) are gathered from environment variable DATAPATH
@@ -281,7 +285,7 @@ def create(
 def create_individual(
     workspace: Annotated[Path, typer.Option()] = Path("."),
     workers: Annotated[int, typer.Option()] = 0,
-):
+) -> None:
     """
     Create sql databases for each individual replay database.
     Replay database(s) are gathered from environment variable DATAPATH.
@@ -295,7 +299,7 @@ def create_individual(
             print(f"Failed Replay {p.name} with exception: {e}")
 
 
-def merge_databases(source: Path, target: Path):
+def merge_databases(source: Path, target: Path) -> None:
     """Function to merge databases"""
     # Connect to the source database
     source_conn = sqlite3.connect(source)
@@ -314,7 +318,7 @@ def merge_databases(source: Path, target: Path):
     placeholders_str = ", ".join(["?" for _ in columns])
 
     insert_statement = (
-        f"INSERT INTO {TABLE_NAME} " f"({columns_str}) " f"VALUES ({placeholders_str})"
+        f"INSERT INTO {TABLE_NAME} ({columns_str}) VALUES ({placeholders_str})"
     )
 
     # Fetch data from the source database
@@ -335,7 +339,7 @@ def merge_databases(source: Path, target: Path):
 
 
 @app.command()
-def merge(folder: Path, target: Path):
+def merge(folder: Path, target: Path) -> None:
     """Merge all databases in directory to target"""
     assert (
         folder != target.parent

@@ -25,8 +25,8 @@ class CMakeExtension(Extension):
 class CMakeBuild(build_ext):
     """Build class for CMake Extension"""
 
-    def get_outputs(self):
-        return super().get_outputs() + ["_sc2_serializer.pyi"]
+    def get_outputs(self) -> list[str]:
+        return [*super().get_outputs(), "_sc2_serializer.pyi"]
 
     def build_extension(self, ext: CMakeExtension) -> None:
         ext_fullpath = Path.cwd() / self.get_ext_fullpath(ext.name)
@@ -45,7 +45,7 @@ class CMakeBuild(build_ext):
             cmake_args.extend(
                 [
                     f"-DCMAKE_BUILD_TYPE={'Debug' if self.debug else 'Release'}",
-                    f"-DCMAKE_MAKE_PROGRAM:FILEPATH={Path(ninja.BIN_DIR)/'ninja'}",
+                    f"-DCMAKE_MAKE_PROGRAM:FILEPATH={Path(ninja.BIN_DIR) / 'ninja'}",
                     "-GNinja",
                 ]
             )

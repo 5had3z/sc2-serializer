@@ -2,15 +2,15 @@
 
 from pathlib import Path
 
+from ._sc2_serializer import *  # noqa : F403
 from ._sc2_serializer import (
     ReplayDataAllDatabase,
-    ReplayDataNoUnitsDatabase,
-    ReplayDataScalarOnlyDatabase,
     ReplayDataAllParser,
+    ReplayDataNoUnitsDatabase,
     ReplayDataNoUnitsParser,
+    ReplayDataScalarOnlyDatabase,
     ReplayDataScalarOnlyParser,
 )
-from ._sc2_serializer import *  # noqa : F403
 
 GAME_INFO_FILE = (Path(__file__).parent / "game_info.yaml").absolute()
 

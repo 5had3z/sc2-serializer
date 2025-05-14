@@ -9,13 +9,13 @@ import json
 import mpyq
 
 
-def read_replay_data(replay_path: str):
+def read_replay_data(replay_path: str) -> bytes:
     """Return the replay data given a path to the replay."""
     with open(replay_path, "rb") as f:
         return f.read()
 
 
-def extract_replay_version(replay_data: bytes):
+def extract_replay_version(replay_data: bytes) -> tuple[str, str, str]:
     """Get the game, data and build info from replay bytes"""
     replay_io = io.BytesIO()
     replay_io.write(replay_data)
@@ -29,6 +29,6 @@ def extract_replay_version(replay_data: bytes):
     return game_version, data_version, build_version
 
 
-def get_replay_file_version_info(replay_path: str):
+def get_replay_file_version_info(replay_path: str) -> tuple[str, str, str]:
     """Get the replay game, data and build version from a file"""
     return extract_replay_version(read_replay_data(replay_path))

@@ -19,11 +19,13 @@ instance of Version as shown below.
                 self.version = version
 
 """
+
 import os
 import platform
+from collections.abc import Iterable, Mapping
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
-from typing import Iterable, Mapping
+from typing import Any
 
 import pysc2.run_configs.platforms as SC2Platform
 import yaml
@@ -68,7 +70,7 @@ class GameInfo:
     upgrades: list[Upgrade] = field(default_factory=list)
 
 
-def make_creation_msg(game) -> sc_pb.RequestCreateGame:
+def make_creation_msg(game: SC2Platform.LocalBase) -> sc_pb.RequestCreateGame:
     create = sc_pb.RequestCreateGame(realtime=False, disable_fog=False)
     create.player_setup.add(type=sc_pb.Participant)
     create.player_setup.add(
@@ -83,7 +85,7 @@ def make_creation_msg(game) -> sc_pb.RequestCreateGame:
     return create
 
 
-def make_interface_opts():
+def make_interface_opts() -> sc_pb.InterfaceOptions:
     return sc_pb.InterfaceOptions()
 
 
@@ -92,37 +94,9 @@ FUNCTIONS_BY_ID = {
 }
 
 
-def parse_upgrades(upgrades, abilities):
-    """"""
-    res: list[Upgrade] = []
-
-    for upgrade in upgrades:
-        ability = abilities[upgrade.ability_id]
-        try:
-            pysc2_name = FUNCTIONS_BY_ID[upgrade.ability_id]
-        except KeyError:
-            pysc2_name = ""
-        res.append(
-            Upgrade(
-                upgrade.upgrade_id,
-                upgrade.ability_id,
-                upgrade.name,
-                upgrade.mineral_cost,
-                upgrade.vespene_cost,
-                upgrade.research_time,
-                ability.button_name,
-                ability.friendly_name.replace("Research", "")
-                .replace("Evolve", "")
-                .strip(),
-                pysc2_name,
-            )
-        )
-    return res
-
-
 def parse_upgrades2(
     abilities: Iterable[AbilityData], upgrades: Mapping[int, UpgradeData]
-):
+) -> list[Upgrade]:
     """Run based off actions to handle non-leveled actions which aren't in the upgrades list"""
     res: list[Upgrade] = []
 
@@ -155,7 +129,7 @@ def parse_upgrades2(
     return res
 
 
-def parse_units(valid_units):
+def parse_units(valid_units: list[Any]) -> list[Unit]:
     """"""
     units: list[Unit] = []
     for unit in valid_units:
@@ -197,18 +171,12 @@ def get_game_info(game: SC2Platform.LocalBase) -> GameInfo:
         game_info = GameInfo(resp.game_version)
         game_data = controller.data()
         game_info.units = parse_units(
-            (
-                u
-                for u in game_data.unit_stats.values()
-                if u.name != "" and 0 < u.race < 4 and u.available and u.build_time > 0
-            )
+            u
+            for u in game_data.unit_stats.values()
+            if u.name != "" and 0 < u.race < 4 and u.available and u.build_time > 0
         )
 
-        # game_info.upgrades = parse_upgrades(
-        #     (u for u in game_data.upgrades.values() if u.ability_id != 0),
-        #     game_data.abilities,
-        # )
-        def name_filter(a: AbilityData):
+        def name_filter(a: AbilityData) -> bool:
             return any(a.friendly_name.startswith(s) for s in ["Research", "Evolve"])
 
         game_info.upgrades = parse_upgrades2(
@@ -231,7 +199,7 @@ def get_versions_from_folder(path: Path) -> list[Version]:
 def get_versions_from_file(path: Path) -> list[Version]:
     """Get version list from csv with game,data,build"""
     versions: list[Version] = []
-    with open(path, "r", encoding="utf-8") as f:
+    with open(path, encoding="utf-8") as f:
         f.readline()  # Skip header
         while line := f.readline():
             game, data, build = line.split(",")
@@ -246,7 +214,7 @@ flags.DEFINE_boolean("versions_folder", False, "use game 'Versions' folder")
 flags.DEFINE_string("versions_file", "", "file containing versions to invoke")
 
 
-def main(unused_argv):
+def main(unused_argv: Any) -> None:
     """
     Launch each version of the game and inquire information about properties of each unit
     """

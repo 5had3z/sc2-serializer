@@ -2,9 +2,10 @@ import os
 from pathlib import Path
 
 import pytest
+
+from sc2_serializer import StepDataSoA, get_database_and_parser
 from sc2_serializer.example import SC2Dataset
-from sc2_serializer.sampler import BasicSampler, SQLSampler
-from sc2_serializer import get_database_and_parser, StepDataSoA
+from sc2_serializer.sampler import BasicSampler, ReplaySampler, SQLSampler
 
 if "SC2_TEST_DB" in os.environ:
     _DEFAULT_REPLAYS = Path(os.environ["SC2_TEST_DB"]).parent
@@ -14,7 +15,7 @@ else:
 
 @pytest.mark.parametrize("has_units", [True, False])
 @pytest.mark.parametrize("has_minimaps", [True, False])
-def test_replay_database_ops(has_units: bool, has_minimaps: bool):
+def test_replay_database_ops(has_units: bool, has_minimaps: bool) -> None:
     """Test basic functionality of python bindings to replay database"""
     db, parser = get_database_and_parser(has_units, has_minimaps)
     replays_path = Path(os.environ.get("DATAPATH", _DEFAULT_REPLAYS))
@@ -55,7 +56,7 @@ _REPLAYS_PATH = Path(os.environ.get("DATAPATH", _DEFAULT_REPLAYS))
         BasicSampler(_REPLAYS_PATH, train_ratio=0.8, is_train=True),
     ],
 )
-def test_pytorch_example(sampler):
+def test_pytorch_example(sampler: ReplaySampler) -> None:
     """Test able to yield data from the example dataset, some sample data might have issues so
     might have to attempt a few times (e.g. missing alert data on older game versions).
     """

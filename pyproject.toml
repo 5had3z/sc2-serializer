@@ -50,5 +50,62 @@ dev = [
 "Homepage" = "https://github.com/5had3z/sc2-serializer"
 
 [tool.ruff]
-ignore = ['E741']
 line-length = 100
+extend-exclude = ["3rdparty"]
+
+
+[tool.ruff.lint]
+ignore = [
+    "A001",
+    "ANN101",
+    "ANN102",
+    "ANN401",
+    "ARG001",
+    "B008",
+    "B023",
+    "E741",
+    "ERA001",
+    "FBT001",
+    "FBT003",
+    "N802",
+    "N803",
+    "N806",
+    "N812",
+    "N815",
+    "PLR0913",
+    "PLR2004",
+    "S101",
+    "S602",
+    "S603",
+    "S607",
+    "S608",
+    "T201"
+]
+select = [
+    "A",
+    "ARG",
+    "B",
+    "C4",
+    "C90",
+    "E",
+    "ERA",
+    "F",
+    "FBT",
+    "ICN",
+    "I",
+    "ISC",
+    "N",
+    "NPY",
+    "PD",
+    "PGH",
+    "PIE",
+    "PLE",
+    "PLR",
+    "Q",
+    "RUF",
+    "S",
+    "SIM",
+    "T",
+    "UP",
+    "W",
+]

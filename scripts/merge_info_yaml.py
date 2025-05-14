@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Merge game info yaml files without duplication"""
+
 from pathlib import Path
 
 import typer
@@ -9,12 +10,12 @@ app = typer.Typer()
 
 
 @app.command()
-def main(source: Path, dest: Path):
+def main(source: Path, dest: Path) -> None:
     """Copies info from source yaml to destination yaml without duplication"""
-    with open(source, "r", encoding="utf-8") as src:
+    with open(source, encoding="utf-8") as src:
         source_data: list = yaml.safe_load(src)
 
-    with open(dest, "r", encoding="utf-8") as dst:
+    with open(dest, encoding="utf-8") as dst:
         dest_data: list = yaml.safe_load(dst)
 
     existing = {entry["version"] for entry in dest_data}

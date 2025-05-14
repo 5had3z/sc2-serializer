@@ -1,14 +1,13 @@
 from pathlib import Path
 from typing import Annotated
 
-import typer
 import numpy as np
+import typer
+from _womd_binding import SequenceData, WomdDatabase, parseSequenceFromArray
+from datapipe import womd_pipeline
+from nvidia.dali.plugin.pytorch import DALIGenericIterator
 from rich.progress import track
 from torch import Tensor
-from nvidia.dali.plugin.pytorch import DALIGenericIterator
-
-from datapipe import womd_pipeline
-from _womd_binding import parseSequenceFromArray, WomdDatabase, SequenceData
 
 app = typer.Typer()
 
@@ -43,7 +42,7 @@ def parse_sample_to_sequence(sample: dict[str, Tensor]) -> SequenceData:
 @app.command()
 def main(
     womd: Annotated[Path, typer.Option()], output: Annotated[Path, typer.Option()]
-):
+) -> None:
     """Run conversion of Womd to Serializer format"""
     batch_size = 1
     datapipe = womd_pipeline(

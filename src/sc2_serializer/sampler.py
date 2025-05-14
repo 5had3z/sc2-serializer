@@ -39,7 +39,7 @@ class ReplaySampler(ABC):
             tuple[Path,int]: Filepath to database and index to sample from.
         """
 
-    def get_split_params(self, dataset_size: int):
+    def get_split_params(self, dataset_size: int) -> tuple[int, int]:
         """Calculate start offset + size based on the full dataset size.
 
         Args:
@@ -117,7 +117,8 @@ class SQLSampler(ReplaySampler):
     """Use SQLite3 database to yield from a folder of replay databases with filters applied.
 
     Args:
-        database (str): Path to sqlite3 database with replay info, prefix '$ENV:' will be prefixed with DATAPATH.
+        database (str): Path to sqlite3 database with replay info, prefix '$ENV:'
+                        will be prefixed with DATAPATH.
         replays_folder (Path): Path to folder of .SC2Replays file(s)
         filter_query (str): SQL query to filter sampled replays
         train_ratio (float): Proportion of all data used for training
@@ -181,7 +182,7 @@ class SQLSampler(ReplaySampler):
         return self.replays_path / result[self.filename_col], result[self.index_col]
 
 
-def gen_val_query(conn: sqlite3.Connection, sql_filters: list[str] | None):
+def gen_val_query(conn: sqlite3.Connection, sql_filters: list[str] | None) -> str:
     """Transform list of sql filters to valid query and test that it works"""
     sql_filter_string = (
         ""

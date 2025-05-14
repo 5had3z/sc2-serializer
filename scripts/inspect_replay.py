@@ -2,11 +2,12 @@
 """
 Explore SC2Replays data with python API
 """
-# ruff: noqa
+
 import time
+from collections.abc import Sequence
 from enum import Enum
 from pathlib import Path
-from typing import Annotated, Sequence
+from typing import Annotated
 
 import cv2
 import numpy as np
@@ -23,7 +24,7 @@ from sc2_serializer import (
     set_replay_database_logger_level,
     spdlog_lvl,
 )
-from sc2_serializer.unit_features import NeutralUnit, NeutralUnitOH, Unit, UnitOH
+from sc2_serializer.unit_features import UnitOH
 
 app = typer.Typer()
 
@@ -59,7 +60,9 @@ def make_units_video(parser: ReplayParser, fname: Path):
         ax.set_xlim(0, parser.info.mapWidth)
         ax.set_ylim(0, parser.info.mapHeight)
         unit_xy = sample["units"][:, [UnitOH.x, UnitOH.y]]
-        for a, c in zip([UnitOH.alliance_self, UnitOH.alliance_enemy], ["blue", "red"]):
+        for a, c in zip(
+            [UnitOH.alliance_self, UnitOH.alliance_enemy], ["blue", "red"], strict=False
+        ):
             unit_filt = unit_xy[sample["units"][:, a] == 1]
             ax.scatter(unit_filt[:, 0], unit_filt[:, 1], c=c)
         canvas = FigureCanvasAgg(fig)
@@ -70,7 +73,7 @@ def make_units_video(parser: ReplayParser, fname: Path):
         writer.write(cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR))
         if not writer.isOpened():
             raise RuntimeError()
-        print(f"Done {tidx+1}/{parser.size()}", end="\r")
+        print(f"Done {tidx + 1}/{parser.size()}", end="\r")
     print("")
 
     writer.release()
@@ -84,7 +87,7 @@ def test_parseable(db: ReplayDatabase, parser: ReplayParser):
         replay_data = db.getEntry(idx)
         parser.parse_replay(replay_data)
         _res = parser.sample(100)
-        print(f"Done {idx+1} of {db.size()}", end="\r")
+        print(f"Done {idx + 1} of {db.size()}", end="\r")
     print(f"\nFinished parsing, took {time.time() - start}s")
 
 
@@ -93,10 +96,7 @@ def check_first_step(path: Path, threshold: int = 224):
     """Check the first recorded gameStep of a replay and warn when its over a threshold"""
     set_replay_database_logger_level(spdlog_lvl.warn)
     db = ReplayDataScalarOnlyDatabase()
-    if path.is_file():
-        replays = [path]
-    else:
-        replays = list(path.glob("*.SC2Replays"))
+    replays = [path] if path.is_file() else list(path.glob("*.SC2Replays"))
 
     count_bad = 0
     total_replays = 0

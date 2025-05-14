@@ -1,13 +1,13 @@
 import logging
+from multiprocessing import Pool, cpu_count
 from pathlib import Path
 from subprocess import run
-from multiprocessing import Pool, cpu_count
 
 import nvidia.dali.tfrecord as tfrec
-from nvidia.dali.pipeline import pipeline_def
 from nvidia.dali import fn
-from nvidia.dali.types import DALIDataType
 from nvidia.dali.data_node import DataNode
+from nvidia.dali.pipeline import pipeline_def
+from nvidia.dali.types import DALIDataType
 
 
 def get_tfrecord_cache(record_root: Path, tfrecords: list[str]) -> list[str]:
@@ -23,7 +23,7 @@ def get_tfrecord_cache(record_root: Path, tfrecords: list[str]) -> list[str]:
     # Check if index exists, write if necessary
     proc_args = [
         ["tfrecord2idx", str(record_root / tfrec), str(idx)]
-        for tfrec, idx in zip(tfrecords, tfrec_idxs)
+        for tfrec, idx in zip(tfrecords, tfrec_idxs, strict=False)
         if not idx.exists()
     ]
 
@@ -49,20 +49,18 @@ def stack_features(
     return fn.stack(*[features[f"{prefix}/{key}"] for key in keys], axis=-1)
 
 
-def concatenate_time(features: dict[str, DataNode]):
+def concatenate_time(features: dict[str, DataNode]) -> None:
     """Concatenate time features, mutates features in place, removes old keys.
 
     For example, transforms prefix/{past,current,future}/suffix into prefix/suffix.
     """
-    keys_to_stack = set(
-        map(
-            lambda x: f"{x[0]}/{x[2]}",
-            filter(
-                lambda x: x[1] in {"future", "past", "current"},
-                map(lambda x: x.split("/"), features),
-            ),
+    keys_to_stack = {
+        f"{x[0]}/{x[2]}"
+        for x in filter(
+            lambda x: x[1] in {"future", "past", "current"},
+            [x.split("/") for x in features],
         )
-    )
+    }
 
     for key in keys_to_stack:
         pre, post = key.split("/")
@@ -74,21 +72,25 @@ def concatenate_time(features: dict[str, DataNode]):
             del features[k]
 
 
-def transpose_key(features: dict[str, DataNode], prefix: str, perm: list[int] | int):
+def transpose_key(
+    features: dict[str, DataNode], prefix: str, perm: list[int] | int
+) -> None:
     """Transpose features that match prefix with permutation perm, mutates features in place."""
     for key in features:
         if key.startswith(prefix):
             features[key] = fn.transpose(features[key], perm=perm)
 
 
-def expand_feature_over_sequence(features: dict[str, DataNode], keys: list[str]):
+def expand_feature_over_sequence(
+    features: dict[str, DataNode], keys: list[str]
+) -> None:
     """Expand features with the same prefix from [128] to [128,91,1]"""
     for key in keys:
         features[key] = fn.stack(*[features[key]] * 91, axis=-1)
 
 
 @pipeline_def
-def womd_pipeline(record_path: Path):
+def womd_pipeline(record_path: Path) -> tuple[DataNode, ...]:
     # fmt: off
     # Features of the road.
     roadgraph_features = {

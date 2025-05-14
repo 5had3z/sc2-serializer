@@ -2,18 +2,20 @@
 """Convert folders of replays in parallel"""
 
 import concurrent.futures as fut
-import subprocess
 import io
+import subprocess
 from multiprocessing import cpu_count
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Annotated, Any
 
 import typer
 
 app = typer.Typer()
 
 
-def make_args(game: Path, replays: Path, converter: Path, output: Path, port: int):
+def make_args(
+    game: Path, replays: Path, converter: Path, output: Path, port: int
+) -> list[str]:
     """Convert arg list to kwargs"""
     return [
         str(converter.absolute()),
@@ -28,7 +30,7 @@ def make_args(game: Path, replays: Path, converter: Path, output: Path, port: in
     ]
 
 
-def run_with_redirect(tid, *args):
+def run_with_redirect(tid: int, *args: Any) -> None:
     """Redirect each thread stdout to log file"""
     print(f"running {tid}: {args}")
     with open(f"worker_logs_{tid}.txt", "a", encoding="utf-8") as f:
@@ -37,10 +39,10 @@ def run_with_redirect(tid, *args):
         )
 
 
-def get_target_folders(base_folder: Path, replay_list: Path | None):
+def get_target_folders(base_folder: Path, replay_list: Path | None) -> list[Path]:
     """Get list of folders to run over"""
     if replay_list is not None:
-        with open(replay_list, "r", encoding="utf-8") as f:
+        with open(replay_list, encoding="utf-8") as f:
             folders = f.readlines()
         targets = [base_folder / folder.strip() for folder in folders]
         for target in targets:
@@ -57,9 +59,9 @@ def main(
     outfolder: Annotated[Path, typer.Option()],
     replays: Annotated[Path, typer.Option()],
     game: Annotated[Path, typer.Option()],
-    replay_list: Annotated[Optional[Path], typer.Option()] = None,
+    replay_list: Annotated[Path | None, typer.Option()] = None,
     n_parallel: Annotated[int, typer.Option()] = cpu_count() // 2,
-):
+) -> None:
     """Convert replays at a target folder with n_parallel processes"""
     assert converter.exists()
     assert game.exists()

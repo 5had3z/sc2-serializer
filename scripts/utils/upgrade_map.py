@@ -2,6 +2,7 @@
 Maps from ability id to name grouped by race
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from itertools import product
 from pathlib import Path
@@ -13,7 +14,7 @@ from pysc2.lib.actions import FUNCTIONS
 _game_info_file = (
     Path(__file__).parent.parent.parent / "src" / "sc2_serializer" / "game_info.yaml"
 )
-with open(_game_info_file, "r", encoding="utf-8") as f:
+with open(_game_info_file, encoding="utf-8") as f:
     _game_data = yaml.safe_load(f)
 
 _version_mapping: dict[str, dict[str, int]] = {}
@@ -37,7 +38,7 @@ _levels = ["1", "2", "3"]
 
 
 # --- Protoss ---
-def _gen_protoss():
+def _gen_protoss() -> list[str]:
     """List of protoss upgrade names"""
     entries = [
         "Charge",
@@ -62,7 +63,7 @@ def _gen_protoss():
 
 
 # --- Terran ---
-def _gen_terran():
+def _gen_terran() -> list[str]:
     """List of terran upgrade names"""
     entries = [
         # "HurricaneThrusters",
@@ -110,7 +111,7 @@ def _gen_terran():
 
 
 # --- Zerg ---
-def _gen_zerg():
+def _gen_zerg() -> list[str]:
     """List of zerg upgrade names"""
     entries = [
         "ChitinousPlating",
@@ -156,10 +157,10 @@ class GameUpgradeInfo:
     zerg_lvl_remap: dict[int, list[int]] = field(default_factory=dict)
 
     @classmethod
-    def from_upgrades(cls, upgrades: dict[str, int]):
+    def from_upgrades(cls, upgrades: dict[str, int]) -> "GameUpgradeInfo":
         """Create from Upgrade Name to ActionID Dict, some versions are missing actions"""
 
-        def _func(gen_fn):
+        def _func(gen_fn: Callable[[], list[str]]) -> dict[int, str]:
             """Create mapping and warn when missing item"""
             tmp = {}
             for p in gen_fn():
@@ -181,10 +182,10 @@ UPGRADE_INFO: dict[str, GameUpgradeInfo] = {}
 for _version, _upgrades in _version_mapping.items():
     UPGRADE_INFO[_version] = GameUpgradeInfo.from_upgrades(_upgrades)
 
-    def _protoss_remap():
+    def _protoss_remap() -> dict[int, list[int]]:
         remap: dict[int, list[int]] = {}
 
-        def remap_str(base: str):
+        def remap_str(base: str) -> None:
             src = _upgrades[base]
             dst = [_upgrades[f"{base}Level{l}"] for l in _levels]
             remap[src] = dst
@@ -197,10 +198,10 @@ for _version, _upgrades in _version_mapping.items():
 
     UPGRADE_INFO[_version].protoss_lvl_remap.update(_protoss_remap())
 
-    def _terran_remap():
+    def _terran_remap() -> dict[int, list[int]]:
         remap: dict[int, list[int]] = {}
 
-        def remap_str(base: str):
+        def remap_str(base: str) -> None:
             src = _upgrades[base]
             dst = [_upgrades[f"{base}Level{l}"] for l in _levels]
             remap[src] = dst
@@ -216,10 +217,10 @@ for _version, _upgrades in _version_mapping.items():
 
     UPGRADE_INFO[_version].terran_lvl_remap.update(_terran_remap())
 
-    def _zerg_remap():
+    def _zerg_remap() -> dict[int, list[int]]:
         remap: dict[int, list[int]] = {}
 
-        def remap_str(base: str):
+        def remap_str(base: str) -> None:
             src = _upgrades[base]
             dst = [_upgrades[f"{base}Level{l}"] for l in _levels]
             remap[src] = dst

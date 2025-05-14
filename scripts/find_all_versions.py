@@ -6,13 +6,12 @@ from pathlib import Path
 from typing import Annotated
 
 import typer
-
 from utils.replay_version import get_replay_file_version_info
 
 app = typer.Typer()
 
 
-def _get_versions_in_tree(root: Path):
+def _get_versions_in_tree(root: Path) -> dict[tuple, Path]:
     """
     Recursively query all the sc2 replays in a directory and return a set of all versions present
     Also returns a mapping from unique versions to a replay with that version.
@@ -40,7 +39,7 @@ def _get_versions_in_tree(root: Path):
 def compare_replays_and_game(
     replays: Annotated[Path, typer.Option(help="Path to SC2 Replays")],
     game: Annotated[Path, typer.Option(help="Path to 'Versions' folder of SC2")],
-):
+) -> None:
     """Compare versions of replays with versions of the game verision currently present"""
     assert game.name == "Versions", f"Should point to the Versions folder, got {game}"
     current_bases = {folder.name[len("base") :] for folder in game.glob("Base*")}
@@ -51,7 +50,7 @@ def compare_replays_and_game(
         k: v for k, v in version_file_map.items() if k[2] not in current_bases
     }
 
-    def sort_key(x: tuple[str]):
+    def sort_key(x: tuple[str]) -> int:
         """Split and accumulate game version"""
         a, b, c = x[0].split(".")
         return int(a) * 1e4 + int(b) * 1e2 + int(c)
@@ -70,7 +69,7 @@ def compare_replays_and_game(
 def write_replay_versions(
     replays: Annotated[Path, typer.Option(help="Path to SC2 Replays")],
     output: Annotated[Path, typer.Option(help="Output .csv to write results")],
-):
+) -> None:
     """Write all the game,data,build versions found in folder of replays to a csv"""
     assert output.suffix == ".csv", f"Output should be a .csv file, got {output.suffix}"
     version_file_map = _get_versions_in_tree(replays)

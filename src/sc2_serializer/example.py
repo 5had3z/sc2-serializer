@@ -3,14 +3,15 @@ Basic example PyTorch Dataloader, a more complex dataloader can be found in the
 experiment code accompanying the paper at https://github.com/5had3z/sc2-experiments.
 """
 
+import itertools
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Sequence
 
 import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-from . import get_database_and_parser, Result
+from . import Result, get_database_and_parser
 from .sampler import ReplaySampler
 
 
@@ -22,15 +23,17 @@ class TimeRange:
     max: float
     step: float
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         assert self.min < self.max
 
-    def arange(self):
+    def arange(self) -> torch.Tensor:
         """Return arange instance of parameters"""
         return torch.arange(self.min, self.max, self.step)
 
 
-def find_closest_indices(options: Sequence[int], targets: Sequence[int]):
+def find_closest_indices(
+    options: Sequence[int], targets: Sequence[int]
+) -> torch.Tensor:
     """
     Find the closest option corresponding to a target, if there is no match, place -1
     """
@@ -41,7 +44,7 @@ def find_closest_indices(options: Sequence[int], targets: Sequence[int]):
     if targets[0] < options[0]:
         nearest[0] = 0
 
-    for idx, (prv, nxt) in enumerate(zip(options, options[1:])):
+    for idx, (prv, nxt) in enumerate(itertools.pairwise(options)):
         if prv > targets[tgt_idx]:  # not in between, skip
             tgt_idx += 1
         elif prv <= targets[tgt_idx] <= nxt:
@@ -71,7 +74,7 @@ class SC2Dataset(Dataset):
         sampler: ReplaySampler,
         features: list[str] | None = None,
         timepoints: TimeRange = TimeRange(0, 30, 0.5),
-    ):
+    ) -> None:
         self.sampler = sampler
         self.features = ["minimaps", "scalars"] if features is None else features
         self.db_handle, self.parser = get_database_and_parser(
@@ -81,10 +84,10 @@ class SC2Dataset(Dataset):
         _loop_per_min = 22.4 * 60
         self._target_game_loops = (timepoints.arange() * _loop_per_min).to(torch.int)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.sampler)
 
-    def __getitem__(self, index: int):
+    def __getitem__(self, index: int) -> dict[str, torch.Tensor]:
         """Sample from dataset at index.
 
         Args:
@@ -102,7 +105,7 @@ class SC2Dataset(Dataset):
         self.parser.parse_replay(self.db_handle.getEntry(db_index))
         return self.load_from_parser()
 
-    def load_from_parser(self):
+    def load_from_parser(self) -> dict[str, torch.Tensor]:
         """Sample from data currently in parser
 
         Return:
