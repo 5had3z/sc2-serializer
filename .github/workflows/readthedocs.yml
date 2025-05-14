@@ -14,6 +14,7 @@ jobs:
           pipx install black git+https://github.com/5had3z/pybind11-stubgen.git
           pip3 install torch --index-url https://download.pytorch.org/whl/cpu --break-system-packages
           pip3 install typer matplotlib opencv-python-headless mpyq --break-system-packages
+          pip install "setuptools<66"
       - name: Checkout repo
         uses: actions/checkout@v4
       - name: Build main library for python bindings
