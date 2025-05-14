@@ -78,11 +78,12 @@
 <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Explore SC2Replays data with python API</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="c1"># ruff: noqa</span>
+
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Sequence</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Annotated</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Annotated</span>
 
 <span class="kn">import</span> <span class="nn">cv2</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -99,7 +100,7 @@
     <span class="n">set_replay_database_logger_level</span><span class="p">,</span>
     <span class="n">spdlog_lvl</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span> <span class="nn">sc2_serializer.unit_features</span> <span class="kn">import</span> <span class="n">NeutralUnit</span><span class="p">,</span> <span class="n">NeutralUnitOH</span><span class="p">,</span> <span class="n">Unit</span><span class="p">,</span> <span class="n">UnitOH</span>
+<span class="kn">from</span> <span class="nn">sc2_serializer.unit_features</span> <span class="kn">import</span> <span class="n">UnitOH</span>
 
 <span class="n">app</span> <span class="o">=</span> <span class="n">typer</span><span class="o">.</span><span class="n">Typer</span><span class="p">()</span>
 
@@ -135,7 +136,9 @@
         <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">parser</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">mapWidth</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">parser</span><span class="o">.</span><span class="n">info</span><span class="o">.</span><span class="n">mapHeight</span><span class="p">)</span>
         <span class="n">unit_xy</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s2">&quot;units&quot;</span><span class="p">][:,</span> <span class="p">[</span><span class="n">UnitOH</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">UnitOH</span><span class="o">.</span><span class="n">y</span><span class="p">]]</span>
-        <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="n">UnitOH</span><span class="o">.</span><span class="n">alliance_self</span><span class="p">,</span> <span class="n">UnitOH</span><span class="o">.</span><span class="n">alliance_enemy</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">]):</span>
+        <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">UnitOH</span><span class="o">.</span><span class="n">alliance_self</span><span class="p">,</span> <span class="n">UnitOH</span><span class="o">.</span><span class="n">alliance_enemy</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;blue&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">],</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">):</span>
             <span class="n">unit_filt</span> <span class="o">=</span> <span class="n">unit_xy</span><span class="p">[</span><span class="n">sample</span><span class="p">[</span><span class="s2">&quot;units&quot;</span><span class="p">][:,</span> <span class="n">a</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">unit_filt</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">unit_filt</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">c</span><span class="p">)</span>
         <span class="n">canvas</span> <span class="o">=</span> <span class="n">FigureCanvasAgg</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
@@ -146,7 +149,7 @@
         <span class="n">writer</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">rgb</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_RGB2BGR</span><span class="p">))</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">writer</span><span class="o">.</span><span class="n">isOpened</span><span class="p">():</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">()</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Done </span><span class="si">{</span><span class="n">tidx</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">parser</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Done </span><span class="si">{</span><span class="n">tidx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">parser</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
 
     <span class="n">writer</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
@@ -160,7 +163,7 @@
         <span class="n">replay_data</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">getEntry</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
         <span class="n">parser</span><span class="o">.</span><span class="n">parse_replay</span><span class="p">(</span><span class="n">replay_data</span><span class="p">)</span>
         <span class="n">_res</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Done </span><span class="si">{</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">db</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Done </span><span class="si">{</span><span class="n">idx</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">db</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Finished parsing, took </span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
 
 
@@ -169,10 +172,7 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check the first recorded gameStep of a replay and warn when its over a threshold&quot;&quot;&quot;</span>
     <span class="n">set_replay_database_logger_level</span><span class="p">(</span><span class="n">spdlog_lvl</span><span class="o">.</span><span class="n">warn</span><span class="p">)</span>
     <span class="n">db</span> <span class="o">=</span> <span class="n">ReplayDataScalarOnlyDatabase</span><span class="p">()</span>
-    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-        <span class="n">replays</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="p">]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">replays</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.SC2Replays&quot;</span><span class="p">))</span>
+    <span class="n">replays</span> <span class="o">=</span> <span class="p">[</span><span class="n">path</span><span class="p">]</span> <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.SC2Replays&quot;</span><span class="p">))</span>
 
     <span class="n">count_bad</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">total_replays</span> <span class="o">=</span> <span class="mi">0</span>

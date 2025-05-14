@@ -122,7 +122,7 @@
 
 <div class="viewcode-block" id="ReplaySampler.get_split_params">
 <a class="viewcode-back" href="../../dataloading.html#sc2_serializer.sampler.ReplaySampler.get_split_params">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_split_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">get_split_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataset_size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate start offset + size based on the full dataset size.</span>
 
 <span class="sd">        Args:</span>
@@ -210,7 +210,8 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Use SQLite3 database to yield from a folder of replay databases with filters applied.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        database (str): Path to sqlite3 database with replay info, prefix &#39;$ENV:&#39; will be prefixed with DATAPATH.</span>
+<span class="sd">        database (str): Path to sqlite3 database with replay info, prefix &#39;$ENV:&#39;</span>
+<span class="sd">                        will be prefixed with DATAPATH.</span>
 <span class="sd">        replays_folder (Path): Path to folder of .SC2Replays file(s)</span>
 <span class="sd">        filter_query (str): SQL query to filter sampled replays</span>
 <span class="sd">        train_ratio (float): Proportion of all data used for training</span>
@@ -278,7 +279,7 @@
 
 
 
-<span class="k">def</span> <span class="nf">gen_val_query</span><span class="p">(</span><span class="n">conn</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span><span class="p">,</span> <span class="n">sql_filters</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">gen_val_query</span><span class="p">(</span><span class="n">conn</span><span class="p">:</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">Connection</span><span class="p">,</span> <span class="n">sql_filters</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Transform list of sql filters to valid query and test that it works&quot;&quot;&quot;</span>
     <span class="n">sql_filter_string</span> <span class="o">=</span> <span class="p">(</span>
         <span class="s2">&quot;&quot;</span>

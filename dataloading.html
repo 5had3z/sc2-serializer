@@ -113,7 +113,7 @@
 <dd><p>Abstract interface to sample from set of replay databases</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="sc2_serializer.sampler.ReplaySampler.get_split_params">
-<span class="sig-name descname"><span class="pre">get_split_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sc2_serializer/sampler.html#ReplaySampler.get_split_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sc2_serializer.sampler.ReplaySampler.get_split_params" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_split_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dataset_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/sc2_serializer/sampler.html#ReplaySampler.get_split_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sc2_serializer.sampler.ReplaySampler.get_split_params" title="Link to this definition"></a></dt>
 <dd><p>Calculate start offset + size based on the full dataset size.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -192,7 +192,8 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>database</strong> (<em>str</em>) – Path to sqlite3 database with replay info, prefix ‘$ENV:’ will be prefixed with DATAPATH.</p></li>
+<li><p><strong>database</strong> (<em>str</em>) – Path to sqlite3 database with replay info, prefix ‘$ENV:’
+will be prefixed with DATAPATH.</p></li>
 <li><p><strong>replays_folder</strong> (<em>Path</em>) – Path to folder of .SC2Replays file(s)</p></li>
 <li><p><strong>filter_query</strong> (<em>str</em>) – SQL query to filter sampled replays</p></li>
 <li><p><strong>train_ratio</strong> (<em>float</em>) – Proportion of all data used for training</p></li>
@@ -246,7 +247,7 @@ the requested [scalar, minimap] features and the game outcome from the player PO
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="sc2_serializer.example.SC2Dataset.load_from_parser">
-<span class="sig-name descname"><span class="pre">load_from_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/sc2_serializer/example.html#SC2Dataset.load_from_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sc2_serializer.example.SC2Dataset.load_from_parser" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">load_from_parser</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/sc2_serializer/example.html#SC2Dataset.load_from_parser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sc2_serializer.example.SC2Dataset.load_from_parser" title="Link to this definition"></a></dt>
 <dd><p>Sample from data currently in parser</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
