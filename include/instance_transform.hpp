@@ -75,8 +75,8 @@ template<IsSoAType SoA, typename Comp>
  * @return Unit data grouped by time
  */
 template<IsSoAType SoA>
-[[nodiscard]] auto recoverFlattenedSortedData(
-    const FlattenedData<SoA> &stepDataFlat) noexcept -> std::vector<std::vector<typename SoA::struct_type>>
+[[nodiscard]] auto recoverFlattenedSortedData(const FlattenedData<SoA> &stepDataFlat) noexcept
+    -> std::vector<std::vector<typename SoA::struct_type>>
 {
     // Create outer dimension with the maximum game step index
     const std::size_t maxStepIdx = std::ranges::max(stepDataFlat.indices);
@@ -145,7 +145,7 @@ template<IsSoAType SoA, typename Comp>
 
     // Create flattened SoA
     FlattenedData2<SoA> result;
-    result.max_step = stepData.size();
+    result.max_step = static_cast<uint32_t>(stepData.size());
     result.data = AoStoSoA<SoA>(std::views::values(flatStepData));
     if (flatStepData.empty()) {
         result.step_count.clear();
@@ -184,8 +184,8 @@ template<IsSoAType SoA, typename Comp>
  * @return Unit data grouped by time
  */
 template<IsSoAType SoA>
-[[nodiscard]] auto recoverFlattenedSortedData2(
-    const FlattenedData2<SoA> &flatStepData) noexcept -> std::vector<std::vector<typename SoA::struct_type>>
+[[nodiscard]] auto recoverFlattenedSortedData2(const FlattenedData2<SoA> &flatStepData) noexcept
+    -> std::vector<std::vector<typename SoA::struct_type>>
 {
     // Create outer dimension with the maximum game step index
     std::vector<std::vector<typename SoA::struct_type>> stepData(flatStepData.max_step);

@@ -42,11 +42,11 @@ using DstFormat = cvt::ReplayDataSoANoUnits;
         std::array<std::string, 2> hash_step_pair;
         for (auto &&[idx, elem] :
             std::views::split(row, ',') | std::views::take(hash_step_pair.size()) | std::views::enumerate) {
-            hash_step_pair[idx] = std::string(elem.begin(), elem.end());
+            hash_step_pair[static_cast<std::size_t>(idx)] = std::string(elem.begin(), elem.end());
         }
         constexpr std::size_t trim_size = std::string(".SC2Replays").size();
         const auto hash = hash_step_pair[0].substr(0, hash_step_pair[0].size() - trim_size + 1);
-        hash_steps[hash] = std::stoi(hash_step_pair[1]);
+        hash_steps[hash] = static_cast<unsigned int>(std::stoul(hash_step_pair[1]));// No direct string->uint available
     }
     return hash_steps;
 }

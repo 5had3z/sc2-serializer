@@ -54,8 +54,8 @@ namespace cvt {
     dst.ability_id = static_cast<int>(src->ability_id);
     dst.progress = src->progress;
     dst.tgtId = src->target_unit_tag;
-    dst.target_pos.x = src->target_pos.x;
-    dst.target_pos.y = src->target_pos.y;
+    dst.target_pos.x = static_cast<int>(std::round(src->target_pos.x));
+    dst.target_pos.y = static_cast<int>(std::round(src->target_pos.y));
     return dst;
 }
 
@@ -63,7 +63,7 @@ namespace cvt {
 {
     Unit dst{};
     dst.id = src->tag;
-    dst.unitType = src->unit_type;
+    dst.unitType = static_cast<int>(src->unit_type);
     dst.observation = static_cast<Visibility>(src->display_type);
     dst.alliance = static_cast<Alliance>(src->alliance);// Enums deffs match here
     dst.health = src->health;
@@ -72,10 +72,10 @@ namespace cvt {
     dst.shield_max = src->shield_max;
     dst.energy = src->energy_max;
     dst.energy_max = src->energy_max;
-    dst.cargo = src->cargo_space_taken;
-    dst.cargo_max = src->cargo_space_max;
-    dst.assigned_harvesters = src->assigned_harvesters;
-    dst.ideal_harvesters = src->ideal_harvesters;
+    dst.cargo = static_cast<char>(src->cargo_space_taken);
+    dst.cargo_max = static_cast<char>(src->cargo_space_max);
+    dst.assigned_harvesters = static_cast<char>(src->assigned_harvesters);
+    dst.ideal_harvesters = static_cast<char>(src->ideal_harvesters);
     dst.weapon_cooldown = src->weapon_cooldown;
     dst.tgtId = src->engaged_target_tag;
     dst.cloak_state = static_cast<CloakState>(src->cloak);// These should match
@@ -108,7 +108,7 @@ namespace cvt {
 {
     NeutralUnit dst{};
     dst.id = src->tag;
-    dst.unitType = src->unit_type;
+    dst.unitType = static_cast<int>(src->unit_type);
     dst.observation = static_cast<Visibility>(src->display_type);
     dst.health = src->health;
     dst.health_max = src->health_max;
@@ -117,7 +117,7 @@ namespace cvt {
     dst.pos.z = src->pos.z;
     dst.heading = src->facing;
     dst.radius = src->radius;
-    dst.contents = std::max(src->vespene_contents, src->mineral_contents);
+    dst.contents = static_cast<uint16_t>(std::max(src->vespene_contents, src->mineral_contents));
     return dst;
 }
 

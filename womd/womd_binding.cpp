@@ -205,7 +205,9 @@ auto parseSequenceFromArray(const py::array_t<float> &agents,
     {
         auto &road = result.roadGraph;
         auto roadgraph_unchecked = roadgraph.unchecked<2>();
+        auto roadgraph_mask_unchecked = roadgraph_mask.unchecked<1>();
         for (py::ssize_t i = 0; i < roadgraph_unchecked.shape(0); ++i) {
+            if (roadgraph_mask_unchecked(i) == 0) { continue; }
             road.id.emplace_back(roadgraph_unchecked(i, 0));
             road.type.emplace_back(roadgraph_unchecked(i, 1));
             road.dir.emplace_back(roadgraph_unchecked(i, 2));

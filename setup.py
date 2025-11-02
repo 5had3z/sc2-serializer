@@ -37,6 +37,7 @@ class CMakeBuild(build_ext):
             f"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={extdir}{os.sep}",
             "-DSC2_TESTS=OFF",
             "-DSC2_CONVERTER=OFF",
+            "-DCMAKE_POLICY_VERSION_MINIMUM=3.22",
         ]
 
         if os.name == "nt":

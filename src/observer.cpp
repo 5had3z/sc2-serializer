@@ -142,11 +142,11 @@ template<> void BaseConverter<ReplayDataSoA>::copyCommonData() noexcept
     // Write directly into stepData.back()
     auto &currentStep = replayData_.data.back();
     currentStep.gameStep = this->Observation()->GetGameLoop();
-    currentStep.minearals = this->Observation()->GetMinerals();
-    currentStep.vespene = this->Observation()->GetVespene();
-    currentStep.popMax = this->Observation()->GetFoodCap();
-    currentStep.popArmy = this->Observation()->GetFoodArmy();
-    currentStep.popWorkers = this->Observation()->GetFoodWorkers();
+    currentStep.minearals = static_cast<uint16_t>(this->Observation()->GetMinerals());
+    currentStep.vespene = static_cast<uint16_t>(this->Observation()->GetVespene());
+    currentStep.popMax = static_cast<uint16_t>(this->Observation()->GetFoodCap());
+    currentStep.popArmy = static_cast<uint16_t>(this->Observation()->GetFoodArmy());
+    currentStep.popWorkers = static_cast<uint16_t>(this->Observation()->GetFoodWorkers());
 
     const sc2::Score &score = this->Observation()->GetScore();
     currentStep.score = convertScore(&score);

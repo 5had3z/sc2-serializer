@@ -8,25 +8,27 @@ See [https://5had3z.github.io/sc2-serializer/index.html](https://5had3z.github.i
 
 ## General Notes
 
- - If the generated_info.hpp is out-of-date compared to info found in PySC2, re-run scripts/gen_info_header.py.
+- If the generated_info.hpp is out-of-date compared to info found in PySC2, re-run scripts/gen_info_header.py.
 
- - The SC2 API zeros out mineral and vespene resources if they are in the fog-of-war. Instead we default them to the correct value and keep track of their last observed value. Visibility is still included, so it is trivial to revert back to zero'd out observations.
+- The SC2 API zeros out mineral and vespene resources if they are in the fog-of-war. Instead we default them to the correct value and keep track of their last observed value. Visibility is still included, so it is trivial to revert back to zero'd out observations.
 
- - Strongly recommended to use [zlib-ng](https://github.com/zlib-ng/zlib-ng) with their LD_PRELOAD instructions for faster (de)serialization.
+- Strongly recommended to use [zlib-ng](https://github.com/zlib-ng/zlib-ng) with their LD_PRELOAD instructions for faster (de)serialization.
 
 ## Building C++ Observer and Tests
 
 ### General
 
 To use the StarCraftII replay observer for converting replays, you will need to initialize the 3rdparty submodule(s).
+
 ```bash
 git submodule update --init --recursive
 ```
 
+Some 3rd party libraries have not updated their `cmake_minimum_required` which can result in configure failures for newer versions of cmake which have removed support for earlier versions of cmake. This can be resolved with `-DCMAKE_POLICY_VERSION_MINIMUM=3.22` (which is the default version of ubuntu 22.04).
 
 ### Linux
 
-Compilation requires >=gcc-13 since some c++23 features are used. If using ubuntu 18.04 or higher, you can get this via the test toolchain ppa on ubuntu shown below. To update cmake to latest and greatest, follow the instructions [here](https://apt.kitware.com/).
+Compilation requires >=gcc-13 since some c++23 features are used. If using ubuntu 18.04 or higher, you can get this via the test toolchain ppa on ubuntu shown below. To update cmake to latest and greatest, follow the [instructions on their website](https://apt.kitware.com/).
 
 ```bash
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test
@@ -50,22 +52,25 @@ cmake -B build
 cmake --build build
 ```
 
-
 ## Building Python Bindings
 
 Currently requires >=gcc-11 and should be relatively simple to install since CMake Package Manager deals with C++ dependencies, however you will have to install `libboost-iostreams-dev` when building for linux. The library bindings module is called `sc2_serializer` and includes a few extra dataset sampling utilities and an example PyTorch dataloader for outcome prediction.
+
 ```bash
 sudo apt install libboost-iostreams-dev
 pip3 install git+https://github.com/5had3z/sc2-serializer.git
 ```
 
 If you clone this repo and install with editable mode, you won't get the auto-gen stubs, you can add this manually (you need to install my fork from pyproject.toml)
+
 ```bash
 pip3 install -e .
 pybind11-stubgen _sc2_serializer --module-path build/_sc2_serializer.cpython-310-x86_64-linux-gnu.so -o src/sc2_serializer
 ```
 
 It is faster to iterate while developing by installing in editable mode, removing pip's compiled version `src/sc2_serializer/_sc2_serializer.cpython-310-x86_64-linux-gnu.so` and symbolically linking to `build/_sc2_serializer.cpython-310-x86_64-linux-gnu.so` instead for incremental builds. You will have manually update the stub with the previously mentioned command if API changes are made.
+
+If building the bindings with `pip install` seems to not make progress after a while, try adding `--no-build-isolation`.
 
 ## Building and Viewing Documentation
 

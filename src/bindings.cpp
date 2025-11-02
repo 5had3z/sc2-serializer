@@ -47,12 +47,13 @@ template<typename T> void bindImage(py::module &m, const std::string &name)
                 return out;
             })
         .def_buffer([](cvt::Image<T> &img) -> py::buffer_info {
+            const auto elemSize = py::ssize_t_cast(sizeof(T));
             return py::buffer_info(img.data(),
-                sizeof(T),
+                elemSize,
                 py::format_descriptor<T>::format(),
                 2,
                 { img._h, img._w },
-                { sizeof(T) * img._h, sizeof(T) });
+                { elemSize * img._h, elemSize });
         });
 }
 

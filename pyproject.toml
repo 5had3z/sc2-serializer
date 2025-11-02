@@ -1,9 +1,9 @@
 [build-system]
 requires = [
-    "setuptools>=61.0,<66.0",
+    "setuptools",
     "wheel",
     "ninja",
-    "cmake>=3.25,<4.0.0",
+    "cmake>=3.22",
     "pybind11-stubgen @ git+https://github.com/5had3z/pybind11-stubgen.git",
     "black",
 ]
@@ -79,7 +79,7 @@ ignore = [
     "S603",
     "S607",
     "S608",
-    "T201"
+    "T201",
 ]
 select = [
     "A",

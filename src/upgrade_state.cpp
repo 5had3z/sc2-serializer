@@ -98,11 +98,11 @@ void UpgradeState::calculateTimes(const std::vector<std::vector<Action>> &player
             // First check if the ability is in the normal upgrade actions
             const auto abilityPtr = raceUpgradeIds.find(action.ability_id);
             if (abilityPtr != raceUpgradeIds.end()) {
-                const std::size_t upgradeIdx = std::distance(raceUpgradeIds.begin(), abilityPtr);
+                const auto upgradeIdx = static_cast<std::size_t>(std::distance(raceUpgradeIds.begin(), abilityPtr));
                 if (!id2delay.contains(action.ability_id)) {
                     throw std::out_of_range{ fmt::format("Ability id {} not in id2delay table", action.ability_id) };
                 }
-                upgradeTimes_[upgradeIdx] = gameTime[idx] + id2delay.at(action.ability_id);
+                upgradeTimes_[upgradeIdx] = static_cast<int>(gameTime[idx]) + id2delay.at(action.ability_id);
                 continue;
             }
 
@@ -111,14 +111,14 @@ void UpgradeState::calculateTimes(const std::vector<std::vector<Action>> &player
             if (remapPtr != raceUpgradeRemap.end()) {
                 // The first ability_id in the remapping that is maxTime is the lowest level unresearched
                 for (auto &&remapAbilityId : remapPtr->second) {
-                    const std::size_t upgradeIdx =
-                        std::distance(raceUpgradeIds.begin(), raceUpgradeIds.find(remapAbilityId));
+                    const auto upgradeIdx = static_cast<std::size_t>(
+                        std::distance(raceUpgradeIds.begin(), raceUpgradeIds.find(remapAbilityId)));
                     if (upgradeTimes_[upgradeIdx] == maxTime) {
                         if (!id2delay.contains(remapAbilityId)) {
                             throw std::out_of_range{ fmt::format(
                                 "Ability id {} not in id2delay table", remapAbilityId) };
                         }
-                        upgradeTimes_[upgradeIdx] = gameTime[idx] + id2delay.at(remapAbilityId);
+                        upgradeTimes_[upgradeIdx] = static_cast<int>(gameTime[idx]) + id2delay.at(remapAbilityId);
                         break;
                     }
                 }

@@ -270,7 +270,7 @@ struct MinimapFeatureFlags
         if (it == keys.end()) {
             throw std::out_of_range{ fmt::format("Minimap feature key \"{}\" doesn't exist", key) };
         }
-        return std::distance(keys.begin(), it);
+        return static_cast<std::size_t>(std::distance(keys.begin(), it));
     }
 
     /**
@@ -375,7 +375,7 @@ template<typename ReplayDataType> class ReplayParser
     {
         py::list ret;
         for (const auto &feat : minimapFeatureFlags_.keys) {
-            if (feat == "player_relative" && minimapFeatureFlags_.test(feat)) {
+            if (std::string_view(feat) == "player_relative" && minimapFeatureFlags_.test(feat)) {
                 ret.append("self");
                 ret.append("ally");
                 ret.append("neutral");
@@ -566,8 +566,7 @@ template<typename T, std::output_iterator<T> It>
 {
     for (std::size_t i = 0; i < image.size(); ++i) {
         const auto bitset = std::bitset<8>(std::to_integer<uint8_t>(image._data[i]));
-#pragma unroll
-        for (int j = 7; j > -1; --j) { *out++ = static_cast<T>(bitset[j]); }
+        for (int j = 7; j > -1; --j) { *out++ = static_cast<T>(bitset[static_cast<std::size_t>(j)]); }
     }
     return out;
 }

@@ -207,9 +207,8 @@ void printStats(const bench_timing &timing, std::string_view prefix)
             std::reduce(std::execution::unseq, vec.begin(), vec.end(), clk::duration{}, std::plus<>());
         const clk::duration mean = sum / vec.size();
         auto var_calc = [mean](clk::duration t) {
-            auto tmp = (t - mean).count();
-            tmp = std::pow(tmp, 2);
-            return clk::duration(tmp);
+            const auto tmp = (t - mean).count();
+            return clk::duration(tmp * tmp);
         };
         const clk::duration var =
             std::transform_reduce(

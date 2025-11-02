@@ -221,7 +221,7 @@ struct Action
         UID other;
 
         // Provide a default constructor to avoid Pybind11 error
-        Target() { memset(this, 0, sizeof(Target)); }
+        Target() : other(0) {}
 
         explicit Target(Point2d &&d) noexcept : point(d) {}
         explicit Target(const Point2d &d) noexcept : point(d) {}

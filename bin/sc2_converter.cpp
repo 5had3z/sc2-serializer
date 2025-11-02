@@ -115,7 +115,11 @@ auto extractLocaleFromMPQ(HANDLE mpqArchive, const SFILE_FIND_DATA &fileData) ->
 
     std::string localeFileBuffer(fileData.dwFileSize, '\0');
     DWORD bytesRead;
-    if (!SFileReadFile(openedLocaleFile, localeFileBuffer.data(), localeFileBuffer.size(), &bytesRead, nullptr)) {
+    if (!SFileReadFile(openedLocaleFile,
+            localeFileBuffer.data(),
+            static_cast<DWORD>(localeFileBuffer.size()),
+            &bytesRead,
+            nullptr)) {
         SPDLOG_ERROR("Failed to read file inside MPQ Archive");
         return std::nullopt;
     }
@@ -154,9 +158,9 @@ auto getDataVersion(const fs::path &replayPath) noexcept
     json data = json::parse(serialData.value());
 
     auto gameVersion = data["GameVersion"].template get<std::string>();
-    auto lastSection = std::ranges::find_last(gameVersion, '.');
-    gameVersion.resize(
-        gameVersion.size() - std::distance(lastSection.begin(), lastSection.end()));// Truncate last section from string
+    const auto lastSection = std::ranges::find_last(gameVersion, '.');
+    const auto suffixLen = static_cast<std::size_t>(std::distance(lastSection.begin(), lastSection.end()));
+    gameVersion.resize(gameVersion.size() - suffixLen);// Truncate last section from string
     auto dataVersion = data["DataVersion"].template get<std::string>();
     auto buildVersion = data["BaseBuild"].template get<std::string>().substr(4);
 

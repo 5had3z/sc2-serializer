@@ -170,7 +170,8 @@ template<HasDBInterface EntryType> class ReplayDatabase
         // Write Offset (index) is nEntries - 1 + sizeof(nEntries)
         const std::size_t nEntries = entryPtr_.size();
         constexpr auto elementSize = sizeof(std::ranges::range_value_t<decltype(entryPtr_)>);
-        dbStream.seekp((nEntries - 1) * elementSize + sizeof(std::size_t), std::ios::beg);
+        const auto writeOffset = (nEntries - 1) * elementSize + sizeof(std::size_t);
+        dbStream.seekp(static_cast<std::ofstream::off_type>(writeOffset), std::ios::beg);
         dbStream.write(reinterpret_cast<const char *>(&entryPtr_.back()), elementSize);
 
         // Write Number of Elements in LUT last to confirm the update
@@ -365,7 +366,7 @@ template<HasDBInterface EntryType> class ReplayDatabase
     template<typename T> [[nodiscard]] auto readFromDatabase(std::size_t index, T (*reader)(std::istream &)) const -> T
     {
         namespace bio = boost::iostreams;
-        using clock = std::chrono::high_resolution_clock;
+        // using clock = std::chrono::high_resolution_clock;
 
         // Check if valid index
         if (index >= entryPtr_.size()) {

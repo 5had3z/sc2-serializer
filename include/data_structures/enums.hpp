@@ -123,7 +123,8 @@ auto enumToOneHot(E e) noexcept -> std::vector<T>
     static_assert(std::is_sorted(enumValues.begin(), enumValues.end()));
     auto it = std::ranges::find(enumValues, e);
     std::vector<T> ret(enumValues.size());
-    ret[std::distance(enumValues.begin(), it)] = static_cast<T>(1);
+    const auto enumIndex = static_cast<std::size_t>(std::distance(enumValues.begin(), it));
+    ret[enumIndex] = static_cast<T>(1);
     return ret;
 }
 

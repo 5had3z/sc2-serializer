@@ -43,7 +43,8 @@ void serialize(const T &data, std::ostream &stream)
     std::size_t nElem = data.size();
     if (nElem > gMaxRangeSize) { throw std::bad_array_new_length{}; }
     stream.write(reinterpret_cast<const char *>(&nElem), sizeof(nElem));
-    stream.write(reinterpret_cast<const char *>(data.data()), sizeof(std::ranges::range_value_t<T>) * nElem);
+    stream.write(reinterpret_cast<const char *>(data.data()),
+        static_cast<std::streamsize>(sizeof(std::ranges::range_value_t<T>) * nElem));
 }
 
 /**
@@ -99,11 +100,12 @@ template<std::ranges::range T>
     requires std::ranges::contiguous_range<T> && std::is_trivially_copyable_v<std::ranges::range_value_t<T>>
 void deserialize(T &data, std::istream &stream)
 {
-    std::size_t nElem = -1;
+    std::size_t nElem = gMaxRangeSize + 1;
     stream.read(reinterpret_cast<char *>(&nElem), sizeof(nElem));
     if (nElem > gMaxRangeSize) { throw std::bad_array_new_length{}; }
     data.resize(nElem);
-    stream.read(reinterpret_cast<char *>(data.data()), sizeof(std::ranges::range_value_t<T>) * nElem);
+    stream.read(reinterpret_cast<char *>(data.data()),
+        static_cast<std::streamsize>(sizeof(std::ranges::range_value_t<T>) * nElem));
 }
 
 /**
@@ -114,7 +116,7 @@ void deserialize(T &data, std::istream &stream)
  */
 template<std::ranges::range T> void deserialize(T &data, std::istream &stream)
 {
-    std::size_t nElem = -1;
+    std::size_t nElem = gMaxRangeSize + 1;
     stream.read(reinterpret_cast<char *>(&nElem), sizeof(nElem));
     if (nElem > gMaxRangeSize) { throw std::bad_array_new_length{}; }
     data.resize(nElem);
