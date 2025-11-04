@@ -3,11 +3,9 @@ pbdoc(Python bindings for Waymo Open Motion Data with Serializer)pbdoc
 """
 
 from __future__ import annotations
-
+import numpy
 import os
 import typing
-
-import numpy as np
 
 __all__ = [
     "Agent",
@@ -37,7 +35,9 @@ class Agent:
     def __init__(self) -> None: ...
 
 class RoadGraph:
-    dir: list[float]
+    dx: list[float]
+    dy: list[float]
+    dz: list[float]
     id: list[int]
     type: list[int]
     x: list[float]
@@ -79,12 +79,12 @@ class WomdDatabase:
     def path(self) -> os.PathLike: ...
 
 def parseSequenceFromArray(
-    agents: np.ndarray[np.float32],
-    agents_mask: np.ndarray[np.uint8],
-    traffic: np.ndarray[np.float32],
-    traffic_mask: np.ndarray[np.uint8],
-    roadgraph: np.ndarray[np.float32],
-    roadgraph_mask: np.ndarray[np.uint8],
+    agents: numpy.ndarray[numpy.float32],
+    agents_mask: numpy.ndarray[numpy.uint8],
+    traffic: numpy.ndarray[numpy.float32],
+    traffic_mask: numpy.ndarray[numpy.uint8],
+    roadgraph: numpy.ndarray[numpy.float32],
+    roadgraph_mask: numpy.ndarray[numpy.uint8],
     scenarioId: str,
 ) -> SequenceData: ...
 
