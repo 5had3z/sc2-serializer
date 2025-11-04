@@ -87,6 +87,7 @@ template<> void bindImage<bool>(py::module &m, const std::string &name)
 template<typename T> void bindReplayDataInterfaces(py::module &m, const std::string &name)
 {
     py::class_<T>(m, name.c_str())
+        .def(py::init<>())
         .def_readwrite("header", &T::header)
         .def_readwrite("data", &T::data)
         .def("__len__", &T::size)
@@ -391,6 +392,7 @@ PYBIND11_MODULE(_sc2_serializer, m)
             py::arg("onehot_enum") = false);
 
     py::class_<cvt::StepDataNoUnitsMinimap>(m, "StepDataNoUnitsMinimap")
+        .def(py::init<>())
         .def(py::self == py::self)
         .def(py::self != py::self)
         .def_readwrite("gameStep", &cvt::StepDataNoUnitsMinimap::gameStep)
@@ -402,6 +404,7 @@ PYBIND11_MODULE(_sc2_serializer, m)
         .def_readwrite("score", &cvt::StepDataNoUnitsMinimap::score);
 
     py::class_<cvt::StepDataNoUnitsMinimapSoA>(m, "StepDataNoUnitsMinimapSoA")
+        .def(py::init<>())
         .def(py::self == py::self)
         .def(py::self != py::self)
         .def_readwrite("gameStep", &cvt::StepDataNoUnitsMinimapSoA::gameStep)
@@ -418,6 +421,7 @@ PYBIND11_MODULE(_sc2_serializer, m)
         });
 
     py::class_<cvt::StepDataNoUnits>(m, "StepDataNoUnits")
+        .def(py::init<>())
         .def(py::self == py::self)
         .def(py::self != py::self)
         .def_readwrite("gameStep", &cvt::StepDataNoUnits::gameStep)
@@ -435,6 +439,7 @@ PYBIND11_MODULE(_sc2_serializer, m)
         .def_readwrite("pathable", &cvt::StepDataNoUnits::pathable);
 
     py::class_<cvt::StepDataNoUnitsSoA>(m, "StepDataNoUnitsSoA")
+        .def(py::init<>())
         .def(py::self == py::self)
         .def(py::self != py::self)
         .def_readwrite("gameStep", &cvt::StepDataNoUnitsSoA::gameStep)
@@ -457,6 +462,7 @@ PYBIND11_MODULE(_sc2_serializer, m)
         });
 
     py::class_<cvt::StepData>(m, "StepData")
+        .def(py::init<>())
         .def(py::self == py::self)
         .def(py::self != py::self)
         .def_readwrite("gameStep", &cvt::StepData::gameStep)
@@ -477,6 +483,7 @@ PYBIND11_MODULE(_sc2_serializer, m)
         .def_readwrite("neutralUnits", &cvt::StepData::neutralUnits);
 
     py::class_<cvt::StepDataSoA>(m, "StepDataSoA")
+        .def(py::init<>())
         .def(py::self == py::self)
         .def(py::self != py::self)
         .def_readwrite("gameStep", &cvt::StepDataSoA::gameStep)
@@ -502,6 +509,7 @@ PYBIND11_MODULE(_sc2_serializer, m)
         });
 
     py::class_<cvt::ReplayInfo>(m, "ReplayInfo")
+        .def(py::init<>())
         .def(py::self == py::self)
         .def(py::self != py::self)
         .def_readwrite("replayHash", &cvt::ReplayInfo::replayHash)

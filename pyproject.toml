@@ -57,8 +57,6 @@ extend-exclude = ["3rdparty"]
 [tool.ruff.lint]
 ignore = [
     "A001",
-    "ANN101",
-    "ANN102",
     "ANN401",
     "ARG001",
     "B008",
@@ -80,6 +78,7 @@ ignore = [
     "S607",
     "S608",
     "T201",
+    "UP007",
 ]
 select = [
     "A",
