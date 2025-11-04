@@ -68,7 +68,7 @@ def make_units_video(parser: ReplayParser, fname: Path):
         canvas = FigureCanvasAgg(fig)
         canvas.draw()
         rgb = np.frombuffer(canvas.tostring_rgb(), dtype=np.uint8).reshape(
-            canvas.get_width_height()[::-1] + (3,)
+            (*canvas.get_width_height()[::-1], 3)
         )
         writer.write(cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR))
         if not writer.isOpened():

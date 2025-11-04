@@ -159,10 +159,10 @@ def womd_pipeline(record_path: Path) -> tuple[DataNode, ...]:
     }
     for key, dtype in traffic_light_types.items():
         for prefix, count in [("current", 1), ("past", 10), ("future", 80)]:
-            traffic_light_features[
-                f"traffic_light_state/{prefix}/{key}"
-            ] = tfrec.FixedLenFeature(
-                [count, 16], dtype, 0 if dtype == tfrec.int64 else 0.0
+            traffic_light_features[f"traffic_light_state/{prefix}/{key}"] = (
+                tfrec.FixedLenFeature(
+                    [count, 16], dtype, 0 if dtype == tfrec.int64 else 0.0
+                )
             )
 
     features_description: dict[str, tfrec.FixedLenFeature] = {}

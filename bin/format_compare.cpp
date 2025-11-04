@@ -4,7 +4,7 @@
  * @brief This program is used for analysing and benchmarking file sizes. One function writes each of the individual
  * data components of a SC2 replay to separate files so we can see the contribution of units, minimaps, scores etc.
  * Another function this performs is to write the unit data in various forms. From this we can check which
- * rearrangement of the unit data structure reults in the smallest file. This is also timed so we can check for
+ * rearrangement of the unit data structure results in the smallest file. This is also timed so we can check for
  * associated computational overhead.
  * @version 0.1
  * @date 2024-05-30

@@ -40,7 +40,7 @@ def compare_replays_and_game(
     replays: Annotated[Path, typer.Option(help="Path to SC2 Replays")],
     game: Annotated[Path, typer.Option(help="Path to 'Versions' folder of SC2")],
 ) -> None:
-    """Compare versions of replays with versions of the game verision currently present"""
+    """Compare versions of replays with versions of the game version currently present"""
     assert game.name == "Versions", f"Should point to the Versions folder, got {game}"
     current_bases = {folder.name[len("base") :] for folder in game.glob("Base*")}
     print("Game Build Versions: \n", current_bases)

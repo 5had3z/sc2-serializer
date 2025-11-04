@@ -108,7 +108,9 @@ struct RoadGraph
 {
     std::vector<std::int64_t> id;
     std::vector<std::int64_t> type;
-    std::vector<float> dir;
+    std::vector<float> dx;
+    std::vector<float> dy;
+    std::vector<float> dz;
     std::vector<float> x;
     std::vector<float> y;
     std::vector<float> z;
@@ -172,13 +174,16 @@ using WomdDatabase = cvt::ReplayDatabase<SequenceData>;
 template<typename T>
 auto toVectorOfVectors(const py::array_t<float> &array, const py::array_t<mask_t> &mask) -> std::vector<std::vector<T>>
 {
-    std::vector<std::vector<T>> result{};
     if (array.shape(2) != pfr::tuple_size_v<T>) { throw std::runtime_error("Invalid number of fields in the array"); }
 
     auto unchecked = array.unchecked<3>();
     auto mask_unchecked = mask.unchecked<2>();
-    for (py::ssize_t i = 0; i < unchecked.shape(0); ++i) {
-        auto inner = result.emplace_back();
+    const auto max_tidx = static_cast<std::size_t>(unchecked.shape(0));
+
+    std::vector<std::vector<T>> result(max_tidx);
+    for (std::size_t tidx = 0; tidx < max_tidx; ++tidx) {
+        auto &inner = result[tidx];
+        const auto i = py::ssize_t_cast(tidx);
         for (py::ssize_t j = 0; j < unchecked.shape(1); ++j) {
             if (mask_unchecked(i, j) == 0) { continue; }
             py::ssize_t k = 0;
@@ -208,12 +213,8 @@ auto parseSequenceFromArray(const py::array_t<float> &agents,
         auto roadgraph_mask_unchecked = roadgraph_mask.unchecked<1>();
         for (py::ssize_t i = 0; i < roadgraph_unchecked.shape(0); ++i) {
             if (roadgraph_mask_unchecked(i) == 0) { continue; }
-            road.id.emplace_back(roadgraph_unchecked(i, 0));
-            road.type.emplace_back(roadgraph_unchecked(i, 1));
-            road.dir.emplace_back(roadgraph_unchecked(i, 2));
-            road.x.emplace_back(roadgraph_unchecked(i, 3));
-            road.y.emplace_back(roadgraph_unchecked(i, 4));
-            road.z.emplace_back(roadgraph_unchecked(i, 5));
+            py::ssize_t k = 0;
+            pfr::for_each_field(road, [&](auto &field) { field.emplace_back(roadgraph_unchecked(i, k++)); });
         }
     }
 
@@ -255,7 +256,9 @@ PYBIND11_MODULE(_womd_binding, m)
         .def(py::init<>())
         .def_readwrite("id", &RoadGraph::id)
         .def_readwrite("type", &RoadGraph::type)
-        .def_readwrite("dir", &RoadGraph::dir)
+        .def_readwrite("dx", &RoadGraph::dx)
+        .def_readwrite("dy", &RoadGraph::dy)
+        .def_readwrite("dz", &RoadGraph::dz)
         .def_readwrite("x", &RoadGraph::x)
         .def_readwrite("y", &RoadGraph::y)
         .def_readwrite("z", &RoadGraph::z);

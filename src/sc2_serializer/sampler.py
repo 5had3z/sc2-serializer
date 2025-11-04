@@ -21,8 +21,7 @@ class ReplaySampler(ABC):
         self.is_train = is_train
 
     @abstractmethod
-    def __len__(self) -> int:
-        ...
+    def __len__(self) -> int: ...
 
     def __getitem__(self, index: int) -> tuple[Path, int]:
         """Magic method that forwards to `sample`"""
