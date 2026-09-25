@@ -186,7 +186,7 @@ if(SC2_PY_READER)
     GITHUB_REPOSITORY
     jbeder/yaml-cpp
     GIT_TAG
-    0.8.0)
+    yaml-cpp-0.9.0)
 
   pybind11_add_module(
     _sc2_serializer
